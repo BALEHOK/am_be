@@ -11,6 +11,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using AssetManagerAdmin.Model;
+using AssetManagerAdmin.WebApi;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
@@ -38,6 +39,7 @@ namespace AssetManagerAdmin.ViewModel
             //                SimpleIoc.Default.Register<IDataService, DataService>();
             //            }
 
+            SimpleIoc.Default.Register<IAssetsApiManager, AssetsApiManager>();
             SimpleIoc.Default.Register<IDataService, DataService>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<WebAdminViewModel>();

@@ -16,6 +16,7 @@ namespace AssetManagerAdmin.ViewModel
     public class ValidationBuilderViewModel : ViewModelBase, IValidationBuilderViewModel, ICommonViewModel
     {
         private readonly IDataService _dataService;
+        private readonly IAssetsApiManager _assetsApiManager;
         private string _server;
 
         public bool IsActive { get; set; }
@@ -139,7 +140,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteTestValidationCommand()
         {
-            var api = new AssetsApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
             api.ValidateAttributeAsync(_dataService.CurrentAssetAttribute.Id, ValidationTest, ValidationExpression)
                 .ContinueWith(a =>
                 {
@@ -166,7 +167,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteSaveValidatorCommand()
         {
-            var api = new AssetsApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
             api.SaveValidation(_dataService.CurrentAssetType, _dataService.CurrentAssetAttribute.DbName, ValidationExpression)
                 .ContinueWith(a =>
                 {
@@ -186,9 +187,10 @@ namespace AssetManagerAdmin.ViewModel
                 OnNewOperator(this, operatorText);
         }
 
-        public ValidationBuilderViewModel(IDataService dataService)
+        public ValidationBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
         {
             _dataService = dataService;
+            _assetsApiManager = assetsApiManager;
 
             MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
             {

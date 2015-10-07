@@ -240,19 +240,6 @@ namespace AssetManagerAdmin.ViewModel
             MessengerInstance.Send(property, propertyName);
         }
 
-        private void LoadTypesInfo()
-        {
-            _dataService.GetTypesInfo(SelectedServer.ApiUrl, (model, exception) =>
-            {
-                _dataService.TypesInfo = model;
-                
-                TypeInfoList = model.ActiveTypes;
-
-                // send types info 
-                MessengerInstance.Send(model, AppActions.TypesInfoLoaded);
-            });
-        }
-
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -291,8 +278,6 @@ namespace AssetManagerAdmin.ViewModel
                     SelectedMenuItem = MainMenuItems.First();
                     IsViewsMenuEnabled = true;
                 });
-
-                LoadTypesInfo();
             });
 
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, server =>

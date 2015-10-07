@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -13,7 +12,7 @@ using AssetManagerAdmin.Model;
 
 namespace AssetManagerAdmin.WebApi
 {
-    public class AssetsApi
+    public class AssetsApi : IAssetsApi
     {
         private readonly UserInfo _user;
         private readonly string _baseAddress;
@@ -37,18 +36,45 @@ namespace AssetManagerAdmin.WebApi
             client.DefaultRequestHeaders.Add("Authorization", String.Format("Bearer {0}", _user.AccessToken));
         }
 
-        public async Task<TypesInfoModel> GetTypesInfo()
-        {
-            TypesInfoModel types;
-            using (var client = new HttpClient())
-            {
-                Authorize(client);
+        private readonly SemaphoreSlim _typesInfoModelSemaphore = new SemaphoreSlim(1);
+        private bool _typesInfoModelRequestInProgress;
+        private TypesInfoModel _typesInfoModelResponse;
 
-                var json = await client.GetStringAsync(GetApiUrl("/api/typesinfo"));
-                types = _js.Deserialize<TypesInfoModel>(json);
+        public virtual async Task<TypesInfoModel> GetTypesInfo()
+        {
+            // if no request in progress, go to API server
+            // otherwise
+            // wait for request to finish and return its result
+            if (!_typesInfoModelRequestInProgress)
+            {
+                _typesInfoModelRequestInProgress = true;
+                await _typesInfoModelSemaphore.WaitAsync();
+
+                try
+                {
+                    string json;
+                    using (var client = new HttpClient())
+                    {
+                        Authorize(client);
+                        json = await client.GetStringAsync(GetApiUrl("/api/typesinfo"));
+                    }
+
+                    _typesInfoModelResponse = _js.Deserialize<TypesInfoModel>(json);
+
+                    _typesInfoModelRequestInProgress = false;
+
+                    return _typesInfoModelResponse;
+                }
+                finally
+                {
+                    _typesInfoModelSemaphore.Release();
+                }
             }
 
-            return types;
+            await _typesInfoModelSemaphore.WaitAsync();
+            _typesInfoModelSemaphore.Release();
+
+            return _typesInfoModelResponse;
         }
 
         public async Task<List<CustomReportModel>> GetReportsList()

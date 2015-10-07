@@ -8,6 +8,6 @@
         public static string LoggingOut = "LoggingOut";
         public static string LogoutDone = "LogoutDone";
 
-        public static string TypesInfoLoaded = "TypesInfoLoaded";
+        public static string ClearTypesInfoCache = "ClearTypesInfoCache";
     }
 }

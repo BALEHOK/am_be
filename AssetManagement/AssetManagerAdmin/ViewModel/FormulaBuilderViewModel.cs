@@ -31,6 +31,7 @@ namespace AssetManagerAdmin.ViewModel
     {
         private ExpressionParser _expressionParser;
         private readonly IDataService _dataService;
+        private readonly IAssetsApiManager _assetsApiManager;
         private string _server;
 
         public AssetsDataProvider DataProvider { get; private set; }
@@ -266,9 +267,26 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
+        private RelayCommand _refreshAssetTypeListCommand;
+
+        public RelayCommand RefreshAssetTypeListCommand
+        {
+            get
+            {
+                return _refreshAssetTypeListCommand ??
+                       (_refreshAssetTypeListCommand = new RelayCommand(ExecuteRefreshAssetTypeListCommand));
+            }
+        }
+
+        private void ExecuteRefreshAssetTypeListCommand()
+        {
+            MessengerInstance.Send((object)null, AppActions.ClearTypesInfoCache);
+            LoadTypesInfo(CurrentContext);
+        }
+
         private void ExecuteSaveFormulaCommand()
         {
-            var api = new AssetsApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
 
             var formulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
 
@@ -571,9 +589,15 @@ namespace AssetManagerAdmin.ViewModel
 
             await WaitForServerName();
 
+            LoadTypesInfo(context);
+        }
+
+        private void LoadTypesInfo(FormulaBuilderContext context)
+        {
             _dataService.GetTypesInfo(_server, (model, exception) =>
             {
-                DataProvider.AssetTypes = model.ActiveTypes;
+                // do not modify original collection
+                DataProvider.AssetTypes = model.ActiveTypes.ToList();
 
                 DataProvider.AssetTypes.ForEach(t =>
                 {
@@ -615,9 +639,10 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public FormulaBuilderViewModel(IDataService dataService)
+        public FormulaBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
         {
             _dataService = dataService;
+            _assetsApiManager = assetsApiManager;
 
             DataProvider = new AssetsDataProvider();
 

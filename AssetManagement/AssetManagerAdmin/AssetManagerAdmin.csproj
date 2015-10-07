@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AssetManagerAdmin</RootNamespace>
-    <AssemblyName>AssetManagerAdmin</AssemblyName>
+    <AssemblyName>FlexMIS-Toolkit</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -39,7 +39,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>flexmis_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\flexmis_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -50,6 +50,10 @@
     <Reference Include="DevExpress.Xpf.Printing.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.ReportDesigner.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Ribbon.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="FontAwesome.WPF, Version=4.3.0.35981, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.WPF.4.4.0.5\lib\FontAwesome.WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
     </Reference>
@@ -80,6 +84,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
@@ -185,17 +190,20 @@
     <Compile Include="View\WebAdminView.xaml.cs">
       <DependentUpon>WebAdminView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WebApi\AssetsApiCacheDecorator.cs" />
     <Compile Include="WebApi\AssetsApi.cs" />
     <Compile Include="Model\DataService.cs" />
     <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\MainMenuItem.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="WebApi\TokenResponse.cs" />
     <Compile Include="View\WebBrowserWrapper.xaml.cs">
       <DependentUpon>WebBrowserWrapper.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\UserInfo.cs" />
+    <Compile Include="WebApi\AssetsApiManager.cs" />
+    <Compile Include="WebApi\IAssetsApi.cs" />
+    <Compile Include="WebApi\IAssetsApiManager.cs" />
     <Page Include="FormulaBuilder\ValueEditors\DoubleComboBoxSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -337,11 +345,12 @@
     <Resource Include="Resharper.Templates\ViewModelCommand.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="flexmis_icon.ico" />
+    <Resource Include="Resources\Images\flexmis_icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="flexmis_logo.png" />
+    <Resource Include="Resources\Images\flexmis_logo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

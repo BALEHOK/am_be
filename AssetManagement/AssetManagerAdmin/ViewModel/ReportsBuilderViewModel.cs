@@ -14,6 +14,7 @@ namespace AssetManagerAdmin.ViewModel
     {
         private string _server;
         private readonly IDataService _dataService;
+        private readonly IAssetsApiManager _assetsApiManager;
         private bool _isPublishing;
         private List<CustomReportModel> _allReports;
 
@@ -151,14 +152,14 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecutePublishReportCommand()
         {
-            var api = new AssetsApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
             var fileName = ReportFileName;
             _isPublishing = true;
             api.PublishReport(ReportName, fileName, ReportAssetType.Id).ContinueWith(r =>
             {
                 api.GetReportsList().ContinueWith(e =>
                 {
-                    ReportsList = e.Result;                    
+                    ReportsList = e.Result;
                     ReportName = ReportFileName = string.Empty;
                     _isPublishing = false;
                 });
@@ -172,13 +173,14 @@ namespace AssetManagerAdmin.ViewModel
             get
             {
                 return _deleteReportCommand ??
-                       (_deleteReportCommand = new RelayCommand<CustomReportModel>(ExecuteDeleteReportCommand, model => true));
+                       (_deleteReportCommand =
+                           new RelayCommand<CustomReportModel>(ExecuteDeleteReportCommand, model => true));
             }
         }
 
         private void ExecuteDeleteReportCommand(CustomReportModel reportModel)
         {
-            var api = new AssetsApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
             api.DeleteReport(reportModel.Name, reportModel.AssetTypeId).ContinueWith(e =>
             {
                 _allReports.Remove(reportModel);
@@ -200,27 +202,28 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public ReportsBuilderViewModel(IDataService dataService)
+        public ReportsBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
         {
             _dataService = dataService;
+            _assetsApiManager = assetsApiManager;
+
             MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
             {
                 _server = server.ApiUrl;
-                var api = new AssetsApi(_server, _dataService.CurrentUser);
-                api.GetReportsList().ContinueWith(e =>
+                var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+                api.GetReportsList().ContinueWith(task => { _allReports = task.Result; });
+
+                _dataService.GetTypesInfo(_server, (typesInfo, e) =>
                 {
-                    _allReports = e.Result;
+                    // do not modify original collection
+                    AssetTypesList = typesInfo.ActiveTypes.ToList();
+                    AssetTypesList.Insert(0, new AssetTypeModel
+                    {
+                        Id = -1,
+                        DisplayName = "[All]"
+                    });
+                    ReportAssetType = AssetTypesList[0];
                 });
-            });
-            MessengerInstance.Register<TypesInfoModel>(this, AppActions.TypesInfoLoaded, model =>
-            {
-                AssetTypesList = model.ActiveTypes;
-                AssetTypesList.Insert(0, new AssetTypeModel
-                {
-                    Id = -1,
-                    DisplayName = "[All]"
-                });
-                ReportAssetType = AssetTypesList[0];
             });
         }
     }

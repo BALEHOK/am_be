@@ -5,40 +5,46 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:assetManagerAdmin="clr-namespace:AssetManagerAdmin"
              mc:Ignorable="d" 
-             d:DesignHeight="300" Width="457"
+             d:DesignHeight="450" Width="500"
              DataContext="{Binding Login, Source={StaticResource Locator}}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" MinWidth="140"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-               Source="../flexmis_logo.png"
-               Stretch="Uniform"
-               Width="250"
-               Margin="0,0,0,30"/>
+        <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+               Source="../Resources/Images/flexmis_logo.png"
+               Stretch="None"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="1" Padding="10" FontSize="18">Server</TextBlock>
-        <ComboBox Grid.Row="2" Grid.Column="2" Margin="0,5,0,5" FontSize="18"
-                  DisplayMemberPath="Name"
-                  ItemsSource="{Binding ServersList}"
-                  SelectedValue="{Binding SelectedServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            
+        <TextBlock Grid.Row="3" Grid.Column="1"
+                   FontSize="24" FontWeight="Bold" TextAlignment="Center">
+            FlexMIS Toolkit
+        </TextBlock>
 
-        <Button Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="1" 
-                Margin="0,5,0,5"
-                FontSize="18"
-                Command="{Binding LoginCommand}">
-            Login
-        </Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+            <TextBlock Padding="0,0,15,0" VerticalAlignment="Center" FontSize="18">Server</TextBlock>
+            <ComboBox Padding="10,4,55,4" Margin="0,5,40,5" FontSize="18"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding ServersList}"
+                      SelectedValue="{Binding SelectedServer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+
+            <Button Padding="40,4,40,4" Margin="0,5,0,5" FontSize="18"
+                    Command="{Binding LoginCommand}">
+                Login
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>

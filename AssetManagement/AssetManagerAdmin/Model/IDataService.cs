@@ -6,7 +6,6 @@ namespace AssetManagerAdmin.Model
 {
     public interface IDataService
     {
-        TypesInfoModel TypesInfo { get; set; }
         UserInfo CurrentUser { get; set; }
         AssetTypeModel CurrentAssetType { get; set; }
         AttributeTypeModel CurrentAssetAttribute { get; set; }

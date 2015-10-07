@@ -10,15 +10,21 @@ namespace AssetManagerAdmin.Model
 {
     public class DataService : IDataService
     {
-        public TypesInfoModel TypesInfo { get; set; }
+        private readonly IAssetsApiManager _assetsApiManager;
         public UserInfo CurrentUser { get; set; }
         public AssetTypeModel CurrentAssetType { get; set; }
         public AttributeTypeModel CurrentAssetAttribute { get; set; }
         public ServerConfig SelectedServer { get; set; }
 
+        public DataService(IAssetsApiManager assetsApiManager)
+        {
+            _assetsApiManager = assetsApiManager;
+        }
+
         public void GetTypesInfo(string server, Action<TypesInfoModel, Exception> callback)
         {
-            var api = new AssetsApi(server, CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(server, CurrentUser);
+
             api.GetTypesInfo().ContinueWith(task =>
             {
                 var result = task.Result;
