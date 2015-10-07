@@ -1,0 +1,42 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/MasterPageDefault.master" 
+CodeBehind="MasterPageWizard.Master.cs" Inherits="AssetSite.Wizard.MasterPageWizard" %>
+
+<%@ Register Src="~/Controls/WizardMenu.ascx" TagName="WizardMenu" TagPrefix="amc" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script type="text/javascript" src="../javascript/NameGen.js"></script>
+</asp:Content>
+
+<asp:Content ID="leftMenu" ContentPlaceHolderID="PlaceHolderLeftColumn" Runat="Server">
+    <amc:WizardMenu ID="WizardMenu1" CurrentStepIndex="1" runat="server" />   
+    <asp:ContentPlaceHolder runat="server" ID="LeftColumn"></asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="PlaceHolderMiddleColumn" Runat="Server">
+    <div id="main-container">         
+        <asp:ScriptManager ID="MainScriptManager" runat="server" ScriptMode="Auto" EnablePageMethods="true">
+         <Services>
+            <asp:ServiceReference InlineScript="true" Path="~/amDataService.asmx" />
+         </Services>
+        </asp:ScriptManager>
+
+        <asp:ContentPlaceHolder ID="WizardContent" runat="server"></asp:ContentPlaceHolder>         
+        
+        <div class="wizard-footer-buttons">            
+            <input type="button" runat="server" visible="false" id="btnNameGenSort" value="Sort" onclick="return ShowSortDialog();" />
+            <asp:Button CssClass="btnPrev" Text="<%$ Resources:Global, PreviousText %>" 
+                ID="btnPrevious" runat="server" onclick="btnPrevious_Click" 
+                CausesValidation="False" meta:resourcekey="btnPreviousResource1" /> 
+            <asp:Button CssClass="btnNext" Text="<%$ Resources:Global, NextText %>" 
+                ID="btnNext" runat="server" onclick="btnNext_Click" 
+                meta:resourcekey="btnNextResource1"  />
+            <asp:Button ID="btnClose" runat="server" 
+                Text="<%$ Resources:Global, CancelText %>" onclick="btnClose_Click" 
+                CausesValidation="False" meta:resourcekey="btnCloseResource1"  />          
+        </div> 
+    </div>
+    
+    <link rel="next" href="/Wizard/Step2.aspx" id="NextLink" />   
+    <%--<script type="text/javascript" src="/javascript/navigate.js"></script>--%>   
+    
+</asp:Content>

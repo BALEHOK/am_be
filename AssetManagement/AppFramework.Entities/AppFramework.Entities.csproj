@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{658431C7-7442-46F1-81C8-7CC6744F7E46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AppFramework.Entities</RootNamespace>
+    <AssemblyName>AppFramework.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-AssetManager|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Staging-AssetManager\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-SOBBUB|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Staging-SOBBUB\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppSettings.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AssetsTaxonomies.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AssetTypeScreen.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AttributePanel.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AttributePanelAttribute.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BatchAction.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BatchJob.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BatchSchedule.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CheckedOut.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataType.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DefaultValue.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DeletedEntity.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityAttribConfig.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityAttribScreens.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityAttribValidation.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityConfig.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityConfigTaxonomy.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityContextAttributesValues.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityIndex.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityTransaction.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityType.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityUser.cs" />
+    <Compile Include="DynList.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynListItem.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynListValue.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="f_cust_GetChildAssets_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="f_cust_GetSqlServerAgentJobs_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="f_cust_GetSrchCount_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="f_cust_SearchByKeywords_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="f_cust_SearchByTypeContext_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IDataEntity.cs" />
+    <Compile Include="ImportExport.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IndexActiveDynEntities.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IndexHistoryDynEntities.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryScan.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryScanItem.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ISearchable.cs" />
+    <Compile Include="ISearchCounter.cs" />
+    <Compile Include="Languages.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LibraryTransactions.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LibraryTransactionType.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MeasureUnit.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MultipleAssetsActive.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MultipleAssetsHistory.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Partials\f_cust_SearchByTypeContext_Result.cs" />
+    <Compile Include="Partials\f_cust_GetSrchCount_Result.cs" />
+    <Compile Include="Partials\f_cust_SearchByKeywords_Result.cs" />
+    <Compile Include="IIndexEntity.cs" />
+    <Compile Include="Partials\IndexHistoryDynEntities.cs" />
+    <Compile Include="Partials\IndexActiveDynEntities.cs" />
+    <Compile Include="Place.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Place2Zip.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PredefinedAsset.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PredefinedAttributes.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportField.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportLayout.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Reservation.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Rights.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Role.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenLayout.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchOperators.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchTracking.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="STEModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StockLocationInfo.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StringResources.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Task.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaskRights.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Taxonomy.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaxonomyItem.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionType.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserInRole.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationList.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationOperand.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationOperandValue.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ValidationOperator.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ZipCode.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Key.snk" />
+    <None Include="STEModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>STEModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

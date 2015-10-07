@@ -1,0 +1,1 @@
+ALTER TABLE DynEntityContextAttributes ALTER COLUMN Value nvarchar(MAX) NULL;

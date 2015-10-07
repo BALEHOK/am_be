@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="AssetUpdater.Controls.SplashControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=Background}"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="200" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <ProgressBar Height="10" HorizontalAlignment="Left" Margin="0,40,0,0" Name="pbAction" VerticalAlignment="Top" Width="200" UseLayoutRounding="False" />
+        <TextBox Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="0,15,0,0" Name="tblkMessage" VerticalAlignment="Top" Width="200" />
+    </Grid>
+</UserControl>

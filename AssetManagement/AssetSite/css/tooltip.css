@@ -1,0 +1,72 @@
+﻿#assetTemplatePopupContainer
+{
+    position:absolute;
+    left:0;
+    top:0;
+    display:none;
+    z-index: 20000;
+}
+
+.assetTypePopupPopup
+{
+}
+
+#assetTemplatePopupContent
+{
+    background-color: #FFF;
+    min-width: 175px;
+    min-height: 50px;
+}
+
+.assetTypePopupPopup .personPopupImage
+{
+    margin: 5px;
+    margin-right: 15px;
+}
+
+.assetTypePopupPopup .corner 
+{
+    width: 19px;
+    height: 15px;
+}
+    
+.assetTypePopupPopup .topLeft 
+{
+    background: url(../images/tooltip/balloon_topLeft.png) no-repeat;
+}
+    
+.assetTypePopupPopup .bottomLeft 
+{
+    background: url(../images/tooltip/balloon_bottomLeft.png) no-repeat;
+}
+    
+.assetTypePopupPopup .left 
+{
+    background: url(../images/tooltip/balloon_left.png) repeat-y;
+}
+    
+.assetTypePopupPopup .right 
+{
+    background: url(../images/tooltip/balloon_right.png) repeat-y;
+}
+    
+.assetTypePopupPopup .topRight 
+{
+    background: url(../images/tooltip/balloon_topRight.png) no-repeat;
+}
+    
+.assetTypePopupPopup .bottomRight 
+{
+    background: url(../images/tooltip/balloon_bottomRight.png) no-repeat;
+}
+    
+.assetTypePopupPopup .top 
+{
+    background: url(../images/tooltip/balloon_top.png) repeat-x;
+}
+    
+.assetTypePopupPopup .bottom 
+{
+    background: url(../images/tooltip/balloon_bottom.png) repeat-x;
+    text-align: center;
+}

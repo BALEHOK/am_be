@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAssetTypeAttribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <AssetTypeAttribute>
+    <IsDescription>false</IsDescription>
+    <Name>DocumentFile</Name>
+    <Comment>Attached file</Comment>
+	  <DataTypeName>file</DataTypeName>
+    <Label />
+    <IsDynListValue>false</IsDynListValue>
+    <IsFinancialInfo>false</IsFinancialInfo>
+    <IsRequired>false</IsRequired>
+    <IsKeyword>false</IsKeyword>
+    <IsFullIndex>false</IsFullIndex>
+    <DisplayOnResultList>false</DisplayOnResultList>
+    <DisplayOrderResultList>0</DisplayOrderResultList>
+    <DisplayOnExtResultList>false</DisplayOnExtResultList>
+    <DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+    <IsActiveVersion>true</IsActiveVersion>    
+    <ID>0</ID>
+    <UID>0</UID>
+    <IsActive>true</IsActive>
+    <ContextId xsi:nil="true" />
+    <AssetTypeUID>0</AssetTypeUID>
+    <DBTableFieldName>DocumentFile</DBTableFieldName>
+    <AllowEditConfig>false</AllowEditConfig>
+	<AllowEditValue>true</AllowEditValue>
+    <DynamicListUid xsi:nil="true" />
+    <IsShownInGrid>false</IsShownInGrid>
+    <IsShownOnPanel>true</IsShownOnPanel>
+    <DisplayOrder>150</DisplayOrder>
+    <ValidationRules />
+  </AssetTypeAttribute>
+</ArrayOfAssetTypeAttribute>

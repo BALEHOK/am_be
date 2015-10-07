@@ -1,0 +1,1 @@
+alter table BatchSchedule alter column RepeatInHours float NULL

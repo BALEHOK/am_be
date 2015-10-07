@@ -1,0 +1,103 @@
+﻿<Window x:Class="AssetManagerAdmin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        mc:Ignorable="d ignore"
+        Height="668"
+        Width="1024"
+        WindowStartupLocation="CenterScreen"
+        Title="FlexMIS Toolkit"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />            
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="1" Grid.Row="0" Margin="5"
+              Visibility="{Binding IsViewsMenuEnabled, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock HorizontalAlignment="Right" Margin="10" FontSize="16"
+                           Text="{Binding SelectedServer.Name}"/>
+                <TextBlock VerticalAlignment="Center">
+                    <Hyperlink NavigateUri="{Binding SelectedServer.SiteUrl}" Command="{Binding OpenSiteCommand}">
+                        <TextBlock Text="{Binding SelectedServer.SiteUrl}" FontSize="16" VerticalAlignment="Center"/>
+                    </Hyperlink>
+                </TextBlock>
+                <Button Width="100" Margin="10"
+                        Command="{Binding LogoutCommand}">Logout</Button>
+            </StackPanel>            
+        </Grid>
+
+        <!--Main Menu-->
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" HorizontalAlignment="Center"
+              Visibility="{Binding IsViewsMenuEnabled, Converter={StaticResource BoolToVis}}">
+            <ListView ItemsSource="{Binding MainMenuItems}" SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content=" ● "/>
+                            <TextBlock Text="{Binding Name}" FontSize="16" VerticalAlignment="Center"/>
+                            <Label Content=" ● "/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <!--Attribute selector-->
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,20,0,0"
+              Visibility="{Binding IsAttributeSelectorEnabled, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Content="{Binding SelectedAttribute.DataType}"/>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="3" Name="WorkingAreaGrid">
+            <ContentControl Content="{Binding CurrentView}" Margin="10"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,39 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/MasterPageBase.Master" 
+CodeBehind="MasterPageDefault.master.cs" Inherits="AssetSite.MasterPages.MasterPageDefault" %>
+
+<asp:Content ContentPlaceHolderID="ContentPlaceHolderHead" runat="server">
+    <asp:ContentPlaceHolder ID="Head" runat="server"></asp:ContentPlaceHolder>
+    <link href="/css/Search.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dd.css" rel="stylesheet" type="text/css" runat="server" />
+</asp:Content>
+
+<asp:Content ID="ContentSearchBox" ContentPlaceHolderID="PlaceHolderSearchBox" Runat="Server">
+    <asp:ContentPlaceHolder ID="PlaceHolderSearchBox" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ContentPlaceHolderID="BreadcrumbPlaceholder" runat="server">
+    <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
+    <asp:ContentPlaceHolder ID="Breadcrumb" runat="server" Visible="false">        
+    </asp:ContentPlaceHolder>
+</asp:Content>
+
+<asp:Content ID="ContentMain" ContentPlaceHolderID="PlaceHolderMainContent" runat="server">
+
+		<div id="inner-column-container">
+			<div id="source-order-container">
+				<div id="middle-column">
+                    <asp:ContentPlaceHolder ID="PlaceHolderMiddleColumn" runat="server"></asp:ContentPlaceHolder>
+				</div>
+				<div id="left-column">
+					<asp:ContentPlaceHolder ID="PlaceHolderLeftColumn" runat="server"></asp:ContentPlaceHolder>
+				</div>
+				<div class="clear-columns">
+					<!-- do not delete --></div>
+			</div>
+			<div id="right-column">
+                <asp:ContentPlaceHolder ID="PlaceHolderRightColumn" runat="server"></asp:ContentPlaceHolder>
+			</div>
+			<div class="clear-columns">
+				<!-- do not delete --></div>
+		</div>
+</asp:Content>

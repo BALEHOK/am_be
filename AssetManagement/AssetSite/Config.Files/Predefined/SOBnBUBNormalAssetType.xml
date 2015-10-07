@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAssetType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AssetType>
+	<UID>0</UID>
+	<ID>0</ID>
+	<Name></Name>
+	<Comment />
+	<TypeId>1</TypeId>
+	<ContextId>0</ContextId>
+	<IsActive>true</IsActive>
+	<IsActiveVersion>true</IsActiveVersion>
+	<IsSearchable>true</IsSearchable>
+	<IsIndexed>true</IsIndexed>
+	<IsContextIndexed>false</IsContextIndexed>
+	<LayoutId>1</LayoutId>
+	<Revision>0</Revision>
+	<DBTableName></DBTableName>
+	<MeasureUnitId>0</MeasureUnitId>
+	<IsInStock>false</IsInStock>
+	<Panels>
+	  <Panel>
+		<Name>General</Name>
+	  </Panel>
+	</Panels>
+	<Attributes>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<IsIdentity>true</IsIdentity>
+		<Name>DynEntityUid</Name>
+		<DataTypeName>long</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>        
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>DynEntityUid</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>   
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>DynEntityId</Name>
+		  <DataTypeName>long</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>DynEntityId</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>       
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	  
+  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>ActiveVersion</Name>
+		  <DataTypeName>bool</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>     
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>ActiveVersion</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>   
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>DynEntityConfigUid</Name>
+		  <DataTypeName>long</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>     
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>DynEntityConfigUid</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	  
+  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Name</Name>
+		  <DataTypeName>string</DataTypeName>
+		<Label>Name</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>true</IsKeyword>
+		<IsFullIndex>true</IsFullIndex>
+		<DisplayOnResultList>true</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>true</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>     
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Name</DBTableFieldName>  
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>10</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Revision</Name>
+		  <DataTypeName>revision</DataTypeName>
+		<Label>Revision</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>    
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>     
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Revision</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>20</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Barcode</Name>
+		  <DataTypeName>barcode</DataTypeName>
+		<Label>Barcode</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Barcode</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>30</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>Location</RelatedEntity>
+		<Name>Location</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>Location</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>LocationId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>40</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>Location</RelatedEntity>
+		<Name>Base Location</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>BaseLocation</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>BaseLocationId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>50</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>Location</RelatedEntity>
+		<Name>Next Location</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>NextLocation</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>NextLocationId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>60</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>Department</RelatedEntity>
+		<Name>Department</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>Department</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>false</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>DepartmentId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>70</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>User</RelatedEntity>
+		<Name>User</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>User</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>UserId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>80</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>User</RelatedEntity>
+		<Name>Owner</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>Owner</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>OwnerId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>90</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>User</RelatedEntity>
+		<Name>Update User</Name>
+		  <DataTypeName>asset</DataTypeName>
+		<Label>UpdateUser</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>     
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>UpdateUserId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>100</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Update Date</Name>
+		  <DataTypeName>currentdate</DataTypeName>
+		<Label>UpdateDate</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo> 
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsRequired>true</IsRequired>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>UpdateDate</DBTableFieldName>   
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>        
+		<DisplayOrder>110</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>     
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Stock Count</Name>
+		  <DataTypeName>float</DataTypeName>
+		<Label>Stock Count</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>StockCount</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>        
+		<DisplayOrder>120</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Stock Price</Name>
+		  <DataTypeName>float</DataTypeName>
+		<Label>Stock Price</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>        
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>StockPrice</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>        
+		<DisplayOrder>130</DisplayOrder>
+		<ValidationRules />
+	  </AssetTypeAttribute>
+	  <AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<RelatedEntity>Document</RelatedEntity>
+		<Name>Document</Name>
+		  <DataTypeName>document</DataTypeName>
+		<Label>Document</Label>
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>		
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>DocumentId</DBTableFieldName>
+		<RelatedAssetTypeID>0</RelatedAssetTypeID>
+		<RelatedAssetTypeAttributeID>0</RelatedAssetTypeAttributeID>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>140</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	  </Attributes>
+  </AssetType>
+</ArrayOfAssetType>

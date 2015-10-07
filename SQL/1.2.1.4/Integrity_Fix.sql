@@ -1,0 +1,1 @@
+UPDATE [DynEntityAttribConfig] SET ActiveVersion=0 WHERE [DynEntityAttribConfigUid]=2651

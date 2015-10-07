@@ -1,0 +1,56 @@
+﻿@charset "UTF-8";
+
+/*******************************************************************************
+*  skidoo_redux_print.css : 2007.01.31 : ruthsarian@gmail.com
+* -----------------------------------------------------------------------------
+*
+*  This print stylesheet is applied whenever a user prints out a webpage. The
+*  goal of the stylesheet is to remove any extra junk that isn't needed in a
+*  printout.
+*
+*  For Skidoo we simply remove the left and right columns so that the printout
+*  contains just the content of the page. If you find it desirable to include
+*  the left and/or right columns in a printout you'll need to edit this
+*  stylesheet to bring them back.
+*  
+* ------------------------------------------------------------------------------
+*  This stylesheet is released into the public domain.
+*******************************************************************************/
+
+
+#left-column, #right-column, #middle-column div.rMenu-center
+{
+        display: none;          /* hide the left and right columns as well as
+                                   the horizontal menu at the top of the
+                                   page */
+}
+#page-container, #outer-column-container, #source-order-container,
+#middle-column, #inner-column-container
+{
+        border-width: 0;
+        margin: 0;
+        padding: 0;             /* get rid of any gutter space and borders
+                                   on elements that are no longer needed with
+                                   the removal of the left and right columns */
+}
+#page-container, #inner-column-container
+{
+        border-width: 0;        /* remove borders around the page */
+}
+#source-order-container, #middle-column
+{
+        float: none;            /* no need to float anything now since we're
+                                   just showing the middle column. */
+}
+*
+{
+        color: #000 !important; /* make sure everything is black text */
+}
+a, a:link, a:visited
+{
+        text-decoration: none;  /* don't underline hyperlinks */
+}
+
+
+/******************************************************************************/
+

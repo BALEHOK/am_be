@@ -1,0 +1,1 @@
+ALTER TABLE Reservation ADD IsBorrowed bit NOT NULL DEFAULT 0;

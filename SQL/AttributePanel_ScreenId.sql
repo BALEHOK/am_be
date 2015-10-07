@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[AttributePanel] ADD [ScreenId] bigint NULL;

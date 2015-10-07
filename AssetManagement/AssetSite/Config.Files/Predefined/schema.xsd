@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema
+	targetNamespace="http://tempuri.org/AssetManagementAssets.xsd"
+    xmlns="http://tempuri.org/AssetManagementAssets.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	attributeFormDefault="unqualified"
+	elementFormDefault="qualified">
+	<xs:element name="Assets">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" name="Asset">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:double" />
+							<xs:element maxOccurs="1" name="Attributes">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="unbounded" name="Attribute">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:double" />
+													<xs:element name="Name" maxOccurs="1" type="xs:string" />
+													<xs:element name="Value" minOccurs="0" maxOccurs="1" type="xs:string" />
+													<xs:element minOccurs="0" maxOccurs="1" name="DynamicLists">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element minOccurs="0" maxOccurs="unbounded" name="DynList">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element maxOccurs="1" name="DynListId" type="xs:double" />																			
+																			<xs:element maxOccurs="1" name="ParentListId" type="xs:double" />
+																			<xs:element maxOccurs="1" name="Value" type="xs:string" />
+																			<xs:element minOccurs="0" maxOccurs="1" name="DynListItemId" type="xs:double" />
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element minOccurs="0" maxOccurs="1" name="MultipleAssets">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element minOccurs="0" maxOccurs="unbounded" name="MultipleAsset">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element maxOccurs="1" name="ID" type="xs:double" />
+																			<xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xsd:schema>

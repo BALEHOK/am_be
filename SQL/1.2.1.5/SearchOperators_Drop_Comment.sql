@@ -1,0 +1,1 @@
+ALTER TABLE SearchOperators DROP COLUMN Comment;

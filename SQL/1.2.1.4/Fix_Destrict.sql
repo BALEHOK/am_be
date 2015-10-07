@@ -1,0 +1,1 @@
+UPDATE DynEntityConfig SET Name='District' WHERE Name='Destrict';

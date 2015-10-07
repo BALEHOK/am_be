@@ -1,0 +1,2837 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C3A8BFF-55D4-4AFA-8273-B95A9344459C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AssetSite</RootNamespace>
+    <AssemblyName>AssetSite</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <SilverlightApplicationList>
+    </SilverlightApplicationList>
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <NuGetPackageImportStamp>bcb451af</NuGetPackageImportStamp>
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PublishDatabases>false</PublishDatabases>
+    <DesktopBuildPackageLocation>..\..\..\Release Packages\AssetManagement\1.1.1\AssetSite.zip</DesktopBuildPackageLocation>
+    <DeployIisAppPath>assetmanager</DeployIisAppPath>
+    <PackageAsSingleFile>true</PackageAsSingleFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="AntiXSSLibrary">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\AntiXSSLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=1.1.0.188, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\AppFramework.Core\ThirdParty\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="CKEditor.NET">
+      <HintPath>..\AppFramework.Core\ThirdParty\CKEditor.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net">
+      <HintPath>..\packages\Common.Logging.Log4Net.2.0.1\lib\net20\Common.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.2.2\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DayPilot">
+      <HintPath>..\AppFramework.Core\ThirdParty\DayPilotProTrial-7.6.3006\Bin\DayPilot.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Office.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Web.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Printing.v15.1.Service, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v15.1.Service, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v15.1.Web, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EFCachingProvider">
+      <HintPath>..\AppFramework.Core\ThirdParty\EFCachingProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="EFCachingProvider.Web">
+      <HintPath>..\AppFramework.Core\ThirdParty\EFCachingProvider.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EFProviderWrapperToolkit">
+      <HintPath>..\AppFramework.Core\ThirdParty\EFProviderWrapperToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="EFTracingProvider">
+      <HintPath>..\AppFramework.Core\ThirdParty\EFTracingProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.0.3.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EPPlus.4.0.3\lib\net20\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlSanitizationLibrary">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\HtmlSanitizationLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AppFramework.Core\ThirdParty\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer">
+      <HintPath>..\packages\ImageResizer.3.4.3\lib\ImageResizer.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer.Mvc">
+      <HintPath>..\packages\ImageResizer.Mvc.3.4.3\lib\ImageResizer.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AppFramework.Core\ThirdParty\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.Interception.3.5.1404.0\lib\Net45\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
+      <HintPath>..\packages\Unity.Interception.3.5.1404.0\lib\Net45\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SanitizerProviders">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\SanitizerProviders.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Extensions.Design" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WarstarDev.Office2k7, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AppFramework.Core\ThirdParty\WarstarDev.Office2k7.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\AdditionalScreens\AdditionalScreenStep1.aspx" />
+    <Content Include="admin\AdditionalScreens\AdditionalScreenStep2.aspx" />
+    <Content Include="admin\AdditionalScreens\AdditionalScreenStep3.aspx" />
+    <Content Include="admin\AdditionalScreens\AdditionalScreenStep4.aspx" />
+    <Content Include="admin\AdditionalScreens\AdditionalScreenStep5.aspx" />
+    <Content Include="admin\AdditionalScreens\SideMenu.ascx" />
+    <Content Include="admin\Batch\Edit.aspx" />
+    <Content Include="admin\Default.aspx" />
+    <Content Include="admin\FAQItems.aspx" />
+    <Content Include="admin\LocationMove.aspx" />
+    <Content Include="admin\Reports\AddOnView\Default.aspx" />
+    <Content Include="admin\Reports\Designer.aspx" />
+    <Content Include="admin\Search\Default.aspx" />
+    <Content Include="admin\Search\Log.aspx" />
+    <Content Include="admin\Synk\Default.aspx" />
+    <Content Include="admin\Tasks\App_LocalResources\EditTask.aspx.fr.resx" />
+    <Content Include="admin\Tasks\App_LocalResources\EditTask.aspx.nl.resx" />
+    <Content Include="admin\Tasks\App_LocalResources\EditTask.aspx.resx" />
+    <Content Include="admin\Tasks\EditTask.aspx" />
+    <Content Include="admin\Tasks\TasksList.aspx" />
+    <Content Include="admin\ZipsAndPlaces.aspx" />
+    <Content Include="amDataService.asmx" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="images\buttons\calculate.png" />
+    <Content Include="Reservations\Overview.aspx" />
+    <Content Include="barcodeImage.aspx" />
+    <Content Include="ClientBin\ReportDesigner.xap" />
+    <Content Include="client\ckeditor\adapters\jquery.js" />
+    <Content Include="client\ckeditor\build-config.js" />
+    <Content Include="client\ckeditor\ckeditor.js" />
+    <Content Include="client\ckeditor\config.js" />
+    <Content Include="client\ckeditor\contents.css" />
+    <Content Include="client\ckeditor\lang\af.js" />
+    <Content Include="client\ckeditor\lang\ar.js" />
+    <Content Include="client\ckeditor\lang\bg.js" />
+    <Content Include="client\ckeditor\lang\bn.js" />
+    <Content Include="client\ckeditor\lang\bs.js" />
+    <Content Include="client\ckeditor\lang\ca.js" />
+    <Content Include="client\ckeditor\lang\cs.js" />
+    <Content Include="client\ckeditor\lang\cy.js" />
+    <Content Include="client\ckeditor\lang\da.js" />
+    <Content Include="client\ckeditor\lang\de.js" />
+    <Content Include="client\ckeditor\lang\el.js" />
+    <Content Include="client\ckeditor\lang\en-au.js" />
+    <Content Include="client\ckeditor\lang\en-ca.js" />
+    <Content Include="client\ckeditor\lang\en-gb.js" />
+    <Content Include="client\ckeditor\lang\en.js" />
+    <Content Include="client\ckeditor\lang\eo.js" />
+    <Content Include="client\ckeditor\lang\es.js" />
+    <Content Include="client\ckeditor\lang\et.js" />
+    <Content Include="client\ckeditor\lang\eu.js" />
+    <Content Include="client\ckeditor\lang\fa.js" />
+    <Content Include="client\ckeditor\lang\fi.js" />
+    <Content Include="client\ckeditor\lang\fo.js" />
+    <Content Include="client\ckeditor\lang\fr-ca.js" />
+    <Content Include="client\ckeditor\lang\fr.js" />
+    <Content Include="client\ckeditor\lang\gl.js" />
+    <Content Include="client\ckeditor\lang\gu.js" />
+    <Content Include="client\ckeditor\lang\he.js" />
+    <Content Include="client\ckeditor\lang\hi.js" />
+    <Content Include="client\ckeditor\lang\hr.js" />
+    <Content Include="client\ckeditor\lang\hu.js" />
+    <Content Include="client\ckeditor\lang\id.js" />
+    <Content Include="client\ckeditor\lang\is.js" />
+    <Content Include="client\ckeditor\lang\it.js" />
+    <Content Include="client\ckeditor\lang\ja.js" />
+    <Content Include="client\ckeditor\lang\ka.js" />
+    <Content Include="client\ckeditor\lang\km.js" />
+    <Content Include="client\ckeditor\lang\ko.js" />
+    <Content Include="client\ckeditor\lang\ku.js" />
+    <Content Include="client\ckeditor\lang\lt.js" />
+    <Content Include="client\ckeditor\lang\lv.js" />
+    <Content Include="client\ckeditor\lang\mk.js" />
+    <Content Include="client\ckeditor\lang\mn.js" />
+    <Content Include="client\ckeditor\lang\ms.js" />
+    <Content Include="client\ckeditor\lang\nb.js" />
+    <Content Include="client\ckeditor\lang\nl.js" />
+    <Content Include="client\ckeditor\lang\no.js" />
+    <Content Include="client\ckeditor\lang\pl.js" />
+    <Content Include="client\ckeditor\lang\pt-br.js" />
+    <Content Include="client\ckeditor\lang\pt.js" />
+    <Content Include="client\ckeditor\lang\ro.js" />
+    <Content Include="client\ckeditor\lang\ru.js" />
+    <Content Include="client\ckeditor\lang\si.js" />
+    <Content Include="client\ckeditor\lang\sk.js" />
+    <Content Include="client\ckeditor\lang\sl.js" />
+    <Content Include="client\ckeditor\lang\sq.js" />
+    <Content Include="client\ckeditor\lang\sr-latn.js" />
+    <Content Include="client\ckeditor\lang\sr.js" />
+    <Content Include="client\ckeditor\lang\sv.js" />
+    <Content Include="client\ckeditor\lang\th.js" />
+    <Content Include="client\ckeditor\lang\tr.js" />
+    <Content Include="client\ckeditor\lang\ug.js" />
+    <Content Include="client\ckeditor\lang\uk.js" />
+    <Content Include="client\ckeditor\lang\vi.js" />
+    <Content Include="client\ckeditor\lang\zh-cn.js" />
+    <Content Include="client\ckeditor\lang\zh.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\es.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\et.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\he.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\id.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\it.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\km.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\no.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\si.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\th.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <Content Include="client\ckeditor\plugins\a11yhelp\dialogs\lang\_translationstatus.txt" />
+    <Content Include="client\ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="client\ckeditor\plugins\about\dialogs\hidpi\logo_ckeditor.png" />
+    <Content Include="client\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="client\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="client\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="client\ckeditor\plugins\fakeobjects\images\spacer.gif" />
+    <Content Include="client\ckeditor\plugins\icons.png" />
+    <Content Include="client\ckeditor\plugins\icons_hidpi.png" />
+    <Content Include="client\ckeditor\plugins\image\dialogs\image.js" />
+    <Content Include="client\ckeditor\plugins\image\images\noimage.png" />
+    <Content Include="client\ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="client\ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="client\ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="client\ckeditor\plugins\link\images\hidpi\anchor.png" />
+    <Content Include="client\ckeditor\plugins\magicline\images\hidpi\icon.png" />
+    <Content Include="client\ckeditor\plugins\magicline\images\icon.png" />
+    <Content Include="client\ckeditor\plugins\pastefromword\filter\default.js" />
+    <Content Include="client\ckeditor\plugins\scayt\dialogs\options.js" />
+    <Content Include="client\ckeditor\plugins\scayt\dialogs\toolbar.css" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ar.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\bg.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ca.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\cs.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\es.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\et.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\fa.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\fi.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\fr.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\gl.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\he.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\hr.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\hu.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\id.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\it.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ja.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\km.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ku.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\lv.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\nb.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\nl.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\no.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\sl.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\sq.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\sv.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\th.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\ug.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\uk.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\vi.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\lang\_translationstatus.txt" />
+    <Content Include="client\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <Content Include="client\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <Content Include="client\ckeditor\plugins\table\dialogs\table.js" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\ciframe.html" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\tmp.html" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\tmpFrameset.html" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\wsc.css" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\wsc.js" />
+    <Content Include="client\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
+    <Content Include="client\ckeditor\samples\ajax.html" />
+    <Content Include="client\ckeditor\samples\api.html" />
+    <Content Include="client\ckeditor\samples\appendto.html" />
+    <Content Include="client\ckeditor\samples\assets\inlineall\logo.png" />
+    <Content Include="client\ckeditor\samples\assets\outputxhtml\outputxhtml.css" />
+    <Content Include="client\ckeditor\samples\assets\sample.css" />
+    <Content Include="client\ckeditor\samples\assets\sample.jpg" />
+    <Content Include="client\ckeditor\samples\assets\uilanguages\languages.js" />
+    <Content Include="client\ckeditor\samples\datafiltering.html" />
+    <Content Include="client\ckeditor\samples\divreplace.html" />
+    <Content Include="client\ckeditor\samples\index.html" />
+    <Content Include="client\ckeditor\samples\inlineall.html" />
+    <Content Include="client\ckeditor\samples\inlinebycode.html" />
+    <Content Include="client\ckeditor\samples\inlinetextarea.html" />
+    <Content Include="client\ckeditor\samples\jquery.html" />
+    <Content Include="client\ckeditor\samples\plugins\dialog\assets\my_dialog.js" />
+    <Content Include="client\ckeditor\samples\plugins\dialog\dialog.html" />
+    <Content Include="client\ckeditor\samples\plugins\enterkey\enterkey.html" />
+    <Content Include="client\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.swf" />
+    <Content Include="client\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\swfobject.js" />
+    <Content Include="client\ckeditor\samples\plugins\htmlwriter\outputforflash.html" />
+    <Content Include="client\ckeditor\samples\plugins\htmlwriter\outputhtml.html" />
+    <Content Include="client\ckeditor\samples\plugins\magicline\magicline.html" />
+    <Content Include="client\ckeditor\samples\plugins\toolbar\toolbar.html" />
+    <Content Include="client\ckeditor\samples\plugins\wysiwygarea\fullpage.html" />
+    <Content Include="client\ckeditor\samples\readonly.html" />
+    <Content Include="client\ckeditor\samples\replacebyclass.html" />
+    <Content Include="client\ckeditor\samples\replacebycode.html" />
+    <Content Include="client\ckeditor\samples\sample.css" />
+    <Content Include="client\ckeditor\samples\sample.js" />
+    <Content Include="client\ckeditor\samples\tabindex.html" />
+    <Content Include="client\ckeditor\samples\uicolor.html" />
+    <Content Include="client\ckeditor\samples\uilanguages.html" />
+    <Content Include="client\ckeditor\samples\xhtmlstyle.html" />
+    <Content Include="client\ckeditor\skins\moono\dialog.css" />
+    <Content Include="client\ckeditor\skins\moono\dialog_ie.css" />
+    <Content Include="client\ckeditor\skins\moono\dialog_ie7.css" />
+    <Content Include="client\ckeditor\skins\moono\dialog_ie8.css" />
+    <Content Include="client\ckeditor\skins\moono\dialog_iequirks.css" />
+    <Content Include="client\ckeditor\skins\moono\dialog_opera.css" />
+    <Content Include="client\ckeditor\skins\moono\editor.css" />
+    <Content Include="client\ckeditor\skins\moono\editor_gecko.css" />
+    <Content Include="client\ckeditor\skins\moono\editor_ie.css" />
+    <Content Include="client\ckeditor\skins\moono\editor_ie7.css" />
+    <Content Include="client\ckeditor\skins\moono\editor_ie8.css" />
+    <Content Include="client\ckeditor\skins\moono\editor_iequirks.css" />
+    <Content Include="client\ckeditor\skins\moono\icons.png" />
+    <Content Include="client\ckeditor\skins\moono\icons_hidpi.png" />
+    <Content Include="client\ckeditor\skins\moono\images\arrow.png" />
+    <Content Include="client\ckeditor\skins\moono\images\close.png" />
+    <Content Include="client\ckeditor\skins\moono\images\hidpi\close.png" />
+    <Content Include="client\ckeditor\skins\moono\images\hidpi\lock-open.png" />
+    <Content Include="client\ckeditor\skins\moono\images\hidpi\lock.png" />
+    <Content Include="client\ckeditor\skins\moono\images\hidpi\refresh.png" />
+    <Content Include="client\ckeditor\skins\moono\images\lock-open.png" />
+    <Content Include="client\ckeditor\skins\moono\images\lock.png" />
+    <Content Include="client\ckeditor\skins\moono\images\refresh.png" />
+    <Content Include="client\ckeditor\styles.js" />
+    <Content Include="Config.Files\Predefined\AssetManagerNormalAssetType.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\Predefined\CombinedDataAssetType.xml" />
+    <Content Include="Config.Files\Predefined\CombinedNormalAssetType.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\Predefined\DataAssetType.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\Predefined\ExtraAttrubutes\DocumentExtraAttributes.xml" />
+    <Content Include="Config.Files\Predefined\ExtraAttrubutes\FaqExtraAttributes.xml" />
+    <Content Include="Config.Files\Predefined\ExtraAttrubutes\UserExtraAttributes.xml" />
+    <Content Include="Config.Files\Predefined\SOBnBUBDataAssetType.xml" />
+    <Content Include="Config.Files\Predefined\SOBnBUBNormalAssetType.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\reservedwords.txt" />
+    <Content Include="Contact.aspx" />
+    <Content Include="Controls\AssetDropDownListEx.ascx" />
+    <Content Include="Controls\AssetsList.ascx" />
+    <Content Include="Controls\AssetTemplates.ascx" />
+    <Content Include="Controls\AssetTypeAttribList.ascx" />
+    <Content Include="Controls\BatchScheduleDialog.ascx" />
+    <Content Include="Controls\ChildAssets.ascx" />
+    <Content Include="Controls\Barcode.ascx" />
+    <Content Include="Controls\Calendar.ascx" />
+    <Content Include="Controls\ShowSharedResources.ascx" />
+    <Content Include="Controls\UpdateParametersPanel.ascx" />
+    <Content Include="Controls\DeleteConfirmationDialog.ascx" />
+    <Content Include="Controls\DynListEditDialog.ascx" />
+    <Content Include="Controls\GoogleMapsControl.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Controls\ImageControl.ascx" />
+    <Content Include="Controls\MultipleAssetsGrid.ascx" />
+    <Content Include="Controls\NumericControl.ascx" />
+    <Content Include="Controls\DynListDDHolder.ascx" />
+    <Content Include="Controls\DynListItemEdit.ascx" />
+    <Content Include="Controls\ExportControl.ascx" />
+    <Content Include="Controls\MultipleAssetsEditor.ascx" />
+    <Content Include="Controls\MultipleAssetsList.ascx" />
+    <Content Include="Controls\NewsAndLoginInfo.ascx" />
+    <Content Include="Controls\PlaceAndZipControl.ascx" />
+    <Content Include="Controls\ReportsPanel.ascx" />
+    <Content Include="Controls\RestoreAssetMessage.ascx" />
+    <Content Include="Controls\RichtextControl.ascx" />
+    <Content Include="Controls\ScreenDetails.ascx" />
+    <Content Include="Controls\ScreensPanel.ascx" />
+    <Content Include="Controls\SearchControls\CategoriesForSearch.ascx" />
+    <Content Include="Controls\SearchControls\RefinementsPanel.ascx" />
+    <Content Include="Controls\SearchControls\SearchConditionsBar.ascx" />
+    <Content Include="Controls\SearchControls\SearchTabs.ascx" />
+    <Content Include="Controls\SearchControls\TypeSearchValueCell.ascx" />
+    <Content Include="Controls\SearchParametersPanel.ascx" />
+    <Content Include="Controls\TaskCommonParams.ascx" />
+    <Content Include="Controls\TasksPanel.ascx" />
+    <Content Include="Controls\TopMenu.ascx" />
+    <Content Include="Controls\UsersList.ascx" />
+    <Content Include="css\daypilot\areas.css" />
+    <Content Include="css\daypilot\areas\icons.png" />
+    <Content Include="css\daypilot\scheduler_white.css" />
+    <Content Include="css\daypilot\scheduler_white\tree_collapse.png" />
+    <Content Include="css\daypilot\scheduler_white\tree_expand.png" />
+    <Content Include="css\daypilot\scheduler_white\tree_nochildren.png" />
+    <Content Include="css\dd.css" />
+    <Content Include="css\fancybox\blank.gif" />
+    <Content Include="css\fancybox\fancybox-x.png" />
+    <Content Include="css\fancybox\fancybox-y.png" />
+    <Content Include="css\fancybox\fancybox.png" />
+    <Content Include="css\fancybox\fancy_close.png" />
+    <Content Include="css\fancybox\fancy_loading.png" />
+    <Content Include="css\fancybox\fancy_nav_left.png" />
+    <Content Include="css\fancybox\fancy_nav_right.png" />
+    <Content Include="css\fancybox\fancy_shadow_e.png" />
+    <Content Include="css\fancybox\fancy_shadow_n.png" />
+    <Content Include="css\fancybox\fancy_shadow_ne.png" />
+    <Content Include="css\fancybox\fancy_shadow_nw.png" />
+    <Content Include="css\fancybox\fancy_shadow_s.png" />
+    <Content Include="css\fancybox\fancy_shadow_se.png" />
+    <Content Include="css\fancybox\fancy_shadow_sw.png" />
+    <Content Include="css\fancybox\fancy_shadow_w.png" />
+    <Content Include="css\fancybox\fancy_title_left.png" />
+    <Content Include="css\fancybox\fancy_title_main.png" />
+    <Content Include="css\fancybox\fancy_title_over.png" />
+    <Content Include="css\fancybox\fancy_title_right.png" />
+    <Content Include="css\fancybox\jquery.fancybox-1.3.4.css" />
+    <Content Include="css\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
+    <Content Include="css\images\ui-bg_dots-small_65_a6a6a6_2x2.png" />
+    <Content Include="css\images\ui-bg_flat_0_333333_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_65_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_glass_55_fcf0ba_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_55_ffcc99_1x400.png" />
+    <Content Include="css\images\ui-bg_gloss-wave_100_ece8da_500x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_100_eeeeee_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_100_f5f3e5_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_100_fafaf4_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_15_459e00_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-hard_95_cccccc_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_15_336699_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_25_67b021_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_95_ffedad_1x100.png" />
+    <Content Include="css\images\ui-bg_inset-soft_15_2b2922_1x100.png" />
+    <Content Include="css\images\ui-icons_004276_256x240.png" />
+    <Content Include="css\images\ui-icons_808080_256x240.png" />
+    <Content Include="css\images\ui-icons_847e71_256x240.png" />
+    <Content Include="css\images\ui-icons_8DC262_256x240.png" />
+    <Content Include="css\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="css\images\ui-icons_eeeeee_256x240.png" />
+    <Content Include="css\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="css\importPage.css" />
+    <Content Include="css\jquery.ui.timepicker.css" />
+    <Content Include="css\layouts\layout7.css" />
+    <Content Include="css\layouts\layout8.css" />
+    <Content Include="css\theme_950.css" />
+    <Content Include="css\theme_1200.css" />
+    <Content Include="css\jquery-ui-1.7.2.custom.css" />
+    <Content Include="css\layout_1200.css" />
+    <Content Include="css\layout_950.css" />
+    <Content Include="css\tooltip.css" />
+    <Content Include="Default.aspx" />
+    <Content Include="Documents\Default.aspx" />
+    <Content Include="Error\Default.aspx" />
+    <Content Include="Error\NotFound.aspx" />
+    <Content Include="Error\Unauthorized.aspx" />
+    <Content Include="Faq.aspx" />
+    <Content Include="Financial\Default.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="images\ajax-loader-bar.gif" />
+    <Content Include="images\ajax-loader.gif" />
+    <Content Include="images\arrowdown.png" />
+    <Content Include="images\arrowup.png" />
+    <Content Include="images\barcode-icon.gif" />
+    <Content Include="images\barcode-icon.jpg" />
+    <Content Include="images\Barcode\0.png" />
+    <Content Include="images\Barcode\1.png" />
+    <Content Include="images\Barcode\2.png" />
+    <Content Include="images\Barcode\3.png" />
+    <Content Include="images\Barcode\4.png" />
+    <Content Include="images\Barcode\5.png" />
+    <Content Include="images\Barcode\6.png" />
+    <Content Include="images\Barcode\7.png" />
+    <Content Include="images\Barcode\8.png" />
+    <Content Include="images\Barcode\9.png" />
+    <Content Include="images\bringBack.png" />
+    <Content Include="images\buttons\borrow.png" />
+    <Content Include="images\buttons\calendar.png" />
+    <Content Include="images\buttons\cancel.png" />
+    <Content Include="images\buttons\curver.png" />
+    <Content Include="images\buttons\edit.jpg" />
+    <Content Include="images\buttons\next-page-arrow.jpg" />
+    <Content Include="images\buttons\prev-page-arrow.jpg" />
+    <Content Include="images\buttons\reserve.png" />
+    <Content Include="images\buttons\return.png" />
+    <Content Include="images\buttons\save.png" />
+    <Content Include="images\buttons\SaveAsTemplate.png" />
+    <Content Include="images\buttons\screens.png" />
+    <Content Include="images\buttons\task.png" />
+    <Content Include="images\buttons\undo.png" />
+    <Content Include="images\buttons\update.png" />
+    <Content Include="images\Contact_Us-300x300.jpg" />
+    <Content Include="images\Contact_Us.jpg" />
+    <Content Include="images\fancy_closebox.png" />
+    <Content Include="images\faq_hover.jpg" />
+    <Content Include="images\faq_normal.jpg" />
+    <Content Include="images\file.gif" />
+    <Content Include="images\Go.gif" />
+    <Content Include="images\info.png" />
+    <Content Include="images\leftcolbg.png" />
+    <Content Include="images\loader.gif" />
+    <Content Include="images\mail_hover.jpg" />
+    <Content Include="images\mail_normal.jpg" />
+    <Content Include="images\panelSearchheaderbackground.GIF" />
+    <Content Include="images\permissions\0.png" />
+    <Content Include="images\permissions\12.png" />
+    <Content Include="images\permissions\14.png" />
+    <Content Include="images\permissions\15.png" />
+    <Content Include="images\permissions\8.png" />
+    <Content Include="images\remove.png" />
+    <Content Include="images\tooltip\balloon_bottom.png" />
+    <Content Include="images\tooltip\balloon_bottomLeft.png" />
+    <Content Include="images\tooltip\balloon_bottomRight.png" />
+    <Content Include="images\tooltip\balloon_left.png" />
+    <Content Include="images\tooltip\balloon_right.png" />
+    <Content Include="images\tooltip\balloon_tail.png" />
+    <Content Include="images\tooltip\balloon_top.png" />
+    <Content Include="images\tooltip\balloon_topLeft.png" />
+    <Content Include="images\tooltip\balloon_topRight.png" />
+    <Content Include="images\uponelevel.gif" />
+    <Content Include="Install\Default.aspx" />
+    <Content Include="javascript\AssetsSearch.js" />
+    <Content Include="javascript\jquery-1.4.4.min.js" />
+    <Content Include="javascript\jquery-ui-1.8.7.custom.min.js" />
+    <Content Include="javascript\jquery.blockUI.js" />
+    <Content Include="javascript\jquery.fancybox-1.3.4.pack.js" />
+    <Content Include="javascript\jquery.ui.datepicker-fr.js" />
+    <Content Include="javascript\jquery.ui.datepicker-nl.js" />
+    <Content Include="javascript\jquery.ui.timepicker-fr.js" />
+    <Content Include="javascript\jquery.ui.timepicker-nl.js" />
+    <Content Include="javascript\jquery.ui.timepicker.js" />
+    <Content Include="javascript\jquery.urldecoder.min.js" />
+    <Content Include="javascript\ReservationDashboard.js" />
+    <Content Include="javascript\Roles.js" />
+    <Content Include="javascript\plainlistcontrol.js" />
+    <Content Include="javascript\faq.js" />
+    <Content Include="javascript\jquery.dd.js" />
+    <Content Include="javascript\jquery.highlight-3.js" />
+    <Content Include="javascript\jquery.hint.js" />
+    <Content Include="javascript\NameGen.js" />
+    <Content Include="javascript\pnz.js" />
+    <Content Include="javascript\Reservations.js" />
+    <Content Include="javascript\DynListItem.js" />
+    <Content Include="javascript\spin.min.js" />
+    <Content Include="javascript\Tasks.js" />
+    <Content Include="javascript\Tooltip.js" />
+    <Content Include="mail\PasswordRecoveryTemplate.txt" />
+    <Content Include="MySettings.aspx" />
+    <Content Include="RecoverCredentials.aspx" />
+    <Content Include="Mobile\Default.aspx" />
+    <Content Include="javascript\Silverlight.js" />
+    <Content Include="Reports\List.aspx" />
+    <Content Include="Reports\Render.aspx" />
+    <Content Include="javascript\moment-with-langs.js" />
+    <Content Include="javascript\moment-with-langs.min.js" />
+    <Content Include="javascript\moment.js" />
+    <Content Include="javascript\moment.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\1.pubxml" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\knockout-2.2.1.debug.js" />
+    <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="TaskView.aspx" />
+    <Content Include="templates\mailTemplate.htm" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep1.aspx.cs">
+      <DependentUpon>AdditionalScreenStep1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep1.aspx.designer.cs">
+      <DependentUpon>AdditionalScreenStep1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep2.aspx.cs">
+      <DependentUpon>AdditionalScreenStep2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep2.aspx.designer.cs">
+      <DependentUpon>AdditionalScreenStep2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep3.aspx.cs">
+      <DependentUpon>AdditionalScreenStep3.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep3.aspx.designer.cs">
+      <DependentUpon>AdditionalScreenStep3.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep4.aspx.cs">
+      <DependentUpon>AdditionalScreenStep4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep4.aspx.designer.cs">
+      <DependentUpon>AdditionalScreenStep4.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep5.aspx.cs">
+      <DependentUpon>AdditionalScreenStep5.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\AdditionalScreenStep5.aspx.designer.cs">
+      <DependentUpon>AdditionalScreenStep5.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\ScreensController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\SideMenu.ascx.cs">
+      <DependentUpon>SideMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\AdditionalScreens\SideMenu.ascx.designer.cs">
+      <DependentUpon>SideMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Batch\Actions.aspx.cs">
+      <DependentUpon>Actions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Batch\Actions.aspx.designer.cs">
+      <DependentUpon>Actions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Batch\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Batch\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Batch\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Batch\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\CacheMonitor.aspx.cs">
+      <DependentUpon>CacheMonitor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\CacheMonitor.aspx.designer.cs">
+      <DependentUpon>CacheMonitor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Contexts\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Contexts\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypes.aspx.cs">
+      <DependentUpon>DataTypes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypes.aspx.designer.cs">
+      <DependentUpon>DataTypes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypesSearchOps.aspx.cs">
+      <DependentUpon>DataTypesSearchOps.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypesSearchOps.aspx.designer.cs">
+      <DependentUpon>DataTypesSearchOps.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypesValidation.aspx.cs">
+      <DependentUpon>DataTypesValidation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DataTypes\DataTypesValidation.aspx.designer.cs">
+      <DependentUpon>DataTypesValidation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Export\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Export\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\FAQItems.aspx.cs">
+      <DependentUpon>FAQItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\FAQItems.aspx.designer.cs">
+      <DependentUpon>FAQItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Import\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Import\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Import\ImportController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\InstallationCheck.aspx.cs">
+      <DependentUpon>InstallationCheck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\InstallationCheck.aspx.designer.cs">
+      <DependentUpon>InstallationCheck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Languages\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Languages\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\LocationMove.aspx.cs">
+      <DependentUpon>LocationMove.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\LocationMove.aspx.designer.cs">
+      <DependentUpon>LocationMove.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\AddOnView\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\AddOnView\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\Add\AssetTypeViewModel.cs" />
+    <Compile Include="admin\Reports\Designer.aspx.cs">
+      <DependentUpon>Designer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\Designer.aspx.designer.cs">
+      <DependentUpon>Designer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\ReportPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Search\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Search\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Search\Log.aspx.cs">
+      <DependentUpon>Log.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Search\Log.aspx.designer.cs">
+      <DependentUpon>Log.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\ServiceOps.aspx.cs">
+      <DependentUpon>ServiceOps.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\ServiceOps.aspx.designer.cs">
+      <DependentUpon>ServiceOps.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Synk\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Synk\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Synk\ManagementResources.cs" />
+    <Compile Include="admin\Synk\Win32Share.cs" />
+    <Compile Include="admin\Tasks\EditTask.aspx.cs">
+      <DependentUpon>EditTask.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Tasks\EditTask.aspx.designer.cs">
+      <DependentUpon>EditTask.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Tasks\TasksList.aspx.cs">
+      <DependentUpon>TasksList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Tasks\TasksList.aspx.designer.cs">
+      <DependentUpon>TasksList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Taxonomies\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Taxonomies\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Taxonomies\ManageTypes.aspx.cs">
+      <DependentUpon>ManageTypes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Taxonomies\ManageTypes.aspx.designer.cs">
+      <DependentUpon>ManageTypes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Taxonomies\TreeEdit.aspx.cs">
+      <DependentUpon>TreeEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Taxonomies\TreeEdit.aspx.designer.cs">
+      <DependentUpon>TreeEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\UsersMonitor.aspx.cs">
+      <DependentUpon>UsersMonitor.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\UsersMonitor.aspx.designer.cs">
+      <DependentUpon>UsersMonitor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Users\EditRights.aspx.cs">
+      <DependentUpon>EditRights.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Users\EditRights.aspx.designer.cs">
+      <DependentUpon>EditRights.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\ZipsAndPlaces.aspx.cs">
+      <DependentUpon>ZipsAndPlaces.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\ZipsAndPlaces.aspx.designer.cs">
+      <DependentUpon>ZipsAndPlaces.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="amDataService.asmx.cs">
+      <DependentUpon>amDataService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="App_Start\HtmlHelperExtensions.cs" />
+    <Compile Include="App_Start\HttpContextVersionProvider.cs" />
+    <Compile Include="App_Start\LoggerConfig.cs" />
+    <Compile Include="App_Start\UnityHttpHandlerFactory.cs" />
+    <Compile Include="App_Start\UnityHttpModule.cs" />
+    <Compile Include="App_Start\PerRequestLifetimeManager.cs" />
+    <Compile Include="App_GlobalResources\Global.fr.designer.cs">
+      <DependentUpon>Global.fr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\Global.nl.designer.cs">
+      <DependentUpon>Global.nl.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\Global.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Global.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
+    <Compile Include="App_Start\EFCachingConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Asset\AssetController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\AttachDocument.aspx.cs">
+      <DependentUpon>AttachDocument.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\AttachDocument.aspx.designer.cs">
+      <DependentUpon>AttachDocument.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\New\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\New\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reservations\ReservationController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reservations\Overview.aspx.cs">
+      <DependentUpon>Overview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reservations\Overview.aspx.designer.cs">
+      <DependentUpon>Overview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\View.aspx.designer.cs">
+      <DependentUpon>View.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="barcodeImage.aspx.cs">
+      <DependentUpon>barcodeImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="barcodeImage.aspx.designer.cs">
+      <DependentUpon>barcodeImage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetAttributePanels.ascx.cs">
+      <DependentUpon>AssetAttributePanels.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetAttributePanels.ascx.designer.cs">
+      <DependentUpon>AssetAttributePanels.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetDropDownListEx.ascx.cs">
+      <DependentUpon>AssetDropDownListEx.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetDropDownListEx.ascx.designer.cs">
+      <DependentUpon>AssetDropDownListEx.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetsList.ascx.cs">
+      <DependentUpon>AssetsList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetsList.ascx.designer.cs">
+      <DependentUpon>AssetsList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetTemplates.ascx.cs">
+      <DependentUpon>AssetTemplates.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetTemplates.ascx.designer.cs">
+      <DependentUpon>AssetTemplates.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetTypeAttribList.ascx.cs">
+      <DependentUpon>AssetTypeAttribList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetTypeAttribList.ascx.designer.cs">
+      <DependentUpon>AssetTypeAttribList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BatchScheduleDialog.ascx.cs">
+      <DependentUpon>BatchScheduleDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BatchScheduleDialog.ascx.designer.cs">
+      <DependentUpon>BatchScheduleDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ChildAssets.ascx.cs">
+      <DependentUpon>ChildAssets.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ChildAssets.ascx.designer.cs">
+      <DependentUpon>ChildAssets.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Barcode.ascx.cs">
+      <DependentUpon>Barcode.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\Barcode.ascx.designer.cs">
+      <DependentUpon>Barcode.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Calendar.ascx.cs">
+      <DependentUpon>Calendar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\Calendar.ascx.designer.cs">
+      <DependentUpon>Calendar.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CatTax\TaxonomiesTree.ascx.designer.cs">
+      <DependentUpon>TaxonomiesTree.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ShowSharedResources.ascx.cs">
+      <DependentUpon>ShowSharedResources.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ShowSharedResources.ascx.designer.cs">
+      <DependentUpon>ShowSharedResources.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UpdateParametersPanel.ascx.cs">
+      <DependentUpon>UpdateParametersPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\UpdateParametersPanel.ascx.designer.cs">
+      <DependentUpon>UpdateParametersPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DeleteConfirmationDialog.ascx.cs">
+      <DependentUpon>DeleteConfirmationDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DeleteConfirmationDialog.ascx.designer.cs">
+      <DependentUpon>DeleteConfirmationDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DynListEditDialog.ascx.cs">
+      <DependentUpon>DynListEditDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DynListEditDialog.ascx.designer.cs">
+      <DependentUpon>DynListEditDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GoogleMapsControl.ascx.cs">
+      <DependentUpon>GoogleMapsControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\GoogleMapsControl.ascx.designer.cs">
+      <DependentUpon>GoogleMapsControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageControl.ascx.cs">
+      <DependentUpon>ImageControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageControl.ascx.designer.cs">
+      <DependentUpon>ImageControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsGrid.ascx.cs">
+      <DependentUpon>MultipleAssetsGrid.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsGrid.ascx.designer.cs">
+      <DependentUpon>MultipleAssetsGrid.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NumericControl.ascx.cs">
+      <DependentUpon>NumericControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericControl.ascx.designer.cs">
+      <DependentUpon>NumericControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DynListDDHolder.ascx.cs">
+      <DependentUpon>DynListDDHolder.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DynListDDHolder.ascx.designer.cs">
+      <DependentUpon>DynListDDHolder.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DynListItemEdit.ascx.cs">
+      <DependentUpon>DynListItemEdit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DynListItemEdit.ascx.designer.cs">
+      <DependentUpon>DynListItemEdit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ExportControl.ascx.cs">
+      <DependentUpon>ExportControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ExportControl.ascx.designer.cs">
+      <DependentUpon>ExportControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsEditor.ascx.cs">
+      <DependentUpon>MultipleAssetsEditor.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsEditor.ascx.designer.cs">
+      <DependentUpon>MultipleAssetsEditor.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsList.ascx.cs">
+      <DependentUpon>MultipleAssetsList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MultipleAssetsList.ascx.designer.cs">
+      <DependentUpon>MultipleAssetsList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NewsAndLoginInfo.ascx.cs">
+      <DependentUpon>NewsAndLoginInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NewsAndLoginInfo.ascx.designer.cs">
+      <DependentUpon>NewsAndLoginInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PlaceAndZipControl.ascx.cs">
+      <DependentUpon>PlaceAndZipControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PlaceAndZipControl.ascx.designer.cs">
+      <DependentUpon>PlaceAndZipControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ReportsPanel.ascx.cs">
+      <DependentUpon>ReportsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ReportsPanel.ascx.designer.cs">
+      <DependentUpon>ReportsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RestoreAssetMessage.ascx.cs">
+      <DependentUpon>RestoreAssetMessage.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\RestoreAssetMessage.ascx.designer.cs">
+      <DependentUpon>RestoreAssetMessage.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RichtextControl.ascx.cs">
+      <DependentUpon>RichtextControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\RichtextControl.ascx.designer.cs">
+      <DependentUpon>RichtextControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScreenDetails.ascx.cs">
+      <DependentUpon>ScreenDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ScreenDetails.ascx.designer.cs">
+      <DependentUpon>ScreenDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScreensPanel.ascx.cs">
+      <DependentUpon>ScreensPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ScreensPanel.ascx.designer.cs">
+      <DependentUpon>ScreensPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\CategoriesForSearch.ascx.cs">
+      <DependentUpon>CategoriesForSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\CategoriesForSearch.ascx.designer.cs">
+      <DependentUpon>CategoriesForSearch.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CatTax\TaxonomiesTree.ascx.cs">
+      <DependentUpon>TaxonomiesTree.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Users\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Users\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Users\ViewRights.aspx.cs">
+      <DependentUpon>ViewRights.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Users\ViewRights.aspx.designer.cs">
+      <DependentUpon>ViewRights.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\ViewTransactions.aspx.cs">
+      <DependentUpon>ViewTransactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
+      <DependentUpon>ViewTransactions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\RefinementsPanel.ascx.cs">
+      <DependentUpon>RefinementsPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\RefinementsPanel.ascx.designer.cs">
+      <DependentUpon>RefinementsPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchConditionsBar.ascx.cs">
+      <DependentUpon>SearchConditionsBar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchConditionsBar.ascx.designer.cs">
+      <DependentUpon>SearchConditionsBar.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchTabs.ascx.cs">
+      <DependentUpon>SearchTabs.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchTabs.ascx.designer.cs">
+      <DependentUpon>SearchTabs.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\TypeSearchValueCell.ascx.cs">
+      <DependentUpon>TypeSearchValueCell.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\TypeSearchValueCell.ascx.designer.cs">
+      <DependentUpon>TypeSearchValueCell.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchParametersPanel.ascx.cs">
+      <DependentUpon>SearchParametersPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchParametersPanel.ascx.designer.cs">
+      <DependentUpon>SearchParametersPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TaskCommonParams.ascx.cs">
+      <DependentUpon>TaskCommonParams.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\TaskCommonParams.ascx.designer.cs">
+      <DependentUpon>TaskCommonParams.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TasksPanel.ascx.cs">
+      <DependentUpon>TasksPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\TasksPanel.ascx.designer.cs">
+      <DependentUpon>TasksPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TopMenu.ascx.cs">
+      <DependentUpon>TopMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\TopMenu.ascx.designer.cs">
+      <DependentUpon>TopMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Translations.ascx.cs">
+      <DependentUpon>Translations.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\Translations.ascx.designer.cs">
+      <DependentUpon>Translations.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UsersList.ascx.cs">
+      <DependentUpon>UsersList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\UsersList.ascx.designer.cs">
+      <DependentUpon>UsersList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WizardMenu.ascx.cs">
+      <DependentUpon>WizardMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\WizardMenu.ascx.designer.cs">
+      <DependentUpon>WizardMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Documents\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DownloadHandler.ashx.cs">
+      <DependentUpon>DownloadHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Error\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error\NotFound.aspx.cs">
+      <DependentUpon>NotFound.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error\NotFound.aspx.designer.cs">
+      <DependentUpon>NotFound.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error\Unauthorized.aspx.cs">
+      <DependentUpon>Unauthorized.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error\Unauthorized.aspx.designer.cs">
+      <DependentUpon>Unauthorized.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Faq.aspx.cs">
+      <DependentUpon>Faq.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Faq.aspx.designer.cs">
+      <DependentUpon>Faq.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Financial\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Financial\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\Alert.cs" />
+    <Compile Include="AssetView.aspx.cs">
+      <DependentUpon>AssetView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AssetView.aspx.designer.cs">
+      <DependentUpon>AssetView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\History.aspx.cs">
+      <DependentUpon>History.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\History.aspx.designer.cs">
+      <DependentUpon>History.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\New\Step1.aspx.cs">
+      <DependentUpon>Step1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\New\Step1.aspx.designer.cs">
+      <DependentUpon>Step1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\New\Step2.aspx.cs">
+      <DependentUpon>Step2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\New\Step2.aspx.designer.cs">
+      <DependentUpon>Step2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Asset\View.aspx.cs">
+      <DependentUpon>View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetToolbar.ascx.cs">
+      <DependentUpon>AssetToolbar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetToolbar.ascx.designer.cs">
+      <DependentUpon>AssetToolbar.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetToolbarButton.ascx.cs">
+      <DependentUpon>AssetToolbarButton.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetToolbarButton.ascx.designer.cs">
+      <DependentUpon>AssetToolbarButton.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AssetTreeView.ascx.cs">
+      <DependentUpon>AssetTreeView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AssetTreeView.ascx.designer.cs">
+      <DependentUpon>AssetTreeView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchResult.ascx.cs">
+      <DependentUpon>SearchResult.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControls\SearchResult.ascx.designer.cs">
+      <DependentUpon>SearchResult.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DynListDropDown.ascx.cs">
+      <DependentUpon>DynListDropDown.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DynListDropDown.ascx.designer.cs">
+      <DependentUpon>DynListDropDown.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\TypesForSearch.ascx.cs">
+      <DependentUpon>TypesForSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DynListListBox.ascx.cs">
+      <DependentUpon>DynListListBox.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DynListListBox.ascx.designer.cs">
+      <DependentUpon>DynListListBox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControls\TypesForSearch.ascx.designer.cs">
+      <DependentUpon>TypesForSearch.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NewAttributePanel.ascx.cs">
+      <DependentUpon>NewAttributePanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NewAttributePanel.ascx.designer.cs">
+      <DependentUpon>NewAttributePanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DynList\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DynList\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DynList\EditListItem.aspx.cs">
+      <DependentUpon>EditListItem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DynList\EditListItem.aspx.designer.cs">
+      <DependentUpon>EditListItem.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\DynList\ListItems.aspx.cs">
+      <DependentUpon>ListItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\DynList\ListItems.aspx.designer.cs">
+      <DependentUpon>ListItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\CookieWrapper.cs" />
+    <Compile Include="Helpers\Culture.cs" />
+    <Compile Include="Helpers\Exporter.cs" />
+    <Compile Include="Helpers\UrlParameterPasser.cs" />
+    <Compile Include="App_Start\HttpContextUserNameProvider.cs" />
+    <Compile Include="Install\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Install\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageSearchResult.master.cs">
+      <DependentUpon>MasterPageSearchResult.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageSearchResult.master.designer.cs">
+      <DependentUpon>MasterPageSearchResult.master</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mobile\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MySettings.aspx.cs">
+      <DependentUpon>MySettings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MySettings.aspx.designer.cs">
+      <DependentUpon>MySettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RecoverCredentials.aspx.cs">
+      <DependentUpon>RecoverCredentials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RecoverCredentials.aspx.designer.cs">
+      <DependentUpon>RecoverCredentials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\List.aspx.cs">
+      <DependentUpon>List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\List.aspx.designer.cs">
+      <DependentUpon>List.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Render.aspx.cs">
+      <DependentUpon>Render.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\Render.aspx.designer.cs">
+      <DependentUpon>Render.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\RenderReport.aspx.cs">
+      <DependentUpon>RenderReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\RenderReport.aspx.designer.cs">
+      <DependentUpon>RenderReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\ResultByCategory.aspx.cs">
+      <DependentUpon>ResultByCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\ResultByCategory.aspx.designer.cs">
+      <DependentUpon>ResultByCategory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SearchPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\SearchResultPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaskView.aspx.cs">
+      <DependentUpon>TaskView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaskView.aspx.designer.cs">
+      <DependentUpon>TaskView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebserviceTest.aspx.cs">
+      <DependentUpon>WebserviceTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebserviceTest.aspx.designer.cs">
+      <DependentUpon>WebserviceTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\EditAssetType.aspx.cs">
+      <DependentUpon>EditAssetType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\EditAssetType.aspx.designer.cs">
+      <DependentUpon>EditAssetType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\SessionWrapper.cs" />
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageBase.Master.cs">
+      <DependentUpon>MasterPageBase.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageBase.Master.designer.cs">
+      <DependentUpon>MasterPageBase.Master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageDefault.Master.cs">
+      <DependentUpon>MasterPageDefault.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageDefault.Master.designer.cs">
+      <DependentUpon>MasterPageDefault.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controls\ListboxForAttributeAdding.ascx.cs">
+      <DependentUpon>ListboxForAttributeAdding.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ListboxForAttributeAdding.ascx.designer.cs">
+      <DependentUpon>ListboxForAttributeAdding.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SortableListbox.ascx.cs">
+      <DependentUpon>SortableListbox.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SortableListbox.ascx.designer.cs">
+      <DependentUpon>SortableListbox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\Add\AssetInfo.aspx.cs">
+      <DependentUpon>AssetInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\Add\AssetInfo.aspx.designer.cs">
+      <DependentUpon>AssetInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\Add\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\Add\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\Add\SelectTemplate.aspx.cs">
+      <DependentUpon>SelectTemplate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\Add\SelectTemplate.aspx.designer.cs">
+      <DependentUpon>SelectTemplate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SearchByContext.aspx.cs">
+      <DependentUpon>SearchByContext.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\SearchByContext.aspx.designer.cs">
+      <DependentUpon>SearchByContext.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\ResultByContext.aspx.cs">
+      <DependentUpon>ResultByContext.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\ResultByContext.aspx.designer.cs">
+      <DependentUpon>ResultByContext.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin\Reports\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin\Reports\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\ResultByType.aspx.cs">
+      <DependentUpon>ResultByType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\ResultByType.aspx.designer.cs">
+      <DependentUpon>ResultByType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\Search.aspx.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\Search.aspx.designer.cs">
+      <DependentUpon>Search.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SearchByCategory.aspx.cs">
+      <DependentUpon>SearchByCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\SearchByCategory.aspx.designer.cs">
+      <DependentUpon>SearchByCategory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SearchByType.aspx.cs">
+      <DependentUpon>SearchByType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\SearchByType.aspx.designer.cs">
+      <DependentUpon>SearchByType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search\SimpleSearchKeywords.aspx.cs">
+      <DependentUpon>SimpleSearchKeywords.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Search\SimpleSearchKeywords.aspx.designer.cs">
+      <DependentUpon>SimpleSearchKeywords.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\EditAttribute.aspx.cs">
+      <DependentUpon>EditAttribute.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\EditAttribute.aspx.designer.cs">
+      <DependentUpon>EditAttribute.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\EditValidationRule.aspx.cs">
+      <DependentUpon>EditValidationRule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\EditValidationRule.aspx.designer.cs">
+      <DependentUpon>EditValidationRule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step1.aspx.cs">
+      <DependentUpon>Step1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step1.aspx.designer.cs">
+      <DependentUpon>Step1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step11.aspx.cs">
+      <DependentUpon>Step11.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step11.aspx.designer.cs">
+      <DependentUpon>Step11.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step2.aspx.cs">
+      <DependentUpon>Step2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step2.aspx.designer.cs">
+      <DependentUpon>Step2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step4.aspx.cs">
+      <DependentUpon>Step4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step4.aspx.designer.cs">
+      <DependentUpon>Step4.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step3.aspx.cs">
+      <DependentUpon>Step3.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step3.aspx.designer.cs">
+      <DependentUpon>Step3.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step9.aspx.cs">
+      <DependentUpon>Step9.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step9.aspx.designer.cs">
+      <DependentUpon>Step9.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\Step10.aspx.cs">
+      <DependentUpon>Step10.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wizard\Step10.aspx.designer.cs">
+      <DependentUpon>Step10.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageWizard.Master.cs">
+      <DependentUpon>MasterPageWizard.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPages\MasterPageWizard.Master.designer.cs">
+      <DependentUpon>MasterPageWizard.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Wizard\WizardController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config.Files\appSettings.config" />
+    <Content Include="Config.Files\dynEntityConfig.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\systemDiagnostics.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppFramework.Core\AppFramework.Core.csproj">
+      <Project>{890BDD21-2741-4028-9D20-9102D51AD64D}</Project>
+      <Name>AppFramework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.DataProxy\AppFramework.DataProxy.csproj">
+      <Project>{3B3DFA46-D697-40D8-81DE-90ECA111A546}</Project>
+      <Name>AppFramework.DataProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Entities\AppFramework.Entities.csproj">
+      <Project>{658431c7-7442-46f1-81c8-7cc6744f7e46}</Project>
+      <Name>AppFramework.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Reports\AppFramework.Reports.csproj">
+      <Project>{41e0c02c-e115-4781-b686-b779a2b4eb6e}</Project>
+      <Name>AppFramework.Reports</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AssetManager.Infrastructure\AssetManager.Infrastructure.csproj">
+      <Project>{87d76790-81cc-45bb-9f7e-b3cdea2564c0}</Project>
+      <Name>AssetManager.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MasterPages\MasterPageBase.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Controls\AssetToolbar.ascx" />
+    <Content Include="Controls\AssetToolbarButton.ascx" />
+    <Content Include="Controls\AssetTreeView.ascx" />
+    <Content Include="Controls\SearchControls\SearchResult.ascx" />
+    <Content Include="Controls\DynListDropDown.ascx" />
+    <Content Include="Controls\SearchControls\TypesForSearch.ascx" />
+    <Content Include="Controls\DynListListBox.ascx" />
+    <Content Include="Controls\NewAttributePanel.ascx" />
+    <Content Include="css\controls\assettoolbar.css" />
+    <Content Include="css\general.css" />
+    <Content Include="css\layouts\layout1.css" />
+    <Content Include="css\layouts\layout2.css" />
+    <Content Include="css\layouts\layout3.css" />
+    <Content Include="css\layouts\layout4.css" />
+    <Content Include="css\layouts\layout5.css" />
+    <Content Include="css\layouts\layout6.css" />
+    <Content Include="css\print.css" />
+    <Content Include="css\Search.css" />
+    <Content Include="css\theme.css" />
+    <Content Include="css\visual_consistencies.css" />
+    <Content Include="admin\DynList\Default.aspx" />
+    <Content Include="admin\DynList\EditListItem.aspx" />
+    <Content Include="admin\DynList\ListItems.aspx" />
+    <Content Include="WebserviceTest.aspx" />
+    <Content Include="Wizard\EditAssetType.aspx" />
+    <Content Include="images\arrow2top.gif" />
+    <Content Include="images\bg_appsettings.gif" />
+    <Content Include="images\bg_configobjects.gif" />
+    <Content Include="images\bg_configtaxonomy.gif" />
+    <Content Include="images\bg_configusers.gif" />
+    <Content Include="images\bg_leftcolumn.gif" />
+    <Content Include="images\buttons\addarrow.png" />
+    <Content Include="images\buttons\attach.jpg" />
+    <Content Include="images\buttons\delete.jpg" />
+    <Content Include="images\buttons\delete.png" />
+    <Content Include="images\buttons\deletearrow.png" />
+    <Content Include="images\buttons\downarrow.png" />
+    <Content Include="images\buttons\edit.png" />
+    <Content Include="images\buttons\history.jpg" />
+    <Content Include="images\buttons\print.jpg" />
+    <Content Include="images\buttons\uparrow.png" />
+    <Content Include="images\button_arrow_navigator_up.gif" />
+    <Content Include="images\companylogo.gif" />
+    <Content Include="images\headerban.jpg" />
+    <Content Include="images\home.gif" />
+    <Content Include="images\icoprint.gif" />
+    <Content Include="images\img_result_arrowright.gif" />
+    <Content Include="images\layouts\layout1.png" />
+    <Content Include="images\layouts\layout2.png" />
+    <Content Include="images\layouts\layout3.png" />
+    <Content Include="images\mailto.gif" />
+    <Content Include="images\panelbottom.gif" />
+    <Content Include="images\panelheaderbackground.gif" />
+    <Content Include="images\resultblocktopline.gif" />
+    <Content Include="javascript\jquery-1.2.6-vsdoc.js" />
+    <Content Include="javascript\utilities.js" />
+    <Content Include="MasterPages\MasterPageDefault.Master" />
+    <Content Include="Controls\ListboxForAttributeAdding.ascx" />
+    <Content Include="Controls\SortableListbox.ascx" />
+    <Content Include="Search\SimpleSearchKeywords.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AssetView.aspx" />
+    <Content Include="Asset\History.aspx" />
+    <Content Include="Asset\Edit.aspx" />
+    <Content Include="Asset\New\Step1.aspx" />
+    <Content Include="Asset\New\Step2.aspx" />
+    <Content Include="Asset\View.aspx" />
+    <Content Include="Search\Search.aspx" />
+    <Content Include="Search\SearchByCategory.aspx" />
+    <Content Include="Wizard\EditAttribute.aspx" />
+    <Content Include="Wizard\EditValidationRule.aspx" />
+    <Content Include="Wizard\Step1.aspx" />
+    <Content Include="Wizard\Step2.aspx" />
+    <Content Include="Wizard\Step3.aspx" />
+    <Content Include="Wizard\Step9.aspx" />
+    <Content Include="Wizard\Step10.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Login.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="images\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\DataTypes\DataTypes.aspx" />
+    <Content Include="admin\DataTypes\DataTypesValidation.aspx" />
+    <Content Include="admin\Taxonomies\Default.aspx" />
+    <Content Include="admin\Taxonomies\ManageTypes.aspx" />
+    <Content Include="admin\Taxonomies\TreeEdit.aspx" />
+    <Content Include="admin\UsersMonitor.aspx" />
+    <Content Include="Controls\CatTax\TaxonomiesTree.ascx" />
+    <Content Include="css\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\CacheMonitor.aspx" />
+    <Content Include="admin\Users\Default.aspx" />
+    <Content Include="admin\Users\EditRights.aspx" />
+    <Content Include="admin\Users\ViewRights.aspx" />
+    <Content Include="Asset\ViewTransactions.aspx" />
+    <Content Include="Config.Files\cachingConfiguration.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="images\buttons\error.png" />
+    <Content Include="admin\Reports\Add\AssetInfo.aspx" />
+    <Content Include="admin\Reports\Add\Default.aspx" />
+    <Content Include="admin\Reports\Add\SelectTemplate.aspx" />
+    <Content Include="Search\SearchByContext.aspx" />
+    <Content Include="Search\ResultByContext.aspx" />
+    <Content Include="images\buttons\attention.png" />
+    <Content Include="images\buttons\close.png" />
+    <Content Include="images\buttons\question.png" />
+    <Content Include="admin\Reports\Default.aspx" />
+    <Content Include="images\buttons\question_hover.png" />
+    <Content Include="javascript\jquery-delegate.js" />
+    <Content Include="Search\ResultByType.aspx" />
+    <Content Include="Search\SearchByType.aspx" />
+    <Content Include="images\loaderA32.gif" />
+    <Content Include="Wizard\Step4.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\Export\Default.aspx" />
+    <Content Include="admin\Import\Default.aspx" />
+    <Content Include="Configuration\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Themes\Default\common.css" />
+    <Content Include="Asset\AttachDocument.aspx" />
+    <Content Include="Config.Files\Predefined\Assets\Location.xml" />
+    <Content Include="Config.Files\Predefined\Assets\User.xml" />
+    <Content Include="Config.Files\WizardMenu.xml" />
+    <Content Include="Controls\AssetAttributePanels.ascx" />
+    <Content Include="Controls\WizardMenu.ascx" />
+    <Content Include="css\installer.css" />
+    <Content Include="images\buttons\database--arrow.png" />
+    <Content Include="images\buttons\database-export.png" />
+    <Content Include="images\buttons\disk.png" />
+    <Content Include="images\buttons\document--plus.png" />
+    <Content Include="images\buttons\minus-small.png" />
+    <Content Include="images\buttons\node-select-all.png" />
+    <Content Include="images\buttons\node.png" />
+    <Content Include="images\buttons\plus-small.png" />
+    <Content Include="images\buttons\plus.png" />
+    <Content Include="Configuration\Default.aspx" />
+    <Content Include="images\buttons\slash.png" />
+    <Content Include="javascript\navigate.js" />
+    <Content Include="javascript\Web.config" />
+    <Content Include="Config.Files\Web.sitemap" />
+    <Content Include="admin\Languages\Web.config" />
+    <Content Include="admin\Export\Web.config" />
+    <None Include="admin\Reports\Add\FinInfo.ttx" />
+    <Content Include="App_Themes\Default\Button.skin" />
+    <Content Include="App_Themes\Default\Dropdown.skin" />
+    <Content Include="App_Themes\Default\Grid.skin" />
+    <Content Include="App_Themes\Default\Label.skin" />
+    <Content Include="admin\Web.config" />
+    <Content Include="Config.Files\Predefined\schema.xsd" />
+    <Content Include="Config.Files\IntegrityCheck.config" />
+    <Content Include="Wizard\Web.config" />
+    <Content Include="MasterPages\MasterPageWizard.Master" />
+    <Content Include="Error\Web.config" />
+    <Content Include="Config.Files\unity.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\Actions.aspx" />
+    <Content Include="admin\Batch\Default.aspx" />
+    <Content Include="images\buttons\zoom.png" />
+    <Content Include="Reports\Default.aspx" />
+    <Content Include="Reports\RenderReport.aspx" />
+    <Content Include="Search\ResultByCategory.aspx" />
+    <Content Include="Web.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\Default.aspx" />
+    <Content Include="Wizard\Step11.aspx" />
+    <Content Include="MasterPages\MasterPageSearchResult.master" />
+    <Content Include="Install\Web.config" />
+    <Content Include="Documents\Web.config" />
+    <Content Include="Config.Files\Predefined\xlsxTemplate.xlsx" />
+    <Content Include="Config.Files\connectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DownloadHandler.ashx" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\connectionStrings.Staging.AssetManager.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\connectionStrings.Staging.SOBBUB.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\appSettings.Staging.SOBBUB.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config.Files\appSettings.Staging.AssetManager.config" />
+    <Content Include="client\ckeditor\CHANGES.md" />
+    <Content Include="client\ckeditor\LICENSE.md" />
+    <Content Include="client\ckeditor\plugins\scayt\LICENSE.md" />
+    <Content Include="client\ckeditor\plugins\scayt\README.md" />
+    <Content Include="client\ckeditor\plugins\wsc\LICENSE.md" />
+    <Content Include="client\ckeditor\plugins\wsc\README.md" />
+    <Content Include="client\ckeditor\README.md" />
+    <Content Include="client\ckeditor\samples\assets\posteddata.php" />
+    <Content Include="client\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.fla" />
+    <Content Include="client\ckeditor\samples\sample_posteddata.php" />
+    <Content Include="client\ckeditor\skins\moono\readme.md" />
+    <Content Include="Config.Files\log4net.config" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+    <None Include="Properties\PublishProfiles\sobenbub- spb2.daxx.ru.pubxml" />
+    <None Include="Properties\PublishProfiles\spb2.daxx.ru.pubxml" />
+    <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <None Include="Web.Staging-AssetManager.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.Staging-SOBBUB.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="admin\Contexts\Default.aspx" />
+    <Content Include="admin\DataTypes\DataTypesSearchOps.aspx" />
+    <Content Include="admin\InstallationCheck.aspx" />
+    <Content Include="admin\Languages\Default.aspx" />
+    <Content Include="admin\ServiceOps.aspx" />
+    <Content Include="App_LocalResources\AssetView.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\ConfigOverview.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Asset\New\Default.aspx" />
+    <Content Include="Config.Files\Predefined\ActiveDirectoryUserFields.xml" />
+    <Content Include="Config.Files\Predefined\Assets\Department.xml" />
+    <Content Include="Controls\Translations.ascx" />
+    <Content Include="images\buttons\sort_down.png" />
+    <Content Include="images\buttons\sort_first.png" />
+    <Content Include="images\buttons\sort_last.png" />
+    <Content Include="images\buttons\sort_up.png" />
+    <Content Include="MasterPages\App_LocalResources\MasterPageBase.Master.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Login.aspx.resx" />
+    <Content Include="admin\Taxonomies\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.resx" />
+    <Content Include="Asset\App_LocalResources\Edit.aspx.resx" />
+    <Content Include="Asset\App_LocalResources\History.aspx.resx" />
+    <Content Include="Asset\App_LocalResources\View.aspx.resx" />
+    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.resx" />
+    <Content Include="Asset\New\App_LocalResources\Step1.aspx.resx" />
+    <Content Include="Asset\New\App_LocalResources\Step2.aspx.resx" />
+    <Content Include="admin\Batch\App_LocalResources\Actions.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\Default.aspx.resx" />
+    <Content Include="admin\DynList\App_LocalResources\EditList.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\EditListItem.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\ListItems.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Export\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Import\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\ManageTypes.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Users\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Users\App_LocalResources\ViewRights.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\CacheMonitor.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\DataTypes.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\DataTypesValidation.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\UsersMonitor.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="MasterPages\App_LocalResources\MasterPageBase.Master.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_GlobalResources\Global.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Global.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Controls\App_LocalResources\WizardMenu.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="MasterPages\App_LocalResources\MasterPageWizard.Master.resx" />
+    <Content Include="App_LocalResources\AssetView.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_GlobalResources\Global.nl.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Global.nl.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Asset\New\App_LocalResources\Step1.aspx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\WizardMenu.ascx.nl.resx" />
+    <Content Include="admin\Batch\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\App_LocalResources\Actions.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\Default.aspx.nl.resx" />
+    <Content Include="admin\DynList\App_LocalResources\EditList.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Users\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Asset\New\App_LocalResources\Step2.aspx.nl.resx" />
+    <Content Include="admin\Users\App_LocalResources\ViewRights.aspx.nl.resx" />
+    <Content Include="admin\Users\App_LocalResources\EditRights.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Users\App_LocalResources\EditRights.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\ManageTypes.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\DataTypesValidation.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\TreeEdit.aspx.resx" />
+    <Content Include="admin\Taxonomies\App_LocalResources\TreeEdit.aspx.nl.resx" />
+    <Content Include="App_LocalResources\ConfigOverview.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Export\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Import\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.nl.resx" />
+    <Content Include="Asset\App_LocalResources\Edit.aspx.nl.resx" />
+    <Content Include="Asset\App_LocalResources\History.aspx.nl.resx" />
+    <Content Include="Asset\App_LocalResources\View.aspx.nl.resx" />
+    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SortPanel.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SortPanel.ascx.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\TypesForSearch.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\TypesForSearch.ascx.resx" />
+    <Content Include="App_LocalResources\Login.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_GlobalResources\Global.fr.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Global.fr.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_LocalResources\AssetView.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\ConfigOverview.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Login.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\CacheMonitor.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\DataTypes.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\DataTypesValidation.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\UsersMonitor.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\App_LocalResources\Actions.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="admin\DynList\App_LocalResources\EditList.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\EditListItem.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\DynList\App_LocalResources\ListItems.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Export\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="admin\Import\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.fr.resx" />
+    <Content Include="admin\Reports\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="admin\Taxonomies\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\ManageTypes.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Taxonomies\App_LocalResources\TreeEdit.aspx.fr.resx" />
+    <Content Include="admin\Users\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="admin\Users\App_LocalResources\EditRights.aspx.fr.resx" />
+    <Content Include="admin\App_LocalResources\LocationMove.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\LocationMove.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\LocationMove.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Batch\App_LocalResources\Schedule.aspx.resx" />
+    <Content Include="admin\Batch\App_LocalResources\Schedule.aspx.fr.resx" />
+    <Content Include="admin\Batch\App_LocalResources\Schedule.aspx.nl.resx" />
+    <Content Include="admin\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\FAQItems.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\FAQItems.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\FAQItems.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\ZipsAndPlaces.aspx.resx" />
+    <Content Include="admin\App_LocalResources\ZipsAndPlaces.aspx.fr.resx" />
+    <Content Include="admin\App_LocalResources\ZipsAndPlaces.aspx.nl.resx" />
+    <Content Include="admin\AdditionalScreens\App_LocalResources\AdditionalScreenStep5.aspx.resx" />
+    <Content Include="admin\AdditionalScreens\App_LocalResources\AdditionalScreenStep5.aspx.nl.resx" />
+    <Content Include="admin\AdditionalScreens\App_LocalResources\AdditionalScreenStep5.aspx.fr.resx" />
+    <Content Include="admin\Tasks\App_LocalResources\Default.aspx.resx" />
+    <Content Include="admin\Tasks\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Tasks\App_LocalResources\Default.aspx.nl.resx" />
+    <Content Include="admin\Contexts\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Contexts\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Contexts\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.nl.resx" />
+    <Content Include="admin\Synk\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Synk\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Synk\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\App_LocalResources\CacheMonitor.aspx.nl.resx" />
+    <Content Include="admin\App_LocalResources\DataTypes.aspx.nl.resx" />
+    <Content Include="admin\App_LocalResources\UsersMonitor.aspx.nl.resx" />
+    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="admin\Users\App_LocalResources\ViewRights.aspx.fr.resx" />
+    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.fr.resx" />
+    <Content Include="Asset\App_LocalResources\Edit.aspx.fr.resx" />
+    <Content Include="Asset\App_LocalResources\History.aspx.fr.resx" />
+    <Content Include="Asset\App_LocalResources\View.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.fr.resx" />
+    <Content Include="Asset\New\App_LocalResources\Step1.aspx.fr.resx" />
+    <Content Include="Asset\New\App_LocalResources\Step2.aspx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\WizardMenu.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SortPanel.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\TypesForSearch.ascx.fr.resx" />
+    <Content Include="MasterPages\App_LocalResources\MasterPageBase.Master.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Documents\App_LocalResources\Default.aspx.resx" />
+    <Content Include="Financial\App_LocalResources\Default.aspx.resx" />
+    <Content Include="App_LocalResources\RecoverCredentials.aspx.resx" />
+    <Content Include="Reservations\App_LocalResources\Add.aspx.resx" />
+    <Content Include="Reservations\App_LocalResources\History.aspx.resx" />
+    <Content Include="Reservations\App_LocalResources\Add.aspx.fr.resx" />
+    <Content Include="Reservations\App_LocalResources\Add.aspx.nl.resx" />
+    <Content Include="Reservations\App_LocalResources\History.aspx.fr.resx" />
+    <Content Include="Reservations\App_LocalResources\History.aspx.nl.resx" />
+    <Content Include="Reservations\App_LocalResources\Overview.aspx.resx" />
+    <Content Include="Reservations\App_LocalResources\Overview.aspx.fr.resx" />
+    <Content Include="Reservations\App_LocalResources\Overview.aspx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchConditionsBar.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_LocalResources\Contact.aspx.resx" />
+    <Content Include="App_LocalResources\Contact.aspx.fr.resx" />
+    <Content Include="App_LocalResources\Contact.aspx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\TopMenu.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\TopMenu.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\TopMenu.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\ReportsPanel.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\ReportsPanel.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\ReportsPanel.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\DeleteConfirmationDialog.resx" />
+    <Content Include="Controls\App_LocalResources\DeleteConfirmationDialog.fr.resx" />
+    <Content Include="Controls\App_LocalResources\DeleteConfirmationDialog.nl.resx" />
+    <Content Include="Controls\App_LocalResources\ExportControl.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\ExportControl.ascx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Controls\App_LocalResources\ExportControl.ascx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Controls\SearchControls\App_LocalResources\RefinementsPanel.ascx.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\RefinementsPanel.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\RefinementsPanel.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\TasksPanel.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\TasksPanel.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\TasksPanel.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\ScreensPanel.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\ScreensPanel.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\ScreensPanel.ascx.fr.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchConditionsBar.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchConditionsBar.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\AssetToolbarButton.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Controls\App_LocalResources\AssetToolbarButton.ascx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Controls\App_LocalResources\AssetToolbarButton.ascx.fr.resx" />
+    <Content Include="App_LocalResources\RecoverCredentials.aspx.nl.resx" />
+    <Content Include="App_LocalResources\RecoverCredentials.aspx.fr.resx" />
+    <Content Include="App_LocalResources\MySettings.aspx.resx" />
+    <Content Include="App_LocalResources\MySettings.aspx.nl.resx" />
+    <Content Include="App_LocalResources\MySettings.aspx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\ChildAssets.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\ChildAssets.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\ChildAssets.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchTabs.ascx.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchTabs.ascx.nl.resx" />
+    <Content Include="Controls\SearchControls\App_LocalResources\SearchTabs.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\RestoreAssetMessage.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\RestoreAssetMessage.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\RestoreAssetMessage.ascx.fr.resx" />
+    <Content Include="Controls\App_LocalResources\AssetTemplates.ascx.resx" />
+    <Content Include="Controls\App_LocalResources\AssetTemplates.ascx.nl.resx" />
+    <Content Include="Controls\App_LocalResources\AssetTemplates.ascx .fr.resx" />
+    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.fr.resx" />
+    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.nl.resx" />
+    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Controls\SearchControls\SearchConditionsBar.ascx.resx">
+      <DependentUpon>SearchConditionsBar.ascx.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Error\App_LocalResources\NotFound.aspx.resx" />
+    <Content Include="Error\App_LocalResources\NotFound.aspx.fr.resx" />
+    <Content Include="Error\App_LocalResources\NotFound.aspx.nl.resx" />
+    <Content Include="MasterPages\App_LocalResources\MasterPageSearchResult.master.resx" />
+    <Content Include="MasterPages\App_LocalResources\MasterPageSearchResult.master.nl.resx" />
+    <Content Include="MasterPages\App_LocalResources\MasterPageSearchResult.master.fr.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Content Include="Wizard\App_LocalResources\Step11.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step10.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step9.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step8.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step7.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step6.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step5.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step4.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step3.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step2.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\Step1.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\EditValidationRule.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\EditPanel.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\EditAttribute.aspx.fr.resx" />
+    <Content Include="Wizard\App_LocalResources\EditAssetType.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\SearchByType.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\SearchByContext.aspx.fr.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\Search.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\ResultByType.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\ResultByContext.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.fr.resx" />
+    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.fr.resx" />
+    <Content Include="Reports\App_LocalResources\RenderReport.aspx.fr.resx" />
+    <Content Include="Reports\App_LocalResources\Default.aspx.fr.resx" />
+    <Content Include="Reports\App_LocalResources\RenderReport.aspx.nl.resx" />
+    <Content Include="Reports\App_LocalResources\Default.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step8.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step7.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step5.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step11.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step10.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\EditValidationRule.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\EditPanel.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\EditAssetType.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SearchByType.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SearchByContext.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\Search.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByType.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByContext.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.nl.resx" />
+    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.en.resx" />
+    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.resx" />
+    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.resx" />
+    <Content Include="Search\App_LocalResources\ResultByContext.aspx.resx" />
+    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.resx" />
+    <Content Include="Search\App_LocalResources\ResultByType.aspx.resx" />
+    <Content Include="Search\App_LocalResources\Search.aspx.resx" />
+    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.resx" />
+    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.resx" />
+    <Content Include="Search\App_LocalResources\SearchByContext.aspx.resx" />
+    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.resx" />
+    <Content Include="Search\App_LocalResources\SearchByType.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.resx" />
+    <Content Include="Search\Default.aspx" />
+    <Content Include="Wizard\App_LocalResources\Step9.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step6.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step4.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\EditAttribute.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step3.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step1.aspx.nl.resx" />
+    <Content Include="Wizard\App_LocalResources\Step2.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Reports\App_LocalResources\RenderReport.aspx.resx" />
+    <Content Include="Reports\App_LocalResources\Default.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\EditValidationRule.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\EditPanel.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\EditAttribute.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\EditAssetType.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step11.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step10.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step9.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Wizard\App_LocalResources\Step8.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step7.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step6.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step5.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step4.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step3.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step2.aspx.resx" />
+    <Content Include="Wizard\App_LocalResources\Step1.aspx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="admin\Export\Exported\" />
+    <Folder Include="admin\Import\Received\" />
+    <Folder Include="admin\Reports\Templates\" />
+    <Folder Include="App_Code\" />
+    <Folder Include="App_Data\Download\" />
+    <Folder Include="App_Data\Logs\" />
+    <Folder Include="Content\" />
+    <Folder Include="Documents\Download\" />
+    <Folder Include="ScreenLayouts\" />
+    <Folder Include="Tasks\" />
+    <Folder Include="Temp\" />
+    <Folder Include="uploads\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-AssetManager|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-AssetManager|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-SOBBUB|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-SOBBUB|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptModuleKind>amd</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <PropertyGroup>
+    <CopyAllFilesToSingleFolderForPackageDependsOn>
+      CustomCollectFiles;
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);
+    </CopyAllFilesToSingleFolderForPackageDependsOn>
+    <CopyAllFilesToSingleFolderForMsdeployDependsOn>
+      CustomCollectFiles;
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);
+    </CopyAllFilesToSingleFolderForMsdeployDependsOn>
+  </PropertyGroup>
+  <Target Name="CustomCollectFiles">
+    <ItemGroup>
+      <_CustomFiles Include="Content\**\*" />
+      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
+        <DestinationRelativePath>Content\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

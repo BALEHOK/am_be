@@ -1,0 +1,666 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{890BDD21-2741-4028-9D20-9102D51AD64D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AppFramework.Core</RootNamespace>
+    <AssemblyName>AppFramework.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-AssetManager|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Staging-AssetManager\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging-SOBBUB|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Staging-SOBBUB\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>ThirdParty\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net">
+      <HintPath>..\packages\Common.Logging.Log4Net.2.0.1\lib\net20\Common.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.2.2\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.0.3.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EPPlus.4.0.3\lib\net20\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ThirdParty\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit">
+      <HintPath>ThirdParty\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Caching, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EnterpriseLibrary.Caching.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common">
+      <HintPath>..\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception">
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
+      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SQLServer.DTSRuntimeWrap, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=x86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>ThirdParty\Microsoft.SQLServer.DTSRuntimeWrap.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SQLServer.ManagedDTS, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>ThirdParty\Microsoft.SQLServer.ManagedDTS.dll</HintPath>
+    </Reference>
+    <Reference Include="NCalc">
+      <HintPath>..\packages\ncalc.1.3.8\lib\NCalc.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Opus6">
+      <HintPath>ThirdParty\Opus6.dll</HintPath>
+    </Reference>
+    <Reference Include="org.in2bits.MyXls">
+      <HintPath>ThirdParty\myxls\org.in2bits.MyXls.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="WarstarDev.Office2k7">
+      <HintPath>ThirdParty\WarstarDev.Office2k7.dll</HintPath>
+    </Reference>
+    <Reference Include="Zen.Barcode.Core">
+      <HintPath>..\packages\Zen.Barcode.Core.Code128.3.1.0\lib\net45\Zen.Barcode.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AC\Authentication\AccessManager.cs" />
+    <Compile Include="AC\Authentication\AuthenticationService.cs" />
+    <Compile Include="AC\Authentication\IAccessManager.cs" />
+    <Compile Include="AC\Authentication\IAuthenticationService.cs" />
+    <Compile Include="AC\Authentication\PermissionsProvider.cs" />
+    <Compile Include="AC\Providers\DynEntityRoleProvider.cs" />
+    <Compile Include="AC\Providers\InMemoryAuthenticationStorageProvider.cs" />
+    <Compile Include="AC\Providers\InMemoryStorageContainer.cs" />
+    <Compile Include="AC\Providers\PasswordProvider.cs" />
+    <Compile Include="AC\Providers\SessionAuthenticationStorageProvider.cs" />
+    <Compile Include="AC\Providers\DynEntityMembershipProvider.cs" />
+    <Compile Include="AC\Providers\IAuthenticationStorageProvider.cs" />
+    <Compile Include="Calculation\AttributeCalculator.cs" />
+    <Compile Include="Calculation\DependenciesFinder.cs" />
+    <Compile Include="Calculation\EnumerableExtender.cs" />
+    <Compile Include="Calculation\ExpressionExtender.cs" />
+    <Compile Include="Calculation\CalculationFunctions.cs" />
+    <Compile Include="Calculation\FunctionsFactory.cs" />
+    <Compile Include="Calculation\IAttributeCalculator.cs" />
+    <Compile Include="Calculation\ParametersFinder.cs" />
+    <Compile Include="Classes\AttributeValueFormatter.cs" />
+    <Compile Include="Classes\DataFactory.cs" />
+    <Compile Include="Classes\IAttributeValueFormatter.cs" />
+    <Compile Include="Classes\IE\IImportExportManager.cs" />
+    <Compile Include="Classes\Layout.cs" />
+    <Compile Include="Classes\LayoutType.cs" />
+    <Compile Include="Classes\SearchEngine\ISearchTracker.cs" />
+    <Compile Include="Classes\Tasks\Runners\ITaskRunnerFactory.cs" />
+    <Compile Include="Classes\Tasks\TaskResult.cs" />
+    <Compile Include="ConstantsEnumerators\SecuredModules.cs" />
+    <Compile Include="DTO\PlainAssetDTO.cs" />
+    <Compile Include="Exceptions\AssetValidationException.cs" />
+    <Compile Include="Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Helpers\TypesHelper.cs" />
+    <Compile Include="Classes\ActionParameters.cs" />
+    <Compile Include="Classes\ApplicationSettings.cs" />
+    <Compile Include="Classes\Asset.cs" />
+    <Compile Include="Classes\AssetAttribute.cs" />
+    <Compile Include="Classes\AssetComparer.cs" />
+    <Compile Include="Classes\AssetsService.cs" />
+    <Compile Include="Classes\AssetTemplateService.cs" />
+    <Compile Include="Classes\AssetTypeRepository.cs" />
+    <Compile Include="Classes\Batch\AssetActions\RecalculateAssets.cs" />
+    <Compile Include="Classes\Batch\IBatchJobManager.cs" />
+    <Compile Include="Classes\Batch\ServiceActions\RebuildReportingView.cs" />
+    <Compile Include="Classes\Batch\AssetTypeActions\UpdateAssetsReferences.cs" />
+    <Compile Include="Classes\Batch\AssetTypeActions\RebuildTypeIndex.cs" />
+    <Compile Include="Classes\Batch\BatchJobFactory.cs" />
+    <Compile Include="Classes\Batch\AssetActions\SynkAssets.cs" />
+    <Compile Include="Classes\Batch\SyncAssetsParameters.cs" />
+    <Compile Include="Classes\Batch\TaskScheduler.cs" />
+    <Compile Include="Classes\Batch\TaxonomyActions\TaxonomyBatch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Batch\AssetActions\UpdateAssets.cs" />
+    <Compile Include="Classes\Caching\ICache.cs" />
+    <Compile Include="Classes\DynamicListsService.cs" />
+    <Compile Include="Classes\DynListItemService.cs" />
+    <Compile Include="Classes\IAssetPanelsAdapter.cs" />
+    <Compile Include="Classes\IAssetsService.cs" />
+    <Compile Include="Classes\IAssetTemplateService.cs" />
+    <Compile Include="Classes\IE\Adapters\IExcelToXmlConverter.cs" />
+    <Compile Include="Classes\IE\Adapters\XmlConverterBase.cs" />
+    <Compile Include="Classes\IE\ImportBinding.cs" />
+    <Compile Include="Classes\ILayoutRepository.cs" />
+    <Compile Include="Classes\ITaxonomyItemService.cs" />
+    <Compile Include="Classes\ITaxonomyService.cs" />
+    <Compile Include="Classes\IUserService.cs" />
+    <Compile Include="Classes\LayoutRepository.cs" />
+    <Compile Include="Classes\LinkedEntityFinder.cs" />
+    <Compile Include="Services\IPanelsService.cs" />
+    <Compile Include="Services\IScreensService.cs" />
+    <Compile Include="Services\PanelsService.cs" />
+    <Compile Include="Services\ScreensService.cs" />
+    <Compile Include="Classes\SearchEngine\IIndexationService.cs" />
+    <Compile Include="Classes\SearchEngine\ISearchService.cs" />
+    <Compile Include="Classes\Tasks\Runners\SqlServerAgentJobRunner.cs" />
+    <Compile Include="Classes\TaxonomyItemService.cs" />
+    <Compile Include="Classes\TaxonomyService.cs" />
+    <Compile Include="Classes\TypeAttribute.cs" />
+    <Compile Include="Classes\UserService.cs" />
+    <Compile Include="Classes\ValidationRulesService.cs" />
+    <Compile Include="Classes\ValidationService.cs" />
+    <Compile Include="Classes\Validation\IValidationOperatorFactory.cs" />
+    <Compile Include="CommonConfiguration.cs" />
+    <Compile Include="DataTypes\AssetDataType.cs" />
+    <Compile Include="DataTypes\StringDataType.cs" />
+    <Compile Include="DataTypes\DateTimeDataType.cs" />
+    <Compile Include="DataTypes\DataTypeBase.cs" />
+    <Compile Include="Classes\DataTypeService.cs" />
+    <Compile Include="Classes\IAssetTypeRepository.cs" />
+    <Compile Include="Classes\IDataTypeService.cs" />
+    <Compile Include="Classes\IE\AssetsExporter.cs" />
+    <Compile Include="Classes\IE\AssetsImporter.cs" />
+    <Compile Include="Classes\IE\IAssetsExporter.cs" />
+    <Compile Include="Classes\ReservationException.cs" />
+    <Compile Include="Classes\ReservationService.cs" />
+    <Compile Include="Classes\SearchEngine\Presentation\Helper.cs" />
+    <Compile Include="Classes\SearchEngine\RefactorCompatibility.cs" />
+    <Compile Include="Classes\SearchEngine\SearchCounter.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\SubsequentQuery.cs" />
+    <Compile Include="Classes\Stock\StockTransactionValidateRest.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\ReservationDescriptor.cs" />
+    <Compile Include="Classes\Tasks\Runners\AssetCreationRunner.cs" />
+    <Compile Include="Classes\AssetFactory.cs" />
+    <Compile Include="Classes\AssetPanelsAdapter.cs" />
+    <Compile Include="Classes\AssetsComparer.cs" />
+    <Compile Include="Classes\AssetTemplate.cs" />
+    <Compile Include="Classes\AssetType.cs" />
+    <Compile Include="Classes\AssetTypeAttribute.cs" />
+    <Compile Include="AC\Authentication\AuthenticationStorage.cs" />
+    <Compile Include="Classes\AssetTypeTaxonomyManager.cs" />
+    <Compile Include="Classes\AssetUser.cs" />
+    <Compile Include="Classes\Barcode\IBarcodeProvider.cs" />
+    <Compile Include="Classes\Barcode\DefaultBarcodeProvider.cs" />
+    <Compile Include="Classes\Batch\AssetActions\ImportAssets.cs" />
+    <Compile Include="Classes\Batch\AssetActions\LocationMove.cs" />
+    <Compile Include="Classes\Batch\AssetTypeActions\PublishAssetType.cs" />
+    <Compile Include="Classes\Batch\AssetTypeActions\CreateAssetsRevisions.cs" />
+    <Compile Include="Classes\Batch\BatchAction.cs" />
+    <Compile Include="Classes\Batch\BatchActionFactory.cs" />
+    <Compile Include="Classes\Batch\BatchJobManager.cs" />
+    <Compile Include="Classes\Batch\BatchJobObserver.cs" />
+    <Compile Include="Classes\Batch\BatchActionParameters.cs" />
+    <Compile Include="Classes\Batch\BatchJob.cs" />
+    <Compile Include="Classes\Batch\IBatchAction.cs" />
+    <Compile Include="Classes\Batch\ServiceActions\RebuildSearchIndexHistory.cs" />
+    <Compile Include="Classes\Caching\CacheAttributes.cs" />
+    <Compile Include="Classes\Caching\CacheFactory.cs" />
+    <Compile Include="Classes\Caching\CacheManager.cs" />
+    <Compile Include="Classes\SearchEngine\FoundAssetTypeComparer.cs" />
+    <Compile Include="Classes\SearchEngine\FoundCategorieItemComparer.cs" />
+    <Compile Include="Classes\TaskRightsEntry.cs" />
+    <Compile Include="Classes\TaskRightsList.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\BatchTaskParametersDescriptor.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\ExportTaskParametersDescriptor.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\Descriptors.cs" />
+    <Compile Include="Classes\DynLists\DynamicList.cs" />
+    <Compile Include="Classes\DynLists\DynamicListItem.cs" />
+    <Compile Include="Classes\DynLists\DynListValue.cs" />
+    <Compile Include="Classes\EntityContext.cs" />
+    <Compile Include="DataTypes\CustomDataType.cs" />
+    <Compile Include="Classes\EntityType.cs" />
+    <Compile Include="Classes\ExtensionMethods.cs" />
+    <Compile Include="Classes\IE\ActionResult.cs" />
+    <Compile Include="Classes\IE\Adapters\AssetsToXmlConverter.cs" />
+    <Compile Include="Classes\IE\Adapters\ExcelToXmlConverter.cs" />
+    <Compile Include="Classes\IE\Adapters\XMLToAssetsAdapter.cs" />
+    <Compile Include="Classes\IE\IntegrityValidation\AssetTypeAttributeValidator.cs" />
+    <Compile Include="Classes\IE\IntegrityValidation\AssetTypeValidator.cs" />
+    <Compile Include="Classes\IE\IntegrityValidation\XMLValidator.cs" />
+    <Compile Include="Classes\IE\LDAPCredentials.cs" />
+    <Compile Include="Classes\IE\Providers\LDAPProvider.cs" />
+    <Compile Include="Classes\IE\Providers\ExcelProvider.cs" />
+    <Compile Include="Classes\IE\Providers\ProviderParameters.cs" />
+    <Compile Include="Classes\IE\BindingInfo.cs" />
+    <Compile Include="Classes\IE\ImportExportParameters.cs" />
+    <Compile Include="Classes\IE\ImportExportManager.cs" />
+    <Compile Include="Classes\IE\Providers\IEntityProvider.cs" />
+    <Compile Include="Classes\IE\IntegrityValidation\IntegrityValidatorBase.cs" />
+    <Compile Include="Classes\IE\Providers\XMLProvider.cs" />
+    <Compile Include="Classes\IE\SchemaGenerator.cs" />
+    <Compile Include="Classes\IE\StatusInfo.cs" />
+    <Compile Include="Classes\IE\TransferResult.cs" />
+    <Compile Include="Classes\Installer\IntegrityCheck.cs" />
+    <Compile Include="Classes\MeasureUnit.cs" />
+    <Compile Include="Classes\Panel.cs" />
+    <Compile Include="Classes\Place.cs" />
+    <Compile Include="Classes\PredefinedAsset.cs" />
+    <Compile Include="Classes\PredefinedAttribute.cs" />
+    <Compile Include="Classes\Tasks\Runners\PredefinedTaskRunner.cs" />
+    <Compile Include="Classes\Tasks\Runners\ExportRunner.cs" />
+    <Compile Include="Classes\Tasks\Runners\PrintReportRunner.cs" />
+    <Compile Include="Classes\Tasks\Runners\ProcessRunner.cs" />
+    <Compile Include="Classes\Reports\DropDownFilterControl.cs" />
+    <Compile Include="Classes\Reports\DynListFilterControl.cs" />
+    <Compile Include="Classes\Reports\FilterControl.cs" />
+    <Compile Include="Classes\Reports\Report.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Reports\ReportField.cs" />
+    <Compile Include="Classes\Reports\TextFilterControl.cs" />
+    <Compile Include="Classes\RightsEntry.cs" />
+    <Compile Include="Classes\Batch\ServiceActions\RebuildSearchIndexActive.cs" />
+    <Compile Include="Classes\SearchEngine\CategorieItem.cs" />
+    <Compile Include="Classes\SearchEngine\ContextSearchElements\ContextForSearch.cs" />
+    <Compile Include="Classes\SearchEngine\ContextSearchElements\ContextItem.cs" />
+    <Compile Include="Classes\SearchEngine\DocumentSearch.cs" />
+    <Compile Include="Classes\SearchEngine\Enumerations\Enumerations.cs" />
+    <Compile Include="Classes\SearchEngine\ExtensionMethods.cs" />
+    <Compile Include="Classes\SearchEngine\IndexFactory.cs" />
+    <Compile Include="Classes\SearchEngine\IndexSaver.cs" />
+    <Compile Include="Classes\SearchEngine\Interface\ISearchCondition.cs" />
+    <Compile Include="Classes\SearchEngine\Interface\ISearchOperator.cs" />
+    <Compile Include="Classes\SearchEngine\Presentation\FoundAssetType.cs" />
+    <Compile Include="Classes\SearchEngine\QueryFormatter.cs" />
+    <Compile Include="Classes\SearchEngine\RPN\Calculator.cs" />
+    <Compile Include="Classes\SearchEngine\RPN\Converter.cs" />
+    <Compile Include="Classes\SearchEngine\RPN\SubsequentQueryConverter.cs" />
+    <Compile Include="Classes\SearchEngine\RPN\SubsequentQueryCalculator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchCondition.cs" />
+    <Compile Include="Classes\SearchEngine\SearchEngine.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOutput.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\BaseOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\StringLessEqualOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\StringLessOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\StringMoreEqualOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\StringMoreOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\EqualOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\LessEqualOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\LessOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\LikeOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\MoreEqualOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\MoreOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\SearchTerm.cs" />
+    <Compile Include="Classes\SearchEngine\SearchParameters.cs" />
+    <Compile Include="Classes\SearchEngine\SearchTracker.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearch.cs" />
+    <Compile Include="Classes\Tasks\SobImportPayments.cs" />
+    <Compile Include="Exceptions\InsufficientPermissionsException.cs" />
+    <Compile Include="DAL\DynEntityIdsTableType.cs" />
+    <Compile Include="DAL\ITableProvider.cs" />
+    <Compile Include="DataTypes\BoolDataType.cs" />
+    <Compile Include="DataTypes\LongDataType.cs" />
+    <Compile Include="Exceptions\DynListNotFoundException.cs" />
+    <Compile Include="Exceptions\AssetNotFoundException.cs" />
+    <Compile Include="Exceptions\AssetTypeNotFoundException.cs" />
+    <Compile Include="Exceptions\ImportException.cs" />
+    <Compile Include="Exceptions\ImportLinkingException.cs" />
+    <Compile Include="Helpers\CustomSerializers.cs" />
+    <Compile Include="Helpers\PropertyUtil.cs" />
+    <Compile Include="Helpers\Routines.cs" />
+    <Compile Include="Classes\Tasks\Runners\SearchRunner.cs" />
+    <Compile Include="Classes\Tasks\Runners\SSISRunner.cs" />
+    <Compile Include="Classes\Stock\StockSubtotals.cs" />
+    <Compile Include="Classes\Stock\StockTransaction.cs" />
+    <Compile Include="Classes\Stock\StockTransactionIn.cs" />
+    <Compile Include="Classes\Stock\StockTransactionManager.cs" />
+    <Compile Include="Classes\Stock\StockTransactionMove.cs" />
+    <Compile Include="Classes\Stock\StockTransactionOut.cs" />
+    <Compile Include="Classes\SearchEngine\TaxonomyTree.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\Attribute.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\AttributeElement.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\OneType.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\Operator.cs" />
+    <Compile Include="Classes\SearchEngine\XElementTransformer.cs" />
+    <Compile Include="Classes\Tasks\Runners\TaskRunnerFactory.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\ImportTaskParametersDescriptor.cs" />
+    <Compile Include="Classes\Tasks\Descriptors\ParametersDescriptor.cs" />
+    <Compile Include="Classes\Taxonomy.cs" />
+    <Compile Include="Classes\TaxonomyItem.cs" />
+    <Compile Include="Classes\Stock\TransactionType.cs" />
+    <Compile Include="Classes\TaxonomyItemsInformation.cs" />
+    <Compile Include="Classes\TranslatableString.cs" />
+    <Compile Include="Classes\Validation\Expression\AttributeExprParser.cs" />
+    <Compile Include="Classes\Validation\Expression\DataTypeExprParser.cs" />
+    <Compile Include="Classes\Validation\Expression\ExprParserLexer.cs" />
+    <Compile Include="Classes\Validation\Expression\ExprParserParserPartial.cs" />
+    <Compile Include="Classes\Validation\Expression\ExprParserParser.cs" />
+    <Compile Include="Classes\Validation\Expression\ExprValidator.cs" />
+    <Compile Include="Classes\Validation\Expression\AttributeExprValidator.cs" />
+    <Compile Include="Classes\Validation\Expression\DataTypeExprValidator.cs" />
+    <Compile Include="Classes\Validation\LogicalOperator.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorBase.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorCompare.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsCorrectBarcode.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsCorrectEmail.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsDatetime.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsDigit.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsFloat.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorIsIP.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorReqEx.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorUnique.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOreratorIsUrl.cs" />
+    <Compile Include="Classes\Validation\ValidationOperand.cs" />
+    <Compile Include="Classes\Validation\ValidationOperatorFactory.cs" />
+    <Compile Include="Classes\Validation\Operators\ValidationOperatorEqual.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Validation\ValidationRuleBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Validation\AttributeValidationRule.cs" />
+    <Compile Include="Classes\Validation\DataTypeValidationRule.cs" />
+    <Compile Include="Classes\BaseXmlDataBase.cs" />
+    <Compile Include="Classes\ZipCode.cs" />
+    <Compile Include="Classes\ZipCompressor.cs" />
+    <Compile Include="ConstantsEnumerators\AttributeNames.cs" />
+    <Compile Include="ConstantsEnumerators\Constants.cs" />
+    <Compile Include="ConstantsEnumerators\Enumerators.cs" />
+    <Compile Include="ConstantsEnumerators\QueryStrings.cs" />
+    <Compile Include="ConstantsEnumerators\SessionVariables.cs" />
+    <Compile Include="ConstantsEnumerators\UserRoles.cs" />
+    <Compile Include="ConstantsEnumerators\StoredProcedures.cs" />
+    <Compile Include="DAL\Adapters\DynColumnAdapter.cs" />
+    <Compile Include="DAL\DynTableProvider.cs" />
+    <Compile Include="DAL\DBHelper.cs" />
+    <Compile Include="DAL\DynColumn.cs" />
+    <Compile Include="DAL\DynRow.cs" />
+    <Compile Include="DAL\DynTable.cs" />
+    <Compile Include="DynamicLibrary.cs" />
+    <Compile Include="Exceptions\FSObjectCreationException.cs" />
+    <Compile Include="Helpers\Formatting.cs" />
+    <Compile Include="Helpers\Randomization.cs" />
+    <Compile Include="Helpers\SmtpSettings.cs" />
+    <Compile Include="Interceptors\TransactionAttribute.cs" />
+    <Compile Include="Interceptors\TransactionInterceptor.cs" />
+    <Compile Include="Interfaces\BaseEntity.cs" />
+    <Compile Include="Interfaces\IBaseEntity.cs" />
+    <Compile Include="Interfaces\IHttpUnityApplication.cs" />
+    <Compile Include="Interfaces\IModification.cs" />
+    <Compile Include="Interfaces\IRevision.cs" />
+    <Compile Include="Interfaces\ISerializable.cs" />
+    <Compile Include="Classes\Tasks\Runners\ITaskRunner.cs" />
+    <Compile Include="ObservableSortedSet.cs" />
+    <Compile Include="PL\AssetAttributeHyperlink.cs" />
+    <Compile Include="PL\AssetAttributeLabel.cs" />
+    <Compile Include="PL\CheckboxControl.cs">
+    </Compile>
+    <Compile Include="PL\Components\CatTax\TaxonomiesDropDown.cs" />
+    <Compile Include="PL\ControlDependencyResolver.cs" />
+    <Compile Include="PL\DocumentControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PL\FileUploadControl.cs" />
+    <Compile Include="PL\IConfirmationDialog.cs" />
+    <Compile Include="PL\IToolbarButton.cs" />
+    <Compile Include="PL\MessagePanel.cs" />
+    <Compile Include="PL\AssetAttributeTextbox.cs" />
+    <Compile Include="PL\AssetHyperLinkTemplate.cs" />
+    <Compile Include="PL\AssetItemTemplate.cs" />
+    <Compile Include="PL\AssetsDropdownList.cs" />
+    <Compile Include="PL\AssetsGrid.cs" />
+    <Compile Include="PL\AssetsGridCommandButton.cs" />
+    <Compile Include="PL\AssetsGridCommandButtonTemplate.cs" />
+    <Compile Include="PL\Batch\BatchJobDataSource.cs" />
+    <Compile Include="PL\CheckboxTemplate.cs" />
+    <Compile Include="PL\Components\CatTax\TaxonomiesTree.cs" />
+    <Compile Include="PL\GridDecorator.cs" />
+    <Compile Include="PL\GridStyleDecorator.cs" />
+    <Compile Include="PL\HelpButton.cs" />
+    <Compile Include="PL\AttributeFieldFactory.cs" />
+    <Compile Include="PL\AttributeItemTemplate.cs" />
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PL\Components\DynFormPanel.cs" />
+    <Compile Include="PL\Components\DynPanel.cs" />
+    <Compile Include="PL\Components\FormElementContainer.cs" />
+    <Compile Include="PL\Components\FormElementContainerType.cs" />
+    <Compile Include="PL\Components\WizPanAssetGeneral.cs" />
+    <Compile Include="PL\DynLists\DynlistDropdownList.cs" />
+    <Compile Include="PL\EmptyTemplate.cs" />
+    <Compile Include="PL\IAssetAttributeControl.cs" />
+    <Compile Include="PL\IAssetAttributesPanel.cs" />
+    <Compile Include="PL\PasswordControl.cs" />
+    <Compile Include="PL\PermissionsControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PL\RightsDatasourceAdapter.cs" />
+    <Compile Include="PL\RightsEntryGridRow.cs" />
+    <Compile Include="PL\RolesDropdown.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PL\Search\RefinementLink.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PL\TaskRightsDatasourceAdapter.cs" />
+    <Compile Include="PL\TextControl.cs" />
+    <Compile Include="PL\UrlControl.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.nl.Designer.cs">
+      <DependentUpon>Resources.nl.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\IRightsService.cs" />
+    <Compile Include="Services\RightsService.cs" />
+    <Compile Include="Validation\AttributeValidator.cs" />
+    <Compile Include="Validation\StringExtender.cs" />
+    <Compile Include="Validation\ValidationExpressionEvaluator.cs" />
+    <Compile Include="Validation\ValidationFunctions.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\ValidationResultLine.cs" />
+    <Compile Include="Validation\ValidationServiceNew.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppFramework.DataProxy\AppFramework.DataProxy.csproj">
+      <Project>{3B3DFA46-D697-40D8-81DE-90ECA111A546}</Project>
+      <Name>AppFramework.DataProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Entities\AppFramework.Entities.csproj">
+      <Project>{658431C7-7442-46F1-81C8-7CC6744F7E46}</Project>
+      <Name>AppFramework.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Key.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.fr.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.nl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

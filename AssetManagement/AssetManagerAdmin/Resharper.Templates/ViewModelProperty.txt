@@ -1,0 +1,12 @@
+﻿        public const string $name1$PropertyName = "$name1$";
+		private $type$ _$name$;
+        public $type$ $name1$
+        {
+            get { return _$name$; }
+
+            set
+            {
+                _$name$ = value;
+                RaisePropertyChanged($name1$PropertyName);
+            }
+        }

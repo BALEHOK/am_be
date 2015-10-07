@@ -1,0 +1,49 @@
+﻿.w100p
+{
+    width: 100%;
+    border: none;
+}
+
+.expandable
+{
+	display: none;
+}
+
+.ButtonExport
+{
+	background-image:url(/images/buttons/database-export.png);
+	background-repeat:no-repeat;
+	padding-left: 20px;
+}
+
+
+.ButtonExport:hover
+{
+	background-image:url(/images/buttons/database--arrow.png);
+	background-repeat:no-repeat;
+}
+
+.cRowAll
+{
+	cursor: pointer;
+	color:Black;
+	font-size:80%;
+	background-color:White;
+}
+.cRowResent
+{
+    cursor: pointer;
+	color:Black;
+	font-size:80%;
+    background-color:#f2f2f2;	
+}
+
+.newAssetButton
+{
+	margin-top: 10px;
+}
+
+.panelcontent
+{
+	overflow: auto;
+}

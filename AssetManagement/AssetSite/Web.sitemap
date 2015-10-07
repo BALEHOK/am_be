@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0">
+  <siteMapNode title="Home" url="~/">
+    <siteMapNode title="Admin" url="/admin/Default.aspx" >
+
+      <siteMapNode url="/Wizard/EditAssetType.aspx#" title="Additional Screens">
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep1.aspx" title="Step 1"   />
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep2.aspx" title="Step 2"   />
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep3.aspx" title="Step 3"   />
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep4.aspx" title="Step 4"   />
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep5.aspx" title="Step 5"   />
+        <siteMapNode url="admin/AdditionalScreens/AdditionalScreenStep6.aspx" title="Step 6"   />
+      </siteMapNode>
+
+      <siteMapNode url="admin/Batch/Default.aspx" title="Batch">
+        <siteMapNode url="admin/Batch/Actions.aspx" title="Actions"   />
+        <siteMapNode url="admin/Batch/Execute.aspx" title="Run Batch"   />
+        <siteMapNode url="admin/Batch/Schedule.aspx" title="Batch Tasks Scheduling"   />
+      </siteMapNode>
+
+      <siteMapNode title="Dynamic Lists" url="admin/DynList/Default.aspx">
+        <siteMapNode url="admin/DynList/EditList.aspx" title="Edit List"/>
+        <siteMapNode url="admin/DynList/EditListItem.aspx" title="Edit List Item"/>
+        <siteMapNode url="admin/DynList/ListItems.aspx" title="List Items"/>
+      </siteMapNode>
+
+      <siteMapNode url="admin/DataTypes/DataTypes.aspx" title="DataTypes">
+        <siteMapNode url="admin/DataTypes/DataTypesValidation.aspx" title="Data Types Validation" />
+        <siteMapNode url="admin/DataTypes/DataTypesSearchOps.aspx" title="Search Operators" />
+      </siteMapNode>
+
+
+      <siteMapNode title="Taxonomies" url="admin/Taxonomies/">
+        <siteMapNode url="admin/Taxonomies/Default.aspx" title="Default" />
+        <siteMapNode url="admin/Taxonomies/ManageTypes.aspx" title="Manage Types" />
+        <siteMapNode url="admin/Taxonomies/TreeEdit.aspx" title="Tree Edit" />
+      </siteMapNode>
+
+      <siteMapNode url="admin/Reports/" title="Reports">
+        <siteMapNode url="admin/Reports/Default.aspx" title="List" />
+        <siteMapNode url="admin/Reports/Add/Default.aspx" title="New report">
+          <siteMapNode url="admin/Reports/Add/AssetInfo.aspx" title="Item Information"/>
+          <siteMapNode url="admin/Reports/Add/SelectTemplate.aspx" title="Template Selection"/>
+        </siteMapNode>
+        <siteMapNode url="admin/Reports/AddOnView/Default.aspx" title="New report" />
+      </siteMapNode>
+
+      <siteMapNode title="Search" url="admin/Search/Default.aspx">
+        <siteMapNode url="admin/Search/Log.aspx" title="Log"/>
+      </siteMapNode>
+
+      <siteMapNode title="Users" url="admin/Users/">
+        <siteMapNode url="admin/Users/Default.aspx" title="Default" />
+        <siteMapNode url="admin/Users/EditRights.aspx" title="Edit Rights" />
+        <siteMapNode url="admin/Users/ViewRights.aspx" title="View Rights" />
+      </siteMapNode>
+
+      <siteMapNode title="Tasks" url="Wizard/EditAssetType.aspx/">
+        <siteMapNode url="TaskView.aspx" title="Default" />
+        <siteMapNode url="admin/Tasks/EditTask.aspx" title="Edit Task" />
+        <siteMapNode url="admin/Tasks/TasksList.aspx" title="Tasks List" />
+      </siteMapNode>
+
+      <siteMapNode url="admin/FAQItems.aspx" title="F.A.Q. items" />
+      <siteMapNode url="admin/ZipsAndPlaces.aspx" title="Zip Codes and Places" />
+      <siteMapNode url="admin/Countries.aspx" title="Countries" />
+      <siteMapNode url="admin/CacheMonitor.aspx" title="Cache Monitor" />
+      <siteMapNode url="admin/LocationMove.aspx" title="Location Movement"></siteMapNode>
+      <siteMapNode url="admin/InstallationCheck.aspx" title="Installed system integrity check"></siteMapNode>
+      <siteMapNode url="admin/Contexts/Default.aspx" title="Contexts" />
+      <siteMapNode url="admin/Import/Default.aspx" title="Import"></siteMapNode>
+      <siteMapNode url="admin/Export/Default.aspx" title="Export"></siteMapNode>
+      <siteMapNode url="admin/Languages/Default.aspx" title="Languages"></siteMapNode>
+      <siteMapNode url="admin/UsersMonitor.aspx" title="Users Monitor" />
+      <siteMapNode url="admin/ServiceOps.aspx" title="Service Operations" />
+
+      <siteMapNode title="Wizard" url="~/Wizard/">
+        <siteMapNode url="Wizard/EditAttribute.aspx" title="EditAttribute" />
+        <siteMapNode url="Wizard/EditPanel.aspx" title="EditPanel" />
+        <siteMapNode url="Wizard/EditAssetType.aspx" title="Item Type Edit" />
+        <siteMapNode url="Wizard/EditValidationRule.aspx" title="EditValidationRule" />
+        <siteMapNode url="Wizard/Step1.aspx" title="Step1" />
+        <siteMapNode url="Wizard/Step10.aspx" title="Step10" />
+        <siteMapNode url="Wizard/Step11.aspx" title="Step11" />
+        <siteMapNode url="Wizard/Step2.aspx" title="Step2" />
+        <siteMapNode url="Wizard/Step3.aspx" title="Step3" />
+        <siteMapNode url="Wizard/Step4.aspx" title="Step4" />
+        <siteMapNode url="Wizard/Step5.aspx" title="Step5" />
+        <siteMapNode url="Wizard/Step6.aspx" title="Step6" />
+        <siteMapNode url="Wizard/Step7.aspx" title="Step7" />
+        <siteMapNode url="Wizard/Step8.aspx" title="Step8" />
+        <siteMapNode url="Wizard/Step9.aspx" title="Step9" />
+      </siteMapNode>
+      
+      <siteMapNode title="New">
+        <siteMapNode url="Asset/New/Step1.aspx" title="Step 1" />
+        <siteMapNode url="Asset/New/Step2.aspx" title="Step 2" />
+      </siteMapNode>
+    </siteMapNode>
+
+    <siteMapNode url="AssetView.aspx" title="Items">
+      <siteMapNode url="Asset/Edit.aspx" title="Edit" />
+      <siteMapNode url="Asset/History.aspx" title="History" />
+
+      
+      <siteMapNode url="Asset/View.aspx" title="View" />
+      <siteMapNode url="Asset/ViewTransactions.aspx" title="ViewTransactions" />
+    </siteMapNode>
+    <siteMapNode title="Config.Files" />
+    <siteMapNode title="Controls">
+      <siteMapNode title="CatTax" />
+      <siteMapNode title="SearchControls" />
+    </siteMapNode>
+    <siteMapNode title="css">
+      <siteMapNode title="controls" />
+      <siteMapNode title="layouts" />
+    </siteMapNode>
+    <siteMapNode url="Default.aspx" title="Default" />
+    <siteMapNode title="DynList">
+      <siteMapNode url="DynList/Default.aspx" title="Default" />
+      <siteMapNode url="DynList/EditList.aspx" title="EditList" />
+      <siteMapNode url="DynList/EditListItem.aspx" title="EditListItem" />
+      <siteMapNode url="DynList/ListItems.aspx" title="ListItems" />
+    </siteMapNode>
+    <siteMapNode url="EditAssetType.aspx" title="Edit Item Type" />
+    <siteMapNode title="Helpers" />
+    <siteMapNode title="images">
+      <siteMapNode title="buttons" />
+      <siteMapNode title="layouts" />
+    </siteMapNode>
+    <siteMapNode title="javascript" />
+    <siteMapNode url="Login.aspx" title="Login" />
+    <siteMapNode title="MasterPages" />
+    <siteMapNode title="Reports">
+      <siteMapNode title="Add">
+        <siteMapNode url="Reports/Add/AssetInfo.aspx" title="Item Info" />
+        <siteMapNode url="Reports/Add/Default.aspx" title="Default" />
+        <siteMapNode url="Reports/Add/SelectTemplate.aspx" title="SelectTemplate" />
+      </siteMapNode>
+      <siteMapNode url="Reports/Default.aspx" title="Default" />
+      <siteMapNode url="Reports/List.aspx" title="Reports and Layouts" />
+      <siteMapNode url="Reports/Render.aspx" title="Render" />
+      <siteMapNode url="Reports/RenderReport.aspx" title="RenderReport" />
+      <siteMapNode title="Templates" />
+      <siteMapNode url="Reports/ViewReport.aspx" title="ViewReport" />
+    </siteMapNode>
+    <siteMapNode title="ScreenLayouts" />
+    <siteMapNode title="Search">
+      <siteMapNode url="Search/ResultByCategory.aspx" title="ResultByCategory" />
+      <siteMapNode url="Search/ResultByContext.aspx" title="ResultByContext" />
+      <siteMapNode url="Search/ResultByType.aspx" title="ResultByType" />
+      <siteMapNode url="Search/Search.aspx" title="Search" />
+      <siteMapNode url="Search/SearchByCategory.aspx" title="SearchByCategory" />
+      <siteMapNode url="Search/SearchByContext.aspx" title="SearchByContext" />
+      <siteMapNode url="Search/SearchByType.aspx" title="SearchByType" />
+      <siteMapNode url="Search/SimpleSearchKeywords.aspx" title="SimpleSearchKeywords" />
+    </siteMapNode>
+
+    <siteMapNode url="Contact.aspx" title="Contact" />
+    <siteMapNode url="Faq.aspx" title="FAQ" />
+    <siteMapNode title="Mobile" url="~/Mobile/Default.aspx" />
+    <siteMapNode title="Financial" url="~/Financial/Default.aspx" />
+    <siteMapNode title="Documents" url="~/Documents/Default.aspx" />
+
+    <siteMapNode title="Reservation">
+      <siteMapNode url="Reservations/Add.aspx" title="Add"/>
+      <siteMapNode url="Reservations/History.aspx" title="History"/>
+      <siteMapNode url="Reservations/Overview.aspx" title="Overview"/>
+    </siteMapNode>
+    
+  </siteMapNode>
+</siteMap>

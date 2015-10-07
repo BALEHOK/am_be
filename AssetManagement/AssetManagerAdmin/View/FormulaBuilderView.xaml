@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="AssetManagerAdmin.View.FormulaBuilderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:AssetManagerAdmin.FormulaBuilder.Controls"
+             xmlns:ctls="clr-namespace:AssetManagerAdmin.View.Controls"
+             mc:Ignorable="d"
+             PresentationTraceSources.TraceLevel="High"
+             DataContext="{Binding FormulaBuilder, Source={StaticResource Locator}}" d:DesignHeight="519" d:DesignWidth="1031">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Context selector-->
+            <Border Padding="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Background="LightGoldenrodYellow">
+                <StackPanel 
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                    <Label Content="Context" VerticalAlignment="Center" FontSize="14"/>
+                    <ComboBox x:Name="ContextSelector" FontSize="14"
+                              VerticalAlignment="Center"
+                              SelectedItem="{Binding CurrentContext}"
+                              ItemsSource="{Binding Contexts}" DisplayMemberPath="Name">
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+
+            <!--Attributes selectors-->
+            <ctls:AttributesSelector Grid.Row="1" Grid.Column="0" Grid.RowSpan="4"
+                                     Visibility="{Binding IsAttributesSelectorVisible, Converter={StaticResource BoolToVis}}"
+                                     AssetType="{Binding DataProvider.CurrentAssetType, Mode=OneWayToSource}"
+                                     AssetTypesList="{Binding AssetTypesList}"
+                                     SelectedAttribute="{Binding AttributeType, Mode=OneWayToSource, NotifyOnTargetUpdated=True}">
+            </ctls:AttributesSelector>
+
+            <ctls:ScreenAttributesSelector Grid.Row="1" Grid.Column="0" Grid.RowSpan="4"
+                                           Visibility="{Binding IsScreenAttributesSelectorVisible, Converter={StaticResource BoolToVis}}"
+                                           AssetType="{Binding DataProvider.CurrentAssetType, Mode=OneWayToSource}"
+                                           AssetTypesList="{Binding AssetTypesList}"
+                                           SelectedScreenAttribute="{Binding ScreenAttribute, Mode=OneWayToSource}">
+            </ctls:ScreenAttributesSelector>
+
+            <controls:FormulaBuilderControl x:Name="FormulaBuilder" Grid.Row="4" Grid.Column="1" Margin="10"
+                                            Grammar="{Binding Grammar, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Builder="{Binding Builder}"
+                                            ExpressionParser="{Binding ExpressionParser}"/>
+
+            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Height="40" HorizontalAlignment="Center" Margin="20">
+                <Button  Margin="5" Width="120" Command="{Binding SaveFormulaCommand}">Save formula</Button>
+                <Button  Margin="5" Width="120" Command="{Binding CopyToClipboardCommand}">Copy to clipboard</Button>
+                <Button  x:Name="ButtonPaste" Margin="5" Visibility="Collapsed" Width="120" Command="{Binding PasteFormulaCommand}">Paste from clipboard</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+    
+</UserControl>

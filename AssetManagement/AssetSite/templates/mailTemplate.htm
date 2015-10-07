@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        html {
+          margin:0px;
+          padding:10px;
+          height:100%;
+          width:100%;
+        }
+        body {
+          margin:0px;
+          padding:0px;
+          width:100%;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 11px;
+        }
+  
+        td.label {
+            font-weight: bold;
+            width: 200px;    	    
+        }
+        
+    </style>
+</head>
+<body>
+	 <p class="title">
+       Er is een bericht verstuurd via het Asset Manager contactformulier
+    </p>
+	<h2>%SUBJECT%</h2>
+	<p>%MESSAGE%</p>   
+    <table width="100%">
+	<tr>
+            <td class="label">Name:</td>
+            <td class="text">%NAME%</td>
+        </tr>        
+        <tr>
+            <td class="label">Email:</td>
+            <td class="text"><a href="mailto:%EMAIL%">%EMAIL%</a></td>
+        </tr>
+    </table>
+    <p class="footer">
+        © 2010
+    </p>
+</body>
+</html>

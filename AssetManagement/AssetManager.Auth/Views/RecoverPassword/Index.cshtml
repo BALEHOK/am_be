@@ -1,0 +1,36 @@
+﻿@model string
+@{
+    Layout = "~/Views/RecoverPassword/_Layout.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(Model)) // error message
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="alert alert-danger">
+                <strong>@Model</strong>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form name="forgot_password" method="post" action="@Url.Action("Index")">
+                    @Html.AntiForgeryToken()
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input required="" name="username" autofocus="" id="username" type="text" class="form-control " placeholder="Username" maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary">Recover</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

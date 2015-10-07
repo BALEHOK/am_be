@@ -1,0 +1,1 @@
+ALTER TABLE DynEntityIndex ALTER COLUMN Barcode nvarchar(200) NULL;

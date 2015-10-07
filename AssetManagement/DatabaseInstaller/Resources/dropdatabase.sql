@@ -1,0 +1,2 @@
+IF  EXISTS (SELECT name FROM sys.databases WHERE name = N'%%DATABASE%%')
+DROP DATABASE [%%DATABASE%%]

@@ -1,0 +1,52 @@
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace AssetManager.Infrastructure.Models.TypeModels
+{
+    public class AttributeTypeModel : INotifyPropertyChanged
+    {
+        private bool _isHighlighted;
+        public long Id { get; set; }
+        public string DisplayName { get; set; }
+        public string DbName { get; set; }
+        public int DisplayOrder { get; set; }
+        public AssetTypeModel RelationType { get; set; }
+        public long RelationId { get; set; }
+        public string ValidationExpression { get; set; }
+        public string CalculationFormula { get; set; }
+        public string ScreenFormula { get; set; }
+        public string DataType { get; set; }
+
+        public bool HasDatabaseFormula
+        {
+            get { return !string.IsNullOrWhiteSpace(CalculationFormula); }
+        }
+
+        public bool HasScreenFormula
+        {
+            get { return !string.IsNullOrWhiteSpace(ScreenFormula); }
+        }
+        public bool HasValidationExpression
+        {
+            get { return !string.IsNullOrEmpty(ValidationExpression); }
+        }
+
+        public bool IsHighlighted
+        {
+            get { return _isHighlighted; }
+            set
+            {
+                _isHighlighted = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

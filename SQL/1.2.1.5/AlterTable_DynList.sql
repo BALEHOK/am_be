@@ -1,0 +1,1 @@
+ALTER TABLE DynList ALTER COLUMN Active bit NOT NULL;

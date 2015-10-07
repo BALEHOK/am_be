@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+/*******************************************************************************
+*  visual_consistencies.css : 2005.09.07 : Ruthsarian Layouts
+* -----------------------------------------------------------------------------
+*  Edited for size
+*******************************************************************************/
+
+ul, ol, dl, p, h1, h2, h3, h4, h5, h6
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+ul ul, ul ol, ol ul, ol ol
+{
+	/* kill margins on sub-lists
+	 */
+	margin-top: 0;
+	margin-bottom: 0;
+}
+h1
+{
+	font-size: 240%;
+}
+h2
+{
+	font-size: 180%;
+}
+h3
+{
+	font-size: 140%;
+}
+h4
+{
+	font-size: 100%;
+}
+h5
+{
+	font-size: 70%;
+}
+h6
+{
+	font-size: 50%;
+}
+a, a:link, a:visited, a:active
+{
+	text-decoration: underline;
+}
+a:hover
+{
+	/* because I like the visual feedback a user gets when they
+	 * mouse over a link and see the underline of the link
+	 * disappear.
+	 */
+	text-decoration: none;
+}
+code, pre
+{
+	/* Make sure we're all using the same monospaced font for CODE
+	 * and PRE elements
+	 */
+	font-family: "Courier New", Courier, monospace;
+}
+label
+{
+	/* It's all about the visual feedback. In this case, label 
+	 * elements are usually clickable which then set focus on
+	 * their target. I want to show that to the user in a manner
+	 * they are used to and understand.
+	 */
+	cursor: pointer;
+}
+table
+{
+	/* Some browsers won't carry the font size down into the 
+	 * browser like they're suppose to.
+	 */
+	font-size: 100%;
+}
+td, th
+{
+	/* I never like or use the default vertical centering "feature"
+	 * provided by tables. 
+	 */
+	vertical-align: top;
+}
+body
+{
+	/* I've seen several comments that setting the base font size to 100.1%
+	 * fixes some browser bugs. Which bugs? I don't know. I believe it's
+	 * to fix some rounding-error bugs that some browsers (Mozilla) are
+	 * prone to. It doesn't hurt anything, so I keep it here.
+	 */
+	font-size: 100.1%;
+}
+
+/******************************************************************************/

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<menu>
+	<item text="Asset naam" url="/Wizard/Step1.aspx" />
+	<item text="Specifieke kenmerken" url="/Wizard/Step2.aspx" />
+</menu>
+

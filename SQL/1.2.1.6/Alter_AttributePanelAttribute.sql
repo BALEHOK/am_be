@@ -1,0 +1,2 @@
+ALTER TABLE AttributePanelAttribute ADD ReferencingDynEntityAttribConfigId bigint NULL;
+

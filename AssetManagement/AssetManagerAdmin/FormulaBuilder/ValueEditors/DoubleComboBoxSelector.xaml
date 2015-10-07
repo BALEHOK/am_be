@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="AssetManagerAdmin.FormulaBuilder.ValueEditors.DoubleComboBoxSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:expressionTypes="clr-namespace:AssetManagerAdmin.FormulaBuilder.Expressions.ExpressionTypes"
+             mc:Ignorable="d" 
+             d:DesignHeight="71" d:DesignWidth="191"
+             d:DataContext="{d:DesignInstance Type=expressionTypes:RelatedFieldValueEntry}">
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox Visibility="{Binding IsEntrySelected, Converter={StaticResource BoolToVis}}"
+                      VerticalAlignment="Center" FontSize="14" x:Name="ValueComboBox"                          
+                      ItemsSource="{Binding Items}" DisplayMemberPath="DisplayName"
+                      SelectedValue="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <ComboBox Visibility="{Binding IsEntrySelected, Converter={StaticResource BoolToVis}}" Margin="5,0,0,0"
+                      VerticalAlignment="Center" FontSize="14" x:Name="SubItemsComboBox"                          
+                      ItemsSource="{Binding Selected.SubItems}" DisplayMemberPath="DisplayName"
+                      SelectedValue="{Binding SubItemSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

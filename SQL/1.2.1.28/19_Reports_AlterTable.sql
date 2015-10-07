@@ -1,0 +1,1 @@
+ALTER TABLE [Report] ADD [Type] INT NOT NULL DEFAULT ((0))

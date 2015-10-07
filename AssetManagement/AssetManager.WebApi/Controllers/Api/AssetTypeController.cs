@@ -1,0 +1,77 @@
+﻿using AssetManager.Infrastructure.Models;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Web.Http;
+using System.Web.Routing;
+using AssetManager.Infrastructure.Models.TypeModels;
+using AssetManager.Infrastructure.Services;
+using AssetManager.WebApi.Extensions;
+using WebApi.OutputCache.V2;
+
+namespace AssetManager.WebApi.Controllers.Api
+{
+    /// <summary>
+    /// Returns AssetType-related information
+    /// by AssetType Id
+    /// </summary>
+    [RoutePrefix("api/assettype")]
+    public class AssetTypeController : ApiController
+    {
+        private readonly IAssetService _assetService;
+        private readonly ITaxonomyService _taxonomyService;
+        private readonly IAssetTypeService _assetTypeService;
+
+        public AssetTypeController(
+            IAssetService assetService,
+            IAssetTypeService assetTypeService,
+            ITaxonomyService taxonomyService)
+        {
+            if (assetService == null)
+                throw new ArgumentNullException("assetService");
+            _assetService = assetService;
+            if (assetTypeService == null)
+                throw new ArgumentNullException("assetTypeService");
+            _assetTypeService = assetTypeService;
+            if (taxonomyService == null)
+                throw new ArgumentNullException("taxonomyService");
+            _taxonomyService = taxonomyService;
+        }
+
+        [Route(""), HttpGet]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public TypesInfoModel GetAssetTypes()
+        {
+            return _assetTypeService.GetAssetTypes();
+        }
+
+        /// <summary>
+        /// Returns list of assets for given type
+        /// </summary>
+        /// <param name="assetTypeId">AssetType Id</param>
+        /// <param name="query">Filter by asset name</param>
+        /// <param name="rowStart">Offset</param>
+        /// <param name="rowsNumber">Items to return</param>
+        /// <returns></returns>
+        [Route("{assetTypeId}/assets")]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public IEnumerable<AssetModel> GetAllAssets(
+            long assetTypeId, string query = null, int? rowStart = 1, int? rowsNumber = 20)
+        {
+            // TODO: impove this API by adding strong-typed property
+            var userId = User.GetId();
+            return _assetService.GetAssets(assetTypeId, userId, query, rowStart, rowsNumber);
+        }
+        
+        /// <summary>
+        /// Returns taxonomy path
+        /// </summary>
+        /// <param name="assetTypeId"></param>
+        /// <returns></returns>
+        [Route("{assetTypeId}/taxonomy")]
+        public TaxonomyModel GetTaxonomy(long assetTypeId)
+        {
+            return _taxonomyService.GetTaxonomyByAssetTypeId(assetTypeId);
+        }        
+    }
+}

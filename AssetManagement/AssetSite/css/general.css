@@ -1,0 +1,404 @@
+﻿@charset "UTF-8";
+
+/*********************** Some general property classes ************************
+* These classes can be used as kind of properties. By defining more than one
+* class on a tag, style-properties can be set.
+* These will mainly used for <p> <div> and <span> tags.
+*
+* These are the default values and can be overridden in the theme-section ...
+******************************************************************************/
+* {
+    margin: 0;
+}
+
+
+html, body 
+{
+    height: 100%;
+}
+
+.clear
+{	clear: both;
+	padding-bottom: 1px;	/* for Gecko-based browsers */
+	margin-bottom: -1px;	/* for Gecko-based browsers */	
+}
+
+input[type="checkbox"], input[type="radio"]
+{
+    height: 14px;
+    line-height: 14px;
+    margin: -2px 0 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 16px;
+    border:	0 none; 
+}
+
+.block
+{	display: block;}
+
+.hide	
+{	display: none;	}
+
+.NoWrap
+{	 white-space: nowrap;}
+
+.linespacing100
+{	line-height: 100%;}
+
+.linespacing125
+{	line-height: 125%;}
+
+.linespacing150
+{	line-height: 150%;}
+
+.linespacing200
+{	line-height: 200%;}
+
+.nomargin
+{	margin: 0px;}
+
+.nomargintopbottom
+{	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.nomargintop
+{	margin-top: 0px;}
+
+.nomarginbottom
+{	margin-bottom: 0px;}
+
+.nomarginleft
+{	margin-left: 0px;}
+
+.nomarginright
+{	margin-right: 0px;}
+
+.toleft
+{	float:left;}
+
+.toright
+{	float:right;}
+
+div.spacer
+{
+	clear: both;
+	height: 10px;
+}
+
+.withborder
+{	border-width: 1px;
+	border-style: solid;
+}
+
+.withtopborder
+{	border-top-width: 1px;
+	border-top-style: solid;	
+}
+
+.withbottomborder
+{	border-bottom-width: 1px;
+	border-bottom-style: solid;		
+}
+
+.withleftborder
+{	border-left-width: 1px;
+	border-left-style: solid;
+}
+
+.withrightborder
+{	border-right-width: 1px;
+	border-right-style: solid;
+}
+
+.withwidepadding
+{	padding: 15px;}
+
+.withpadding
+{	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.withsmallpadding
+{	padding: 2px;}
+
+.nopaddingleft
+{	padding-left: 0px;}
+
+.nopaddingright
+{
+	padding-right: 0;
+}
+
+.nopaddingbottom
+{
+	padding-bottom: 0;
+}
+
+.nopaddingtop
+{
+	padding-top: 0;
+}
+
+.nopadding
+{
+	padding: 0;
+}
+
+.withsmallmargintop
+{	margin-top: 3px;}
+
+.withnormalleftrightpadding
+{	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.valignMiddle
+{	vertical-align: middle;}
+
+.valignBottom
+{	vertical-align: bottom;
+}
+
+.alignCenter
+{	text-align: center;}
+
+.alignRight
+{	text-align: right;}
+
+ul
+{	list-style-type: square;}
+
+ul.notab
+{	padding-left: 0px;		/* When used, the li items has no tab (no whitespace) in front */
+	margin-left: 18px;
+}
+
+li.minus
+{	list-style-image: url(../images/Minus.gif);
+	list-style-position: outside;
+}
+
+li.square
+{	list-style-type: square;}
+
+p.hiddenp						/* Sometimes used before block with background-color (IE-hack) */
+{	height:0px;
+	overflow:hidden;
+	margin:0px;	
+}
+
+.barcode { font-size: 36pt; } /*font-family: "Code39AzaleaRegular2", verdana, calibri;*/
+
+.linkSelected
+{
+    font-weight:bold;
+}
+
+.loader 
+{
+    width: 32px;
+    height: 32px;
+    background: url('/images/ajax-loader.gif') no-repeat 0 0;    
+}
+.hidden 
+{
+    display: none;
+}
+
+
+.highlight { background-color: yellow }
+
+.searchBacklinkHolder
+{
+    background-color: #a7df8a; 
+    padding: 15px 17px 15px 17px; 
+    font-size: 14px;
+}
+
+#breadcrumb
+{
+	padding: 5px 30px 5px 5px;
+	font-size: smaller;
+	position: relative;
+	background-color: #F1F0F2;
+}
+
+#breadcrumb a
+{
+	text-decoration: none;
+	color: #595959;
+}
+
+#breadcrumb a:hover
+{
+	text-decoration: underline;
+}
+
+#breadcrumb strong
+{
+	color: #5eba2f;
+}
+
+#breadcrumb .newAsset 
+{
+    position:absolute;
+    top: 5px;
+    right: 10px;
+    width: 20px;
+}
+
+#aspnetForm 
+{
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -2em;
+}
+
+#footer, .push {
+    height: 2em;
+    clear: both;
+}
+
+#footer
+{
+	background-color: #fff;	/* footer background color */
+	font-size: x-small;
+	color: #595959;
+	border-color: #b8b8b8;
+	border-top: solid 0px #000;
+	margin: 0 auto;	
+}
+#footer .inside
+{
+	margin-top: 0;
+	margin-bottom: 0;		
+}
+#footer .copyright
+{
+	float: left;	
+}
+
+#gridLoader 
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.barcodeButton
+{
+    margin-left: 5px;
+    margin-top: -10px;
+}
+
+.blur 
+{
+    font-style: italic;
+    color: #a7a699; 
+}
+
+.errorText 
+{
+    font-weight:bold;
+    color: #FF0000;
+}
+
+.ui-datepicker { width: 14em; display: none; }
+.ui-datepicker-trigger
+{  
+    margin-top: 1px;
+    margin-left: 5px;
+}
+.ui-datepicker-title { font-size: .9em; }
+.ui-datepicker-trigger { cursor: pointer; }
+/******************************************************************************/
+
+.additional-screens .panelcontent p.error { color: Red; }
+.additional-screens .panelcontent ul.error { text-align: left; margin-left: 20px;}
+.additional-screens .panelcontent ul.error li {  }
+.dialog.tasks {overflow:auto;font-size:12px;}
+.refinements a { display:block; margin-bottom: 10px; }
+
+.screen-title { color: #66cc33; font-size:120%; }
+.screen-subtitle { font-size:115%; }
+.float-left {
+    float: left;
+}
+.editDL { margin-top: 2px; margin-left: 10px; }
+.period br {
+    float: left;
+}
+.period label {
+    margin-right: 10px;
+}
+
+.gridlabels .validation.error { color:red; }
+
+.restore-asset {
+    background-color: #f8ffd3;
+    border: 1px solid #ff4141;
+    padding: 10px;
+    margin: 10px 0px 10px 0px;
+}
+
+.assets-picker {
+    white-space: nowrap;
+}
+.assets-select {
+    min-width: 342px;
+}
+
+#openPopupWindow
+{
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 90px;
+    height: 90px;
+    margin-top: -64px;
+    overflow: hidden;
+    text-indent: -999px;
+    font-size: 0;
+    line-height: 0;
+    background: url(/images/Contact_Us.jpg) no-repeat;
+    border: thin;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -khtml-border-radius: 40;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+#tellfriend {
+	position: absolute;
+	margin-top: -300px;
+	left: 400px;
+	color: #fff;
+	padding: 15px;
+	margin-bottom: 20px;
+	width: 380px;
+	z-index: 1;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	background-color: #f2f2f2;
+}
+
+#tellfriend a.close {
+	position: absolute;
+	right: -10px;
+	top: -10px;
+	background: url(/images/fancy_closebox.png) no-repeat;
+	height: 30px;
+	width: 30px;
+	overflow: hidden;
+	text-indent: -1000px;
+}
+
+#tellfriend form textarea {
+	height: 80px;
+}

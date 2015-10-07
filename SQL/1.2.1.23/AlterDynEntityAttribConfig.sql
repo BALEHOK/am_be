@@ -1,0 +1,2 @@
+alter table DynEntityAttribConfig
+drop column GUIDisplayOrder

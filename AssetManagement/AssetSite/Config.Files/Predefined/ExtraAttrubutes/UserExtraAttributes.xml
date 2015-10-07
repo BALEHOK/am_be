@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAssetTypeAttribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Password</Name>
+		<Comment>Hashed password</Comment>
+		<DataTypeName>password</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Password</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>150</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Email</Name>
+		<Comment>User email</Comment>
+		<DataTypeName>email</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Email</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>160</DisplayOrder>
+    <ValidationExpr>@Unique</ValidationExpr>
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>LastLoginDate</Name>
+		<Comment />
+		<DataTypeName>datetime</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>false</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>LastLoginDate</DBTableFieldName>
+		<IsInternal>true</IsInternal>
+		<DynamicListUid xsi:nil="true" />
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>LastActivityDate</Name>
+		<Comment />
+		<DataTypeName>datetime</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>false</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>LastActivityDate</DBTableFieldName>
+		<IsInternal>true</IsInternal>
+		<DynamicListUid xsi:nil="true" />
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>LastLockoutDate</Name>
+		<Comment />
+		<DataTypeName>datetime</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>false</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>LastLockoutDate</DBTableFieldName>
+		<IsInternal>true</IsInternal>
+		<DynamicListUid xsi:nil="true" />
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>false</AllowEditValue>
+		<IsShownInGrid>false</IsShownInGrid>
+		<IsShownOnPanel>false</IsShownOnPanel>
+		<DisplayOrder>0</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<RelatedEntity>User</RelatedEntity>
+		<IsDescription>false</IsDescription>
+		<Name>Users</Name>
+		<Comment>Child users for this user</Comment>
+		<DataTypeName>assets</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<DBTableFieldName>Users</DBTableFieldName>
+		<IsInternal>true</IsInternal>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>false</IsShownInGrid>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>190</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Permissions On Users</Name>
+		<Comment>Permissions on child users's assets</Comment>
+		<DataTypeName>permission</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>true</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>PermissionOnUsers</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>200</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+	<AssetTypeAttribute>
+		<IsDescription>false</IsDescription>
+		<Name>Role</Name>
+		<Comment>User role</Comment>
+		<DataTypeName>role</DataTypeName>
+		<Label />
+		<IsDynListValue>false</IsDynListValue>
+		<IsFinancialInfo>false</IsFinancialInfo>
+		<IsRequired>false</IsRequired>
+		<IsKeyword>false</IsKeyword>
+		<IsFullIndex>false</IsFullIndex>
+		<DisplayOnResultList>false</DisplayOnResultList>
+		<DisplayOrderResultList>0</DisplayOrderResultList>
+		<DisplayOnExtResultList>false</DisplayOnExtResultList>
+		<DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+		<IsActiveVersion>true</IsActiveVersion>
+		<ID>0</ID>
+		<UID>0</UID>
+		<IsActive>true</IsActive>
+		<ContextId xsi:nil="true" />
+		<AssetTypeUID>0</AssetTypeUID>
+		<DBTableFieldName>Role</DBTableFieldName>
+		<AllowEditConfig>false</AllowEditConfig>
+		<AllowEditValue>true</AllowEditValue>
+		<DynamicListUid xsi:nil="true" />
+		<IsShownInGrid>true</IsShownInGrid>
+		<IsShownOnPanel>true</IsShownOnPanel>
+		<DisplayOrder>210</DisplayOrder>
+		<ValidationRules />
+	</AssetTypeAttribute>
+</ArrayOfAssetTypeAttribute>

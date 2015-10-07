@@ -1,0 +1,21 @@
+﻿
+.toolbar .button
+{
+	float:left;
+	margin: 5px;
+	width: auto;
+	cursor:pointer;
+}
+.toolbar .button img
+{
+	position: absolute;
+}
+
+.toolbar .label
+{
+	margin-left:25px;
+}
+
+.toolbar .button.btn-restore {
+    float: right;
+}

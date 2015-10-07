@@ -1,0 +1,1 @@
+ALTER TABLE IndexHistoryDynEntities ALTER COLUMN DynEntityConfigId bigint NOT NULL;

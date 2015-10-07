@@ -1,0 +1,23 @@
+﻿<Application x:Class="AssetManagerAdmin.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:AssetManagerAdmin.ViewModel"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:assetManagerAdmin="clr-namespace:AssetManagerAdmin"
+             xmlns:converters="clr-namespace:AssetManagerAdmin.Converters"
+             StartupUri="MainWindow.xaml"
+             mc:Ignorable="d">
+    <Application.Resources>
+        <!--Global View Model Locator-->
+        <vm:ViewModelLocator x:Key="Locator"
+                             d:IsDataSource="True" />
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />        
+        <converters:InverseBooleanConverter x:Key="InverseBoolean"/>
+        <converters:BooleanToFontWeightConverter x:Key="BoolToBold"/>
+        <converters:FileNameConverter x:Key="FileName"/>
+        
+    </Application.Resources>
+    
+</Application>

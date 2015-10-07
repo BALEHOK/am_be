@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActiveText" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="AddNodeText" xml:space="preserve">
+    <value>Add node</value>
+  </data>
+  <data name="AddText" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddTranslation" xml:space="preserve">
+    <value>Add Translation</value>
+  </data>
+  <data name="AllowBorrowText" xml:space="preserve">
+    <value>Allow Borrow</value>
+  </data>
+  <data name="AttributesText" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text for cancel button</comment>
+  </data>
+  <data name="CompleteText" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="ContextIndexedText" xml:space="preserve">
+    <value>Is Context Indexed</value>
+  </data>
+  <data name="DataTypeText" xml:space="preserve">
+    <value>Data Type</value>
+  </data>
+  <data name="DeleteConfirm" xml:space="preserve">
+    <value>Delete current node?</value>
+  </data>
+  <data name="DeleteNodeText" xml:space="preserve">
+    <value>Delete node</value>
+  </data>
+  <data name="DeleteText" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DescText" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DraftText" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="EditText" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="FinishText" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="ItemsManagement" xml:space="preserve">
+    <value>Items Management</value>
+  </data>
+  <data name="lblNoTasks" xml:space="preserve">
+    <value>no tasks are available</value>
+  </data>
+  <data name="ListIsEmpty" xml:space="preserve">
+    <value>List is empty</value>
+  </data>
+  <data name="ManageTypesText" xml:space="preserve">
+    <value>Manage types</value>
+  </data>
+  <data name="NameEmptyMessage" xml:space="preserve">
+    <value>Then name is not filled in.</value>
+  </data>
+  <data name="NameText" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NextText" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="NoCategoriesMessage" xml:space="preserve">
+    <value>No categories found</value>
+  </data>
+  <data name="NoPermissionsText" xml:space="preserve">
+    <value>You don't have the permissions for this action.</value>
+  </data>
+  <data name="PreviousText" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="PublishText" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="RequiredText" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="SaveText" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SearchOperatorsText" xml:space="preserve">
+    <value>Search operators</value>
+  </data>
+  <data name="SelectText" xml:space="preserve">
+    <value>Select...</value>
+  </data>
+  <data name="TypeText" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="UpdateText" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UseForNamesText" xml:space="preserve">
+    <value>Allow name autogeneration</value>
+  </data>
+  <data name="ValidationText" xml:space="preserve">
+    <value>Validation</value>
+  </data>
+  <data name="ViewText" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="UseForNamesTextInsertUpdate" xml:space="preserve">
+    <value>insert+update</value>
+  </data>
+  <data name="UseForNamesTextIsertOnly" xml:space="preserve">
+    <value>insert only</value>
+  </data>
+  <data name="UseForNamesTextNone" xml:space="preserve">
+    <value>none</value>
+  </data>
+  <data name="lnkUndo" xml:space="preserve">
+    <value>undo</value>
+  </data>
+  <data name="ParentChildRelationsText" xml:space="preserve">
+    <value>Show Parent/Child relations</value>
+  </data>
+</root>

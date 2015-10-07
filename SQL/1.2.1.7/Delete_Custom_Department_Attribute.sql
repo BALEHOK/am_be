@@ -1,0 +1,5 @@
+DELETE FROM  AttributePanelAttribute WHERE DynEntityAttribConfigUId IN (SELECT DynEntityAttribConfigUid FROM DynEntityAttribConfig WHERE DBTableFieldname='DepartmentId' AND AllowEditConfig=1);
+DELETE FROM  DynEntityAttribScreens WHERE DynEntityAttribUid IN (SELECT DynEntityAttribConfigUid FROM DynEntityAttribConfig WHERE DBTableFieldname='DepartmentId' AND AllowEditConfig=1);
+DELETE FROM  DynListValue WHERE DynEntityAttribConfigUid IN (SELECT DynEntityAttribConfigUid FROM DynEntityAttribConfig WHERE DBTableFieldname='DepartmentId' AND AllowEditConfig=1);
+DELETE FROM  DynEntityContextAttributes WHERE DynEntityAttribUid IN (SELECT DynEntityAttribConfigUid FROM DynEntityAttribConfig WHERE DBTableFieldname='DepartmentId' AND AllowEditConfig=1);
+DELETE FROM DynEntityAttribConfig WHERE DBTableFieldname='DepartmentId' AND AllowEditConfig=1 

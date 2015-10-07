@@ -1,0 +1,9 @@
+ALTER TABLE ValidationOperandValue 
+ADD CONSTRAINT FK_ValidationOperandValue_ValidationList
+FOREIGN KEY(ValidationListUid)
+REFERENCES ValidationList(ValidationUid);
+
+ALTER TABLE ValidationOperandValue 
+ADD CONSTRAINT FK_ValidationOperandValue_ValidationOperandUid
+FOREIGN KEY(ValidationOperandUid)
+REFERENCES ValidationOperand(OperandUid);

@@ -1,0 +1,18 @@
+﻿{
+    "AuthServerUrl": "http://auth.facilitymanager.fmis.software/core",
+    "Certificate": {
+        "File": "idsrv3test.pfx",
+        "Password": "idsrv3test"
+    },
+    "CorsAllowedOrigins": [ "*" ],
+    "Clients": {
+        "AMSPA": {
+            "RedirectUris": [ "*" ],
+            "PostLogoutRedirectUris": [ "*" ]
+        },
+        "AMAT": {
+            "RedirectUris": [ "oob://localhost/AMATclient" ],
+            "PostLogoutRedirectUris": [ "oob://localhost/AMATclient" ]
+        }
+    }
+}

@@ -1,0 +1,12 @@
+.panels_leftcol_container
+{
+	float:left;
+	width:34%;	
+}
+
+
+.panels_rightcol_container
+{
+	float:right;
+	width:64%;
+}

@@ -1,0 +1,1 @@
+ALTER TABLE DynEntityConfig ALTER COLUMN MeasureUnitId bigint NULL;

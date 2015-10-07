@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Attributes>
+	<Attribute>
+		<DisplayName>International ISDN Number (Others)</DisplayName>
+		<LDAPName>internationalISDNNumber</LDAPName>	
+	</Attribute>	
+	<Attribute>
+		<DisplayName>City</DisplayName>
+		<LDAPName>l</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>codePage</DisplayName>
+		<LDAPName>codePage</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Comment</DisplayName>
+		<LDAPName>comment</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Organizaiton</DisplayName>
+		<LDAPName>company</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>controlAccessRights</DisplayName>
+		<LDAPName>controlAccessRights</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Country</DisplayName>
+		<LDAPName>co</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Country Abbreviation</DisplayName>
+		<LDAPName>c</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>countryCode</DisplayName>
+		<LDAPName>countryCode</LDAPName>
+	</Attribute>	
+	<Attribute>
+		<DisplayName>Department</DisplayName>
+		<LDAPName>department</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Division</DisplayName>
+		<LDAPName>division</LDAPName>
+	</Attribute>	
+	<Attribute>
+		<DisplayName>EMail</DisplayName>
+		<LDAPName>mail</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>E-Mail Address (Others)</DisplayName>
+		<LDAPName>otherMailbox</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Employee ID</DisplayName>
+		<LDAPName>employeeID</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Fax Number</DisplayName>
+		<LDAPName>facsimileTelephoneNumber</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Fax Number (Others)</DisplayName>
+		<LDAPName>otherFacsimileTelephoneNumber</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Person Name</DisplayName>
+		<LDAPName>givenName</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Person Second Name</DisplayName>
+		<LDAPName>SN</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Home Address</DisplayName>
+		<LDAPName>homePostalAddress</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Home Drive</DisplayName>
+		<LDAPName>homeDrive</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Home Folder</DisplayName>
+		<LDAPName>homeDirectory</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Home Phone</DisplayName>
+		<LDAPName>homePhone</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Home Phone (Others)</DisplayName>
+		<LDAPName>otherHomePhone</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Initials</DisplayName>
+		<LDAPName>initials</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>International ISDN Number</DisplayName>
+		<LDAPName>primaryInternationalISDNNumber</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>IP Phone Number</DisplayName>
+		<LDAPName>ipPhone</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>IP Phone Number (Others)</DisplayName>
+		<LDAPName>otherIpPhone</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Job Title</DisplayName>
+		<LDAPName>title</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>lastLogoff</DisplayName>
+		<LDAPName>lastLogoff</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>lastLogon</DisplayName>
+		<LDAPName>lastLogon</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Logon Name</DisplayName>
+		<LDAPName>userPrincipalName</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Logon Name (pre-Windows 2000)</DisplayName>
+		<LDAPName>sAMAccountName</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Logon Workstations</DisplayName>
+		<LDAPName>userWorkstations</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>logonCount</DisplayName>
+		<LDAPName>logonCount</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>logonHours</DisplayName>
+		<LDAPName>logonHours</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>logonWorkstation</DisplayName>
+		<LDAPName>logonWorkstation</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Manager</DisplayName>
+		<LDAPName>manager</LDAPName>
+	</Attribute>	
+	<Attribute>
+		<DisplayName>Middle Name</DisplayName>
+		<LDAPName>middleName</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Mobile Number</DisplayName>
+		<LDAPName>mobile</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Mobile Number (Others)</DisplayName>
+		<LDAPName>otherMobile</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Name</DisplayName>
+		<LDAPName>cn</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>networkAddress</DisplayName>
+		<LDAPName>networkAddress</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Notes</DisplayName>
+		<LDAPName>info</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Office Location</DisplayName>
+		<LDAPName>physicalDeliveryOfficeName</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>otherLoginWorkstations</DisplayName>
+		<LDAPName>otherLoginWorkstations</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Pager Number</DisplayName>
+		<LDAPName>pager</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Pager Number (Others)</DisplayName>
+		<LDAPName>otherPager</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Phone Number (Others)</DisplayName>
+		<LDAPName>otherTelephone</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Post Office Box</DisplayName>
+		<LDAPName>postOfficeBox</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>postalAddress</DisplayName>
+		<LDAPName>postalAddress</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>preferredDeliveryMethod</DisplayName>
+		<LDAPName>preferredDeliveryMethod</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>registeredAddress</DisplayName>
+		<LDAPName>registeredAddress</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>State/Province</DisplayName>
+		<LDAPName>st</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>street</DisplayName>
+		<LDAPName>street</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Street Address</DisplayName>
+		<LDAPName>streetAddress</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Telephone Number</DisplayName>
+		<LDAPName>telephoneNumber</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>Title</DisplayName>
+		<LDAPName>personalTitle</LDAPName>
+	</Attribute>	
+	<Attribute>
+		<DisplayName>unicodePwd</DisplayName>
+		<LDAPName>unicodePwd</LDAPName>
+	</Attribute>
+	<Attribute>
+		<DisplayName>ZIP/Postal Code</DisplayName>
+		<LDAPName>postalCode</LDAPName>
+	</Attribute>
+</Attributes>

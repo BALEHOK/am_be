@@ -1,0 +1,26 @@
+﻿@model XtraReport
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reporting Backend</title>
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionType = ExtensionType.WebDocumentViewer },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.Report }
+    )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionType = ExtensionType.WebDocumentViewer },
+        new Script { ExtensionSuite = ExtensionSuite.Report }
+    )
+</head>
+<body>
+    @Html.DevExpress().WebDocumentViewer(settings =>
+    {
+        settings.Name = "WebDocumentViewer";
+    }).Bind(Model).GetHtml()
+</body>
+</html>
+

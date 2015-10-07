@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAssetTypeAttribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <AssetTypeAttribute>
+    <IsDescription>false</IsDescription>
+    <Name>Question</Name>
+    <Comment>Question</Comment>
+	  <DataTypeName>string</DataTypeName>
+    <Label />
+    <IsDynListValue>false</IsDynListValue>
+    <IsFinancialInfo>false</IsFinancialInfo>
+    <IsRequired>true</IsRequired>
+    <IsKeyword>false</IsKeyword>
+    <IsFullIndex>false</IsFullIndex>
+    <DisplayOnResultList>false</DisplayOnResultList>
+    <DisplayOrderResultList>0</DisplayOrderResultList>
+    <DisplayOnExtResultList>false</DisplayOnExtResultList>
+    <DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+    <IsActiveVersion>true</IsActiveVersion>    
+    <ID>0</ID>
+    <UID>0</UID>
+    <IsActive>true</IsActive>
+    <ContextId xsi:nil="true" />
+    <AssetTypeUID>0</AssetTypeUID>
+    <DBTableFieldName>Question</DBTableFieldName>
+    <AllowEditConfig>false</AllowEditConfig>
+	<AllowEditValue>true</AllowEditValue>
+    <DynamicListUid xsi:nil="true" />
+    <IsShownInGrid>true</IsShownInGrid>
+    <IsShownOnPanel>true</IsShownOnPanel>
+    <DisplayOrder>10</DisplayOrder>
+    <ValidationRules />
+  </AssetTypeAttribute>
+  <AssetTypeAttribute>
+    <IsDescription>false</IsDescription>
+    <Name>Answer</Name>
+    <Comment>Answer</Comment>
+	  <DataTypeName>string</DataTypeName>
+    <Label />
+    <IsDynListValue>false</IsDynListValue>
+    <IsFinancialInfo>false</IsFinancialInfo>
+    <IsRequired>true</IsRequired>
+    <IsKeyword>false</IsKeyword>
+    <IsFullIndex>false</IsFullIndex>
+    <DisplayOnResultList>false</DisplayOnResultList>
+    <DisplayOrderResultList>0</DisplayOrderResultList>
+    <DisplayOnExtResultList>false</DisplayOnExtResultList>
+    <DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+    <IsActiveVersion>true</IsActiveVersion>
+    <ID>0</ID>
+    <UID>0</UID>
+    <IsActive>true</IsActive>
+    <ContextId xsi:nil="true" />
+    <AssetTypeUID>0</AssetTypeUID>
+    <DBTableFieldName>Answer</DBTableFieldName>
+    <AllowEditConfig>false</AllowEditConfig>
+    <AllowEditValue>true</AllowEditValue>
+    <DynamicListUid xsi:nil="true" />
+    <IsShownInGrid>true</IsShownInGrid>
+    <IsShownOnPanel>true</IsShownOnPanel>
+    <DisplayOrder>11</DisplayOrder>
+    <ValidationRules />
+  </AssetTypeAttribute>
+    <AssetTypeAttribute>
+        <IsDescription>false</IsDescription>
+        <Name>Language</Name>
+        <Comment>Language</Comment>
+		<DataTypeName>string</DataTypeName>
+        <Label />
+        <IsDynListValue>false</IsDynListValue>
+        <IsFinancialInfo>false</IsFinancialInfo>
+        <IsRequired>true</IsRequired>
+        <IsKeyword>false</IsKeyword>
+        <IsFullIndex>false</IsFullIndex>
+        <DisplayOnResultList>false</DisplayOnResultList>
+        <DisplayOrderResultList>0</DisplayOrderResultList>
+        <DisplayOnExtResultList>false</DisplayOnExtResultList>
+        <DisplayOrderExtResultList>0</DisplayOrderExtResultList>
+        <IsActiveVersion>true</IsActiveVersion>
+        <ID>0</ID>
+        <UID>0</UID>
+        <IsActive>true</IsActive>
+        <ContextId xsi:nil="true" />
+        <AssetTypeUID>0</AssetTypeUID>
+        <DBTableFieldName>Language</DBTableFieldName>
+        <AllowEditConfig>false</AllowEditConfig>
+        <AllowEditValue>true</AllowEditValue>
+        <DynamicListUid xsi:nil="true" />
+        <IsShownInGrid>true</IsShownInGrid>
+        <IsShownOnPanel>true</IsShownOnPanel>
+        <DisplayOrder>12</DisplayOrder>
+        <ValidationRules />
+    </AssetTypeAttribute>
+</ArrayOfAssetTypeAttribute>

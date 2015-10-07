@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="FormulaBuilder.PlaceHoldersContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:formulaBuilder="clr-namespace:FormulaBuilder"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <!--    <Grid>-->
+    <!--        <Grid.ColumnDefinitions>-->
+    <!--            <ColumnDefinition Width="*"/>-->
+    <!--        </Grid.ColumnDefinitions>-->
+    <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
+        <StackPanel Orientation="Horizontal" Name="StackPanel">
+        </StackPanel>
+    </ScrollViewer>
+    <!--    </Grid>-->
+</UserControl>

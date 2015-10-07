@@ -1,0 +1,267 @@
+﻿.search-result
+{
+    border-bottom: 1px solid #cccccc;
+    margin-bottom:10px;
+	padding:10px;
+}
+
+.search-result.detail
+{
+	background-color:#BBDDAA;
+}
+
+.search-result.alternative
+{
+	background-color:#EEFFDD;
+}
+.search-result .sub-text
+{
+    font-weight: bold;
+    color: #595959;
+}
+.refined div
+{
+    padding-left: 10px;
+}
+.export div
+{
+    padding-left: 10px;
+}
+.export a
+{
+    font-size: .8em;
+}
+.pager
+{
+	text-align:center;
+}
+
+.pager .selected
+{
+	font-weight: bold;	
+	font-size: 22px;
+	vertical-align:bottom;
+}
+
+.nextPageArrow, .prevPageArrow
+{
+    background: url("/images/buttons/next-page-arrow.jpg") no-repeat;
+    width: 10px;
+    height: 8px;
+    display: inline-block;
+    margin: 0px 5px;
+}
+
+.prevPageArrow
+{
+    background: url("/images/buttons/prev-page-arrow.jpg") no-repeat;
+}
+
+.details
+{	
+	text-decoration:none;
+	background-color:#444444;
+	color:White;
+	padding: 5px 20px 5px 20px;
+    min-height: 20px;
+}
+.details a
+{
+	text-decoration: underline;
+	color:White;
+}
+.details a.active 
+{
+    text-decoration: none;
+    color: #cccccc;
+}
+
+.paddingPanel
+{
+	padding-right:15px;
+	padding-left:15px;
+}
+
+.sortPanel
+{
+	padding-right:15px;
+	padding-left:15px;
+}
+.activeButton
+{
+	background-color:#5eba2f;
+	color:White;
+	height:31px;
+	text-align:center;
+	border: none;
+	padding:0px;
+	margin-right:4px;
+}
+.activeButton a
+{
+	text-decoration:none;
+	color:White;
+	margin:20px;
+	margin-top:40px;
+}
+
+.activeButton td
+{
+	padding-top:3px;
+}
+
+.searchTabs
+{	
+	border: none;
+	background-color:#979797;
+	height:31px;
+	padding:0px;
+	text-align:center;
+	
+}
+.searchTabs td
+{
+	border-right:solid 4px white;
+	border-bottom:solid 2px white;
+	padding-top:3px;
+}
+.searchTabs a
+{
+	text-decoration:none;
+	color:White;
+	margin:20px;
+	margin-top:40px;
+}
+.greenBottom
+{
+	width:100%;
+	height:5px;
+	background-color:#5eba2f;
+}
+.reglament
+{
+	margin-left:140px;
+	margin-right:140px;
+	margin-top:40px;
+	margin-bottom:40px;
+}
+.searcher
+{
+	padding-top:30px;
+    clear: both;
+}
+.categorySearcher
+{
+	margin-top:5px;
+	margin-bottom:5px;
+	background-color:#f2f2f2;
+	border:solid 1px #ececec;
+}
+.treeSearch
+{
+	border:solid 1px #979797;
+	margin-left:40px;
+	margin-right:40px;	
+	margin-bottom:30px;
+}
+.bottomText
+{
+	background-color:#dadada;
+	margin-top:30px;
+	margin-bottom:0px;
+	padding:5px 10px 5px 10px;
+}
+.line
+{
+	border-bottom:solid 1px #dadada;
+	height:1px;
+	margin-bottom:10px;
+}
+.bottomText a
+{
+	text-decoration:none;
+}
+
+.ItemsHeader
+{
+	font-size:large;
+	color:#606060;
+}
+
+.Items
+{
+	font-size:large;
+	color:White;
+}
+
+.refineTitle
+{
+	color:#606060;
+	font-weight:bolder;
+}
+.TypeSearchHeader
+{
+	background-color:#5eba2f;
+	color:White;
+	border: none;
+}
+
+.searchTable tr td
+{
+	padding-top:5px;
+	padding-right:5px;
+}
+.centerAlligned
+{
+	text-align:center;
+}
+
+#left-column.facets 
+{ 
+    width: 230px; 
+    height: 100%; 
+    min-height: 100%; 
+    height: auto; 
+}
+
+.facets h2 
+{
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #5EBA2F;
+    padding: 5px 5px 5px 10px;
+    font-size: 12px;
+    margin: 0px;
+    min-height: 20px;
+}
+
+.facets h3
+{
+    font-weight: bold;
+    color: #595959;
+    padding: 5px 5px 5px 10px;
+    font-size: 12px;
+    margin: 5px 0px 5px 0px;
+    background: #F6F6F6 url('/images/arrowup.png') no-repeat 195px 10px;
+}
+
+#refinements div, #refineby .refinements
+{
+    padding-left: 10px;
+}
+
+.margin-15
+{
+    margin: 0 15px 0 0;
+}
+
+.active
+{
+	background: #9933CC url('/images/arrowup.png') no-repeat 210px 10px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #5EBA2F;
+	padding: 5px 5px 5px 10px;
+	font-size: 12px;
+	margin: 5px 0px 5px 0px;
+}

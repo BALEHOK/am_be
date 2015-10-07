@@ -1,0 +1,933 @@
+﻿/*******************************************************************************
+*  skidoo_redux_theme.css : 2007.03.05 : ruthsarian@gmail.com
+* -----------------------------------------------------------------------------
+*  
+*  This stylesheet provides the theme of the layout. The theme includes
+*  anything that controls the presentation of the page, but typically it's just
+*  for setting colors, fonts, borders, and gutter space. 
+*
+*  It is possible to offer multiple themes for a single page and allow the
+*  user to pick the one that best fits their needs. 
+*  
+* ------------------------------------------------------------------------------
+*  This stylesheet is released into the public domain.
+*******************************************************************************/
+
+body, html
+{
+    font-family:verdana,arial,helvetica,sans-serif;        
+}
+
+h1
+{
+	font-size: 170%;
+	color: #5eba2f;
+	font-weight: bold;
+}
+
+h2
+{
+	font-size: 145%;
+}
+
+h3
+{
+	font-size: 120%;
+}
+
+#page-container, #page-container-popup
+{
+	font-size: 78%;		/* font attributes set here so that
+					   the font sizer javascript bit can
+					   operate on the body element and not
+					   fubar things */
+	font-family: verdana, arial, helvetica, sans-serif;
+	line-height: 145%;
+}
+#page-container, #inner-column-container
+{
+	border-color: #fff;		/* all the borders within the layout */
+}
+#outer-column-container
+{
+	border-left-color: #fff;	/* left column background */
+	border-right-color: #fff;	/* right column background */
+}
+#masthead
+{
+	border-color: #b8b8b8;
+}
+#inner-column-container
+{
+	/*background-color: #fff;	* middle column background */
+}
+#left-column h3, #right-column h3
+{
+	margin-bottom: 0;		/* column menu titles should
+					   hug the menus */
+}
+#right-column p, #right-column ul
+{
+	margin-top: 0;
+}
+p.fontsize-set
+{
+	text-align: center;		/* center the icons for changing
+					   font size */
+}
+p.fontsize-set input
+{
+	margin: 0 2px;			/* space them out a bit */
+}
+
+/*******************************************************************************
+ * RMENU RELATED STYLES
+ *
+ * These are styles specifically for the menus used in the layout. This has its
+ * own section because there are quite a lot of rules that need to be set
+ * in order to control just the theme of the menu.
+ *
+ */
+
+ul.rMenu li
+{
+	background-color: #fcfcfc;	/* background of menu items */
+}
+ul.rMenu li:hover,
+ul.rMenu li.sfhover
+{
+	background-color: #ddf;		/* background color of parent menu item
+					   when mouse is over a submenu */
+}
+ul.rMenu li a, #middle-column div.rMenu-center
+{
+	border-color: #99a;		/* border color of menu items */
+}
+ul.rMenu li a:hover
+{
+	color: #fff;			/* color of menu item when mouse is
+					   over it */
+	background-color: #99f;		/* background color of menu item when
+					   mouse is over it */
+}
+ul.rMenu li.sfhover a:active,
+ul.rMenu li:hover a:active
+{
+	color: #fff;			/* color of menu item when clicked */
+	background-color: #c00;		/* background color of menu item
+					   when clicked */
+}
+div.rMenu-center ul.rMenu li
+{
+	background-color: #f6f6f6;	/* horizontal menu background color */
+}
+div.rMenu-center ul.rMenu li:hover,
+div.rMenu-center ul.rMenu li.sfhover
+{
+	background-color: #ddf;		/* background color of parent menu item
+					   when mouse is over a submenu of the
+					   horizontal menu */
+}
+
+/*******************************************************************************
+ * AssetManagement RELATED STYLES
+ *
+ * These are styles specifically for the AssetManagement layout. 
+ *
+ */
+
+a
+{
+	color: #488f24;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	text-decoration: none;
+}
+
+body.columns2 #outer-column-container
+{
+	background-image:url('../images/bg_leftcolumn.gif');
+	background-position:right;
+	background-repeat:repeat-y;
+}
+
+#headright
+{
+	border-color: #b8b8b8;
+	background-image:url('../images/headerban.jpg');	
+}
+
+#headright #clickable-area
+{
+	height: 100%;
+	cursor: pointer;
+	margin-right: 150px;
+}
+
+#companylogo
+{
+}
+
+#logoffblock
+{
+	color:#666666;
+	z-index:10;
+	cursor: default;
+}
+
+.BuildText
+{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 9px;	
+	color: #8c8c8c;
+	padding-left:17px;
+	padding-top:7px;
+}
+
+#menubar a
+{
+	font-weight: bold;
+	color: #595959;
+	text-decoration:none;
+}
+
+#menubar a:hover
+{
+	text-decoration: underline;
+}
+
+#menubarleft
+{
+	border-color: #b8b8b8;
+}
+
+#searchresultheader
+{
+	background-color:#a8a8a8;color:#fff;
+}
+
+#searchresultheader a
+{
+	color: #fff;
+	text-decoration: none;
+}
+
+#searchresultheader a:hover
+{
+	text-decoration: underline;
+}
+
+#sortbyblock
+{
+	color: #8c8c8c;
+}
+
+#sortbyblock a
+{
+	font-weight: bold;
+	color: #595959;
+	text-decoration: none;
+}
+
+.resultblock
+{
+	background-image:url('../images/resultblocktopline.gif');
+	background-position:left top;
+	background-repeat:repeat-x;
+}
+
+.resultblock a
+{
+	font-weight: bold;
+}
+
+.resultblock .result_h2
+{
+	color: #989898;
+}
+
+.resultblockbgcolor
+{
+	background-color: #edffdb;
+}
+
+.resultset_nextpages a
+{
+	color: #595959;
+}
+
+span.activesearchpage
+{
+    font-size: 190%;
+	color: #57ad2c;
+	position: relative;
+	top: 4px;
+}
+
+.navigator_category
+{
+	background-color:#6ebb1f;
+	color:#fff;
+}
+
+.navigator_content a, .navigator_content a:link, .navigator_content a:visited
+{
+	color: #595959;
+	text-decoration: none;
+}
+
+.navigator_content a:hover
+{
+	text-decoration: underline;
+}
+
+span.refineresulttext
+{
+	font-size: medium;
+	color: #595959;
+}
+
+a img
+{
+	border: 0;
+}
+
+.panel
+{
+	background-color:#edffdb;
+	background-image:url('../images/panelbottom.gif');
+	background-position:left bottom;
+	background-repeat:repeat-x;
+	margin: 10px 0 10px 0;
+	width: auto;
+}
+
+.panel .panelheader
+{
+	height:26px;
+	font-weight:bold;
+	padding-left:17px;	
+	padding-right: 17px;
+	padding-top:5px;
+	background-image:url('../images/panelheaderbackground.gif');	
+	background-repeat:repeat-x;
+	width: auto;
+	overflow: hidden;
+}
+.panel .panelSimpleHeader
+{
+    height:26px;
+	font-weight:bold;
+	padding-left:17px;	
+	padding-top:5px;
+	width: auto;
+	overflow: hidden;
+	color:#939393;
+	background-color:White;
+}
+.panel .panelSearch
+{
+	height:auto;
+	font-weight:bold;
+	padding: 5px 17px 5px 17px;
+	background-color:  #a7df8a; 
+	width: auto;
+	vertical-align: middle;
+}
+
+.panel .panelSearch table 
+{
+    height: 100%;
+}
+
+.panel .panelSearch table td
+{
+    vertical-align: middle;
+}
+
+.panel .panelcontent
+{
+	padding:0px 17px 10px 17px;
+	background-position:left top;
+	background-repeat:no-repeat;
+}
+
+.panelcontent
+{
+   /*overflow: hidden;*/
+}
+
+.configobjects .panelcontent
+{
+	padding:0px 17px 10px 70px;
+	background-image:url('../images/bg_configobjects.gif');
+}
+
+.configtaxonomy .panelcontent
+{
+	padding:0px 17px 10px 70px;
+	background-image:url('../images/bg_configtaxonomy.gif');
+}
+
+.configusers .panelcontent
+{
+	padding:0px 17px 10px 70px;
+	background-image:url('../images/bg_configusers.gif');
+}
+
+.appsettings .panelcontent
+{
+	padding:0px 17px 10px 70px;
+	background-image:url('../images/bg_appsettings.gif');
+}
+
+body.adminmain .panel
+{
+	width:593px;
+}
+
+label
+{
+	color: #595959;
+	cursor: default;
+}
+
+input, textarea
+{
+	border: 1px solid #DFDFDF;
+	border-top-color: #B8B8B8;
+}
+
+body.wizard input, body.wizard textarea
+{
+	width: 350px;
+}
+
+#main-container
+{
+	padding-left: 20px;	
+}
+
+.wizard-footer-buttons
+{
+	text-align: right;
+	margin-bottom: 10px;
+}
+
+.wizard-header
+{
+	color: #66cc33;
+	margin-bottom: 5px;
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.wizard-menu
+{
+	overflow: hidden;
+}
+
+.wizard-menu .item, .wizard-menu .active
+{
+	font-weight: bold;
+	font-size: 95%;
+	background-color: #999999;
+	color: #ffffff;
+	margin-top: 5px;
+	padding-left: 15px;
+	height: 20px;
+}
+
+.wizard-menu .active
+{
+	color: #ffffff;
+	background-color: #5EBA2F;
+}
+
+.wizard-menu .subitem
+{
+	background-color: #bbddaa;
+	margin-top: 1px;
+	color: #666666;
+	padding-left: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.wizard-menu a.title
+{
+	color: #ffffff;
+}
+
+.panelcontent .labels
+{
+	float: left;
+	width: 100px;
+}
+
+.panelcontent .controls
+{
+	float: left;
+	width: 250px;
+}
+
+.panelcontent .literal
+{
+    padding: 0px 10px;
+}
+
+.panelcontent .controls .input-text
+{
+	width: 200px;
+}
+
+.gridcontrols
+{
+	padding: 5px;
+    color: #4e4e4e;
+}
+
+
+.panelcontent .item
+{
+	height: 25px;
+}
+
+.panelcontent .item select, .panelcontent .item input
+{
+	width: 140px;
+}
+
+.third-column
+{
+}
+
+.panelcontent .label
+{
+	color:#595959;
+	font-weight: bold;
+	width: 150px;
+}
+
+.item a, .item a:hover
+{
+    text-decoration: none;
+    color: #fff;
+}
+.item a:hover
+{
+    text-decoration: underline;    
+}
+
+.w100p
+{
+    width: 100%;
+    border: none;
+}
+
+.wh100p
+{
+    width: 100%;
+    height: 100%;
+}
+
+.labels
+{
+    font-weight: bold;
+    color: #595959;
+    padding-right: 20px;
+    padding-left: 10px;
+}
+
+.gridlabels
+{
+    font-weight: bold;
+    color: #595959;
+    padding: 5px;
+    padding-right: 20px;
+    padding-left: 10px;    
+    width: 200px;
+}
+.multiple-assets-panel
+{
+    border:1px solid #b7cea4;
+    padding:4px;
+    border-radius:4px;
+}
+.multiple-assets-table-alternating
+{
+    background-color:#b3e896;
+}
+.multiple-assets-table-header
+{
+    border-bottom:1px solid #a7d48f;
+}
+.multiple-assets-padding
+{
+    padding:0 0 5px 5px;    
+}
+.SelectControl
+{
+    width: 250px;
+}
+
+.description
+{
+    width: 100%;
+    height: 50px;
+}
+
+.LayoutImg
+{
+    vertical-align: middle;
+}
+
+.border1
+{
+    border: 1px solid #979797;    
+    padding: 2px;
+    width: 97%;
+}
+
+.border1 .hdr
+{
+    color: Black;
+    background: #BBDDAA;
+    font-weight: bold;
+    display: block;
+    padding: 5px;
+}
+
+.listAttributes, .listAttrubutes_s, .listAttributes_w
+{
+    border: 1px solid #979797;
+    
+    color: #595959;    
+}
+.listAttributes
+{
+    width: 300px;
+    height: 330px;
+}
+
+.listAttrubutes_s
+{
+    width: 240px;
+    height: 115px;
+}
+
+.listAttributes_w
+{
+    width: 100%; 
+    height: 200px;    
+}
+
+.listAttr_div
+{
+    margin: 10px;
+}
+
+.active_lnk
+{
+    font-weight: bold;
+}
+
+.buttons_p
+{   
+    margin: 10px;
+}
+
+.treeview1
+{
+    background: white;
+    border: 1px solid #979797;
+    padding: 10px;      
+}
+
+.tv_node { font-weight: normal; color: Black; font: Tahoma normal; }
+
+.treeview1 input { border: none; }
+
+
+.panelcontent .validation-message
+{
+	
+}
+
+ul#sortable
+{
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+ul#sortable li
+{
+    padding: 3px; background: #fff; border:1px solid black; 
+    margin: 3px; width: 200px;
+}
+
+ul#sortable li .del
+{
+    
+}
+
+#AssocList
+{
+    display: none;
+}
+
+.ItemsList
+{
+    width: 200px;
+    height: 300px;
+}
+
+.italic
+{
+	font-style: italic;
+}
+
+.panelsection
+{
+	background-color: White;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;	
+	border: 1px solid #7f7f7f; 
+}
+
+a.expandable
+{
+	
+}
+
+.assetsgrid, .rightsgrid
+{
+    width: 100%;
+    border: none;
+    color:#333333;
+    border-collapse:collapse;
+}
+
+.assetsgrid .header, .rightsgrid .header
+{
+	color:#1E1E1E;
+	background-color:#DFDFDF;
+	font-weight:bold;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.assetsgrid .row
+{
+	background-color:#FFFFFF;
+}
+
+.rightsgrid .row
+{
+	background-color:#c4fbc0;
+}
+
+.rightsgrid .alterrow
+{
+	background-color:#9fd29b;
+}
+
+.rightsgrid .row-deny
+{
+	background-color:#ffa2a2;
+}
+
+.rightsgrid .alterrow-deny
+{
+	background-color:#ff8888;
+}
+
+
+.assetsgrid .alterrow
+{
+	background-color:#E0FFC1;
+}
+
+div.options div
+{
+	margin-right: 40px;	
+}
+
+div.important
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background-color: #ffa914; 
+}
+
+.norm-perm
+{
+	color: #266904;
+	padding: 3px;
+	width: 30px;
+	text-align:center;
+	font-weight:bold;
+}
+
+.fin-perm
+{
+	color: #0067a5;
+	padding: 3px;
+	width: 30px;
+	text-align:center;
+	font-weight:bold;
+}
+
+.green
+{
+	color: #488F24;
+}
+
+.red
+{
+	color: #ff5353;
+}
+
+.helpbutton
+{
+	cursor: pointer;
+}
+
+div#messagebox{ margin: 1% 40%;background: #b5e0a4; position:absolute; text-align:center; width:200px;}
+div#statusText{ padding:5px 20px 20px 20px; font-size:12px; color:#000000}
+div#messagebox #title{ font-weight: bold;}
+div#messagebox #icon 
+{ 
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	margin-left: 5px;	
+ }
+div#messagebox #close 
+{
+	 background-image: url('/images/buttons/close.png'); 
+	 background-repeat: no-repeat;
+	 background-position: 2px 2px;
+	 width: 10px;
+	 height: 10px;
+	 position: absolute;
+	 margin-left: 185px;
+	 margin-top: 0px;
+	 cursor:pointer;	
+}
+/* Nifty Corners (Rounded Corners)*/
+b.rtop, b.rbottom{display:block;background: #FFF}
+b.rtop b, b.rbottom b{display:block;height: 1px;
+    overflow: hidden; background: #b5e0a4}
+b.r1{margin: 0 5px}
+b.r2{margin: 0 3px}
+b.r3{margin: 0 2px}
+b.rtop b.r4, b.rbottom b.r4{margin: 0 1px;height: 2px}
+/* Nifty Corners (Rounded Corners)*/
+/******************************************************************************/
+
+.toolbarbutton
+{
+	margin-right: 10px;
+	padding: 5px;
+}
+
+.gridbutton
+{
+	padding: 5px;
+}
+
+.treeview .selected
+{
+	font-weight: bold;
+}
+
+.alert
+{
+    font: larger bold;    
+    color: Red;
+}
+
+.separator
+{
+	clear: both;
+}
+
+.padded div
+{
+    padding: 5px;
+}
+
+.pointer
+{
+	cursor :pointer
+}
+
+.sc { color: Green; }
+.fl { color: Red; font-weight: bold; }
+
+.multiselect { width: 200px; }
+
+.horizontal-separator
+{
+    width: 750px;
+    height: 5px;
+    background-color: #5eba2f;
+    margin: 20px 0 20px 0;
+    margin: 20px auto;
+}
+    
+#login-area
+{
+    margin: 0 auto;
+    width: 450px;
+}
+   
+#news-area
+{
+    margin: 0 auto;
+    width: 750px;
+}
+
+#recovery-area
+{
+    margin: 0 auto;
+    width: 300px;
+}
+
+
+.login-area-block
+{
+    float: left;
+}
+    
+.login-area-block ul
+{
+    margin-top: 0;
+    width: 140px;
+}
+
+
+.news-block,
+.info-block
+{
+    width: 365px;
+    float: left;
+}
+
+.news-item
+{
+    margin-top: 10px;
+    
+}
+
+.news-item-date
+{
+    color: #666;   
+    font-weight: bold; 
+}

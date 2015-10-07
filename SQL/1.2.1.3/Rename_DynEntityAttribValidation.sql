@@ -1,0 +1,1 @@
+EXEC sp_rename  @objname='DynEntityAttribValidation.DynEntityAttribconfigId', @newname='DynEntityAttribConfigId', @objtype='COLUMN'

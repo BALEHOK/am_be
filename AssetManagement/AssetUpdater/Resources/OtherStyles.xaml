@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <RadialGradientBrush x:Key="backgrndBrush">
+        <GradientStop Color="Black" Offset="1.0"></GradientStop>
+        <GradientStop Color="Gray" Offset="0.75"></GradientStop>
+        <GradientStop Color="LightGray" Offset="0.25"></GradientStop>
+        <GradientStop Color="White" Offset="0.0"></GradientStop>
+    </RadialGradientBrush>
+
+    <ImageSource x:Key="downloadImg"> pack://application:,,,/Resources/download.png </ImageSource>
+    <ImageSource x:Key="okImage">pack://application:,,,/Resources/ok.png</ImageSource>
+    <ImageSource x:Key="errorImage">pack://application:,,,/Resources/error.png</ImageSource>
+</ResourceDictionary>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<parameters>
+  <bindings>
+    <param Key="8768" Value="" DefaultValue="0" RelatedAttributeId="" />
+    <param Key="8769" Value="" DefaultValue="true" RelatedAttributeId="" />
+    <param Key="8759" Value="Name" DefaultValue="" RelatedAttributeId="" />
+    <param Key="8763" Value="" DefaultValue="" RelatedAttributeId="" />
+    <param Key="8764" Value="" DefaultValue="" RelatedAttributeId="" />
+    <param Key="8765" Value="C10 maand" DefaultValue="" RelatedAttributeId="" />
+    <param Key="8766" Value="PersonName" DefaultValue="" RelatedAttributeId="6274" />
+  </bindings>
+</parameters>

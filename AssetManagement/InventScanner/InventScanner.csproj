@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15057425-8753-40DD-945D-64E20AA99562}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InventScanner</RootNamespace>
+    <AssemblyName>InventScanner</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Caching, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>../packages/EnterpriseLibrary.Caching.5.0.505.0/lib/NET35/Microsoft.Practices.EnterpriseLibrary.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data">
+      <HintPath>..\packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.ExceptionHandling">
+      <HintPath>..\packages\EnterpriseLibrary.ExceptionHandling.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging">
+      <HintPath>..\packages\EnterpriseLibrary.ExceptionHandling.Logging.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.ExceptionHandling.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssetView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssetView.Designer.cs">
+      <DependentUpon>AssetView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\AssetEx.cs" />
+    <Compile Include="Core\AssetsSet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\AssetsTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\AssetTypeDictionary.cs" />
+    <Compile Include="Core\KeyValuePairs.cs" />
+    <Compile Include="Core\LengthlyOperationStartEventArgs.cs" />
+    <Compile Include="Core\LengthlyOperationStepEventArgs.cs" />
+    <Compile Include="Core\LogTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\ReportList.cs" />
+    <Compile Include="Core\ReportRow.cs" />
+    <Compile Include="Core\ReportRowAction.cs" />
+    <Compile Include="Core\SeriazableDictionary.cs" />
+    <Compile Include="Core\XmlAdapter.cs" />
+    <Compile Include="Core\XmlAdapters.cs" />
+    <Compile Include="Core\KeyValuePairStub.cs" />
+    <Compile Include="LocationExportCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LocationExportCtrl.Designer.cs">
+      <DependentUpon>LocationExportCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocationImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LocationImport.Designer.cs">
+      <DependentUpon>LocationImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocationImporterCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LocationImporterCtrl.Designer.cs">
+      <DependentUpon>LocationImporterCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MoveAssets.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MoveAssets.Designer.cs">
+      <DependentUpon>MoveAssets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Connect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Connect.Designer.cs">
+      <DependentUpon>Connect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AssetView.nl.resx">
+      <DependentUpon>AssetView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssetView.resx">
+      <DependentUpon>AssetView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connect.nl.resx">
+      <DependentUpon>Connect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connect.resx">
+      <DependentUpon>Connect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationExportCtrl.resx">
+      <DependentUpon>LocationExportCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationImport.nl.resx">
+      <DependentUpon>LocationImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationImport.resx">
+      <DependentUpon>LocationImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocationImporterCtrl.resx">
+      <DependentUpon>LocationImporterCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.nl.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MoveAssets.resx">
+      <DependentUpon>MoveAssets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.nl.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.nl.Designer.cs">
+      <DependentUpon>Resources.nl.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\AppFramework.Core.Classes.Asset.datasource" />
+    <None Include="Properties\DataSources\AppFramework.Core.Classes.Asset1.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.KeyValuePairStub.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.LogTable.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.ReportRow.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.ReportRow1.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.ReportRowAction.datasource" />
+    <None Include="Properties\DataSources\InventScanner.Core.XmlAdapter.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppFramework.Core\AppFramework.Core.csproj">
+      <Project>{890bdd21-2741-4028-9d20-9102d51ad64d}</Project>
+      <Name>AppFramework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.DataProxy\AppFramework.DataProxy.csproj">
+      <Project>{3B3DFA46-D697-40D8-81DE-90ECA111A546}</Project>
+      <Name>AppFramework.DataProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogTable\LogTable.csproj">
+      <Project>{460BD8A8-22BB-4171-B2FA-8BB31FAF7514}</Project>
+      <Name>LogTable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Report.xsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
