@@ -38,7 +38,7 @@ namespace AssetManager.Auth.Controllers
             var user = _userManager.GetUser(model.Username);
             if (user == null)
             {
-                return View((object)("User " + model.Username + " not found"));
+                return View((object)("User \"" + model.Username + "\" not found"));
             }
 
             var newPassword = user.ResetPassword();

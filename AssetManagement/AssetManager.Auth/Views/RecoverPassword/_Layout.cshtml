@@ -7,25 +7,26 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>@title</title>
-    <link href="/core/assets/styles.min.css" rel="stylesheet">
-</head>
-<body lang="en">
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-        <a href="@HostingEnvironment.ApplicationVirtualPath">
-            <span class="navbar-brand">@AuthConstants.SiteName</span>
-        </a>
-    </div>
-</div>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>@title</title>
+        <link href="/core/assets/styles.min.css" rel="stylesheet">
+        <link href="/content/css/am-custom.css" rel="stylesheet">
+    </head>
+    <body lang="en">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-header">
+                <a href="@HostingEnvironment.ApplicationVirtualPath">
+                    <span class="navbar-brand">@AuthConstants.SiteName</span>
+                </a>
+            </div>
+        </div>
 
-<div class="container page-recover-password">
-    <div class="page-header">
-        <h1>@title</h1>
-    </div>
-    @RenderBody()
-</div>
-</body>
+        <div class="container page-recover-password">
+            <div class="page-header">
+                <h1>@title</h1>
+            </div>
+            @RenderBody()
+        </div>
+    </body>
 </html>

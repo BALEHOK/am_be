@@ -128,6 +128,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\am-custom.css" />
+    <Content Include="Content\images\app-logo_transparent.png" />
     <Content Include="Email\Templates\RecoverPasswordEmail.cshtml" />
     <Content Include="favicon.ico" />
     <Content Include="Web.config">

@@ -4,6 +4,7 @@ using AppFramework.Auth;
 using AppFramework.Auth.Security;
 using AssetManager.Auth;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services.Default;
 using Microsoft.Owin;
 using Owin;
 
@@ -20,6 +21,11 @@ namespace AssetManager.Auth
             app.Map("/core", authApp =>
             {
                 var factory = Factory.Configure();
+                
+                // add custom CSS
+                var viewOptions = new DefaultViewServiceOptions();
+                viewOptions.Stylesheets.Add("/content/css/am-custom.css");
+                factory.ConfigureDefaultViewService(viewOptions);
 
                 var options = new IdentityServerOptions
                 {
