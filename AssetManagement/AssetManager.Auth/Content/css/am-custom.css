@@ -211,3 +211,16 @@ input[type="password"]:focus {
     min-width: 140px;
 }
 
+.page-logout .col-sm-6 {
+    float: none;
+    margin: 0 auto;
+}
+
+.page-logout .col-sm-6 p,
+.page-logout .col-sm-6 form {
+    text-align: center;
+}
+
+.page-logout .form-group .btn {
+    min-width: 140px;
+}
