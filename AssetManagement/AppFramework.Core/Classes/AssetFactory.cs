@@ -87,8 +87,7 @@ namespace AppFramework.Core.Classes
             var rightsService = new RightsService(unitOfWork);
             var assetsService = new AssetsService(unitOfWork, atRepository, attributeValueFormatter, rightsService);
             var dataTypeService = new DataTypeService(unitOfWork);
-            var tableProvider = new DynTableProvider(unitOfWork,
-                new DynColumnAdapter(dataTypeService), dataTypeService);
+            var tableProvider = new DynTableProvider(unitOfWork, new DynColumnAdapter(dataTypeService));
             var assetType = atRepository.GetById(assetTypeId);
             var rows = tableProvider.GetHistoryAssets(assetType.Base, assetId, rowStart, rowsNumber);
 			return rows.Select(row => new Asset(
@@ -181,8 +180,7 @@ namespace AppFramework.Core.Classes
 			using (var unitOfWork = new DataProxy.UnitOfWork())
 			{
                 var dataTypeService = new DataTypeService(unitOfWork);
-                var tableProvider = new DynTableProvider(unitOfWork,
-                    new DynColumnAdapter(dataTypeService), dataTypeService);
+                var tableProvider = new DynTableProvider(unitOfWork, new DynColumnAdapter(dataTypeService));
                 var rows = tableProvider.GetRows(
 					assetType.Base,
 					new Dictionary<string, string>() { { AttributeNames.ActiveVersion, bool.TrueString } },

@@ -1,34 +1,35 @@
-﻿using AppFramework.DataProxy;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using AppFramework.Core.Classes.SearchEngine.Enumerations;
+using AppFramework.Core.Classes.SearchEngine.Presentation;
+using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
+using AppFramework.Core.Exceptions;
+using AppFramework.DataProxy;
 using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes.SearchEngine
 {
-    using AppFramework.Core.AC.Authentication;
-    using AppFramework.Core.Classes.SearchEngine.Enumerations;
-    using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
-    using AppFramework.Core.Exceptions;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Data.EntityClient;
-    using System.Data.SqlClient;
-    using System.Linq;
-
     /// <summary>
     /// Facade of Search system
     /// </summary>
-    public class SearchEngine : AppFramework.Core.Classes.SearchEngine.ISearchService
+    public class SearchEngine : ISearchService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITaxonomyItemService _taxonomyItemService;
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly ISearchTracker _searchTracker;
+        private readonly ITypeSearch _typeSearch;
 
         public SearchEngine(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             IAssetTypeRepository assetTypeRepository,
             ITaxonomyItemService taxonomyItemService,
-            ISearchTracker searchTracker)
+            ISearchTracker searchTracker,
+            ITypeSearch typeSearch)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
@@ -42,6 +43,9 @@ namespace AppFramework.Core.Classes.SearchEngine
             if (searchTracker == null)
                 throw new ArgumentNullException("searchTracker");
             _searchTracker = searchTracker;
+            if (typeSearch == null)
+                throw new ArgumentNullException("typeSearch");
+            _typeSearch = typeSearch;
         }
 
         /// <summary>
@@ -50,16 +54,17 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <returns></returns>
         public int NewSearchId()
         {
-            if (System.Web.HttpContext.Current.Application["SearchId"] == null)
+            if (HttpContext.Current.Application["SearchId"] == null)
             {
-                var unitOfWork = new DataProxy.UnitOfWork();
-                System.Web.HttpContext.Current.Application["SearchId"] = unitOfWork.GetMaxSearchId();
+                var unitOfWork = new UnitOfWork();
+                HttpContext.Current.Application["SearchId"] = unitOfWork.GetMaxSearchId();
             }
 
-            int searchId = (int)System.Web.HttpContext.Current.Application["SearchId"] == int.MaxValue ?
-                0 : (int)System.Web.HttpContext.Current.Application["SearchId"];
+            var searchId = (int) HttpContext.Current.Application["SearchId"] == int.MaxValue
+                ? 0
+                : (int) HttpContext.Current.Application["SearchId"];
 
-            System.Web.HttpContext.Current.Application["SearchId"] = ++searchId;
+            HttpContext.Current.Application["SearchId"] = ++searchId;
             return searchId;
         }
 
@@ -73,7 +78,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         /// <param name="querystring"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.IIndexEntity> FindByKeywords(
+        public IEnumerable<IIndexEntity> FindByKeywords(
             string querystring,
             long searchId,
             long userId,
@@ -88,44 +93,44 @@ namespace AppFramework.Core.Classes.SearchEngine
             if (enableTracking)
             {
                 _searchTracker.LogSearchRequest(
-                   searchId,
-                   SearchType.SearchByKeywords,
-                   querystring,
-                   new SearchParameters
-                   {
-                       QueryString = querystring,
-                       ConfigsIds = configsIds,
-                       TaxonomyItemsIds = taxonomyItemsIds,
-                       Time = time,
-                       Order = order
-                   },
-                   userId);
+                    searchId,
+                    SearchType.SearchByKeywords,
+                    querystring,
+                    new SearchParameters
+                    {
+                        QueryString = querystring,
+                        ConfigsIds = configsIds,
+                        TaxonomyItemsIds = taxonomyItemsIds,
+                        Time = time,
+                        Order = order
+                    },
+                    userId);
             }
 
             var rdResults = _unitOfWork.SqlProvider.ExecuteReader(
                 "_cust_SearchByKeywords",
-                new SqlParameter[]
+                new[]
                 {
                     new SqlParameter("SearchId", searchId),
                     new SqlParameter("UserId", userId),
                     new SqlParameter("keywords", querystring),
                     new SqlParameter("ConfigIds",
-                        configsIds != null ? string.Join(" ", configsIds.Split(new char[] {','})) : null),
+                        configsIds != null ? string.Join(" ", configsIds.Split(',')) : null),
                     new SqlParameter("taxonomyItemsIds",
-                        taxonomyItemsIds != null ? string.Join(" ", taxonomyItemsIds.Split(new char[] {','})) : null),
+                        taxonomyItemsIds != null ? string.Join(" ", taxonomyItemsIds.Split(',')) : null),
                     new SqlParameter("active", time == TimePeriodForSearch.CurrentTime),
                     new SqlParameter("orderby", (byte) order),
                     new SqlParameter("PageNumber", pageNumber),
-                    new SqlParameter("PageSize", pageSize),
+                    new SqlParameter("PageSize", pageSize)
                 },
                 CommandType.StoredProcedure);
 
-            var entities = new List<Entities.IIndexEntity>();
+            var entities = new List<IIndexEntity>();
             var typesInSearchLocalCache = new Dictionary<long, AssetType>();
-            var helper = new Presentation.Helper(_unitOfWork);
+            var helper = new Helper(_unitOfWork);
             while (rdResults.Read())
             {
-                var entity = new Entities.f_cust_SearchByKeywords_Result
+                var entity = new f_cust_SearchByKeywords_Result
                 {
                     IndexUid = rdResults.GetInt64(0),
                     DynEntityUid = rdResults.GetInt64(1)
@@ -185,7 +190,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 entity.rownumber = rdResults.GetInt32(28);
 
                 if (!typesInSearchLocalCache.ContainsKey(entity.DynEntityConfigId))
-                    typesInSearchLocalCache.Add(entity.DynEntityConfigId, 
+                    typesInSearchLocalCache.Add(entity.DynEntityConfigId,
                         _assetTypeRepository.GetById(entity.DynEntityConfigId));
                 entity.Subtitle = helper.BuildSubtitle(entity,
                     typesInSearchLocalCache[entity.DynEntityConfigId]);
@@ -196,17 +201,39 @@ namespace AppFramework.Core.Classes.SearchEngine
             return entities;
         }
 
-        public static Dictionary<long, string> FindIdNameBySearchPattern(long assetTypeId, long assetTypeAttributeId, string searchPattern, out int totalCount, int pageNumber = 1, int pageSize = 100)
+        /// <summary>
+        /// Find by Type
+        /// </summary>
+        /// <returns></returns>
+        public List<IIndexEntity> FindByTypeContext(
+            long searchId,
+            long userId,
+            long? assetTypeUid,
+            IEnumerable<AttributeElement> elements,
+            string configsIds = "",
+            string taxonomyItemsIds = "",
+            TimePeriodForSearch time = TimePeriodForSearch.CurrentTime,
+            Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance,
+            int pageNumber = 1,
+            int pageSize = 20)
         {
-            AssetType at = AssetType.GetByID(assetTypeId);
-            string fieldName = at.Attributes.Single(a => a.ID == assetTypeAttributeId).DBTableFieldName;
-            var unitOfWork = new DataProxy.UnitOfWork();
+            var result = _typeSearch.FindByTypeContext(searchId, userId, assetTypeUid, elements, configsIds,
+                taxonomyItemsIds, time, order, pageNumber, pageSize);
+            return result;
+        }
+
+        public static Dictionary<long, string> FindIdNameBySearchPattern(long assetTypeId, long assetTypeAttributeId,
+            string searchPattern, out int totalCount, int pageNumber = 1, int pageSize = 100)
+        {
+            var at = AssetType.GetByID(assetTypeId);
+            var fieldName = at.Attributes.Single(a => a.ID == assetTypeAttributeId).DBTableFieldName;
+            var unitOfWork = new UnitOfWork();
 
             var parameters = new List<SqlParameter>();
-            string parameterName = string.Format("@{0}", fieldName);
+            var parameterName = string.Format("@{0}", fieldName);
             parameters.Add(new SqlParameter(parameterName, string.Format("%{0}%", searchPattern)));
 
-            string queryWithPaging = string.Format(@"
+            var queryWithPaging = string.Format(@"
                 WITH search AS
                 (SELECT  
                     DynEntityId, 
@@ -218,19 +245,19 @@ namespace AppFramework.Core.Classes.SearchEngine
                 )
                 SELECT DynEntityId, Name, TotalCount FROM search
                 WHERE intRow BETWEEN @intStartRow AND @intEndRow",
-             at.DBTableName,
-             fieldName,
-             parameterName);
+                at.DBTableName,
+                fieldName,
+                parameterName);
 
             if (pageNumber < 1)
                 pageNumber = 1;
-            parameters.Add(new SqlParameter("@intStartRow", (pageNumber - 1) * pageSize));
-            parameters.Add(new SqlParameter("@intEndRow", pageNumber * pageSize - 1));
+            parameters.Add(new SqlParameter("@intStartRow", (pageNumber - 1)*pageSize));
+            parameters.Add(new SqlParameter("@intEndRow", pageNumber*pageSize - 1));
 
             var reader = unitOfWork.SqlProvider.ExecuteReader(
                 queryWithPaging,
                 parameters.ToArray(),
-                System.Data.CommandType.Text);
+                CommandType.Text);
 
             var result = new Dictionary<long, string>();
             totalCount = 0;
@@ -257,15 +284,17 @@ namespace AppFramework.Core.Classes.SearchEngine
             var counters = new List<SearchCounter>();
             var rdCounters = _unitOfWork.SqlProvider.ExecuteReader(
                 "_cust_GetSrchCount",
-                new SqlParameter[]{
-                            new SqlParameter("SearchId", searchId),
-                            new SqlParameter("UserId", userId),
-                            new SqlParameter("keywords", keywords),
-                            new SqlParameter("ConfigIds", configsIds != null ? string.Join(" ", configsIds.Split(new char[] { ',' })) : null),
-                            new SqlParameter("taxonomyItemsIds", taxonomyItemsIds != null ? string.Join(" ", taxonomyItemsIds.Split(new char[] { ',' })) : null),
-                            new SqlParameter("active", time == TimePeriodForSearch.CurrentTime),
-                            new SqlParameter("type", type),
-                        },
+                new[]
+                {
+                    new SqlParameter("SearchId", searchId),
+                    new SqlParameter("UserId", userId),
+                    new SqlParameter("keywords", keywords),
+                    new SqlParameter("ConfigIds", configsIds != null ? string.Join(" ", configsIds.Split(',')) : null),
+                    new SqlParameter("taxonomyItemsIds",
+                        taxonomyItemsIds != null ? string.Join(" ", taxonomyItemsIds.Split(',')) : null),
+                    new SqlParameter("active", time == TimePeriodForSearch.CurrentTime),
+                    new SqlParameter("type", type)
+                },
                 CommandType.StoredProcedure);
 
             while (rdCounters.Read())
@@ -308,10 +337,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 parameters.ConfigsIds,
                 parameters.TaxonomyItemsIds,
                 parameters.Time,
-                parameters.Order,
-                pageNumber: 1,
-                pageSize: int.MaxValue,
-                enableTracking: false);
+                parameters.Order, 1, int.MaxValue, false);
         }
     }
 }

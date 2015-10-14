@@ -270,7 +270,7 @@ namespace AppFramework.Core.Classes
 
                 if (isNew)
                 {
-                    var table = new DynTable(_dynColumnAdapter, _dataTypeService, _unitOfWork);
+                    var table = new DynTable(_dynColumnAdapter, _unitOfWork);
                     table.Create(assetType);
                 }
                 scope.Complete();

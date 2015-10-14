@@ -11,10 +11,12 @@ namespace AppFramework.Core.Validation
     public class ValidationFunctions : FunctionsFactory<bool, ValidationResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AssetAttribute _attribute;
 
-        public ValidationFunctions(IUnitOfWork unitOfWork)
+        public ValidationFunctions(IUnitOfWork unitOfWork, AssetAttribute attribute)
         {
             _unitOfWork = unitOfWork;
+            _attribute = attribute;
 
             Functions.Add("ISDIGIT", IsDigit);
             Functions.Add("REGEX", RegEx);
@@ -23,9 +25,8 @@ namespace AppFramework.Core.Validation
             Functions.Add("ISEMAIL", IsCorrectEmail);
             Functions.Add("ISURL", IsUrl);
             Functions.Add("UNIQUE", Unique);
+            Functions.Add("SYSTEMUNIQUE", SystemUnique);
         }
-
-        public AssetAttribute Attribute { get; set; }
 
         private bool Unique(ValidationResult validation, object[] parameters)
         {
@@ -36,21 +37,21 @@ namespace AppFramework.Core.Validation
             if (string.IsNullOrEmpty(value))
                 return result.IsValid;
 
-            if (Attribute.ParentAsset != null)
+            if (_attribute.ParentAsset != null)
             {
-                result.IsValid = _unitOfWork.IsValueUnique(Attribute.ParentAsset.GetConfiguration().DBTableName,
-                    Attribute.Configuration.DBTableFieldName,
+                result.IsValid = _unitOfWork.IsValueUnique(_attribute.ParentAsset.GetConfiguration().DBTableName,
+                    _attribute.Configuration.DBTableFieldName,
                     value,
-                    Attribute.ParentAsset.ID);
+                    _attribute.ParentAsset.ID);
             }
             else
             {
                 var count =
                     _unitOfWork.SqlProvider.ExecuteScalar(
                         string.Format("SELECT COUNT(*) FROM [{0}] WHERE [{1}] = @value",
-                            Attribute.Configuration.Parent.DBTableName,
-                            Attribute.Configuration.DBTableFieldName),
-                        new IDataParameter[] { new SqlParameter("@value", value) });
+                            _attribute.Configuration.Parent.DBTableName,
+                            _attribute.Configuration.DBTableFieldName),
+                        new IDataParameter[] {new SqlParameter("@value", value)});
 
                 result.IsValid = int.Parse(count.ToString()) == 0;
             }
@@ -58,16 +59,87 @@ namespace AppFramework.Core.Validation
             result.Message = !result.IsValid
                 ? string.Format(
                     "An entity with the attribute <i>{0}</i> = <i>{1}</i> already exists. Value must be unique.",
-                    Attribute.Configuration.NameLocalized, value)
+                    _attribute.Configuration.NameLocalized, value)
                 : null;
 
             validation.ResultLines.Add(result);
             return result.IsValid;
         }
 
+        private bool SystemUnique(ValidationResult validation, object[] parameters)
+        {
+            var value = parameters[0].ToString();
+
+            var dbDataType = DataTypeService.ConvertToDbDataType(_attribute.Configuration.DataType);
+
+            long assetId;
+            long assetConfigId;
+            if (_attribute.ParentAsset != null)
+            {
+                assetId = _attribute.ParentAsset.ID;
+                assetConfigId = _attribute.ParentAsset.DynEntityConfigUid;
+            }
+            else
+            {
+                assetId = 0;
+                assetConfigId = 0;
+            }
+
+            var foundValues =
+                _unitOfWork.SqlProvider.ExecuteScalar(
+                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType),
+                    new IDataParameter[]
+                    {
+                        new SqlParameter("@attrValue", value),
+                        new SqlParameter("@DynEntityId", assetId),
+                        new SqlParameter("@DynEntityConfigUid", assetConfigId)
+                    });
+
+            ValidationResultLine result;
+            if (foundValues == null)
+            {
+                result = ValidationResultLine.Success;
+            }
+            else
+            {
+                var message = string.Format(
+                    "An entity with the attribute <i>{0}</i> = <i>{1}</i> already exists. Value must be unique in the whole system.",
+                    _attribute.Configuration.NameLocalized, value);
+                result = ValidationResultLine.Error(string.Empty, message);
+            }
+
+            validation.ResultLines.Add(result);
+            return result.IsValid;
+        }
+
+        private static string GetSqlForUniquenessRequest(string attributeName, string dbDataType)
+        {
+            // first select all types that contain attribute with the same name
+            // (i.e. put all the tables containing the attribute in a single UNION SELECT)
+            // then check uniqueness among all the values in all the selected tables
+            return string.Format(
+                @"
+DECLARE @union NVARCHAR(max);
+SELECT @union = COALESCE(@union + ' UNION ', '')
+		+ '(SELECT [DynEntityId], [DynEntityConfigUid], [' + clmn + '] as [{0}] FROM ' + tbl + ' WHERE ActiveVersion = 1)'
+FROM (
+	SELECT [DBTableName] as tbl
+		,[DBTableFieldname] as clmn
+	FROM [DynEntityAttribConfig] attr JOIN [DynEntityConfig] t
+		ON attr.DynEntityConfigUid = t.DynEntityConfigId
+	WHERE attr.Name = '{0}') as tt
+
+DECLARE @query NVARCHAR(max);
+SET @query = N'SELECT TOP 1 1 from (' + @union + ') as allValues WHERE [{0}] = @value AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)'
+
+EXEC sp_executesql @query, N'@value {1},@id bigint,@config bigint',@value=@attrValue,@id=@DynEntityId,@config=@DynEntityConfigUid",
+                attributeName,
+                dbDataType);
+        }
+
         private bool IsUrl(ValidationResult validation, object[] parameters)
         {
-            var value = (string)parameters[0];
+            var value = (string) parameters[0];
             var match = Regex.Match(value,
                 @"((https?|ftp|gopher|telnet|file|notes|ms-help):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)");
 
@@ -83,7 +155,7 @@ namespace AppFramework.Core.Validation
 
         private bool IsCorrectEmail(ValidationResult validation, object[] parameters)
         {
-            var value = (string)parameters[0];
+            var value = (string) parameters[0];
             var match = Regex.Match(value, @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
 
             var result = new ValidationResultLine(string.Empty)
@@ -98,7 +170,7 @@ namespace AppFramework.Core.Validation
 
         private bool IsCorrectBarcode(ValidationResult validation, object[] parameters)
         {
-            var value = (string)parameters[0];
+            var value = (string) parameters[0];
 
             var barcodeProvider = new DefaultBarcodeProvider();
 
@@ -140,8 +212,8 @@ namespace AppFramework.Core.Validation
 
         private bool RegEx(ValidationResult validation, object[] parameters)
         {
-            var expression = new Regex((string)parameters[0]);
-            var value = (string)parameters[1];
+            var expression = new Regex((string) parameters[0]);
+            var value = (string) parameters[1];
 
             var match = expression.Match(value);
 
@@ -157,7 +229,7 @@ namespace AppFramework.Core.Validation
 
         private bool IsIP(ValidationResult validation, object[] parameters)
         {
-            var value = (string)parameters[0];
+            var value = (string) parameters[0];
             var match = Regex.Match(value,
                 @"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
 

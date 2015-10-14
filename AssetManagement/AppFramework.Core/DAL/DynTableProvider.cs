@@ -25,21 +25,17 @@ namespace AppFramework.Core.DAL
     public class DynTableProvider : ITableProvider
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDataTypeService _dataTypeService;
         private readonly IDynColumnAdapter _dynColumnAdapter;
         private readonly ILog _logger = LogManager.GetCurrentClassLogger();
 
-        public DynTableProvider(IUnitOfWork unitOfWork, IDynColumnAdapter dynColumnAdapter, IDataTypeService dataTypeService)
+        public DynTableProvider(IUnitOfWork unitOfWork, IDynColumnAdapter dynColumnAdapter)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("IUnitOfWork");
             if (dynColumnAdapter == null)
                 throw new ArgumentNullException("IDynColumnAdapter");
-            if (dataTypeService == null)
-                throw new ArgumentNullException("IDataTypeService");
             _unitOfWork = unitOfWork;
             _dynColumnAdapter = dynColumnAdapter;
-            _dataTypeService = dataTypeService;
         }
 
         /// <summary>
@@ -570,9 +566,9 @@ namespace AppFramework.Core.DAL
             {
                 string varibleName = _getVariableName(column);
                 SqlDbType paramType;
-                if (Enum.IsDefined(typeof(SqlDbType), _dataTypeService.ConvertToDbDataType(column.DataType)))
+                if (Enum.IsDefined(typeof(SqlDbType), DataTypeService.ConvertToDbDataType(column.DataType)))
                 {
-                    paramType = Routines.StringToEnum<SqlDbType>(_dataTypeService.ConvertToDbDataType(column.DataType));
+                    paramType = Routines.StringToEnum<SqlDbType>(DataTypeService.ConvertToDbDataType(column.DataType));
                 }
                 else
                 {

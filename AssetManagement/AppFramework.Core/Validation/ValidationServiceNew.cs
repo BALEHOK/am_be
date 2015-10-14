@@ -2,26 +2,21 @@
 using System.Linq;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
-using AppFramework.Core.DataTypes;
-using AppFramework.Core.Helpers;
-using AppFramework.DataProxy;
-using System.Diagnostics;
-using Common.Logging;
 using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.DataProxy;
+using Common.Logging;
 
 namespace AppFramework.Core.Validation
 {
     public interface IValidationServiceNew
     {
-        ValidationResult ValidateDataType(string attributeName, DataTypeBase dataType, object value);
-        ValidationResult ValidateAttribute(AssetAttribute attribute, long currentUserId);
-        ValidationResult ValidateAsset(Asset asset, long currentUserId);
+        ValidationResult ValidateAttribute(AssetAttribute attribute);
+        ValidationResult ValidateAsset(Asset asset);
     }
 
     public class ValidationServiceNew : IValidationServiceNew
     {
-        private readonly AttributeValidator _attributeValidator;
-        private readonly ValidationFunctions _validationFunctions;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILog _logger;
 
         public ValidationServiceNew(IUnitOfWork unitOfWork, ILog logger)
@@ -30,74 +25,11 @@ namespace AppFramework.Core.Validation
                 throw new ArgumentNullException("unitOfWork");
             if (logger == null)
                 throw new ArgumentNullException("logger");
+            _unitOfWork = unitOfWork;
             _logger = logger;
-
-            _validationFunctions = new ValidationFunctions(unitOfWork);
-            _attributeValidator = new AttributeValidator(_validationFunctions);
         }
 
-        public ValidationResult ValidateDataType(string attributeName, DataTypeBase dataType, object value)
-        {
-            var result = ValidationResult.Success;
-
-            if (value == null)
-                return result;
-
-            var isValidType = true;
-            try
-            {
-                TypesHelper.GetTypedValue(dataType.FrameworkDataType, value);
-            }
-            catch (FormatException)
-            {
-                isValidType = false;
-            }
-            catch (InvalidCastException)
-            {
-                isValidType = false;
-            }
-            catch (OverflowException)
-            {                
-                result += ValidationResultLine.Error(attributeName, "Value exceeds maximum for this type");
-                return result;
-            }
-
-            var dataTypeValidationExpression = dataType.Base.ValidationExpr;            
-            if (!string.IsNullOrEmpty(dataTypeValidationExpression))
-            {
-                if (dataTypeValidationExpression.StartsWith("@"))
-                {
-                    result +=
-                        ValidationResultLine.Error(
-                            attributeName,
-                            string.Format("Validation expression for '{0}' data type should be updated",
-                                dataType.Name));
-                    return result;
-                }
-
-                var evaluator = new ValidationExpressionEvaluator(dataTypeValidationExpression, _validationFunctions,
-                    result);
-                evaluator.Expression.EvaluateParameter += (name, args) =>
-                {
-                    if (name.Equals("@value"))
-                        args.Result = TypesHelper.GetTypedValue(dataType.FrameworkDataType, value);
-                };
-                if (!evaluator.Evaluate())
-                    result += ValidationResultLine.Error(attributeName, dataType.Base.ValidationMessage);
-            }
-
-            if (!isValidType)
-            {
-                result +=
-                    ValidationResultLine.Error(
-                        attributeName,
-                        string.Format("Validation failed: value '{0}' is not valid ", value));
-            }
-
-            return result;
-        }
-
-        public ValidationResult ValidateAttribute(AssetAttribute attribute, long currentUserId)
+        public ValidationResult ValidateAttribute(AssetAttribute attribute)
         {
             var result = ValidationResult.Success;
 
@@ -114,6 +46,9 @@ namespace AppFramework.Core.Validation
                 return result;
             }
 
+
+            var validationFunctions = new ValidationFunctions(_unitOfWork, attribute);
+
             // check data type
             if (result.IsValid &&
                 attribute.Configuration.DataTypeEnum != Enumerators.DataType.Asset &&
@@ -121,16 +56,15 @@ namespace AppFramework.Core.Validation
                 attribute.Configuration.DataTypeEnum != Enumerators.DataType.DynList &&
                 attribute.Configuration.DataTypeEnum != Enumerators.DataType.DynLists)
             {
-                result += ValidateDataType(
-                    attribute.Configuration.ID.ToString(), 
-                    attribute.Data.DataType, 
-                    attribute.Data.Value);
+                var dataTypeValidator = new DataTypeValidator(validationFunctions);
+                result += dataTypeValidator.Validate(attribute);
             }
 
             // validate expression if exists            
             if (result.IsValid)
             {
-                result += _attributeValidator.Validate(attribute, attribute.Data.Value);
+                var attributeValidator = new AttributeValidator(validationFunctions);
+                result += attributeValidator.Validate(attribute);
             }
 
             var validationExpression = attribute.Configuration.ValidationExpr;
@@ -151,26 +85,26 @@ namespace AppFramework.Core.Validation
             }
 
             return result;
-        }       
+        }
 
-        public ValidationResult ValidateAsset(Asset asset, long currentUserId)
+        public ValidationResult ValidateAsset(Asset asset)
         {
             var result = new ValidationResult();
             foreach (var attribute in asset.Attributes)
             {
-                result += ValidateAttribute(attribute, currentUserId);
+                result += ValidateAttribute(attribute);
             }
             return result;
         }
 
         private bool _isEmpty(AssetAttribute attribute)
         {
-            bool isEmpty = false;
-            switch(attribute.Configuration.DataTypeEnum)
+            bool isEmpty;
+            switch (attribute.Configuration.DataTypeEnum)
             {
                 case Enumerators.DataType.Asset:
-                    isEmpty = !attribute.ValueAsId.HasValue 
-                        || attribute.ValueAsId == 0;
+                    isEmpty = !attribute.ValueAsId.HasValue
+                              || attribute.ValueAsId == 0;
                     break;
 
                 case Enumerators.DataType.DynList:
@@ -186,10 +120,10 @@ namespace AppFramework.Core.Validation
 
         private bool _isAutoGenerated(AssetAttribute attribute)
         {
-            return 
+            return
                 attribute.ParentAsset != null &&
                 attribute.ParentAsset.Configuration.AutoGenerateNameType !=
-                    Enumerators.TypeAutoGenerateName.None &&
+                Enumerators.TypeAutoGenerateName.None &&
                 attribute.Configuration.DBTableFieldName == AttributeNames.Name;
         }
     }

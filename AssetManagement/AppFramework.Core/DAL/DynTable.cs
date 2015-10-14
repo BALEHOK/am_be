@@ -12,7 +12,6 @@ namespace AppFramework.Core.DAL
     public class DynTable
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDataTypeService _dataTypeService;
         private readonly IDynColumnAdapter _dynColumnAdapter;
 
         /// <summary>
@@ -20,18 +19,14 @@ namespace AppFramework.Core.DAL
         /// </summary>
         public DynTable(
             IDynColumnAdapter dynColumnAdapter,
-            IDataTypeService dataTypeService,
             IUnitOfWork unitOfWork)
         {
             if (dynColumnAdapter == null)
                 throw new ArgumentNullException("IDynColumnAdapter");
-            if (dataTypeService == null)
-                throw new ArgumentNullException("IDataTypeService");
             if (unitOfWork == null)
                 throw new ArgumentNullException("IUnitOfWork");
 
             _unitOfWork = unitOfWork;
-            _dataTypeService = dataTypeService;
             _dynColumnAdapter = dynColumnAdapter;
         }
 
@@ -81,7 +76,7 @@ namespace AppFramework.Core.DAL
             var sb = new StringBuilder();
             sb.Append(string.Format("[{0}]", column.Name));
             sb.Append(" ");
-            sb.Append(_dataTypeService.ConvertToDbDataType(column.DataType));
+            sb.Append(DataTypeService.ConvertToDbDataType(column.DataType));
             sb.Append(column.IsNull ? " NULL " : " NOT NULL ");
 
             if (column.IsIdentity)

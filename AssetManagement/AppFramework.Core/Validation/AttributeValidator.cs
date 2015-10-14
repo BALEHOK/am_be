@@ -35,8 +35,10 @@ namespace AppFramework.Core.Validation
             return expression;
         }
 
-        public ValidationResult Validate(AssetAttribute attribute, object value)
+        public ValidationResult Validate(AssetAttribute attribute)
         {
+            var value = attribute.Data.Value;
+
             var result = ValidationResult.Success;
 
             var validationExpression = attribute.Configuration.ValidationExpr;
@@ -57,9 +59,6 @@ namespace AppFramework.Core.Validation
                     ? TypesHelper.GetTypedValue(attribute.Configuration.Base.DataType.FrameworkDataType, value)
                     : HttpUtility.UrlDecode(name);
             };
-
-            // set attribute value for evaluating functions
-            _validationFunctions.Attribute = attribute;
 
             try
             {

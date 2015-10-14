@@ -58,7 +58,7 @@ namespace AppFramework.Core.Classes
             // TODO : must be passed via DI
             var dtService = new DataTypeService(_unitOfWork);
             _columnAdapter = new DynColumnAdapter(dtService);
-            _tableProvider = new DynTableProvider(_unitOfWork, _columnAdapter, dtService);
+            _tableProvider = new DynTableProvider(_unitOfWork, _columnAdapter);
             _indexationService = new IndexationService(_unitOfWork, _assetTypeRepository, this);
             _attributeCalculator = new AttributeCalculator(_unitOfWork, this, _assetTypeRepository);
             _dynamicListsService = new DynamicListsService(_unitOfWork);

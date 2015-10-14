@@ -6,6 +6,8 @@
 
     public class DefaultBarcodeProvider : IBarcodeProvider
     {
+        private static readonly Regex BarcodeRegex = new Regex("^[0-9a-zA-Z]{7," + ApplicationSettings.BarcodeLength + "}$", RegexOptions.Compiled);
+        
         public string GenerateBarcode()
         {
             Random rnd = new Random((int)DateTime.Now.Ticks);
@@ -25,9 +27,7 @@
 
         public bool ValidateBarcode(string barcode)
         {
-            int length = ApplicationSettings.BarcodeLength;
-            string pattern = @"^[0-9]{" + length.ToString() + "}$";
-            return Regex.Match(barcode, pattern).Success;
+            return BarcodeRegex.IsMatch(barcode);
         }
 
         public System.Drawing.Image GenerateBarcodeImage(string barcode)

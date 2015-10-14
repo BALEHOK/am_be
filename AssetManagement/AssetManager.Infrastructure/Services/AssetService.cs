@@ -159,7 +159,7 @@ namespace AssetManager.Infrastructure.Services
 
             _modelFactory.AssignInternalAttributes(asset, userId);
 
-            var validationResult = _validationService.ValidateAsset(asset, userId);
+            var validationResult = _validationService.ValidateAsset(asset);
             if (!validationResult.IsValid)
                 throw new AssetValidationException(validationResult);
 
@@ -372,7 +372,7 @@ namespace AssetManager.Infrastructure.Services
 
             _modelFactory.AssignInternalAttributes(asset, userId);
 
-            var validationResult = _validationService.ValidateAsset(asset, userId);
+            var validationResult = _validationService.ValidateAsset(asset);
             if (!validationResult.IsValid)
                 throw new AssetValidationException(validationResult);
 

@@ -1,12 +1,12 @@
 using System;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
 using AppFramework.DataProxy;
 using AppFramework.Core.AC.Providers;
 using AssetManager.Infrastructure.Services;
 using AssetManager.Infrastructure;
 using AppFramework.Core;
 using System.Web;
+using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Reports;
 
 namespace AssetManager.WebApi
@@ -17,7 +17,7 @@ namespace AssetManager.WebApi
     public class UnityConfig
     {
         #region Unity Container
-        private static Lazy<IUnityContainer> container = new Lazy<IUnityContainer>(() =>
+        private static readonly Lazy<IUnityContainer> Container = new Lazy<IUnityContainer>(() =>
         {
             var container = new UnityContainer();
             RegisterTypes(container);
@@ -29,7 +29,7 @@ namespace AssetManager.WebApi
         /// </summary>
         public static IUnityContainer GetConfiguredContainer()
         {
-            return container.Value;
+            return Container.Value;
         }
         #endregion
 
@@ -42,7 +42,6 @@ namespace AssetManager.WebApi
             // NOTE: To load from web.config uncomment the line below. Make sure to add a Microsoft.Practices.Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 
-            // TODO: Register your types here
             container
                 .RegisterType<IUnitOfWork, UnitOfWork>(
                     new PerRequestLifetimeManager(),
@@ -52,6 +51,8 @@ namespace AssetManager.WebApi
                 .RegisterType<IBarcodeService, BarcodeService>()
                 .RegisterType<IAssetService, AssetService>()
                 .RegisterType<IAssetTypeService, AssetTypeService>()
+                .RegisterType<ISearchService, SearchEngine>()
+                .RegisterType<ITypeSearch, TypeSearch>()
                 .RegisterType<IExportService, ExportService>()
                 .RegisterType<IFileService, FileService>()
                 .RegisterType<IEnvironmentSettings, EnvironmentSettings>()

@@ -1,5 +1,4 @@
 ﻿using System.Web.UI;
-using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Core.PL;
@@ -23,8 +22,6 @@ namespace AssetSite.Controls
 
     public partial class AssetAttributePanels : UserControl
     {
-        [Dependency]
-        public IAuthenticationService AuthenticationService { get; set; }
         [Dependency]
         public IAssetTypeRepository AssetTypeRepository { get; set; }
         [Dependency]
@@ -97,9 +94,8 @@ namespace AssetSite.Controls
                 Asset = Asset
             };
 
-            long assetTypeUid;
             long screenId;
-            AppFramework.Entities.AssetTypeScreen screen;
+            AssetTypeScreen screen;
             _assetController = new AssetController { AssetType = Asset.GetConfiguration(), Asset = Asset };
 
             if (Request["ScreenId"] != null && long.TryParse(Request["ScreenId"], out screenId))
@@ -160,8 +156,7 @@ namespace AssetSite.Controls
                 return true;
             }
             
-            var validationResult = ValidationService.ValidateAttribute(attribute,
-                AuthenticationService.CurrentUserId);
+            var validationResult = ValidationService.ValidateAttribute(attribute);
             if (validationResult.IsValid)
                 return true;
 

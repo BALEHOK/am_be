@@ -38,11 +38,10 @@ namespace AppFramework.Core.Classes.IE
             var userService = new UserService(_unitOfWork, _assetTypeRepository, _assetsService);
             var authenticationService = new AuthenticationService(_unitOfWork, userService);
             var typeSearch = new TypeSearch(
-                authenticationService, 
                 _unitOfWork, 
                 _assetTypeRepository, 
                 _assetsService);
-            var dataTable = typeSearch.FillAssetToDataTableByTypeContext(assetTypeUid, type.DBTableName, filter);
+            var dataTable = typeSearch.FillAssetToDataTableByTypeContext((long)authenticationService.CurrentUser.ProviderUserKey, assetTypeUid, type.DBTableName, filter);
             var columnsDataTable = GetAssetColumnsByTypeContext(type.DBTableName);
 
             foreach (DataRow row in columnsDataTable.Rows)

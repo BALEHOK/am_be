@@ -146,7 +146,6 @@ namespace AssetSite.Controls
             var pageType = Page.GetType().BaseType;
 
             var typeSearch = new TypeSearch(
-                AuthenticationService,
                 UnitOfWork,
                 AssetTypeRepository,
                 AssetsService);
@@ -187,6 +186,7 @@ namespace AssetSite.Controls
                 var page = (Page as NewResultByType);
                 result = typeSearch.FindByTypeContext(
                     page.SearchId,
+                    (long)AuthenticationService.CurrentUser.ProviderUserKey,
                     long.Parse(Request.QueryString["TypeUID"]),
                     (Session[Request.QueryString["Params"]] as List<AttributeElement>),
                     page.ConfigsIds,
@@ -202,6 +202,7 @@ namespace AssetSite.Controls
                 var page = (Page as NewResultByContext);
                 result = typeSearch.FindByTypeContext(
                     page.SearchId,
+                    (long)AuthenticationService.CurrentUser.ProviderUserKey,
                     null,
                     (Session[Request.QueryString["Params"]] as List<AttributeElement>),
                     page.ConfigsIds,

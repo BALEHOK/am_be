@@ -133,6 +133,7 @@ namespace AssetManagerAdmin.Model
                 new ValidationButton {Name = "IsEmail", Text = "IsEmail([@value])"},
                 new ValidationButton {Name = "IsUrl", Text = "IsUrl([@value])"},
                 new ValidationButton {Name = "Unique", Text = "Unique([@value])"},
+                new ValidationButton {Name = "SystemUnique", Text = "SystemUnique([@value])"},
                 new ValidationButton {Name = "()", Text = "()"},
                 new ValidationButton {Name = "and", Text = "and"},
                 new ValidationButton {Name = "not", Text = "not"},

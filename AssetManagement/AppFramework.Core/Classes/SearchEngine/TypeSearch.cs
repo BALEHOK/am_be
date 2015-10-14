@@ -19,22 +19,17 @@ namespace AppFramework.Core.Classes.SearchEngine
     /// <summary>
     /// Contains the logic for search by AssetType
     /// </summary>
-    public class TypeSearch
+    public class TypeSearch : ITypeSearch
     {
-        private readonly IAuthenticationService _authenticationService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly IAssetsService _assetsService;
 
         public TypeSearch(
-            IAuthenticationService authenticationService,
             IUnitOfWork unitOfWork,
             IAssetTypeRepository assetTypeRepository,
             IAssetsService assetsService)
         {
-            if (authenticationService == null)
-                throw new ArgumentNullException("authenticationService");
-            _authenticationService = authenticationService;
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
@@ -49,11 +44,13 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <summary>
         /// Returns datatable with asset by asset type and search parameters
         /// </summary>
+        /// <param name="userId">current user id</param>
         /// <param name="assetTypeUid">asset type uid</param>
         /// <param name="tableName">table name</param>
         /// <param name="elements">search parameters</param>
         /// <returns></returns>
         public DataTable FillAssetToDataTableByTypeContext(
+            long userId,
             long assetTypeUid,
             string tableName,
             IEnumerable<AttributeElement> elements)
@@ -78,7 +75,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                         {
                             new SqlParameter("SearchId", searchId),
                             new SqlParameter("TableName", tableName),
-                            new SqlParameter("UserId", (long)_authenticationService.CurrentUser.ProviderUserKey)
+                            new SqlParameter("UserId", userId)
                         },
                     CommandType.StoredProcedure);
 
@@ -92,6 +89,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         public List<Entities.IIndexEntity> FindByTypeContext(
             long searchId,
+            long userId,
             long? assetTypeUid,
             IEnumerable<AttributeElement> elements,
             string configsIds,
@@ -126,7 +124,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 new SqlParameter[]
                 {
                     new SqlParameter("SearchId", searchId),
-                    new SqlParameter("UserId", (long)_authenticationService.CurrentUser.ProviderUserKey),
+                    new SqlParameter("UserId", userId),
                     new SqlParameter("ConfigIds",
                         configsIds != null
                             ? string.Join(" ", configsIds.Split(new char[] {','}))

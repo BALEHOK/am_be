@@ -44,12 +44,11 @@ namespace AppFramework.Core.DAL
         /// <param name="isNull">Can column be null or not</param>
         public static void AlterTable(long dynEntityConfigUid, DynColumn column, IUnitOfWork unitOfWork)
         {
-            var dataTypeService = new DataTypeService(unitOfWork);
             unitOfWork.SqlProvider.ExecuteNonQuery(StoredProcedures.AlterTable,
                 new SqlParameter[] { 
                     new SqlParameter("@dynEntityConfigUid", dynEntityConfigUid),
                     new SqlParameter("@column_name", column.Name),
-                    new SqlParameter("@column_datatype", dataTypeService.ConvertToDbDataType(column.DataType)),
+                    new SqlParameter("@column_datatype", DataTypeService.ConvertToDbDataType(column.DataType)),
                     new SqlParameter("@column_isnull", column.IsNull),
                     new SqlParameter("@column_default", column.IsNull ? string.Empty : column.GetDefaultValue()),
                 },

@@ -34,13 +34,13 @@ namespace AssetSite.Search
                 }
 
                 var typeSearch = new TypeSearch(
-                    AuthenticationService,
                     UnitOfWork,
                     AssetTypeRepository,
                     AssetsService);
 
                 var result = typeSearch.FindByTypeContext(
                     SearchId,
+                    (long)AuthenticationService.CurrentUser.ProviderUserKey,
                     null,
                     (Session[Request.QueryString["Params"]] as List<AttributeElement>),
                     ConfigsIds,

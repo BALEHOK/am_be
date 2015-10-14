@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
+using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
@@ -44,7 +46,10 @@ namespace AssetManager.WebApi.Controllers.Api
             int? sortBy = null)
         {
             if (!searchId.HasValue)
+            {
                 searchId = _searchService.NewSearchId();
+            }
+
             var userId = User.GetId();
             var result = _searchService.FindByKeywords(
                 query,
@@ -60,6 +65,39 @@ namespace AssetManager.WebApi.Controllers.Api
                     ? TimePeriodForSearch.CurrentTime
                     : TimePeriodForSearch.History
                 );
+
+            return new SearchResultModel
+            {
+                SearchId = searchId.Value,
+                Entities = result.ToList()
+            };
+        }
+
+        /// <summary>
+        /// Performs search by type
+        /// </summary>
+        [Route("bytype"), HttpGet]
+        [CacheOutput(ClientTimeSpan = 120, ServerTimeSpan = 120)]
+        public SearchResultModel ByType(
+            long assetType,
+            int page = 1,
+            TimePeriodForSearch context = TimePeriodForSearch.CurrentTime,
+            int? searchId = null,
+            int? taxonomy = null,
+            int? sortBy = null)
+        {
+            if (!searchId.HasValue)
+            {
+                searchId = _searchService.NewSearchId();
+            }
+
+            var userId = User.GetId();
+            var result = _searchService.FindByTypeContext(
+                searchId.Value,
+                userId,
+                assetType,
+                new List<AttributeElement>(0),
+                time: context);
 
             return new SearchResultModel
             {

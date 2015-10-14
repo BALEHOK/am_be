@@ -30,10 +30,5 @@ namespace AppFramework.Core.Classes
         IEnumerable<CustomDataType> GetAll();
         
         void AssignSearchOperators(DataTypeBase dataType, List<long> assignedOperators);
-
-        /// <summary>
-        /// Description of data type for SQL statements
-        /// </summary>
-        string ConvertToDbDataType(DataTypeBase customDataType);
     }
 }

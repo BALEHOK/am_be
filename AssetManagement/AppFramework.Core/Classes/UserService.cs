@@ -70,7 +70,7 @@ namespace AppFramework.Core.Classes
         {
             var dtService = new DataTypeService(_unitOfWork);
             var adapter = new DynColumnAdapter(dtService);
-            var provider = new DynTableProvider(_unitOfWork, adapter, dtService);
+            var provider = new DynTableProvider(_unitOfWork, adapter);
             provider.UpdateAsset(user.ToAsset());
         }
 

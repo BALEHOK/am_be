@@ -321,9 +321,19 @@
         {
             get
             {
-                int tmpRet = 7;
-                string tmp = ConfigurationManager.AppSettings["BarcodeLength"];
-                int.TryParse(tmp, out tmpRet);
+                int tmpRet;
+                var tmp = ConfigurationManager.AppSettings["BarcodeLength"];
+
+                if (string.IsNullOrEmpty(tmp) || !int.TryParse(tmp, out tmpRet))
+                {
+                    return 7;
+                }
+
+                if (tmpRet < 7 || tmpRet > 48)
+                {
+                    throw new ConfigurationErrorsException("Barcode length must be within range 7 - 48 characters. See BarcodeLength parameter in AppSettings.");
+                }
+
                 return tmpRet;
             }
         }

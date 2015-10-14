@@ -554,6 +554,8 @@ namespace AssetManagerAdmin.ViewModel
                 .AddParameter(new ValidationFieldValueEntry());
             grammar.AddFunction("Unique", "UNIQUE")
                 .AddParameter(new ValidationFieldValueEntry());
+            grammar.AddFunction("SystemUnique", "SYSTEMUNIQUE")
+                .AddParameter(new ValidationFieldValueEntry());
 
             return grammar;
         }

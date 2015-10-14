@@ -309,7 +309,7 @@ namespace AppFramework.Core.Classes.Stock
             var unitOfWork = new UnitOfWork();
             var dtService = new DataTypeService(unitOfWork);
             var adapter = new DynColumnAdapter(dtService);
-            var provider = new DynTableProvider(unitOfWork, adapter, dtService);
+            var provider = new DynTableProvider(unitOfWork, adapter);
             provider.UpdateAsset(Asset);
         }
 
