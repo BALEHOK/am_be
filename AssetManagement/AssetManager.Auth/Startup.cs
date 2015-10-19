@@ -14,11 +14,13 @@ namespace AssetManager.Auth
 {
     public class Startup
     {
+        public const string AuthRoot = "/core";
+
         public void Configuration(IAppBuilder app)
         {
             log4net.Config.XmlConfigurator.Configure();
 
-            app.Map("/core", authApp =>
+            app.Map(AuthRoot, authApp =>
             {
                 var factory = Factory.Configure();
                 

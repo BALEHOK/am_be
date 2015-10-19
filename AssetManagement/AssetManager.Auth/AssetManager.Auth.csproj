@@ -124,6 +124,7 @@
     <Compile Include="Email\Models\RecoverPasswordEmailModel.cs" />
     <Compile Include="Email\ViewLoader.cs" />
     <Compile Include="Models\RecoverPasswordModel.cs" />
+    <Compile Include="Models\RecoverPasswordPageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

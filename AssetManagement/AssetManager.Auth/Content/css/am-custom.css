@@ -185,6 +185,45 @@ input[type="password"]:focus {
     cursor: default;
 }
 
+.btn-link {
+  font-weight: normal;
+  color: #337ab7;
+  border-radius: 0;
+  box-shadow: none;
+}
+.btn-link,
+.btn-link:active,
+.btn-link.active,
+.btn-link[disabled],
+fieldset[disabled] .btn-link {
+  background: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+.btn-link:hover,
+.btn-link:focus {
+  color: #23527c;
+  text-decoration: underline;
+  background-color: transparent;
+  box-shadow: none;
+}
+.btn-link[disabled]:hover,
+fieldset[disabled] .btn-link:hover,
+.btn-link[disabled]:focus,
+fieldset[disabled] .btn-link:focus {
+  color: #777;
+  text-decoration: none;
+  box-shadow: none;
+}
 
 .page-consent .col-sm-10,
 .page-consent .col-sm-8 {

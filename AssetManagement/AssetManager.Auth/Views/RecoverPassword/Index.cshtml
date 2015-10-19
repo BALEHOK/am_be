@@ -1,23 +1,23 @@
-﻿@model string
+﻿@model AssetManager.Auth.Models.RecoverPasswordPageModel
 @{
     Layout = "~/Views/RecoverPassword/_Layout.cshtml";
 }
 
-@if (!string.IsNullOrEmpty(Model)) // error message
+@if (!string.IsNullOrEmpty(Model.Error)) // error message
 {
     <div class="row">
         <div class="col-md-12 col-sm-12">
             <div class="alert alert-danger">
-                <strong>@Model</strong>
+                <strong>@Model.Error</strong>
             </div>
         </div>
     </div>
 }
 <div class="row">
-    <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
+    <div class="col-md-6 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-body">
-                <form name="forgot_password" method="post" action="@Url.Action("Index")">
+                <form name="forgot_password" method="post">
                     @Html.AntiForgeryToken()
                     <fieldset>
                         <div class="form-group">
@@ -27,6 +27,10 @@
 
                         <div class="form-group">
                             <button class="btn btn-primary">Recover</button>
+                            @if (!string.IsNullOrEmpty(Model.LinkToLogin))
+                            {
+                                <a href="@Model.LinkToLogin" class="btn btn-link">Back to login</a>
+                            }
                         </div>
                     </fieldset>
                 </form>

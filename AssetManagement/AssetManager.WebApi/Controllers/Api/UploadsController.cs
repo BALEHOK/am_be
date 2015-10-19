@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
 using AppFramework.ConstantsEnumerators;
+using Common.Logging;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -18,10 +19,12 @@ namespace AssetManager.WebApi.Controllers.Api
     {
         private readonly IFileService _fileService;
         private readonly IValidationService _validationService;
+        private readonly ILog _logger;
 
         public UploadsController(
             IFileService fileService,
-            IValidationService validationService)
+            IValidationService validationService,
+            ILog logger)
         {
             if (fileService == null)
                 throw new ArgumentNullException("fileService");
@@ -29,6 +32,9 @@ namespace AssetManager.WebApi.Controllers.Api
             if (validationService == null)
                 throw new ArgumentNullException("validationService");
             _validationService = validationService;
+            if (logger == null)
+                throw new ArgumentNullException("logger");
+            _logger = logger;
         }
 
         [Route("")]
@@ -74,12 +80,20 @@ namespace AssetManager.WebApi.Controllers.Api
                 fileName, fileType);
 
             if (!validationResult.IsValid)
+            {
+                _logger.InfoFormat("Invalid upload: {0}", 
+                    validationResult.GetErrorMessage());
                 return Request.CreateErrorResponse(
                     HttpStatusCode.BadRequest,
                     validationResult.GetErrorMessage());
+            }
 
             var destinationFilename = _fileService.GetDestinationFilename(
                 fileName, uploadsDirRelPath);
+
+            _logger.DebugFormat("Uploading {0} to {1}",
+                fileData.LocalFileName, destinationFilename);
+
             File.Move(fileData.LocalFileName, destinationFilename);
 
             var result = new UploadResultModel

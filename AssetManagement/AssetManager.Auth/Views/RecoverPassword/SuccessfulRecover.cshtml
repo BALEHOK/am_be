@@ -1,4 +1,6 @@
-﻿@{
+﻿@model AssetManager.Auth.Models.RecoverPasswordPageModel
+
+@{
     Layout = "~/Views/RecoverPassword/_Layout.cshtml";
 }
 <div class="row">
@@ -6,5 +8,13 @@
         <div class="alert alert-success">
             Check your mailbox for new credentials.
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        @if (!string.IsNullOrEmpty(Model.LinkToLogin))
+        {
+            <a href="@Model.LinkToLogin" class="btn btn-link">Back to login</a>
+        }
     </div>
 </div>
