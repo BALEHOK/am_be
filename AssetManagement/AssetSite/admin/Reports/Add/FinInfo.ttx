@@ -1,0 +1,6 @@
+AssetTypeId	String	200
+AssetType	String	200
+AssetId	String	200
+Asset	String	200
+Price	Number
+Count	Long
