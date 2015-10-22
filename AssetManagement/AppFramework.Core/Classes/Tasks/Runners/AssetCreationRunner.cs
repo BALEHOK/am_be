@@ -5,6 +5,7 @@
     using System;
     using System.Linq;
     using AppFramework.ConstantsEnumerators;
+    using System.Collections.Generic;
 
     class AssetCreationRunner : ITaskRunner
     {
@@ -51,7 +52,11 @@
             return new TaskResult((TaskFunctionType)task.FunctionType)
             {
                 NavigationResult = string.Format(QueryStrings.CreateAssetUrlFormat, DynEntityConfigId) +
-                    (ScreenId.HasValue ? "&ScreenId=" + ScreenId : string.Empty)
+                    (ScreenId.HasValue ? "&ScreenId=" + ScreenId : string.Empty),
+                NavigationResultArguments = new Dictionary<string, object> {
+                    { "DynEntityConfigId", DynEntityConfigId },
+                    { "ScreenId", ScreenId }
+                },                    
             };
         }
     }

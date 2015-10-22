@@ -1,28 +1,26 @@
 ﻿using AppFramework.ConstantsEnumerators;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppFramework.Core.Classes.Tasks
 {
     public class TaskResult
     {
-        private readonly TaskFunctionType _taskFunctionType;
+        public TaskFunctionType TaskFunctionType { get; private set; }
 
-        public AppFramework.ConstantsEnumerators.TaskStatus Status { get; set; }
+        public TaskStatus Status { get; set; }
 
         public List<string> Errors { get; set; }
      
         public string NavigationResult { get; set; }
 
+        public Dictionary<string, object> NavigationResultArguments { get; set; }
+
         public TaskActionOnComplete ActionOnComplete
         {
             get
             {
-                TaskActionOnComplete result = TaskActionOnComplete.Nothing;
-                switch (_taskFunctionType)
+                var result = TaskActionOnComplete.Nothing;
+                switch (TaskFunctionType)
                 {
                     case TaskFunctionType.ExportFileSearch:
                     case TaskFunctionType.ExecuteSearch:
@@ -41,9 +39,10 @@ namespace AppFramework.Core.Classes.Tasks
 
         public TaskResult(TaskFunctionType taskFunctionType)
         {
-            _taskFunctionType = taskFunctionType;
+            TaskFunctionType = taskFunctionType;
             Errors = new List<string>();
-            Status = AppFramework.ConstantsEnumerators.TaskStatus.Sussess;
+            NavigationResultArguments = new Dictionary<string, object>();
+            Status = TaskStatus.Sussess;
         }
     }
 }

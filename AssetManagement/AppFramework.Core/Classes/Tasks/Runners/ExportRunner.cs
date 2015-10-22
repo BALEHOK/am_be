@@ -2,6 +2,7 @@
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Web;
@@ -109,6 +110,7 @@ namespace AppFramework.Core.Classes.Tasks.Runners
                 taskResult.NavigationResult = 
                     HttpContext.Current.Request.Url.Scheme + "://" +
                     HttpContext.Current.Request.Url.Authority + "/DownloadHandler.ashx?file=" + filename;
+                taskResult.NavigationResultArguments = new Dictionary<string, object> { { "file", filename } };
             }
             catch(Exception ex)
             {

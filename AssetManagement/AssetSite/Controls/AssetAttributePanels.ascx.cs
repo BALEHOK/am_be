@@ -55,7 +55,8 @@ namespace AssetSite.Controls
             if (Asset == null)
                 throw new NullReferenceException();
 
-            var isAdminUser = HttpContext.Current.User.IsInRole(UserRoles.Administrators);
+            var isAdminUser = HttpContext.Current.User.IsInRole(
+                PredefinedRoles.Administrators.ToString());
 
             // limitations for users creation/editing for other than Administrator roles
             if (Asset.IsUser & !isAdminUser)

@@ -11,6 +11,7 @@ using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.DAL;
 using AppFramework.Core.DAL.Adapters;
 using AppFramework.DataProxy;
+using AppFramework.Core.Services;
 
 namespace AppFramework.Core.Classes
 {
@@ -19,6 +20,7 @@ namespace AppFramework.Core.Classes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly IAssetsService _assetsService;
+        private readonly IRoleService _roleService;
 
         public UserService(
             IUnitOfWork unitOfWork,
@@ -34,6 +36,7 @@ namespace AppFramework.Core.Classes
             if (assetsService == null)
                 throw new ArgumentNullException("assetsService");
             _assetsService = assetsService;
+            _roleService = new RoleService();
         }
 
         public AssetUser GetCurrentUser()
@@ -188,8 +191,13 @@ namespace AppFramework.Core.Classes
 
         public IEnumerable<string> GetUserRoles(long userId)
         {
-            var roles = _unitOfWork.RoleRepository.Get(r => r.UserInRole.Any(u => u.UserId == userId));
-            return roles.Select(r => r.RoleName).ToList();
+            var userInRoles = _unitOfWork.UserInRoleRepository
+                    .Where(u => u.UserId == userId)
+                    .ToList();
+
+            return _roleService.GetAllRoles()
+                .Where(r => userInRoles.Any(ur => ur.RoleId == (int)r))
+                .Select(r => r.ToString());
         }
 
         /// <summary>

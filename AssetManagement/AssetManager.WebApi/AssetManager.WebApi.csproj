@@ -313,10 +313,12 @@
     <Compile Include="Controllers\Api\DataTypeController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\DynListController.cs" />
+    <Compile Include="Controllers\Api\FaqController.cs" />
     <Compile Include="Controllers\Api\FilesController.cs" />
     <Compile Include="Controllers\Api\PlacesController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
+    <Compile Include="Controllers\Api\TasksController.cs" />
     <Compile Include="Controllers\Api\UploadsController.cs" />
     <Compile Include="Controllers\Api\ValidationController.cs" />
     <Compile Include="Controllers\Api\ZipCodesController.cs" />

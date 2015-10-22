@@ -2,6 +2,7 @@
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web;
 
@@ -42,42 +43,45 @@ namespace AppFramework.Core.Classes.Tasks.Runners
                     break;
             }
 
-            uriBuilder.Query = buildQueryByParams(Params);
+            var dictionary = buildDictionaryFromSearchParams(Params);
+
+            uriBuilder.Query = string.Join("&", 
+                dictionary.Select(p => string.Format("{0}={1}", p.Key, p.Value)));
 
             return new TaskResult((TaskFunctionType)task.FunctionType)
             {
-                Status = AppFramework.ConstantsEnumerators.TaskStatus.Sussess,
-                NavigationResult = uriBuilder.ToString()
+                Status = TaskStatus.Sussess,
+                NavigationResult = uriBuilder.ToString(),
+                NavigationResultArguments = dictionary
             };
         }
 
-        private string buildQueryByParams(SearchConfigurationDescriptor @params)
+        private Dictionary<string, object> buildDictionaryFromSearchParams(
+            SearchConfigurationDescriptor @params)
         {
-            var parameters = new List<string>();
+            var dictionary = new Dictionary<string, object>();
             var properties = @params.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var value = property.GetValue(@params, null);
-
                 if (value is List<AttributeElement>)
                 {
                     // these parameters passing via session
                     var guid = Guid.NewGuid().ToString();
                     HttpContext.Current.Session[guid] = value;
-                    parameters.Add(string.Format("{0}={1}",
-                        property.Name,
-                        guid));
+                    dictionary.Add(property.Name, guid);
                 }
                 else if (value != null && !string.IsNullOrEmpty(value.ToString()))
                 {
                     // normal url parameter
-                    parameters.Add(string.Format("{0}={1}", property.Name, property.PropertyType.IsEnum
-                                                                               ? ((int) value).ToString()
-                                                                               : HttpContext.Current.Server.UrlEncode(
-                                                                                   value.ToString())));
+                    dictionary.Add(
+                        property.Name, 
+                        property.PropertyType.IsEnum
+                            ? ((int) value).ToString()
+                            : HttpContext.Current.Server.UrlEncode(value.ToString()));
                 }
             }
-            return string.Join("&", parameters);
+            return dictionary;
         }
     }
 }

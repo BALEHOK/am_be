@@ -290,8 +290,10 @@
     <Compile Include="Classes\LayoutRepository.cs" />
     <Compile Include="Classes\LinkedEntityFinder.cs" />
     <Compile Include="Services\IPanelsService.cs" />
+    <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\IScreensService.cs" />
     <Compile Include="Services\PanelsService.cs" />
+    <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\ScreensService.cs" />
     <Compile Include="Classes\SearchEngine\IIndexationService.cs" />
     <Compile Include="Classes\SearchEngine\ISearchService.cs" />
@@ -511,7 +513,6 @@
     <Compile Include="ConstantsEnumerators\Enumerators.cs" />
     <Compile Include="ConstantsEnumerators\QueryStrings.cs" />
     <Compile Include="ConstantsEnumerators\SessionVariables.cs" />
-    <Compile Include="ConstantsEnumerators\UserRoles.cs" />
     <Compile Include="ConstantsEnumerators\StoredProcedures.cs" />
     <Compile Include="DAL\Adapters\DynColumnAdapter.cs" />
     <Compile Include="DAL\DynTableProvider.cs" />
@@ -562,9 +563,7 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

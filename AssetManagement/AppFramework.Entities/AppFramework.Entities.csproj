@@ -229,9 +229,6 @@
     <Compile Include="Rights.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Role.cs">
-      <DependentUpon>STEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="ScreenLayout.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>

@@ -127,12 +127,16 @@
     <Compile Include="Models\CustomReportModel.cs" />
     <Compile Include="Models\DynListItemModel.cs" />
     <Compile Include="Models\DynListModel.cs" />
+    <Compile Include="Models\FaqModel.cs" />
     <Compile Include="Models\PlaceModel.cs" />
+    <Compile Include="Models\ResultBase.cs" />
     <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\SearchCountersModel.cs" />
     <Compile Include="Models\SearchResultModel.cs" />
     <Compile Include="Models\SearchTrackingModel.cs" />
     <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\TaskModel.cs" />
+    <Compile Include="Models\TaskResultModel.cs" />
     <Compile Include="Models\TaxonomyModel.cs" />
     <Compile Include="Models\TypeModels\AssetTypeModel.cs" />
     <Compile Include="Models\TypeModels\AssetTypeScreenModel.cs" />

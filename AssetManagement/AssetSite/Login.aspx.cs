@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Security;
 using AppFramework.Core.Classes;
 using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.ConstantsEnumerators;
 
 namespace AssetSite
 {
@@ -19,7 +20,9 @@ namespace AssetSite
         {
             ErrorMessage.Text = "";
             if (Membership.ValidateUser(UserLogin.Text, Password.Text) &&
-                !Roles.IsUserInRole(UserLogin.Text.ToLower(), UserRoles.OnlyPerson))
+                !Roles.IsUserInRole(
+                    UserLogin.Text.ToLower(), 
+                    PredefinedRoles.OnlyPerson.ToString()))
             {
                 FormsAuthentication.SetAuthCookie(UserLogin.Text, RememberMe.Checked);
                 Response.Redirect(Request["ReturnUrl"] ?? FormsAuthentication.DefaultUrl);

@@ -294,8 +294,7 @@ namespace AppFramework.Core.Classes
                 if (asset.IsUser)
                 {
                     // Role assigning
-                    long roleId = (int)asset[AttributeNames.Role].Data.Value;
-                    
+                    int roleId = (int)asset[AttributeNames.Role].Data.Value;
                     if (roleId == 0)
                         roleId = (int) PredefinedRoles.OnlyPerson;
                     
@@ -310,7 +309,9 @@ namespace AppFramework.Core.Classes
                     if (HttpContext.Current != null)
                     {
                         // it's a new administrator, grant all permissions
-                        if (assetInitialUid == 0 && Roles.IsUserInRole(asset.Name, UserRoles.Administrators))
+                        if (assetInitialUid == 0 && 
+                            Roles.IsUserInRole(
+                                asset.Name, PredefinedRoles.Administrators.ToString()))
                         {
                             var rightsList = new[] {
                                 new RightsEntry

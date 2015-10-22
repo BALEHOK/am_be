@@ -86,7 +86,6 @@ namespace AppFramework.DataProxy
         IDataRepository<DynEntityConfig> DynEntityConfigRepository { get; }
         IDataRepository<DynEntityAttribConfig> DynEntityAttribConfigRepository { get; }
         IDataRepository<UserInRole> UserInRoleRepository { get; }
-        IDataRepository<Role> RoleRepository { get; }
         IDataRepository<ImportExport> ImportExportRepository { get; }
         IDataRepository<IndexActiveDynEntities> IndexActiveDynEntitiesRepository { get; }
         IDataRepository<IndexHistoryDynEntities> IndexHistoryDynEntitiesRepository { get; }

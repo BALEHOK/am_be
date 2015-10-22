@@ -60,6 +60,7 @@ namespace AssetManager.WebApi
                 .RegisterType<IDocumentService, DocumentService>()
                 .RegisterType<IModelFactory, ModelFactory>()
                 .RegisterType<IHistoryService, HistoryService>()
+                .RegisterType<ITasksService, TasksService>()
                 .AddNewExtension<CommonConfiguration>()
                 .RegisterType<IHttpHandler, FileHandler>("/FileHandler.ashx")
                 .AddNewExtension<ReportsConfiguration>();

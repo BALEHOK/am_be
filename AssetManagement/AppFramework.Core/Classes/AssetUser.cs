@@ -25,7 +25,7 @@ namespace AppFramework.Core.Classes
 
         public bool IsAdministrator
         {
-            get { return _roles.Contains(UserRoles.Administrators); }
+            get { return _roles.Contains(PredefinedRoles.Administrators.ToString()); }
         }
 
         public IEnumerable<string> Roles

@@ -5,6 +5,7 @@ using AppFramework.Core.Calculation;
 using AppFramework.Core.ConstantsEnumerators;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.WebApi;
+using AppFramework.ConstantsEnumerators;
 
 namespace AssetManagerAdmin.Model
 {
@@ -98,13 +99,13 @@ namespace AssetManagerAdmin.Model
                 }
             };
 
-            if (CurrentUser.UserModel.UserRole != UserRoles.Administrators)
+            if (CurrentUser.UserModel.UserRole != PredefinedRoles.Administrators.ToString())
             {
-                if (CurrentUser.UserModel.UserRole == UserRoles.Users)
+                if (CurrentUser.UserModel.UserRole == PredefinedRoles.Users.ToString())
                     mainMenu.Remove(mainMenu.Single(i => i.Id == 0));
 
-                if (CurrentUser.UserModel.UserRole == UserRoles.SuperUser ||
-                    CurrentUser.UserModel.UserRole == UserRoles.Users)
+                if (CurrentUser.UserModel.UserRole == PredefinedRoles.SuperUser.ToString() ||
+                    CurrentUser.UserModel.UserRole == PredefinedRoles.Users.ToString())
                 {
                     mainMenu.Remove(mainMenu.Single(i => i.Id == 1));
                     mainMenu.Remove(mainMenu.Single(i => i.Id == 2));

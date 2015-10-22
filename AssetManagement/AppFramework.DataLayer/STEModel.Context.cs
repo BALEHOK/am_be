@@ -222,12 +222,6 @@ namespace AppFramework.DataLayer
         }
         private ObjectSet<Rights> _rights;
     
-        public ObjectSet<Role> Role
-        {
-            get { return _role  ?? (_role = CreateObjectSet<Role>("Role")); }
-        }
-        private ObjectSet<Role> _role;
-    
         public ObjectSet<SearchOperators> SearchOperators
         {
             get { return _searchOperators  ?? (_searchOperators = CreateObjectSet<SearchOperators>("SearchOperators")); }

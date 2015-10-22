@@ -6,6 +6,7 @@ using AppFramework.Core.Classes;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.DataProxy;
 using Microsoft.Practices.Unity;
+using AppFramework.Core.Services;
 
 namespace AppFramework.Core.PL
 {
@@ -13,6 +14,9 @@ namespace AppFramework.Core.PL
     {
         [Dependency]
         public IUnitOfWork UnitOfWork { get; set; }
+
+        [Dependency]
+        public IRoleService RoleService { get; set; }
 
         public AssetAttribute AssetAttribute { get; set; }
 
@@ -80,7 +84,7 @@ namespace AppFramework.Core.PL
 
         private void InitDropdown()
         {
-            _dropdown.DataSource = UnitOfWork.RoleRepository.Get();
+            _dropdown.DataSource = RoleService.GetAllRoles();
             _dropdown.Attributes.Add("onchange", "OnRolesComboBoxIndexChanged(this)");
             _dropdown.DataBind();
 

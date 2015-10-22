@@ -562,20 +562,6 @@
         }
         private IDataRepository<UserInRole> _repositoryUserInRole;
 
-        public IDataRepository<Role> RoleRepository
-        {
-            get
-            {
-                if (_repositoryRole == null)
-                {
-                    _repositoryRole = new DataRepository<Role>(_context);
-                }
-                return _repositoryRole;
-            }
-        }
-        private IDataRepository<Role> _repositoryRole;
-
-
         public IDataRepository<ImportExport> ImportExportRepository
         {
             get

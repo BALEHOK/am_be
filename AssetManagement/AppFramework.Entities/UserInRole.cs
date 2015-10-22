@@ -18,7 +18,6 @@ using System.Runtime.Serialization;
 namespace AppFramework.Entities
 {
     [DataContract(IsReference = true)]
-    [KnownType(typeof(Role))]
     public partial class UserInRole: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
     {
         #region Primitive Properties
@@ -43,7 +42,7 @@ namespace AppFramework.Entities
         private long _userId;
     
         [DataMember]
-        public long RoleId
+        public int RoleId
         {
             get { return _roleId; }
             set
@@ -54,49 +53,12 @@ namespace AppFramework.Entities
                     {
                         throw new InvalidOperationException("The property 'RoleId' is part of the object's key and cannot be changed. Changes to key properties can only be made when the object is not being tracked or is in the Added state.");
                     }
-                    if (!IsDeserializing)
-                    {
-                        if (Role != null && Role.RoleId != value)
-                        {
-                            Role = null;
-                        }
-                    }
                     _roleId = value;
                     OnPropertyChanged("RoleId");
                 }
             }
         }
-        private long _roleId;
-
-        #endregion
-
-        #region Navigation Properties
-    
-        [DataMember]
-        public Role Role
-        {
-            get { return _role; }
-            set
-            {
-                if (!ReferenceEquals(_role, value))
-                {
-                    if (ChangeTracker.ChangeTrackingEnabled && ChangeTracker.State != ObjectState.Added && value != null)
-                    {
-                        // This the dependent end of an identifying relationship, so the principal end cannot be changed if it is already set,
-                        // otherwise it can only be set to an entity with a primary key that is the same value as the dependent's foreign key.
-                        if (RoleId != value.RoleId)
-                        {
-                            throw new InvalidOperationException("The principal end of an identifying relationship can only be changed when the dependent end is in the Added state.");
-                        }
-                    }
-                    var previousValue = _role;
-                    _role = value;
-                    FixupRole(previousValue);
-                    OnNavigationPropertyChanged("Role");
-                }
-            }
-        }
-        private Role _role;
+        private int _roleId;
 
         #endregion
 
@@ -160,16 +122,6 @@ namespace AppFramework.Entities
             }
         }
     
-        // This entity type is the dependent end in at least one association that performs cascade deletes.
-        // This event handler will process notifications that occur when the principal end is deleted.
-        internal void HandleCascadeDelete(object sender, ObjectStateChangingEventArgs e)
-        {
-            if (e.NewState == ObjectState.Deleted)
-            {
-                this.MarkAsDeleted();
-            }
-        }
-    
         protected bool IsDeserializing { get; private set; }
     
         [OnDeserializing]
@@ -187,50 +139,6 @@ namespace AppFramework.Entities
     
         protected virtual void ClearNavigationProperties()
         {
-            Role = null;
-        }
-
-        #endregion
-
-        #region Association Fixup
-    
-        private void FixupRole(Role previousValue)
-        {
-            if (IsDeserializing)
-            {
-                return;
-            }
-    
-            if (previousValue != null && previousValue.UserInRole.Contains(this))
-            {
-                previousValue.UserInRole.Remove(this);
-            }
-    
-            if (Role != null)
-            {
-                if (!Role.UserInRole.Contains(this))
-                {
-                    Role.UserInRole.Add(this);
-                }
-    
-                RoleId = Role.RoleId;
-            }
-            if (ChangeTracker.ChangeTrackingEnabled)
-            {
-                if (ChangeTracker.OriginalValues.ContainsKey("Role")
-                    && (ChangeTracker.OriginalValues["Role"] == Role))
-                {
-                    ChangeTracker.OriginalValues.Remove("Role");
-                }
-                else
-                {
-                    ChangeTracker.RecordOriginalValue("Role", previousValue);
-                }
-                if (Role != null && !Role.ChangeTracker.ChangeTrackingEnabled)
-                {
-                    Role.StartTracking();
-                }
-            }
         }
 
         #endregion

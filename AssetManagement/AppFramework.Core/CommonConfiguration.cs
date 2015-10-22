@@ -65,7 +65,8 @@ namespace AppFramework.Core
                 .RegisterType<ITaskRunnerFactory, TaskRunnerFactory>()
                 .RegisterType<IAttributeValueFormatter, AttributeValueFormatter>()
                 .RegisterType<IImportExportManager, ImportExportManager>()
-                .RegisterType<IRightsService, RightsService>();
+                .RegisterType<IRightsService, RightsService>()
+                .RegisterType<IRoleService, RoleService>();
         }
     }
 }

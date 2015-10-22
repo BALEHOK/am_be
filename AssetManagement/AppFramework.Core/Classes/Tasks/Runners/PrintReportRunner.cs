@@ -1,4 +1,5 @@
 ﻿using AppFramework.ConstantsEnumerators;
+using System.Collections.Generic;
 
 namespace AppFramework.Core.Classes.Tasks.Runners
 {
@@ -19,8 +20,14 @@ namespace AppFramework.Core.Classes.Tasks.Runners
             var result = new TaskResult((TaskFunctionType)task.FunctionType);
             if (string.IsNullOrEmpty(reportId))
             {
-                result.Status = AppFramework.ConstantsEnumerators.TaskStatus.Error;
-                result.NavigationResult = System.Web.VirtualPathUtility.ToAbsolute(string.Format(RENDER_URL, reportId, assetUid));
+                result.Status = TaskStatus.Error;
+                result.NavigationResult = System.Web.VirtualPathUtility.ToAbsolute(
+                    string.Format(RENDER_URL, reportId, assetUid));
+                result.NavigationResultArguments = new Dictionary<string, object>
+                {
+                    { "reportId", reportId },
+                    { "assetUid", assetUid }
+                };
             }
             else
             {

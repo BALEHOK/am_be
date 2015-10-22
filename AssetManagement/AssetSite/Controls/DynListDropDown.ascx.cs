@@ -7,6 +7,7 @@ using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.DynLists;
 using AppFramework.Core.ConstantsEnumerators;
 using Microsoft.Practices.Unity;
+using AppFramework.ConstantsEnumerators;
 
 namespace AssetSite.Controls
 {
@@ -135,7 +136,7 @@ namespace AssetSite.Controls
             if (dd != null)
             {
                 DynListControls.Controls.Add(dd);
-                if (Editable && HttpContext.Current.User.IsInRole(UserRoles.Administrators))
+                if (Editable && HttpContext.Current.User.IsInRole(PredefinedRoles.Administrators.ToString()))
                 {
                     EditDialog.DynamicList = list;
                     EditDialog.DynamicLists = _getAllDynamicLists();

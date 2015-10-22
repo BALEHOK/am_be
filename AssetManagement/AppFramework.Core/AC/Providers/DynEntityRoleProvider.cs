@@ -10,6 +10,8 @@ namespace AppFramework.Core.AC.Providers
     using AppFramework.DataProxy;
     using AppFramework.Entities;
     using Services;
+    using System;
+    using AppFramework.ConstantsEnumerators;
 
     /// <summary>
     /// Role provider based on DynEntityMembershipProvider
@@ -52,8 +54,23 @@ namespace AppFramework.Core.AC.Providers
             }
         }
 
+        [Dependency]
+        public IRoleService RoleService
+        {
+            get
+            {
+                return _roleService ?? (_roleService = new RoleService());
+            }
+            set
+            {
+                if (value != null)
+                    _roleService = value;
+            }
+        }
+
         private IUserService _userService;
         private IUnitOfWork _unitOfWork;
+        private IRoleService _roleService;
 
         /// <summary>
         /// Adds the specified user names to the specified roles for the configured applicationName.
@@ -62,22 +79,7 @@ namespace AppFramework.Core.AC.Providers
         /// <param name="roleNames">A string array of the role names to add the specified user names to.</param>
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
-            var roles = UnitOfWork.RoleRepository.Get(r => roleNames.Contains(r.RoleName));
-            foreach (string userName in usernames)
-            {
-                var user = UserService.FindByName(userName);
-                if (user == null)
-                    continue;
-
-                foreach (var role in roles)
-                {
-                    if (!IsUserInRole(user.UserName, role.RoleName))
-                    {
-                        UnitOfWork.UserInRoleRepository.Insert(new UserInRole() { RoleId = role.RoleId, UserId = user.Asset.ID });
-                    }
-                }
-            }
-            UnitOfWork.Commit();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -102,12 +104,7 @@ namespace AppFramework.Core.AC.Providers
         /// <param name="roleName">The name of the role to create.</param>
         public override void CreateRole(string roleName)
         {
-            if (!RoleExists(roleName))
-            {
-                var unitOfWork = new UnitOfWork();
-                unitOfWork.RoleRepository.Insert(new Role() { RoleName = roleName });
-                unitOfWork.Commit();
-            }
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -120,18 +117,7 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
         {
-            var unitOfWork = new UnitOfWork();
-            var roleToDelete = unitOfWork.RoleRepository.SingleOrDefault(r => r.RoleName == roleName);
-            if (roleToDelete == null)
-            {
-                return false;
-            }
-            else
-            {
-                unitOfWork.RoleRepository.Delete(roleToDelete);
-                unitOfWork.Commit();
-                return true;
-            }
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -144,7 +130,8 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override string[] FindUsersInRole(string roleName, string usernameToMatch)
         {
-            return GetUsersInRole(roleName).Where(u => u.Contains(usernameToMatch)).ToArray();
+            // TODO: to implement if really needed. Otherwise use IRolesService.
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -155,9 +142,9 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override string[] GetAllRoles()
         {
-            var unitOfWork = new UnitOfWork();
-            string[] roles = unitOfWork.RoleRepository.Get().Select(r => r.RoleName).ToArray();
-            return roles;
+            return RoleService.GetAllRoles()
+                .Select(r => r.ToString())
+                .ToArray();
         }
 
         /// <summary>
@@ -172,10 +159,7 @@ namespace AppFramework.Core.AC.Providers
             string[] roleNames = new string[] { };
             var user = UserService.FindByName(username);
             if (user != null)
-            {
-                var roles = UnitOfWork.RoleRepository.Get(r => r.UserInRole.Any(u => u.UserId == user.Asset.ID));
-                roleNames = roles.Select(r => r.RoleName).ToArray();
-            }
+                roleNames = user.Roles.ToArray();
             return roleNames;
         }
 
@@ -188,20 +172,8 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override string[] GetUsersInRole(string roleName)
         {
-            List<string> users = new List<string>();
-            var role = UnitOfWork.RoleRepository.Get(r => r.RoleName == roleName).SingleOrDefault();
-            if (role != null)
-            {
-                foreach (var ur in role.UserInRole)
-                {
-                    var au = UserService.GetById(ur.UserId);
-                    if (au != null)
-                    {
-                        users.Add(au.UserName);
-                    }
-                }
-            }
-            return users.ToArray();
+            // TODO: to implement if really needed. Otherwise use IRolesService.
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -214,7 +186,17 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override bool IsUserInRole(string username, string roleName)
         {
-            return GetUsersInRole(roleName).Contains(username);
+            var result = false;
+            PredefinedRoles role;
+            var user = UserService.FindByName(username);
+            if (user != null && Enum.TryParse(roleName, out role))
+            {
+                var userInRoles = UnitOfWork.UserInRoleRepository
+                    .Where(u => u.UserId == user.Asset.ID)
+                    .ToList();
+                result = userInRoles.Any(ur => ur.RoleId == (int)role);
+            }
+            return result;
         }
 
         /// <summary>
@@ -224,21 +206,8 @@ namespace AppFramework.Core.AC.Providers
         /// <param name="roleNames">A string array of role names to remove the specified user names from.</param>
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
-            var roles = UnitOfWork.RoleRepository.Get(r => roleNames.Contains(r.RoleName));
-            foreach (string userName in usernames)
-            {
-                AssetUser user = UserService.FindByName(userName);
-                foreach (string roleName in roleNames)
-                {
-                    var role = roles.Single(r => r.RoleName == roleName);
-                    var userInRole = role.UserInRole.SingleOrDefault(u => u.UserId == user.Asset.ID);
-                    if (userInRole != null)
-                    {
-                        UnitOfWork.UserInRoleRepository.Delete(userInRole);
-                    }
-                }
-            }
-            UnitOfWork.Commit();
+            // TODO: to implement if really needed. Otherwise use IRolesService.
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -250,8 +219,8 @@ namespace AppFramework.Core.AC.Providers
         /// </returns>
         public override bool RoleExists(string roleName)
         {
-            var unitOfWork = new UnitOfWork();
-            return unitOfWork.RoleRepository.Get(r => r.RoleName == roleName).Count() == 1;
+            // TODO: to implement if really needed. Otherwise use IRolesService.
+            throw new NotSupportedException();
         }
     }
 }

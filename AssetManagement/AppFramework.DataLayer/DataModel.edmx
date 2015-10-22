@@ -647,14 +647,6 @@
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateUserId" Type="bigint" Nullable="false" />
         </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="RoleId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Description" Type="text" />
-        </EntityType>
         <EntityType Name="ScreenLayout">
           <Key>
             <PropertyRef Name="Id" />
@@ -1229,20 +1221,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserInRole_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="UserInRole" Type="Self.UserInRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="UserInRole">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ValidationList_ValidationOperators">
           <End Role="ValidationOperator" Type="Self.ValidationOperator" Multiplicity="1" />
           <End Role="ValidationList" Type="Self.ValidationList" Multiplicity="*" />
@@ -1525,7 +1503,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="ReportLayout" EntityType="Self.ReportLayout" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservation" EntityType="Self.Reservation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rights" EntityType="Self.Rights" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScreenLayout" EntityType="Self.ScreenLayout" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchOperators" EntityType="Self.SearchOperators" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchTracking" EntityType="Self.SearchTracking" Schema="dbo" store:Type="Tables" />
@@ -1676,10 +1653,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
             <End Role="TaxonomyItem1" EntitySet="TaxonomyItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserInRole_Role" Association="Self.FK_UserInRole_Role">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="UserInRole" EntitySet="UserInRole" />
-          </AssociationSet>
           <AssociationSet Name="FK_ValidationList_ValidationOperators" Association="Self.FK_ValidationList_ValidationOperators">
             <End Role="ValidationOperator" EntitySet="ValidationOperator" />
             <End Role="ValidationList" EntitySet="ValidationList" />
@@ -1781,7 +1754,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <EntitySet Name="ReportField" EntityType="DataModel.ReportField" />
           <EntitySet Name="Reservation" EntityType="DataModel.Reservation" />
           <EntitySet Name="Rights" EntityType="DataModel.Rights" />
-          <EntitySet Name="Role" EntityType="DataModel.Role" />
           <EntitySet Name="SearchOperators" EntityType="DataModel.SearchOperators" />
           <EntitySet Name="StringResources" EntityType="DataModel.StringResources" />
           <EntitySet Name="Taxonomy" EntityType="DataModel.Taxonomy" />
@@ -1804,10 +1776,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="FK_Place2Zip_Place" Association="DataModel.FK_Place2Zip_Place">
             <End Role="Place" EntitySet="Place" />
             <End Role="Place2Zip" EntitySet="Place2Zip" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserInRole_Role" Association="DataModel.FK_UserInRole_Role">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="UserInRole" EntitySet="UserInRole" />
           </AssociationSet>
           <AssociationSet Name="FK_ValidationList_ValidationOperators" Association="DataModel.FK_ValidationList_ValidationOperators">
             <End Role="ValidationOperator" EntitySet="ValidationOperator" />
@@ -2362,15 +2330,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="3" />
           <Property Type="Int64" Name="UpdateUserId" Nullable="false" />
         </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Type="Int64" Name="RoleId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="UserInRole" Relationship="DataModel.FK_UserInRole_Role" FromRole="Role" ToRole="UserInRole" />
-        </EntityType>
         <EntityType Name="SearchOperators">
           <Key>
             <PropertyRef Name="SearchOperatorUid" />
@@ -2425,8 +2384,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <PropertyRef Name="RoleId" />
           </Key>
           <Property Type="Int64" Name="UserId" Nullable="false" />
-          <Property Type="Int64" Name="RoleId" Nullable="false" />
-          <NavigationProperty Name="Role" Relationship="DataModel.FK_UserInRole_Role" FromRole="UserInRole" ToRole="Role" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
         </EntityType>
         <EntityType Name="ValidationList">
           <Key>
@@ -2507,18 +2465,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Principal>
             <Dependent Role="Place2Zip">
               <PropertyRef Name="PlaceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserInRole_Role">
-          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="DataModel.UserInRole" Role="UserInRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleId" />
-            </Principal>
-            <Dependent Role="UserInRole">
-              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3863,15 +3809,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Role">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Role)">
-        <MappingFragment StoreEntitySet="Role">
-          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="SearchOperators">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.SearchOperators)">
         <MappingFragment StoreEntitySet="SearchOperators">
@@ -4613,7 +4550,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         <EntityTypeShape EntityType="DataModel.ReportField" Width="1.5" PointX="10" PointY="1" Height="2.1725878906249818" />
         <EntityTypeShape EntityType="DataModel.Reservation" Width="1.5" PointX="10.75" PointY="16.75" Height="3.7109993489583335" />
         <EntityTypeShape EntityType="DataModel.Rights" Width="1.5" PointX="12.75" PointY="16.75" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.Role" Width="1.5" PointX="10.75" PointY="4.875" Height="1.7879850260416106" />
         <EntityTypeShape EntityType="DataModel.SearchOperators" Width="1.5" PointX="3.625" PointY="25.375" Height="2.3648893229166674" />
         <EntityTypeShape EntityType="DataModel.StringResources" Width="1.5" PointX="16.75" PointY="16.75" Height="1.5956835937499818" />
         <EntityTypeShape EntityType="DataModel.Taxonomy" Width="1.5" PointX="3.625" PointY="12.375" Height="3.5186979166666106" />
@@ -4637,10 +4573,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         <AssociationConnector Association="DataModel.FK_Place2Zip_Place" >
           <ConnectorPoint PointX="7.625" PointY="1.9228417968749909" />
           <ConnectorPoint PointX="8.375" PointY="1.9228417968749909" />
-        </AssociationConnector>
-        <AssociationConnector Association="DataModel.FK_UserInRole_Role" >
-          <ConnectorPoint PointX="9.625" PointY="9.7978417968749909" />
-          <ConnectorPoint PointX="10.375" PointY="9.7978417968749909" />
         </AssociationConnector>
         <AssociationConnector Association="DataModel.FK_ValidationList_ValidationOperators" >
           <ConnectorPoint PointX="5.34375" PointY="40.375" />

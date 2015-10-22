@@ -100,7 +100,8 @@ namespace AppFramework.Core.PL
                 case Enumerators.DataType.Permission:
                     ctrl = new PermissionsControl(attribute);
                     // deny to change the permissions for built-in administrator
-                    if (Roles.IsUserInRole(ConstantsEnumerators.UserRoles.Administrators) && PredefinedAsset.Contains(attribute.ParentAsset))
+                    if (Roles.IsUserInRole(PredefinedRoles.Administrators.ToString()) 
+                        && PredefinedAsset.Contains(attribute.ParentAsset))
                     {
                         ctrl.Editable = false;
                     }
@@ -153,7 +154,7 @@ namespace AppFramework.Core.PL
                 case Enumerators.DataType.Role:
                     ctrl = new RolesDropdown(attribute);
                     // deny to change the role for built-in administrator
-                    if (Roles.IsUserInRole(ConstantsEnumerators.UserRoles.Administrators) 
+                    if (Roles.IsUserInRole(PredefinedRoles.Administrators.ToString()) 
                         && PredefinedAsset.Contains(attribute.ParentAsset))
                     {
                         ctrl.Editable = false;

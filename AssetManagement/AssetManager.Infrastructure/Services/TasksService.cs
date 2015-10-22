@@ -1,4 +1,5 @@
-﻿using AppFramework.DataProxy;
+﻿using AppFramework.Core.Exceptions;
+using AppFramework.DataProxy;
 using AppFramework.Entities;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,9 @@ namespace AssetManager.Infrastructure.Services
 
         public Task GetTaskById(long id)
         {
-            var task = _unitOfWork.TaskRepository.Single(t => t.TaskId == id);
+            var task = _unitOfWork.TaskRepository.SingleOrDefault(t => t.TaskId == id);
+            if (task == null)
+                throw new EntityNotFoundException();
             return task;
         }
 
