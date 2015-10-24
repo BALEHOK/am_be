@@ -4,21 +4,17 @@ using AssetManager.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using AssetManager.Infrastructure.Helpers;
 using AppFramework.Core.DTO;
 using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Exceptions;
 using AppFramework.Core.Validation;
-using System.ComponentModel.DataAnnotations;
-using AppFramework.Core.Classes.Barcode;
 using Newtonsoft.Json.Linq;
-using System.Web.Hosting;
 using System.IO;
 using Common.Logging;
 using AppFramework.Core.Calculation;
+using AppFramework.DataProxy;
 
 namespace AssetManager.Infrastructure.Services
 {
@@ -34,7 +30,9 @@ namespace AssetManager.Infrastructure.Services
         private readonly ILog _logger;
         private readonly IHistoryService _historyService;
         private readonly IAttributeCalculator _calculator;
+        private readonly IUnitOfWork _unitOfWork;
 
+        // TODO: more than 7 dependencies, needs to be decomposed
         public AssetService(
             IAssetsService assetsService,
             IDynamicListsService dynListService,
@@ -45,6 +43,7 @@ namespace AssetManager.Infrastructure.Services
             IFileService fileService,
             IHistoryService historyService,
             IAttributeCalculator calculator,
+            IUnitOfWork unitOfWork,
             ILog logger)
         {
             if (assetsService == null)
@@ -74,12 +73,20 @@ namespace AssetManager.Infrastructure.Services
             if (calculator == null)
                 throw new ArgumentNullException("calculator");
             _calculator = calculator;
+            if (unitOfWork == null)
+                throw new ArgumentNullException("unitOfWork");
+            _unitOfWork = unitOfWork;
             if (logger == null)
                 throw new ArgumentNullException("logger");
             _logger = logger;
         }
 
-        public AssetModel GetAsset(long assetTypeId, long assetId, int? revision = null, long? uid = null)
+        public AssetModel GetAsset(
+            long assetTypeId, 
+            long assetId, 
+            int? revision = null, 
+            long? uid = null,
+            bool withChilds = false)
         {
             if (revision.HasValue && uid.HasValue)
                 throw new ArgumentException("Cannot get asset by both revision and uid. Please pass one of those.");
@@ -97,8 +104,13 @@ namespace AssetManager.Infrastructure.Services
             var permission = _authenticationService.GetPermission(asset);
             if (!permission.CanRead())
                 throw new InsufficientPermissionsException("No permissions to read asset's data");
-           
-            return _modelFactory.GetAssetModel(asset, permission);
+
+            var model = _modelFactory.GetAssetModel(asset, permission);
+
+            if (withChilds && assetType.ParentChildRelations)
+                model.ChildAssetTypes = GetChildAssetTypes(assetTypeId);
+
+            return model;
         }
 
         public AttributeModel GetAssetAttribute(long assetTypeId, long assetId, long attributeId)
@@ -378,6 +390,18 @@ namespace AssetManager.Infrastructure.Services
 
             asset = _calculator.PreCalculateAsset(asset, screenId, overwrite);
             return _modelFactory.GetAssetModel(asset, Permission.RDRD);
+        }
+
+        public IEnumerable<ChildAssetType> GetChildAssetTypes(long assetTypeId)
+        {
+            var result = _unitOfWork.GetChildAssets(assetTypeId);
+            return result.Select(i => new ChildAssetType
+            {
+                DynEntityConfigId = i.DynEntityConfigId,
+                DynEntityAttribConfigId = i.DynEntityAttribConfigId,
+                AssetTypeName = i.AssetTypeName,
+                AttributeName = i.AttributeName
+            });
         }
     }
 }

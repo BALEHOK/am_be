@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using AppFramework.Core.Classes;
 using AppFramework.Entities;
-using AppFramework.Core.Classes.SearchEngine.Enumerations;
-using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 
 namespace AssetSite.Controls
 {
@@ -55,16 +51,18 @@ namespace AssetSite.Controls
                 var item = e.Item.DataItem as f_cust_GetChildAssets_Result;
                 HyperLink lnkAssetType = e.Item.FindControl("linkAssetType") as HyperLink;
                 string name = new TranslatableString(item.AssetTypeName).GetTranslation();
-                if (_array.Count(a => a.AssetTypeID == item.AssetTypeID) > 1)
+                if (_array.Any(a => a.DynEntityConfigId == item.DynEntityConfigId))
                 {
                     name += "(" + new TranslatableString(item.AttributeName).GetTranslation() + ")";
                 }
                 lnkAssetType.Text = name;               
-                lnkAssetType.NavigateUrl = string.Format("~/Search/ResultByType.aspx?AttributeUId={0}&TypeUID={1}&AssetId={2}&AssetTypeId={3}", 
-                    item.AssetUID.ToString(),
-                    item.AssetTypeUID.ToString(), 
-                    AssetId, 
-                    AssetTypeId);
+                lnkAssetType.NavigateUrl = 
+                    string.Format(
+                        "~/Search/ResultByType.aspx?AttributeUId={0}&TypeUID={1}&AssetId={2}&AssetTypeId={3}", 
+                        item.DynEntityAttribConfigUid.ToString(),
+                        item.DynEntityConfigUid.ToString(), 
+                        AssetId, 
+                        AssetTypeId);
             }
         }      
     }

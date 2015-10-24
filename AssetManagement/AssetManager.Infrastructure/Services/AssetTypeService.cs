@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.DataProxy;
@@ -14,6 +13,7 @@ namespace AssetManager.Infrastructure.Services
     public interface IAssetTypeService
     {
         TypesInfoModel GetAssetTypes(bool loadAttributes = false, bool loadScreens = false);
+        AssetTypeModel GetAssetType(long id, bool loadAttributes = false);
     }
 
     public class AssetTypeService : IAssetTypeService
@@ -25,42 +25,45 @@ namespace AssetManager.Infrastructure.Services
         public AssetTypeService(IUnitOfWork unitOfWork, IScreensService screensService, IDataFactory dataFactory)
         {
             if (unitOfWork == null)
-                throw new System.ArgumentNullException("unitOfWork");
+                throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
             if (screensService == null)
-                throw new System.ArgumentNullException("screensService");
+                throw new ArgumentNullException("screensService");
             _screensService = screensService;
             if (dataFactory == null)
-                throw new System.ArgumentNullException("dataFactory");
+                throw new ArgumentNullException("dataFactory");
             _dataFactory = dataFactory;
+        }
+
+        public AssetTypeModel GetAssetType(long id, bool loadAttributes = false)
+        {
+            Expression<Func<DynEntityConfig, object>> include;
+            if (loadAttributes)
+            {
+                include = c => c.DynEntityAttribConfigs.Select(a => a.DataType);
+            }
+            else
+            {
+                include = null;
+            }
+            var typeConfig = _unitOfWork.DynEntityConfigRepository
+                .SingleOrDefault(c => c.DynEntityConfigId == id && c.ActiveVersion, include);
+
+            return typeConfig != null
+                ? CreateAssetTypeModel(typeConfig, loadAttributes, true)
+                : null;
         }
 
         public TypesInfoModel GetAssetTypes(bool loadAttributes = false, bool loadScreens = false)
         {
             var activeConfigs = _unitOfWork.DynEntityConfigRepository
-                .Get(c => c.ActiveVersion, include: c => c.DynEntityAttribConfigs.Select(a => a.DataType))
-                .ToList();
+                .Get(c => c.ActiveVersion, include: c => c.DynEntityAttribConfigs.Select(a => a.DataType));
 
             // load types and attributes info
-            var typesInfo = activeConfigs.Select(config =>
-            {
-                var typeInfo = new AssetTypeModel
-                {
-                    Id = config.DynEntityConfigId,
-                    DisplayName = config.Name,
-                    DbName = config.DBTableName,
-                    Description = config.Comment,
-                    Revision = config.Revision,
-                    UpdateDate = config.UpdateDate,
-                    Attributes = loadAttributes
-                        ? LoadAttributes(config)
-                        : null,
-                };
-                return typeInfo;
-            })
-            .OrderBy(t => t.DisplayName)
-            .ToList();
-            
+            var typesInfo = activeConfigs.Select(typeConfig => CreateAssetTypeModel(typeConfig, loadAttributes))
+                .OrderBy(t => t.DisplayName)
+                .ToList();
+
             if (loadScreens)
                 LoadScreens(typesInfo);
 
@@ -70,10 +73,28 @@ namespace AssetManager.Infrastructure.Services
             };
         }
 
-        private static List<AttributeTypeModel> LoadAttributes(DynEntityConfig config)
+
+
+        private static AssetTypeModel CreateAssetTypeModel(DynEntityConfig typeConfig, bool loadAttributes, bool showOnPanelOnlyAttributes = false)
+        {
+            return new AssetTypeModel
+            {
+                Id = typeConfig.DynEntityConfigId,
+                DisplayName = typeConfig.Name,
+                DbName = typeConfig.DBTableName,
+                Description = typeConfig.Comment,
+                Revision = typeConfig.Revision,
+                UpdateDate = typeConfig.UpdateDate,
+                Attributes = loadAttributes
+                    ? LoadAttributes(typeConfig, showOnPanelOnlyAttributes)
+                    : null
+            };
+        }
+
+        private static List<AttributeTypeModel> LoadAttributes(DynEntityConfig config, bool showOnPanelOnlyAttributes)
         {
             var attributes =
-                config.DynEntityAttribConfigs.Select(
+                config.DynEntityAttribConfigs.Where(a => !showOnPanelOnlyAttributes || a.IsShownOnPanel).Select(
                     a =>
                     {
                         var attributeInfo = new AttributeTypeModel
@@ -85,7 +106,7 @@ namespace AssetManager.Infrastructure.Services
                             DisplayOrder = a.DisplayOrder,
                             ValidationExpression = a.ValidationExpr,
                             CalculationFormula = a.CalculationFormula,
-                            DataType = a.DataType.Name,
+                            DataType = a.DataType.Name
                         };
                         return attributeInfo;
                     }).OrderBy(a => a.DisplayOrder).ToList();
@@ -104,7 +125,7 @@ namespace AssetManager.Infrastructure.Services
                     var screenModel = new AssetTypeScreenModel
                     {
                         Id = screen.ScreenId,
-                        Name = screen.Name,
+                        Name = screen.Name
                     };
 
                     var panels = screen.AttributePanel.Select(panel =>

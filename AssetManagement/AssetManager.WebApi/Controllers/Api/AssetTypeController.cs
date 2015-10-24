@@ -1,9 +1,7 @@
-﻿using AssetManager.Infrastructure.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Web.Http;
-using System.Web.Routing;
+using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
 using AssetManager.WebApi.Extensions;
@@ -45,6 +43,13 @@ namespace AssetManager.WebApi.Controllers.Api
             return _assetTypeService.GetAssetTypes();
         }
 
+        [Route("{assetTypeId}"), HttpGet]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public AssetTypeModel GetAssetType(long assetTypeId)
+        {
+            return _assetTypeService.GetAssetType(assetTypeId, true);
+        }
+
         /// <summary>
         /// Returns list of assets for given type
         /// </summary>
@@ -62,7 +67,7 @@ namespace AssetManager.WebApi.Controllers.Api
             var userId = User.GetId();
             return _assetService.GetAssets(assetTypeId, userId, query, rowStart, rowsNumber);
         }
-        
+
         /// <summary>
         /// Returns taxonomy path
         /// </summary>
@@ -72,6 +77,12 @@ namespace AssetManager.WebApi.Controllers.Api
         public TaxonomyModel GetTaxonomy(long assetTypeId)
         {
             return _taxonomyService.GetTaxonomyByAssetTypeId(assetTypeId);
-        }        
+        }
+
+        [Route("{assetTypeId}/child")]
+        public IEnumerable<ChildAssetType> GetChildAssetTypes(long assetTypeId)
+        {
+            return _assetService.GetChildAssetTypes(assetTypeId);
+        }
     }
 }

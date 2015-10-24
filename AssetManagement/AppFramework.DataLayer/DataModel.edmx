@@ -3214,11 +3214,12 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <ComplexType Name="f_cust_GetChildAssets_Result">
-          <Property Type="Int64" Name="AssetTypeUID" Nullable="false" />
-          <Property Type="Int64" Name="AssetTypeID" Nullable="false" />
           <Property Type="String" Name="AssetTypeName" Nullable="false" MaxLength="60" />
-          <Property Type="Int64" Name="AssetUID" Nullable="false" />
           <Property Type="String" Name="AttributeName" Nullable="false" MaxLength="60" />
+          <Property Type="Int64" Name="DynEntityConfigUid" Nullable="false" />
+          <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
+          <Property Type="Int64" Name="DynEntityAttribConfigUid" Nullable="false" />
+          <Property Type="Int64" Name="DynEntityAttribConfigId" Nullable="false" />
         </ComplexType>
         <EntityType Name="DynEntityAttribConfig">
           <Key>
@@ -4356,11 +4357,12 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <FunctionImportMapping FunctionImportName="f_cust_GetChildAssets" FunctionName="DataModel.Store.f_cust_GetChildAssets">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DataModel.f_cust_GetChildAssets_Result">
-                <ScalarProperty Name="AssetTypeUID" ColumnName="AssetTypeUID" />
-                <ScalarProperty Name="AssetTypeID" ColumnName="AssetTypeID" />
                 <ScalarProperty Name="AssetTypeName" ColumnName="AssetTypeName" />
-                <ScalarProperty Name="AssetUID" ColumnName="AssetUID" />
                 <ScalarProperty Name="AttributeName" ColumnName="AttributeName" />
+                <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="DynEntityAttribConfigUid" ColumnName="DynEntityAttribConfigUid" />
+                <ScalarProperty Name="DynEntityAttribConfigId" ColumnName="DynEntityAttribConfigId" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

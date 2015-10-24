@@ -162,12 +162,10 @@ namespace AssetSite
                 searchPattern = "%%";
             int totalCount;
             int pageSize = 100;
-            var result = SearchEngine.FindIdNameBySearchPattern(assetTypeId, assetTypeAttributeId, searchPattern, out totalCount, pageNumber, pageSize);
+            var result = SearchEngine.FindIdNameBySearchPattern(UnitOfWork, assetTypeId, assetTypeAttributeId, out totalCount, searchPattern, pageNumber, pageSize);
             SearchDataHolder svcResult = new SearchDataHolder();
             svcResult.ContainerId = containerId;
-            svcResult.Data = (from r in result
-                              select new KeyValuePair<long, string>(r.Key, r.Value))
-                             .ToList();
+            svcResult.Data = result;
             svcResult.Pattern = searchPattern;
             svcResult.HasMoreRows = totalCount > pageNumber * pageSize;
             svcResult.CurrentPage = pageNumber;

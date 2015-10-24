@@ -6,7 +6,7 @@ namespace AssetManager.Infrastructure.Services
 {
     public interface IAssetService
     {
-        AssetModel GetAsset(long assetTypeId, long assetId, int? revision = null, long? uid = null);
+        AssetModel GetAsset(long assetTypeId, long assetId, int? revision = null, long? uid = null, bool withChildTypes = false);
 
         AttributeModel GetAssetAttribute(long assetTypeId, long assetId, long attributeId);
         
@@ -26,5 +26,7 @@ namespace AssetManager.Infrastructure.Services
         AssetModel CreateAsset(long assetTypeId, long userId);
 
         AssetModel CalculateAsset(AssetModel model, long userId, long? screenId = null, bool overwrite = false);
+
+        IEnumerable<ChildAssetType> GetChildAssetTypes(long assetTypeId);
     }
 }

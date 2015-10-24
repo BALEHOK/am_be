@@ -23,38 +23,6 @@ namespace AppFramework.Entities
         #region Primitive Properties
     
         [DataMember]
-        public long AssetTypeUID
-        {
-            get { return _assetTypeUID; }
-            set
-            {
-                if (_assetTypeUID != value)
-                {
-                    OnComplexPropertyChanging();
-                    _assetTypeUID = value;
-                    OnPropertyChanged("AssetTypeUID");
-                }
-            }
-        }
-        private long _assetTypeUID;
-    
-        [DataMember]
-        public long AssetTypeID
-        {
-            get { return _assetTypeID; }
-            set
-            {
-                if (_assetTypeID != value)
-                {
-                    OnComplexPropertyChanging();
-                    _assetTypeID = value;
-                    OnPropertyChanged("AssetTypeID");
-                }
-            }
-        }
-        private long _assetTypeID;
-    
-        [DataMember]
         public string AssetTypeName
         {
             get { return _assetTypeName; }
@@ -71,22 +39,6 @@ namespace AppFramework.Entities
         private string _assetTypeName;
     
         [DataMember]
-        public long AssetUID
-        {
-            get { return _assetUID; }
-            set
-            {
-                if (_assetUID != value)
-                {
-                    OnComplexPropertyChanging();
-                    _assetUID = value;
-                    OnPropertyChanged("AssetUID");
-                }
-            }
-        }
-        private long _assetUID;
-    
-        [DataMember]
         public string AttributeName
         {
             get { return _attributeName; }
@@ -101,6 +53,70 @@ namespace AppFramework.Entities
             }
         }
         private string _attributeName;
+    
+        [DataMember]
+        public long DynEntityConfigUid
+        {
+            get { return _dynEntityConfigUid; }
+            set
+            {
+                if (_dynEntityConfigUid != value)
+                {
+                    OnComplexPropertyChanging();
+                    _dynEntityConfigUid = value;
+                    OnPropertyChanged("DynEntityConfigUid");
+                }
+            }
+        }
+        private long _dynEntityConfigUid;
+    
+        [DataMember]
+        public long DynEntityConfigId
+        {
+            get { return _dynEntityConfigId; }
+            set
+            {
+                if (_dynEntityConfigId != value)
+                {
+                    OnComplexPropertyChanging();
+                    _dynEntityConfigId = value;
+                    OnPropertyChanged("DynEntityConfigId");
+                }
+            }
+        }
+        private long _dynEntityConfigId;
+    
+        [DataMember]
+        public long DynEntityAttribConfigUid
+        {
+            get { return _dynEntityAttribConfigUid; }
+            set
+            {
+                if (_dynEntityAttribConfigUid != value)
+                {
+                    OnComplexPropertyChanging();
+                    _dynEntityAttribConfigUid = value;
+                    OnPropertyChanged("DynEntityAttribConfigUid");
+                }
+            }
+        }
+        private long _dynEntityAttribConfigUid;
+    
+        [DataMember]
+        public long DynEntityAttribConfigId
+        {
+            get { return _dynEntityAttribConfigId; }
+            set
+            {
+                if (_dynEntityAttribConfigId != value)
+                {
+                    OnComplexPropertyChanging();
+                    _dynEntityAttribConfigId = value;
+                    OnPropertyChanged("DynEntityAttribConfigId");
+                }
+            }
+        }
+        private long _dynEntityAttribConfigId;
 
         #endregion
 
@@ -139,11 +155,12 @@ namespace AppFramework.Entities
             {
                 throw new ArgumentNullException("changeTracker");
             }
-            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.AssetTypeUID", parentPropertyName), complexObject == null ? null : (object)complexObject.AssetTypeUID);
-            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.AssetTypeID", parentPropertyName), complexObject == null ? null : (object)complexObject.AssetTypeID);
             changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.AssetTypeName", parentPropertyName), complexObject == null ? null : (object)complexObject.AssetTypeName);
-            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.AssetUID", parentPropertyName), complexObject == null ? null : (object)complexObject.AssetUID);
             changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.AttributeName", parentPropertyName), complexObject == null ? null : (object)complexObject.AttributeName);
+            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.DynEntityConfigUid", parentPropertyName), complexObject == null ? null : (object)complexObject.DynEntityConfigUid);
+            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.DynEntityConfigId", parentPropertyName), complexObject == null ? null : (object)complexObject.DynEntityConfigId);
+            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.DynEntityAttribConfigUid", parentPropertyName), complexObject == null ? null : (object)complexObject.DynEntityAttribConfigUid);
+            changeTracker.RecordOriginalValue(String.Format(CultureInfo.InvariantCulture, "{0}.DynEntityAttribConfigId", parentPropertyName), complexObject == null ? null : (object)complexObject.DynEntityAttribConfigId);
         }
 
         #endregion

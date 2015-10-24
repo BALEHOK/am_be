@@ -222,12 +222,10 @@ namespace AppFramework.Core.Classes.SearchEngine
             return result;
         }
 
-        public static Dictionary<long, string> FindIdNameBySearchPattern(long assetTypeId, long assetTypeAttributeId,
-            string searchPattern, out int totalCount, int pageNumber = 1, int pageSize = 100)
+        public static List<KeyValuePair<long, string>> FindIdNameBySearchPattern(IUnitOfWork unitOfWork, long assetTypeId, long assetTypeAttributeId, out int totalCount, string searchPattern = "", int pageNumber = 1, int pageSize = 100)
         {
             var at = AssetType.GetByID(assetTypeId);
             var fieldName = at.Attributes.Single(a => a.ID == assetTypeAttributeId).DBTableFieldName;
-            var unitOfWork = new UnitOfWork();
 
             var parameters = new List<SqlParameter>();
             var parameterName = string.Format("@{0}", fieldName);
@@ -235,7 +233,7 @@ namespace AppFramework.Core.Classes.SearchEngine
 
             var queryWithPaging = string.Format(@"
                 WITH search AS
-                (SELECT  
+                (SELECT DISTINCT
                     DynEntityId, 
                     Name, 
                     ROW_NUMBER() OVER(ORDER BY [{1}]) as intRow, 
@@ -256,17 +254,18 @@ namespace AppFramework.Core.Classes.SearchEngine
 
             var reader = unitOfWork.SqlProvider.ExecuteReader(
                 queryWithPaging,
-                parameters.ToArray(),
-                CommandType.Text);
+                parameters.ToArray());
 
-            var result = new Dictionary<long, string>();
+            var result = new List<KeyValuePair<long, string>>();
             totalCount = 0;
             while (reader.Read())
             {
-                if (!result.ContainsKey(reader.GetInt64(0)))
-                    result.Add(reader.GetInt64(0), reader.GetString(1));
+                result.Add(new KeyValuePair<long, string>(reader.GetInt64(0), reader.GetString(1)));
+                
                 if (totalCount == 0)
+                {
                     totalCount = reader.GetInt32(2);
+                }
             }
             reader.Close();
             return result;

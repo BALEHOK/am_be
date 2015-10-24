@@ -7,7 +7,6 @@ using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.DAL;
 using AppFramework.Core.DAL.Adapters;
 using AppFramework.Core.Exceptions;
-using AppFramework.Core.Interfaces;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 using Microsoft.Practices.EnterpriseLibrary.Caching;

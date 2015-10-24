@@ -33,5 +33,7 @@ namespace AssetManager.Infrastructure.Models
         public bool IsHistory { get; set; }
 
         public string Barcode { get; set; }
+
+        public IEnumerable<ChildAssetType> ChildAssetTypes { get; set; }
     }
 }

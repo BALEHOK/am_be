@@ -50,10 +50,10 @@ namespace AppFramework.Reports.StandardReports.DataProviders
             var childAssetPointers = _unitOfWork.GetChildAssets(assetTypeId);
             foreach (var assetsPointer in childAssetPointers)
             {
-                var childAssetType = _assetTypeRepository.GetById(assetsPointer.AssetTypeID);
+                var childAssetType = _assetTypeRepository.GetById(assetsPointer.DynEntityConfigId);
                 var childAssets = from ca in _assetsService.GetAssetsByAssetTypeAndUser(childAssetType, currentUserId)
                                   let attribute = asset.Attributes
-                                     .SingleOrDefault(att => att.GetConfiguration().UID == assetsPointer.AssetUID /* actually DynEntityAttribConfigUid - DB SP misspelling... */)
+                                     .SingleOrDefault(att => att.GetConfiguration().UID == assetsPointer.DynEntityAttribConfigUid)
                                   where attribute != null && attribute.ValueAsId == asset.ID
                                   select ca;
 

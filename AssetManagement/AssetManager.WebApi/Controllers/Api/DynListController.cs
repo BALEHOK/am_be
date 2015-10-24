@@ -1,14 +1,11 @@
-﻿using AppFramework.Core.Classes;
-using AppFramework.DataProxy;
-using AssetManager.Infrastructure.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using WebApi.OutputCache.V2;
+using AppFramework.Core.Classes;
 using AssetManager.Infrastructure.Helpers;
+using AssetManager.Infrastructure.Models;
+using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -29,7 +26,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public IEnumerable<DynListModel> GetAll()
         {
             return from list in _dynListService.GetAll()
-                   select list.ToDto();
+                select list.ToDto();
         }
 
         [Route("{dynamicListUid}")]

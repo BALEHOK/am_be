@@ -6,6 +6,7 @@
     using AppFramework.Entities;
     using Common.Logging;
     using System;
+    using System.Collections.Generic;
     using System.Data.EntityClient;
     using System.Data.Objects;
     using System.Data.SqlClient;
@@ -112,7 +113,7 @@
             return _noCacheContext.GetStocksByLocation(assetId, assetTypeId);
         }
 
-        public ObjectResult<AppFramework.Entities.f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId)
+        public IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId)
         {
             return _noCacheContext.f_cust_GetChildAssets(assetTypeId);
         }

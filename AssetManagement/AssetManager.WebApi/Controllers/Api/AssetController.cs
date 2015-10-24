@@ -35,7 +35,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("revisions/{revision}")]
         public AssetModel Get(long assetTypeId, long assetId, int? revision = null, long? uid = null)
         {
-            return _assetService.GetAsset(assetTypeId, assetId, revision, uid);
+            return _assetService.GetAsset(assetTypeId, assetId, revision, uid, true);
         }
 
         [Route("~/api/assettype/{assetTypeId}/asset"), HttpGet]

@@ -2,6 +2,7 @@ using AppFramework.DataProxy.Providers;
 using AppFramework.DataProxy.Repositories;
 using AppFramework.Entities;
 using System;
+using System.Collections.Generic;
 using System.Data.Objects;
 
 namespace AppFramework.DataProxy
@@ -48,8 +49,8 @@ namespace AppFramework.DataProxy
 
         bool GetPermittedTask(long assetTypeId, long userId, long taxonomyItemId);
         ObjectResult<int?> GetPermittedAssetsCount(long assetTypeId, long userId);
-        ObjectResult<AppFramework.Entities.StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId);
-        ObjectResult<AppFramework.Entities.f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId);
+        ObjectResult<StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId);
+        IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId);
         bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId);
         int GetMaxSearchId();
         ITaxonomyItemRepository TaxonomyItemRepository { get; }

@@ -52,6 +52,7 @@ namespace AssetManager.WebApi
                 .RegisterType<IAssetService, AssetService>()
                 .RegisterType<IAssetTypeService, AssetTypeService>()
                 .RegisterType<ISearchService, SearchEngine>()
+                .RegisterType<IDataTypeService, DataTypeService>()
                 .RegisterType<ITypeSearch, TypeSearch>()
                 .RegisterType<IExportService, ExportService>()
                 .RegisterType<IFileService, FileService>()

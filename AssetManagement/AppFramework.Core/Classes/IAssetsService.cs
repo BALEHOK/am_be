@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.DTO;
 using AppFramework.ConstantsEnumerators;
+using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes
 {
