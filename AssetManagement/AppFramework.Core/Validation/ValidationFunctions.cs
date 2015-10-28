@@ -85,15 +85,22 @@ namespace AppFramework.Core.Validation
                 assetConfigId = 0;
             }
 
+            var isFloatValue = _attribute.Configuration.Name == "float";
+            if (isFloatValue)
+            {
+                value = value.Replace(",", ".");
+            }
+            
             var foundValues =
                 _unitOfWork.SqlProvider.ExecuteScalar(
-                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType),
+                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType, isFloatValue),
                     new IDataParameter[]
                     {
                         new SqlParameter("@attrValue", value),
                         new SqlParameter("@DynEntityId", assetId),
                         new SqlParameter("@DynEntityConfigUid", assetConfigId)
                     });
+            
 
             ValidationResultLine result;
             if (foundValues == null)
@@ -112,8 +119,11 @@ namespace AppFramework.Core.Validation
             return result.IsValid;
         }
 
-        private static string GetSqlForUniquenessRequest(string attributeName, string dbDataType)
+        private static string GetSqlForUniquenessRequest(string attributeName, string dbDataType, bool isFloatValue)
         {
+            // Float value can't use == operator
+            var equalityTest = string.Format(isFloatValue ? "ABS([{0}] - @value) < 0.000001" : "[{0}] = @value", attributeName);
+
             // first select all types that contain attribute with the same name
             // (i.e. put all the tables containing the attribute in a single UNION SELECT)
             // then check uniqueness among all the values in all the selected tables
@@ -130,10 +140,11 @@ FROM (
 	WHERE attr.Name = '{0}') as tt
 
 DECLARE @query NVARCHAR(max);
-SET @query = N'SELECT TOP 1 1 from (' + @union + ') as allValues WHERE [{0}] = @value AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)'
+SET @query = N'SELECT TOP 1 1 from (' + @union + ') as allValues WHERE {1} AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)'
 
-EXEC sp_executesql @query, N'@value {1},@id bigint,@config bigint',@value=@attrValue,@id=@DynEntityId,@config=@DynEntityConfigUid",
+EXEC sp_executesql @query, N'@value {2},@id bigint,@config bigint',@value=@attrValue,@id=@DynEntityId,@config=@DynEntityConfigUid",
                 attributeName,
+                equalityTest,
                 dbDataType);
         }
 
