@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using AppFramework.Core.Calculation;
@@ -10,6 +11,9 @@ namespace AppFramework.Core.Validation
 {
     public class ValidationFunctions : FunctionsFactory<bool, ValidationResult>
     {
+        private const string EqualityTestForFloatGreaterThanOne = "ABS(([{0}] - @value) / @value) < 0.000001";
+        private const string EqualityTestForFloatLessThanOne = "ABS([{0}] - @value)  < 0.000001";
+        private const string CommonEqualityTest = "[{0}] = @value";
         private readonly IUnitOfWork _unitOfWork;
         private readonly AssetAttribute _attribute;
 
@@ -48,9 +52,9 @@ namespace AppFramework.Core.Validation
             {
                 var count =
                     _unitOfWork.SqlProvider.ExecuteScalar(
-                        string.Format("SELECT COUNT(*) FROM [{0}] WHERE [{1}] = @value",
-                            _attribute.Configuration.Parent.DBTableName,
-                            _attribute.Configuration.DBTableFieldName),
+                    string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(ref value),
+                            _attribute.Configuration.DBTableFieldName,
+                            _attribute.Configuration.Parent.DBTableName),
                         new IDataParameter[] {new SqlParameter("@value", value)});
 
                 result.IsValid = int.Parse(count.ToString()) == 0;
@@ -84,16 +88,10 @@ namespace AppFramework.Core.Validation
                 assetId = 0;
                 assetConfigId = 0;
             }
-
-            var isFloatValue = _attribute.Configuration.Name == "float";
-            if (isFloatValue)
-            {
-                value = value.Replace(",", ".");
-            }
             
             var foundValues =
                 _unitOfWork.SqlProvider.ExecuteScalar(
-                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType, isFloatValue),
+                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType, GetEqualityTest(ref value)),
                     new IDataParameter[]
                     {
                         new SqlParameter("@attrValue", value),
@@ -119,11 +117,27 @@ namespace AppFramework.Core.Validation
             return result.IsValid;
         }
 
-        private static string GetSqlForUniquenessRequest(string attributeName, string dbDataType, bool isFloatValue)
+        private string GetEqualityTest(ref string value)
         {
-            // Float value can't use == operator
-            var equalityTest = string.Format(isFloatValue ? "ABS([{0}] - @value) < 0.000001" : "[{0}] = @value", attributeName);
+            var equalityTest = CommonEqualityTest;
+            var isFloatValue = _attribute.Configuration.Name == "float";
+            if (isFloatValue)
+            {
+                float floatValue;
+                if (float.TryParse(value, out floatValue))
+                {
+                    equalityTest = Math.Abs(floatValue) < 1
+                        ? EqualityTestForFloatLessThanOne
+                        : EqualityTestForFloatGreaterThanOne;
+                }
+                value = value.Replace(",", ".");
+            }
+            return equalityTest;
+        }
 
+        private static string GetSqlForUniquenessRequest(string attributeName, string dbDataType, string equalityTest)
+        {
+            equalityTest = string.Format(equalityTest, attributeName);
             // first select all types that contain attribute with the same name
             // (i.e. put all the tables containing the attribute in a single UNION SELECT)
             // then check uniqueness among all the values in all the selected tables
