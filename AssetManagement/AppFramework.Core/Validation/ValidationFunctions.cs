@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes;
@@ -34,25 +35,25 @@ namespace AppFramework.Core.Validation
 
         private bool Unique(ValidationResult validation, object[] parameters)
         {
-            var value = parameters[0].ToString();
+            var value = parameters[0];
 
             var result = ValidationResultLine.Success;
 
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value.ToString()))
                 return result.IsValid;
 
             if (_attribute.ParentAsset != null)
             {
                 result.IsValid = _unitOfWork.IsValueUnique(_attribute.ParentAsset.GetConfiguration().DBTableName,
                     _attribute.Configuration.DBTableFieldName,
-                    value,
+                    value.ToString(),
                     _attribute.ParentAsset.ID);
             }
             else
             {
                 var count =
                     _unitOfWork.SqlProvider.ExecuteScalar(
-                    string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(ref value),
+                    string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value),
                             _attribute.Configuration.DBTableFieldName,
                             _attribute.Configuration.Parent.DBTableName),
                         new IDataParameter[] {new SqlParameter("@value", value)});
@@ -72,7 +73,7 @@ namespace AppFramework.Core.Validation
 
         private bool SystemUnique(ValidationResult validation, object[] parameters)
         {
-            var value = parameters[0].ToString();
+            var value = parameters[0];
 
             var dbDataType = DataTypeService.ConvertToDbDataType(_attribute.Configuration.DataType);
 
@@ -91,7 +92,7 @@ namespace AppFramework.Core.Validation
             
             var foundValues =
                 _unitOfWork.SqlProvider.ExecuteScalar(
-                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType, GetEqualityTest(ref value)),
+                    GetSqlForUniquenessRequest(_attribute.Configuration.Name, dbDataType, GetEqualityTest(value)),
                     new IDataParameter[]
                     {
                         new SqlParameter("@attrValue", value),
@@ -117,20 +118,16 @@ namespace AppFramework.Core.Validation
             return result.IsValid;
         }
 
-        private string GetEqualityTest(ref string value)
+        private string GetEqualityTest(object value)
         {
             var equalityTest = CommonEqualityTest;
             var isFloatValue = _attribute.Configuration.Name == "float";
             if (isFloatValue)
             {
-                float floatValue;
-                if (float.TryParse(value, out floatValue))
-                {
-                    equalityTest = Math.Abs(floatValue) < 1
-                        ? EqualityTestForFloatLessThanOne
-                        : EqualityTestForFloatGreaterThanOne;
-                }
-                value = value.Replace(",", ".");
+                equalityTest = Math.Abs((float) value) < 1
+                    ? EqualityTestForFloatLessThanOne
+                    : EqualityTestForFloatGreaterThanOne;
+                
             }
             return equalityTest;
         }
