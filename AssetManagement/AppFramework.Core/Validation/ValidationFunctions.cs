@@ -42,24 +42,36 @@ namespace AppFramework.Core.Validation
             if (string.IsNullOrEmpty(value.ToString()))
                 return result.IsValid;
 
+            object count;
+            
             if (_attribute.ParentAsset != null)
             {
-                result.IsValid = _unitOfWork.IsValueUnique(_attribute.ParentAsset.GetConfiguration().DBTableName,
-                    _attribute.Configuration.DBTableFieldName,
-                    value.ToString(),
-                    _attribute.ParentAsset.ID);
+                var assetId = _attribute.ParentAsset.ID;
+                var assetConfigId = _attribute.ParentAsset.DynEntityConfigUid;
+
+                count =
+                 _unitOfWork.SqlProvider.ExecuteScalar(
+                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
+                         _attribute.Configuration.DBTableFieldName,
+                         _attribute.Configuration.Parent.DBTableName),
+                     new IDataParameter[] 
+                     { 
+                         new SqlParameter("@value", value), 
+                         new SqlParameter("@id", assetId), 
+                         new SqlParameter("@config", assetConfigId) 
+                     });
             }
             else
             {
-                var count =
-                    _unitOfWork.SqlProvider.ExecuteScalar(
-                    string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value),
-                            _attribute.Configuration.DBTableFieldName,
-                            _attribute.Configuration.Parent.DBTableName),
-                        new IDataParameter[] {new SqlParameter("@value", value)});
-
-                result.IsValid = int.Parse(count.ToString()) == 0;
+                count =
+                 _unitOfWork.SqlProvider.ExecuteScalar(
+                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value),
+                         _attribute.Configuration.DBTableFieldName,
+                         _attribute.Configuration.Parent.DBTableName),
+                     new IDataParameter[] { new SqlParameter("@value", value) });
             }
+
+            result.IsValid = int.Parse(count.ToString()) == 0;
 
             result.Message = !result.IsValid
                 ? string.Format(
