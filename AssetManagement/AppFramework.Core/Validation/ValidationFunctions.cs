@@ -42,34 +42,32 @@ namespace AppFramework.Core.Validation
             if (string.IsNullOrEmpty(value.ToString()))
                 return result.IsValid;
 
-            object count;
-            
+
+            long assetId;
+            long assetConfigId;
             if (_attribute.ParentAsset != null)
             {
-                var assetId = _attribute.ParentAsset.ID;
-                var assetConfigId = _attribute.ParentAsset.DynEntityConfigUid;
-
-                count =
-                 _unitOfWork.SqlProvider.ExecuteScalar(
-                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE ActiveVersion = 1 AND " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
-                         _attribute.Configuration.DBTableFieldName,
-                         _attribute.Configuration.Parent.DBTableName),
-                     new IDataParameter[] 
-                     { 
-                         new SqlParameter("@value", value), 
-                         new SqlParameter("@id", assetId), 
-                         new SqlParameter("@config", assetConfigId) 
-                     });
+                assetId = _attribute.ParentAsset.ID;
+                assetConfigId = _attribute.ParentAsset.DynEntityConfigUid;
             }
             else
             {
-                count =
-                 _unitOfWork.SqlProvider.ExecuteScalar(
-                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value),
-                         _attribute.Configuration.DBTableFieldName,
-                         _attribute.Configuration.Parent.DBTableName),
-                     new IDataParameter[] { new SqlParameter("@value", value) });
+                assetId = 0;
+                assetConfigId = 0;
             }
+
+            var count =
+                _unitOfWork.SqlProvider.ExecuteScalar(
+                string.Format("SELECT COUNT(*) FROM [{1}] WHERE ActiveVersion = 1 AND " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
+                        _attribute.Configuration.DBTableFieldName,
+                        _attribute.Configuration.Parent.DBTableName),
+                    new IDataParameter[] 
+                    { 
+                        new SqlParameter("@value", value), 
+                        new SqlParameter("@id", assetId), 
+                        new SqlParameter("@config", assetConfigId) 
+                    });
+            
 
             result.IsValid = int.Parse(count.ToString()) == 0;
 
