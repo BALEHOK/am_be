@@ -51,7 +51,7 @@ namespace AppFramework.Core.Validation
 
                 count =
                  _unitOfWork.SqlProvider.ExecuteScalar(
-                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
+                 string.Format("SELECT COUNT(*) FROM [{1}] WHERE ActiveVersion = 1 AND " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
                          _attribute.Configuration.DBTableFieldName,
                          _attribute.Configuration.Parent.DBTableName),
                      new IDataParameter[] 
