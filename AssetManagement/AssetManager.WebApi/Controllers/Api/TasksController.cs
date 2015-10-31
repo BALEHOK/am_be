@@ -53,7 +53,9 @@ namespace AssetManager.WebApi.Controllers.Api
                 ShouldRedirectOnComplete = result.ActionOnComplete == TaskActionOnComplete.Navigate, // void or should navigate
                 Result = result.NavigationResultArguments, // array of arguments to build redirect url
                 Status = result.Status.ToString().ToUpper(), // SUCCESS or ERROR
-                Errors = result.Errors, // array or errors               
+                Errors = result.Errors, // array or errors 
+                TaskName = task.Name,
+                TaskId = task.TaskId              
             };
         }
     }

@@ -3,6 +3,7 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 using AssetSite.Filters;
+using Newtonsoft.Json;
 
 namespace AssetManager.WebApi
 {
@@ -19,13 +20,15 @@ namespace AssetManager.WebApi
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
-            jsonFormatter.SerializerSettings.ContractResolver
+            var jsonSerializerSettings = config.Formatters.OfType<JsonMediaTypeFormatter>().First().SerializerSettings;
+            jsonSerializerSettings.ContractResolver
                 = new CamelCasePropertyNamesContractResolver();
-            jsonFormatter.SerializerSettings.ReferenceLoopHandling =
-                Newtonsoft.Json.ReferenceLoopHandling.Serialize;
-            jsonFormatter.SerializerSettings.PreserveReferencesHandling =
-                Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            jsonSerializerSettings.ReferenceLoopHandling =
+                ReferenceLoopHandling.Serialize;
+            jsonSerializerSettings.PreserveReferencesHandling =
+                PreserveReferencesHandling.Objects;
+            jsonSerializerSettings.MetadataPropertyHandling =
+                MetadataPropertyHandling.Ignore;
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 

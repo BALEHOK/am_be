@@ -9,6 +9,7 @@ using AppFramework.Core.Helpers;
 using AppFramework.DataProxy;
 using Common.Logging;
 using NCalc;
+using AppFramework.Core.Exceptions;
 
 namespace AppFramework.Core.Calculation
 {
@@ -120,7 +121,7 @@ namespace AppFramework.Core.Calculation
             catch (Exception e)
             {
                 SetError(e.ToString());
-                throw;
+                throw new InvalidFormulaException(expressionString, e);
             }
 
             return result;
@@ -148,7 +149,7 @@ namespace AppFramework.Core.Calculation
             if (expression.HasErrors())
             {
                 SetError(string.Format("Invalid formula '{0}'. Error: {1}", expressionText, expression.Error));
-                throw new InvalidOperationException(Error);
+                throw new InvalidFormulaException(expressionText, Error);
             }
 
             return expression;
@@ -176,7 +177,7 @@ namespace AppFramework.Core.Calculation
 
         private void SetError(string message)
         {
-            _logger.Info(message);
+            _logger.ErrorFormat("Formula error: {0}", message);
             Error = message;
         }
 

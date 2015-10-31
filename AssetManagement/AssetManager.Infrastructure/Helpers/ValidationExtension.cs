@@ -1,9 +1,4 @@
 ﻿using AppFramework.Core.Exceptions;
-using AppFramework.Core.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http.ModelBinding;
 
 namespace AssetManager.Infrastructure.Helpers
@@ -11,10 +6,16 @@ namespace AssetManager.Infrastructure.Helpers
     public static class ValidationExtension
     {
         public static void AddModelErrors(this ModelStateDictionary state,
-            ValidationResult validationResult)
+            AssetValidationException validationEx)
         {
-            foreach (var error in validationResult.ResultLines)
+            foreach (var error in validationEx.ValidationResult.ResultLines)
                 state.AddModelError(error.Key, error.Message);
+        }
+
+        public static void AddModelErrors(this ModelStateDictionary state,
+            InvalidFormulaException formulaEx)
+        {
+            state.AddModelError("", formulaEx.Message);
         }
     }
 }

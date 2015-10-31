@@ -35,5 +35,31 @@ namespace AppFramework.Core.Classes.SearchEngine
             Entities.Enumerations.SearchOrder order,
             int pageNumber,
             int pageSize);
+
+        /// <summary>
+        /// Advance search by type. Overload for v2
+        /// </summary>
+        /// <param name="searchId"></param>
+        /// <param name="userId">current user id</param>
+        /// <param name="assetTypeUid">asset type uid</param>
+        /// <param name="elements">Attribute elements converted to search chain</param>
+        /// <param name="configsIds"></param>
+        /// <param name="taxonomyItemsIds"></param>
+        /// <param name="time"></param>
+        /// <param name="order"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        List<Entities.IIndexEntity> FindByType(
+            long searchId,
+            long userId,
+            long assetTypeUid,
+            List<AttributeElement> elements,
+            string configsIds,
+            string taxonomyItemsIds,
+            TimePeriodForSearch time,
+            Entities.Enumerations.SearchOrder order,
+            int pageNumber,
+            int pageSize);
     }
 }

@@ -61,7 +61,11 @@ namespace AssetManager.WebApi.Controllers.Api
                 }
                 catch (AssetValidationException ex)
                 {
-                    ModelState.AddModelErrors(ex.ValidationResult);
+                    ModelState.AddModelErrors(ex);
+                }
+                catch (InvalidFormulaException ex)
+                {
+                    ModelState.AddModelErrors(ex);
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +122,11 @@ namespace AssetManager.WebApi.Controllers.Api
                 }
                 catch (AssetValidationException ex)
                 {
-                    ModelState.AddModelErrors(ex.ValidationResult);
+                    ModelState.AddModelErrors(ex);
+                }
+                catch (InvalidFormulaException ex)
+                {
+                    ModelState.AddModelErrors(ex);
                 }
                 catch (Exception ex)
                 {

@@ -86,34 +86,34 @@ namespace AssetSite.Search
                     Session["TaskData"] = desc.Serialize();
                 }
 
-                //                var typeSearch = new TypeSearch(
-                //                    AuthenticationService,
-                //                    UnitOfWork,
-                //                    AssetTypeRepository,
-                //                    AssetsService);
+                var typeSearch = new TypeSearch(
+                    UnitOfWork,
+                    AssetTypeRepository,
+                    AssetsService);
 
-                //                var result = typeSearch.FindByTypeContext(
-                //                    SearchId,
-                //                    assetTypeUid,
-                //                    (Session[_strparams] as List<AttributeElement>),
-                //                    ConfigsIds,
-                //                    TaxonomyItemsIds,
-                //                    Period,
-                //                    OrderBy,
-                //                    PageNumber,
-                //                    PageSize);
+                var result = typeSearch.FindByTypeContext(
+                    SearchId,
+                    AuthenticationService.CurrentUserId,
+                    assetTypeUid,
+                    (Session[_strparams] as List<AttributeElement>),
+                    ConfigsIds,
+                    TaxonomyItemsIds,
+                    Period,
+                    OrderBy,
+                    PageNumber,
+                    PageSize);
                 
-                var searchParams = (List<AttributeElement>)Session[_strparams];
-                var queryString = searchParams.First().Text;
+                //var searchParams = (List<AttributeElement>)Session[_strparams];
+                //var queryString = searchParams.First().Text;
 
                 var assetType = AssetTypeRepository.GetByUid(assetTypeUid);
-                var searchId = SearchService.NewSearchId();
-                var result = SearchService.FindByKeywords(
-                    queryString, 
-                    searchId,
-                    AuthenticationService.CurrentUserId,
-                    pageNumber: 1, 
-                    configsIds: assetType.ID.ToString()).ToList();
+                //var searchId = SearchService.NewSearchId();
+                //var result = SearchService.FindByKeywords(
+                //    queryString, 
+                //    searchId,
+                //    AuthenticationService.CurrentUserId,
+                //    pageNumber: 1, 
+                //    configsIds: assetType.ID.ToString()).ToList();
 
                 SearchMasterPage.ResultSet[SearchId] = result;
 
@@ -128,7 +128,7 @@ namespace AssetSite.Search
                         new Dictionary<string, object>
                         {
                             {"ReportId", report.Id},
-                            {"SearchId", searchId},
+                            {"SearchId", SearchId},
                             {"Params", _strparams},
                             {"TypeId", assetType.ID},
 

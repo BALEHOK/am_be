@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
-using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
 using AssetManager.WebApi.Extensions;
+using AssetManager.WebApi.Models.Search;
 using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api
@@ -17,12 +16,17 @@ namespace AssetManager.WebApi.Controllers.Api
     public class SearchController : ApiController
     {
         private readonly ISearchService _searchService;
+        private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
 
-        public SearchController(ISearchService searchService)
+        public SearchController(ISearchService searchService, IAdvanceSearchModelMapper advanceSearchModelMapper)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
             _searchService = searchService;
+
+            if (advanceSearchModelMapper == null)
+                throw new ArgumentNullException("advanceSearchModelMapper");
+            _advanceSearchModelMapper = advanceSearchModelMapper;
         }
 
         /// <summary>
@@ -73,35 +77,33 @@ namespace AssetManager.WebApi.Controllers.Api
             };
         }
 
+
         /// <summary>
         /// Performs search by type
         /// </summary>
-        [Route("bytype"), HttpGet]
+        [Route("bytype"), HttpPost]
         [CacheOutput(ClientTimeSpan = 120, ServerTimeSpan = 120)]
-        public SearchResultModel ByType(
-            long assetType,
-            int page = 1,
-            TimePeriodForSearch context = TimePeriodForSearch.CurrentTime,
-            int? searchId = null,
-            int? taxonomy = null,
-            int? sortBy = null)
+        public SearchResultModel ByType(AdvanceSearchModel model)
         {
-            if (!searchId.HasValue)
+            if (model.SearchId == 0)
             {
-                searchId = _searchService.NewSearchId();
+                model.SearchId = _searchService.NewSearchId();
             }
 
             var userId = User.GetId();
-            var result = _searchService.FindByTypeContext(
-                searchId.Value,
+            var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);
+            var result = _searchService.FindByType(
+                model.SearchId,
                 userId,
-                assetType,
-                new List<AttributeElement>(0),
-                time: context);
+                model.AssetTypeId,
+                attributeElements,
+                time: model.Context,
+                order: model.SortBy,
+                pageNumber: model.Page);
 
             return new SearchResultModel
             {
-                SearchId = searchId.Value,
+                SearchId = model.SearchId,
                 Entities = result.ToList()
             };
         }
@@ -114,11 +116,13 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <returns></returns>
         [Route("counters"), HttpGet]
         [CacheOutput(ClientTimeSpan = 30, ServerTimeSpan = 30)]
-        public SearchCountersModel GetCounters(long searchId, string query)
+        public SearchCountersModel GetCounters(long searchId, string query = null)
         {
             var userId = User.GetId();
+
+            // if no query => getting counters for search by type
             var result = _searchService.GetCounters(
-                searchId, userId, query, "", "", TimePeriodForSearch.CurrentTime, false);
+                searchId, userId, query, "", "", TimePeriodForSearch.CurrentTime, string.IsNullOrEmpty(query));
 
             if (result.Any())
             {

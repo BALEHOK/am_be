@@ -8,6 +8,7 @@ using AppFramework.Core;
 using System.Web;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Reports;
+using AssetManager.WebApi.Models.Search;
 
 namespace AssetManager.WebApi
 {
@@ -62,6 +63,7 @@ namespace AssetManager.WebApi
                 .RegisterType<IModelFactory, ModelFactory>()
                 .RegisterType<IHistoryService, HistoryService>()
                 .RegisterType<ITasksService, TasksService>()
+                .RegisterType<IAdvanceSearchModelMapper, AdvanceSearchModelMapper>()
                 .AddNewExtension<CommonConfiguration>()
                 .RegisterType<IHttpHandler, FileHandler>("/FileHandler.ashx")
                 .AddNewExtension<ReportsConfiguration>();

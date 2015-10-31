@@ -54,6 +54,11 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
             {
                 return AndOr == 0 ? Enumerations.ConcatenationOperation.And : Enumerations.ConcatenationOperation.Or;
             }
+
+            set
+            {
+                AndOr = (int) value;
+            }
         }
 
         /// <summary>

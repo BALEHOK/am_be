@@ -1,18 +1,19 @@
-﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.Classes.SearchEngine.ContextSearchElements;
-using AppFramework.Core.Classes.SearchEngine.Enumerations;
-using AppFramework.Core.Classes.SearchEngine.SearchOperators;
-using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
-using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.Core.Helpers;
-using AppFramework.DataProxy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes.SearchEngine.ContextSearchElements;
+using AppFramework.Core.Classes.SearchEngine.Enumerations;
+using AppFramework.Core.Classes.SearchEngine.Presentation;
+using AppFramework.Core.Classes.SearchEngine.SearchOperators;
+using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
+using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.Core.Helpers;
+using AppFramework.DataProxy;
+using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes.SearchEngine
 {
@@ -55,39 +56,71 @@ namespace AppFramework.Core.Classes.SearchEngine
             string tableName,
             IEnumerable<AttributeElement> elements)
         {
-            int searchId = _unitOfWork.GetMaxSearchId() + 1;
-            DataTable dataTable = new DataTable();
+            var searchId = _unitOfWork.GetMaxSearchId() + 1;
+            var dataTable = new DataTable();
 
             List<SqlParameter> parameters;
 
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
-            string searchQuery = _generateTypeSearchQuery(
-                searchId, 
-                type, 
-                elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(), 
+            var searchQuery = _generateTypeSearchQuery(
+                searchId,
+                type,
+                elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(),
                 TimePeriodForSearch.CurrentTime,
                 out parameters);
 
             _prefillTemporaryTable(searchId, searchQuery, parameters, _unitOfWork);
             var reader = _unitOfWork.SqlProvider.ExecuteReader(
-                    "_cust_GetExportDataByTypeContext",
-                    new SqlParameter[]
-                        {
-                            new SqlParameter("SearchId", searchId),
-                            new SqlParameter("TableName", tableName),
-                            new SqlParameter("UserId", userId)
-                        },
-                    CommandType.StoredProcedure);
+                "_cust_GetExportDataByTypeContext",
+                new[]
+                {
+                    new SqlParameter("SearchId", searchId),
+                    new SqlParameter("TableName", tableName),
+                    new SqlParameter("UserId", userId)
+                },
+                CommandType.StoredProcedure);
 
-                dataTable.Load(reader);
+            dataTable.Load(reader);
 
             return dataTable;
         }
 
         /// <summary>
-        /// Type search
+        /// Advance search by type. Overload for v2
         /// </summary>
-        public List<Entities.IIndexEntity> FindByTypeContext(
+        /// <param name="searchId"></param>
+        /// <param name="userId"></param>
+        /// <param name="assetTypeUid"></param>
+        /// <param name="elements">Attribute elements converted to search chain</param>
+        /// <param name="configsIds"></param>
+        /// <param name="taxonomyItemsIds"></param>
+        /// <param name="time"></param>
+        /// <param name="order"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public List<IIndexEntity> FindByType(
+            long searchId,
+            long userId,
+            long assetTypeUid,
+            List<AttributeElement> elements,
+            string configsIds,
+            string taxonomyItemsIds,
+            TimePeriodForSearch time,
+            Entities.Enumerations.SearchOrder order,
+            int pageNumber,
+            int pageSize)
+        {
+            List<SqlParameter> parameters;
+
+            var type = _assetTypeRepository.GetByUid(assetTypeUid);
+            var searchQuery = _generateTypeSearchQuery(searchId, type, elements, time, out parameters);
+
+            return FindByTypeContext(searchId, userId, searchQuery, parameters, configsIds, taxonomyItemsIds, time,
+                order, pageNumber, pageSize);
+        }
+
+        public List<IIndexEntity> FindByTypeContext(
             long searchId,
             long userId,
             long? assetTypeUid,
@@ -102,7 +135,6 @@ namespace AppFramework.Core.Classes.SearchEngine
             List<SqlParameter> parameters;
             string searchQuery;
 
-            var entities = new List<Entities.IIndexEntity>();
             if (assetTypeUid.HasValue)
             {
                 var type = _assetTypeRepository.GetByUid(assetTypeUid.Value);
@@ -117,35 +149,55 @@ namespace AppFramework.Core.Classes.SearchEngine
                     out parameters);
             }
 
+            return FindByTypeContext(searchId, userId, searchQuery, parameters, configsIds, taxonomyItemsIds, time,
+                order, pageNumber, pageSize);
+        }
+
+        /// <summary>
+        /// Type search
+        /// </summary>
+        private List<IIndexEntity> FindByTypeContext(
+            long searchId,
+            long userId,
+            string searchQuery,
+            List<SqlParameter> parameters,
+            string configsIds,
+            string taxonomyItemsIds,
+            TimePeriodForSearch time,
+            Entities.Enumerations.SearchOrder order,
+            int pageNumber,
+            int pageSize)
+        {
+            var entities = new List<IIndexEntity>();
+
             _prefillTemporaryTable(searchId, searchQuery, parameters, _unitOfWork);
 
             using (var rdResults = _unitOfWork.SqlProvider.ExecuteReader(
                 "_cust_SearchByTypeContext",
-                new SqlParameter[]
+                new[]
                 {
                     new SqlParameter("SearchId", searchId),
                     new SqlParameter("UserId", userId),
                     new SqlParameter("ConfigIds",
                         configsIds != null
-                            ? string.Join(" ", configsIds.Split(new char[] {','}))
+                            ? string.Join(" ", configsIds.Split(','))
                             : null),
                     new SqlParameter("taxonomyItemsIds",
                         taxonomyItemsIds != null
-                            ? string.Join(" ", taxonomyItemsIds.Split(new char[] {','}))
+                            ? string.Join(" ", taxonomyItemsIds.Split(','))
                             : null),
                     new SqlParameter("active", time == TimePeriodForSearch.CurrentTime),
                     new SqlParameter("orderby", (byte) order),
                     new SqlParameter("PageNumber", pageNumber),
-                    new SqlParameter("PageSize", pageSize),
+                    new SqlParameter("PageSize", pageSize)
                 },
                 CommandType.StoredProcedure))
             {
-
                 var typesInSearchLocalCache = new Dictionary<long, AssetType>();
-                var helper = new Presentation.Helper(_unitOfWork);
+                var helper = new Helper(_unitOfWork);
                 while (rdResults.Read())
                 {
-                    var entity = new Entities.f_cust_SearchByTypeContext_Result
+                    var entity = new f_cust_SearchByTypeContext_Result
                     {
                         IndexUid = rdResults.GetInt64(0),
                         DynEntityUid = rdResults.GetInt64(1)
@@ -222,43 +274,46 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="searchQuery"></param>
         /// <param name="parameters"></param>
         /// <param name="unitOfWork"></param>
-        private static void _prefillTemporaryTable(long searchId, string searchQuery, List<SqlParameter> parameters, IUnitOfWork unitOfWork)
+        private static void _prefillTemporaryTable(long searchId, string searchQuery, List<SqlParameter> parameters,
+            IUnitOfWork unitOfWork)
         {
             var parametersDefinition = string.Join(", ", from p in parameters
-                                                            select string.Format("{0} {1}", p.ParameterName,
-                                                                p.SqlDbType == System.Data.SqlDbType.NVarChar || p.SqlDbType == System.Data.SqlDbType.VarChar ?
-                                                                string.Format("{0}({1})", p.SqlDbType, p.Size) : p.SqlDbType.ToString()));
+                select string.Format("{0} {1}", p.ParameterName,
+                    p.SqlDbType == SqlDbType.NVarChar || p.SqlDbType == SqlDbType.VarChar
+                        ? string.Format("{0}({1})", p.SqlDbType, p.Size)
+                        : p.SqlDbType.ToString()));
 
-            unitOfWork.SqlProvider.ExecuteNonQuery(string.Format("DELETE FROM {0} WHERE SearchId=@SearchId;", Constants.TypeContextSearchTempTable),
-                                                                    new SqlParameter[] { new SqlParameter("@SearchId", searchId) },
-                                                                    CommandType.Text,
-                                                                    closeConnection: false);
+            unitOfWork.SqlProvider.ExecuteNonQuery(
+                string.Format("DELETE FROM {0} WHERE SearchId=@SearchId;", Constants.TypeContextSearchTempTable),
+                new[] {new SqlParameter("@SearchId", searchId)},
+                CommandType.Text, false);
             var query = string.Format("INSERT {0} EXECUTE sp_executesql N'{1}', N'{2}' {3};",
                 Constants.TypeContextSearchTempTable,
                 searchQuery,
                 parametersDefinition,
                 (parameters.Count > 0)
-                ?
-                ", " + string.Join(", ", from p in parameters
-                                         select string.Format("{0}={0}", p.ParameterName))
-                : string.Empty
+                    ? ", " + string.Join(", ", from p in parameters
+                        select string.Format("{0}={0}", p.ParameterName))
+                    : string.Empty
                 );
-            unitOfWork.SqlProvider.ExecuteNonQuery(query, parameters.ToArray(), CommandType.Text, closeConnection: false);
+            unitOfWork.SqlProvider.ExecuteNonQuery(query, parameters.ToArray(), CommandType.Text, false);
         }
 
         /// <summary>
         /// Complex search performs when there are complex attributes dynlists, multipleassets) in search chains
         /// </summary>
         /// <returns></returns>
-        private static string _generateTypeSearchQuery(long searchId, AssetType at, List<AttributeElement> elements, TimePeriodForSearch period, out List<SqlParameter> parameters)
+        private static string _generateTypeSearchQuery(long searchId, AssetType at, List<AttributeElement> elements,
+            TimePeriodForSearch period, out List<SqlParameter> parameters)
         {
             #region Build select statement with joins
+
             // retrieve complex chains
-            IEnumerable<AttributeElement> complexChains = elements.Where(el => el.IsComplex);
+            var complexChains = elements.Where(el => el.IsComplex);
 
             // join appropriate assets tables for multiple assets elements
             var joins = new HashSet<string>();
-            foreach (AttributeElement element in complexChains)
+            foreach (var element in complexChains)
             {
                 var joinLine = string.Empty;
 
@@ -270,10 +325,13 @@ namespace AppFramework.Core.Classes.SearchEngine
                     //                                    AttributeNames.DynEntityId,
                     //                                    AttributeNames.ActiveVersion);
                 }
-                else if (element.ElementType == Enumerators.DataType.DynList || element.ElementType == Enumerators.DataType.DynLists)
+                if (element.ElementType == Enumerators.DataType.DynList ||
+                    element.ElementType == Enumerators.DataType.DynLists)
                 {
-                    joinLine = string.Format(@" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
-                        at.DBTableName);
+                    joinLine =
+                        string.Format(
+                            @" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
+                            at.DBTableName);
                 }
                 else
                 {
@@ -283,52 +341,57 @@ namespace AppFramework.Core.Classes.SearchEngine
                 if (!joins.Contains(joinLine))
                     joins.Add(joinLine);
             }
+
             #endregion
 
-            string query = string.Format(@"SELECT {3}, [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
+            var query = string.Format(@"SELECT {3}, [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
                                            FROM   [{0}] 
                                            {1} 
                                            {2}",
                 at.DBTableName,
                 string.Join(" ", joins),
-                _getWhereStatement(elements, period, at.DBTableName, out parameters), 
+                _getWhereStatement(elements, period, at.DBTableName, out parameters),
                 searchId);
             return query;
         }
 
-        private static string _generateContextSearchQuery(long searchId, List<AttributeElement> elements, TimePeriodForSearch time, out List<SqlParameter> parameters)
+        private static string _generateContextSearchQuery(long searchId, List<AttributeElement> elements,
+            TimePeriodForSearch time, out List<SqlParameter> parameters)
         {
             //construct select statment
-            string selectStatement = string.Format("SELECT {3}, [{0}], [{1}] FROM [{2}] WHERE ",
-                PropertyUtil.GetName<Entities.DynEntityContextAttributesValues>(e => e.DynEntityUid),
-                PropertyUtil.GetName<Entities.DynEntityContextAttributesValues>(e => e.DynEntityConfigUid),
-                typeof(Entities.DynEntityContextAttributesValues).Name,
+            var selectStatement = string.Format("SELECT {3}, [{0}], [{1}] FROM [{2}] WHERE ",
+                PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.DynEntityUid),
+                PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.DynEntityConfigUid),
+                typeof (DynEntityContextAttributesValues).Name,
                 searchId);
 
             string timeQuery;
 
             if (time == TimePeriodForSearch.CurrentTime)
             {
-                timeQuery = String.Format(" AND {0} = 1", PropertyUtil.GetName<Entities.DynEntityContextAttributesValues>(e => e.IsActive));
+                timeQuery = String.Format(" AND {0} = 1",
+                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.IsActive));
             }
             else if (time == TimePeriodForSearch.History)
             {
-                timeQuery = String.Format(" AND {0} = 0", PropertyUtil.GetName<Entities.DynEntityContextAttributesValues>(e => e.IsActive));
+                timeQuery = String.Format(" AND {0} = 0",
+                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.IsActive));
             }
 
             parameters = new List<SqlParameter>();
 
             var chainQuery = new StringBuilder();
-            int i = 0;
-            foreach (AttributeElement chain in elements)
+            var i = 0;
+            foreach (var chain in elements)
             {
-                SearchTerm t = BaseOperator.GetOperatorByClassName(chain.ServiceMethod).GenerateForContext(chain);
+                var t = BaseOperator.GetOperatorByClassName(chain.ServiceMethod).GenerateForContext(chain);
 
                 parameters.Add(t.Parameter);
 
                 chainQuery.Append(chain.StartBrackets);
                 chainQuery.Append(selectStatement);
-                chainQuery.AppendFormat("( [{2}] = {0} AND {1} )", chain.ContextUID, t.CommandText, PropertyUtil.GetName<Entities.DynEntityContextAttributesValues>(e => e.ContextId));
+                chainQuery.AppendFormat("( [{2}] = {0} AND {1} )", chain.ContextUID, t.CommandText,
+                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.ContextId));
                 chainQuery.Append(chain.EndBrackets);
 
                 if (i != elements.Count - 1)
@@ -348,9 +411,10 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="elements"></param>
         /// <param name="period"></param>
         /// <returns></returns>
-        private static string _getWhereStatement(List<AttributeElement> elements, TimePeriodForSearch period, string tableName, out List<SqlParameter> parameters, bool skipBrackets = false)
+        private static string _getWhereStatement(List<AttributeElement> elements, TimePeriodForSearch period,
+            string tableName, out List<SqlParameter> parameters, bool skipBrackets = false)
         {
-            string query = string.Empty;
+            var query = string.Empty;
             parameters = new List<SqlParameter>();
 
             if (elements.Count > 0)
@@ -358,9 +422,9 @@ namespace AppFramework.Core.Classes.SearchEngine
                 query = " WHERE ";
                 query += "( ";
 
-                for (int i = 0; i < elements.Count; i++)
+                for (var i = 0; i < elements.Count; i++)
                 {
-                    SearchTerm t = elements[i].GetSearchTerm(tableName);
+                    var t = elements[i].GetSearchTerm(tableName);
 
                     switch (elements[i].ElementType)
                     {
@@ -386,7 +450,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                             t.Parameter.Value = fvalue;
                             break;
                         case Enumerators.DataType.Bool:
-                            bool bValue = false;
+                            var bValue = false;
                             if (elements[i].Value.ToLower() == "true" || elements[i].Value == "1")
                             {
                                 bValue = true;
@@ -451,7 +515,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         private static bool ChainIsDynamicList(AttributeElement element)
         {
             return element.ElementType == Enumerators.DataType.DynList ||
-                        element.ElementType == Enumerators.DataType.DynLists;
+                   element.ElementType == Enumerators.DataType.DynLists;
         }
     }
 }

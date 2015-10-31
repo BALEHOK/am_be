@@ -252,6 +252,7 @@
     <Compile Include="DTO\PlainAssetDTO.cs" />
     <Compile Include="Exceptions\AssetValidationException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Exceptions\InvalidFormulaException.cs" />
     <Compile Include="Helpers\TypesHelper.cs" />
     <Compile Include="Classes\ActionParameters.cs" />
     <Compile Include="Classes\ApplicationSettings.cs" />
@@ -563,9 +564,7 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

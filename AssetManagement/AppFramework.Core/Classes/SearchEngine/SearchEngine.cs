@@ -56,8 +56,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             if (HttpContext.Current.Application["SearchId"] == null)
             {
-                var unitOfWork = new UnitOfWork();
-                HttpContext.Current.Application["SearchId"] = unitOfWork.GetMaxSearchId();
+                HttpContext.Current.Application["SearchId"] = _unitOfWork.GetMaxSearchId();
             }
 
             var searchId = (int) HttpContext.Current.Application["SearchId"] == int.MaxValue
@@ -76,8 +75,6 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <summary>
         /// Search by keywords, taxonomies
         /// </summary>
-        /// <param name="querystring"></param>
-        /// <returns></returns>
         public IEnumerable<IIndexEntity> FindByKeywords(
             string querystring,
             long searchId,
@@ -205,19 +202,9 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Find by Type
         /// </summary>
         /// <returns></returns>
-        public List<IIndexEntity> FindByTypeContext(
-            long searchId,
-            long userId,
-            long? assetTypeUid,
-            IEnumerable<AttributeElement> elements,
-            string configsIds = "",
-            string taxonomyItemsIds = "",
-            TimePeriodForSearch time = TimePeriodForSearch.CurrentTime,
-            Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance,
-            int pageNumber = 1,
-            int pageSize = 20)
+        public List<IIndexEntity> FindByType(long searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20)
         {
-            var result = _typeSearch.FindByTypeContext(searchId, userId, assetTypeUid, elements, configsIds,
+            var result = _typeSearch.FindByType(searchId, userId, assetTypeUid, elements, configsIds,
                 taxonomyItemsIds, time, order, pageNumber, pageSize);
             return result;
         }
