@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
@@ -42,24 +43,34 @@ namespace AppFramework.Core.Validation
             if (string.IsNullOrEmpty(value.ToString()))
                 return result.IsValid;
 
+
+            long assetId;
+            long assetConfigId;
             if (_attribute.ParentAsset != null)
             {
-                result.IsValid = _unitOfWork.IsValueUnique(_attribute.ParentAsset.GetConfiguration().DBTableName,
-                    _attribute.Configuration.DBTableFieldName,
-                    value.ToString(),
-                    _attribute.ParentAsset.ID);
+                assetId = _attribute.ParentAsset.ID;
+                assetConfigId = _attribute.ParentAsset.DynEntityConfigUid;
             }
             else
             {
-                var count =
-                    _unitOfWork.SqlProvider.ExecuteScalar(
-                    string.Format("SELECT COUNT(*) FROM [{1}] WHERE " + GetEqualityTest(value),
-                            _attribute.Configuration.DBTableFieldName,
-                            _attribute.Configuration.Parent.DBTableName),
-                        new IDataParameter[] {new SqlParameter("@value", value)});
-
-                result.IsValid = int.Parse(count.ToString()) == 0;
+                assetId = 0;
+                assetConfigId = 0;
             }
+
+            var count =
+                _unitOfWork.SqlProvider.ExecuteScalar(
+                string.Format("SELECT COUNT(*) FROM [{1}] WHERE ActiveVersion = 1 AND " + GetEqualityTest(value) + " AND NOT ([DynEntityId] = @id AND [DynEntityConfigUid] = @config)",
+                        _attribute.Configuration.DBTableFieldName,
+                        _attribute.Configuration.Parent.DBTableName),
+                    new IDataParameter[] 
+                    { 
+                        new SqlParameter("@value", value), 
+                        new SqlParameter("@id", assetId), 
+                        new SqlParameter("@config", assetConfigId) 
+                    });
+            
+
+            result.IsValid = int.Parse(count.ToString()) == 0;
 
             result.Message = !result.IsValid
                 ? string.Format(
@@ -121,7 +132,7 @@ namespace AppFramework.Core.Validation
         private string GetEqualityTest(object value)
         {
             var equalityTest = CommonEqualityTest;
-            var isFloatValue = _attribute.Configuration.Name == "float";
+            var isFloatValue = _attribute.Configuration.DataTypeEnum == Enumerators.DataType.Float;
             if (isFloatValue)
             {
                 equalityTest = Math.Abs((float) value) < 1
