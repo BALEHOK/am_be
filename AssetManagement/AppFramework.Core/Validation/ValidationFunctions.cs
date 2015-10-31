@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
@@ -131,7 +132,7 @@ namespace AppFramework.Core.Validation
         private string GetEqualityTest(object value)
         {
             var equalityTest = CommonEqualityTest;
-            var isFloatValue = _attribute.Configuration.Name == "float";
+            var isFloatValue = _attribute.Configuration.DataTypeEnum == Enumerators.DataType.Float;
             if (isFloatValue)
             {
                 equalityTest = Math.Abs((float) value) < 1
