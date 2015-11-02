@@ -1,4 +1,5 @@
 using AssetManager.Infrastructure.Models.TypeModels;
+using AssetManager.WebApi.JsonConverters;
 using Newtonsoft.Json;
 
 namespace AssetManager.WebApi.Models.Search
@@ -27,7 +28,8 @@ namespace AssetManager.WebApi.Models.Search
 
         public ParenthesisType Parenthesis { get; set; }
 
-        public string Value { get; set; }
+        [JsonConverter(typeof(AttributeFilterValueConverter))]
+        public IdNamePair<string, string> Value { get; set; }
 
         public AttributeTypeModel ReferenceAttrib { get; set; }
     }

@@ -6,6 +6,7 @@ using AppFramework.Core.ConstantsEnumerators;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.WebApi;
 using AppFramework.ConstantsEnumerators;
+using System.Threading.Tasks;
 
 namespace AssetManagerAdmin.Model
 {
@@ -28,6 +29,12 @@ namespace AssetManagerAdmin.Model
 
             api.GetTypesInfo().ContinueWith(task =>
             {
+                if (task.Exception != null)
+                {
+                    callback(null, task.Exception);
+                    return;
+                }
+
                 var result = task.Result;
 
                 // get a list of relation attributes

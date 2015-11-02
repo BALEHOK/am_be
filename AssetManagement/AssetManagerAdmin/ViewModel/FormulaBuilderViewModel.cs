@@ -598,6 +598,12 @@ namespace AssetManagerAdmin.ViewModel
         {
             _dataService.GetTypesInfo(_server, (model, exception) =>
             {
+                if (exception != null)
+                {
+                    MessengerInstance.Send(new StatusMessage(exception));
+                    return;
+                }
+
                 // do not modify original collection
                 DataProvider.AssetTypes = model.ActiveTypes.ToList();
 

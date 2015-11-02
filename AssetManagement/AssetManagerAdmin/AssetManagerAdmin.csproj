@@ -113,6 +113,7 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="Converters\BooleanToFontWeightConverter.cs" />
     <Compile Include="Converters\FileNameConverter.cs" />
+    <Compile Include="DialogService.cs" />
     <Compile Include="FormulaBuilder\Expressions\AssetsDataProvider.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\ValidationFieldValueEntry.cs" />
     <Compile Include="FormulaBuilder\Expressions\IEntryFactoryDataProvider.cs" />
@@ -134,6 +135,8 @@
       <DependentUpon>PlaceHolderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="IDialogService.cs" />
+    <Compile Include="Model\StatusMessage.cs" />
     <Compile Include="Model\ValidationButton.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\AssetFieldNameEntry.cs" />

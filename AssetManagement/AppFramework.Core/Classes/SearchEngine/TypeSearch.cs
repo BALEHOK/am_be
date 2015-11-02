@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using AppFramework.ConstantsEnumerators;
@@ -431,8 +432,15 @@ namespace AppFramework.Core.Classes.SearchEngine
                         case Enumerators.DataType.CurrentDate:
                         case Enumerators.DataType.DateTime:
                             DateTime time;
-                            DateTime.TryParse(elements[i].Value, out time);
-                            t.Parameter.Value = time;
+                            if (DateTime.TryParse(elements[i].Value, out time))
+                            {
+                                t.Parameter.Value = time;
+                            }
+                            else
+                            {
+                                t.Parameter.Value = SqlDateTime.MinValue.Value;
+                            }
+                            
                             break;
                         case Enumerators.DataType.Int:
                             int intvalue;
@@ -469,7 +477,11 @@ namespace AppFramework.Core.Classes.SearchEngine
                             break;
                     }
 
-                    parameters.Add(t.Parameter);
+                    if (t.Parameter != null)
+                    {
+                        parameters.Add(t.Parameter);
+                    }
+
                     query += skipBrackets ? string.Empty : elements[i].StartBrackets;
                     query += t.CommandText;
                     query += skipBrackets ? string.Empty : elements[i].EndBrackets;

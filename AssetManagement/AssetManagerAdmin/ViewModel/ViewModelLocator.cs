@@ -41,6 +41,7 @@ namespace AssetManagerAdmin.ViewModel
 
             SimpleIoc.Default.Register<IAssetsApiManager, AssetsApiManager>();
             SimpleIoc.Default.Register<IDataService, DataService>();
+            SimpleIoc.Default.Register<IDialogService, DialogService>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<WebAdminViewModel>();
             SimpleIoc.Default.Register<FormulaBuilderViewModel>();

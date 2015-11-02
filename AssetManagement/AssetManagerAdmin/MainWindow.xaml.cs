@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using AssetManagerAdmin.ViewModel;
 
 namespace AssetManagerAdmin
@@ -15,6 +16,6 @@ namespace AssetManagerAdmin
         {
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();            
-        }
+        }        
     }
 }

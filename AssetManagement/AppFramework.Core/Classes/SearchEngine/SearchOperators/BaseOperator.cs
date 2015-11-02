@@ -1,37 +1,47 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes.SearchEngine.Interface;
+using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
+
 namespace AppFramework.Core.Classes.SearchEngine.SearchOperators
 {
-    using System;
-    using System.Data.SqlClient;
-    using System.Globalization;
-    using AppFramework.ConstantsEnumerators;
-    using AppFramework.Core.Classes.SearchEngine.Interface;
-    using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
-
     public abstract class BaseOperator : ISearchOperator
     {
         public abstract string GetOperator();
 
         public virtual SearchTerm Generate(string value, string fieldName)
         {
-            SearchTerm term = new SearchTerm();
-            if (!string.IsNullOrEmpty(value))
+            var term = new SearchTerm();
+
+            var paramName = string.Format("@parameter{0}", GetHashCode());
+            term.CommandText = string.Format("{0} {1} {2}",
+                fieldName.Contains("[") ? fieldName : string.Format("[{0}]", fieldName),
+                GetOperator(),
+                paramName);
+            if (string.IsNullOrEmpty(value))
             {
-                string paramName = string.Format("@parameter{0}", GetHashCode());
-                term.CommandText = string.Format("{0} {1} {2}",
-                    fieldName.Contains("[") ? fieldName : string.Format("[{0}]", fieldName),
-                    GetOperator(),
-                    paramName);
+                // set size = 4000, beacause later empty string value could be overidden by default sql date for example
+                // and its length is more than 1. bad design
+                term.Parameter = new SqlParameter(paramName, SqlDbType.NVarChar, 4000);
+                term.Parameter.Value = string.Empty;
+            }
+            else
+            {
                 term.Parameter = new SqlParameter(paramName, value);
             }
+
             return term;
         }
 
         public virtual SearchTerm GenerateForContext(AttributeElement chain)
         {
-            string paramName = string.Format("{0}", string.Format("@parameter{0}", GetHashCode()));
-            SearchTerm term = new SearchTerm();
+            var paramName = string.Format("{0}", string.Format("@parameter{0}", GetHashCode()));
+            var term = new SearchTerm();
             term.Parameter = new SqlParameter(paramName, chain.Value);
-            string leftPart = " StringValue ";
+            var leftPart = " StringValue ";
 
             switch (chain.ElementType)
             {
@@ -60,7 +70,8 @@ namespace AppFramework.Core.Classes.SearchEngine.SearchOperators
                 case Enumerators.DataType.Float:
                     leftPart = " NumericValue ";
                     double result;
-                    if (double.TryParse(chain.Value, NumberStyles.Float, ApplicationSettings.DisplayCultureInfo, out result))
+                    if (double.TryParse(chain.Value, NumberStyles.Float, ApplicationSettings.DisplayCultureInfo,
+                        out result))
                         term.Parameter = new SqlParameter(paramName, result);
                     break;
                 case Enumerators.DataType.DateTime:
@@ -69,7 +80,8 @@ namespace AppFramework.Core.Classes.SearchEngine.SearchOperators
                     {
                         DateTime dt;
 
-                        if (DateTime.TryParse(chain.Value, ApplicationSettings.DisplayCultureInfo.DateTimeFormat, DateTimeStyles.None, out dt))
+                        if (DateTime.TryParse(chain.Value, ApplicationSettings.DisplayCultureInfo.DateTimeFormat,
+                            DateTimeStyles.None, out dt))
                         {
                             if (dt.TimeOfDay.TotalSeconds == 0)
                             {
@@ -91,16 +103,16 @@ namespace AppFramework.Core.Classes.SearchEngine.SearchOperators
 
         public static ISearchOperator GetOperatorByClassName(string className)
         {
-            Type opType = Type.GetType(
+            var opType = Type.GetType(
                 string.Format("AppFramework.Core.Classes.SearchEngine.SearchOperators.{0}", className)
-            );
+                );
 
             if (opType == null)
             {
                 throw new Exception(string.Format("Search operator {0} not implemented", className));
             }
 
-            ISearchOperator op = Activator.CreateInstance(opType) as ISearchOperator;
+            var op = Activator.CreateInstance(opType) as ISearchOperator;
 
             if (op == null)
             {

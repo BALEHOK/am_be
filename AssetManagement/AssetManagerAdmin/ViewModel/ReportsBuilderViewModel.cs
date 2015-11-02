@@ -18,8 +18,6 @@ namespace AssetManagerAdmin.ViewModel
         private bool _isPublishing;
         private List<CustomReportModel> _allReports;
 
-        #region Properties
-
         public const string AssetTypesListPropertyName = "AssetTypesList";
         private List<AssetTypeModel> _assetTypesList;
 
@@ -104,10 +102,6 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        #endregion
-
-        #region Commands
-
         private RelayCommand _selectReportFileCommand;
 
         public RelayCommand SelectReportFileCommand
@@ -176,7 +170,7 @@ namespace AssetManagerAdmin.ViewModel
                        (_deleteReportCommand =
                            new RelayCommand<CustomReportModel>(ExecuteDeleteReportCommand, model => true));
             }
-        }
+        }               
 
         private void ExecuteDeleteReportCommand(CustomReportModel reportModel)
         {
@@ -187,8 +181,6 @@ namespace AssetManagerAdmin.ViewModel
                 RaisePropertyChanged(ReportAssetTypePropertyName);
             });
         }
-
-        #endregion
 
         protected override void RaisePropertyChanged(string propertyName)
         {
@@ -211,18 +203,38 @@ namespace AssetManagerAdmin.ViewModel
             {
                 _server = server.ApiUrl;
                 var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
-                api.GetReportsList().ContinueWith(task => { _allReports = task.Result; });
+                api.GetReportsList()
+                .ContinueWith(task => 
+                {
+                    if (task.Exception != null)
+                    {
+                        MessengerInstance.Send(
+                            new StatusMessage(task.Exception));
+                    }
+                    else
+                    {
+                        _allReports = task.Result;
+                    }
+                });
 
                 _dataService.GetTypesInfo(_server, (typesInfo, e) =>
                 {
-                    // do not modify original collection
-                    AssetTypesList = typesInfo.ActiveTypes.ToList();
-                    AssetTypesList.Insert(0, new AssetTypeModel
+                    if (e != null)
                     {
-                        Id = -1,
-                        DisplayName = "[All]"
-                    });
-                    ReportAssetType = AssetTypesList[0];
+                        MessengerInstance.Send(
+                            new StatusMessage(e));
+                    }
+                    else
+                    {
+                        // do not modify original collection
+                        AssetTypesList = typesInfo.ActiveTypes.ToList();
+                        AssetTypesList.Insert(0, new AssetTypeModel
+                        {
+                            Id = -1,
+                            DisplayName = "[All]"
+                        });
+                        ReportAssetType = AssetTypesList[0];
+                    }
                 });
             });
         }

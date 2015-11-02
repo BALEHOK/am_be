@@ -1385,7 +1385,6 @@
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
@@ -1525,7 +1524,6 @@
     </Compile>
     <Compile Include="Asset\History.aspx.cs">
       <DependentUpon>History.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\History.aspx.designer.cs">
       <DependentUpon>History.aspx</DependentUpon>

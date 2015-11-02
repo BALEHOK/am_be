@@ -133,14 +133,21 @@ namespace AssetManager.WebApi.Models.Search
             }
             currentAttributeElement.ElementType = attributeDataType;
 
+            if (currentFilter.Value == null || currentFilter.Value.Id == null)
+            {
+                currentAttributeElement.Value = string.Empty;
+                return;
+            }
+
             if (IsDateAttributeType(attributeDataType))
             {
                 DateTime dt;
 
-                if (!DateTime.TryParse(currentFilter.Value,
-                    ApplicationSettings.DisplayCultureInfo.DateTimeFormat,
-                    DateTimeStyles.None, out dt))
+                if (!DateTime.TryParse(currentFilter.Value.Id,
+                        ApplicationSettings.DisplayCultureInfo.DateTimeFormat,
+                        DateTimeStyles.None, out dt))
                 {
+                    currentAttributeElement.Value = string.Empty;
                     return;
                 }
 
@@ -156,7 +163,7 @@ namespace AssetManager.WebApi.Models.Search
             }
             else
             {
-                currentAttributeElement.Value = currentFilter.Value;
+                currentAttributeElement.Value = currentFilter.Value.Id;
             }
         }
 

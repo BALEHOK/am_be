@@ -18,7 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />            
         </ResourceDictionary>
-    </Window.Resources>
+    </Window.Resources>   
 
     <Grid x:Name="LayoutRoot">
         <Grid.ColumnDefinitions>

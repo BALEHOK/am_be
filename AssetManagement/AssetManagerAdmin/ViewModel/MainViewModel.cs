@@ -9,6 +9,8 @@ using AssetManagerAdmin.Model;
 using AssetManagerAdmin.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Practices.ServiceLocation;
 
 namespace AssetManagerAdmin.ViewModel
 {
@@ -29,6 +31,14 @@ namespace AssetManagerAdmin.ViewModel
         private readonly Dictionary<int, ContentControl> _views;
 
         public bool IsActive { get; set; }
+
+        public IDialogService DialogService
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<IDialogService>();
+            }
+        }
 
         #region Properties
 
@@ -257,7 +267,7 @@ namespace AssetManagerAdmin.ViewModel
                 // {0, new WebAdminView()},
                 {1, new FormulaBuilderView()},
                 {2, new ValidationBuilderView()},
-                {3,new ReportsBuilderView()} 
+                {3, new ReportsBuilderView()} 
             };
 
             _dataService = dataService;
@@ -283,6 +293,14 @@ namespace AssetManagerAdmin.ViewModel
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, server =>
             {
                 CurrentView = new LoginView();
+            });
+
+            MessengerInstance.Register<StatusMessage>(this, msg => 
+            {
+                DialogService.ShowMessage(
+                    msg.Message,
+                    msg.Title,
+                    msg.Status);
             });
 
             IsViewsMenuEnabled = false;
