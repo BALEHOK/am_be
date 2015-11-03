@@ -49,10 +49,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RazorEngine, Version=3.7.2.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.7.2\lib\net45\RazorEngine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -118,11 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RecoverPasswordController.cs" />
-    <Compile Include="Email\AuthMailService.cs" />
-    <Compile Include="Email\IMailService.cs" />
-    <Compile Include="Email\IViewLoader.cs" />
-    <Compile Include="Email\Models\RecoverPasswordEmailModel.cs" />
-    <Compile Include="Email\ViewLoader.cs" />
     <Compile Include="Models\RecoverPasswordModel.cs" />
     <Compile Include="Models\RecoverPasswordPageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -131,7 +122,6 @@
   <ItemGroup>
     <Content Include="Content\css\am-custom.css" />
     <Content Include="Content\images\app-logo_transparent.png" />
-    <Content Include="Email\Templates\RecoverPasswordEmail.cshtml" />
     <Content Include="favicon.ico" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -168,6 +158,14 @@
     <ProjectReference Include="..\AppFramework.Core\AppFramework.Core.csproj">
       <Project>{890bdd21-2741-4028-9d20-9102d51ad64d}</Project>
       <Name>AppFramework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Email\AppFramework.Email.csproj">
+      <Project>{f37064e9-580c-48a0-835e-280f6b0cf87c}</Project>
+      <Name>AppFramework.Email</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AssetManager.Infrastructure\AssetManager.Infrastructure.csproj">
+      <Project>{87d76790-81cc-45bb-9f7e-b3cdea2564c0}</Project>
+      <Name>AssetManager.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

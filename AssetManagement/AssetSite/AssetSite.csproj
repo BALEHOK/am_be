@@ -591,7 +591,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Config.Files\reservedwords.txt" />
-    <Content Include="Contact.aspx" />
     <Content Include="Controls\AssetDropDownListEx.ascx" />
     <Content Include="Controls\AssetsList.ascx" />
     <Content Include="Controls\AssetTemplates.ascx" />
@@ -1144,13 +1143,6 @@
     </Compile>
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="Controls\AssetAttributePanels.ascx.cs">
       <DependentUpon>AssetAttributePanels.ascx</DependentUpon>

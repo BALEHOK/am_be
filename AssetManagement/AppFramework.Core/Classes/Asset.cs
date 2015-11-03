@@ -64,7 +64,7 @@ namespace AppFramework.Core.Classes
         {
             get
             {
-                AssetAttribute attr = this.Attributes.SingleOrDefault(a => a.GetConfiguration().Name == AttributeNames.Name);
+                var attr = this[AttributeNames.Name];
                 if (attr != null)
                     return attr.Value;
                 else
@@ -72,7 +72,7 @@ namespace AppFramework.Core.Classes
             }
             set
             {
-                AssetAttribute attr = this.Attributes.SingleOrDefault(a => a.GetConfiguration().Name == AttributeNames.Name);
+                var attr = this[AttributeNames.Name];
                 if (attr != null)
                     attr.Value = value;
             }
@@ -208,6 +208,10 @@ namespace AppFramework.Core.Classes
             {
                 var revision = this[AttributeNames.Revision].Value;
                 return int.Parse(revision);
+            }
+            set
+            {
+                this[AttributeNames.Revision].Value = value.ToString();
             }
         }
 

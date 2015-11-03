@@ -7,11 +7,7 @@ namespace AssetManager.Infrastructure.Models
 {
     public class AssetRevisionModel
     {
-        //public string AssetUid { get; set; }
-
         public long AssetId { get; set; }
-
-        //public string AssetTypeUid { get; set; }
 
         public long AssetTypeId { get; set; }
 

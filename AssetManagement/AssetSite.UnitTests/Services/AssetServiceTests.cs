@@ -22,43 +22,24 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions;
 using AppFramework.UnitTests.Common.Fixtures;
+using AssetManager.Infrastructure;
 
 namespace AssetSite.UnitTests.Services
 {
     public class AssetServiceTests
     {
         [Theory, AutoDomainData]
-        public void AssetService_GetAsset_ReturnsModel(
-            long assetTypeId,
-            long assetId,
-            [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
-            [Frozen]Mock<IAssetsService> assetsCoreServiceMock,
-            [Frozen]Mock<IAuthenticationService> authServiceMock,
+        public void ModelFactory_GetAssetModel_ReturnsModel(
             IUnitOfWork unitOfWork,
-            AssetService sut)
+            ModelFactory sut)
         {
             //Arrange
             var fixture = new Fixture() { OmitAutoProperties = true }
                 .Customize(new AssetCustomization(unitOfWork))
                 .Customize(new AssetTypeCustomization(unitOfWork));
-
-            var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
-            var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
-
-            assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
-                .Returns(assetType);
-
-            assetsCoreServiceMock
-                .Setup(s => s.GetAssetById(assetId, assetType))
-                .Returns(asset);
-
-            authServiceMock
-                .Setup(s => s.GetPermission(asset))
-                .Returns(Permission.RWRW);
-
+            var asset = fixture.Create<Asset>();
             //Act
-            var result = sut.GetAsset(assetTypeId, assetId);
+            var result = sut.GetAssetModel(asset, Permission.RWRW);
             //Assert
             Assert.NotNull(result);
             Assert.True(result.Editable);
@@ -100,8 +81,6 @@ namespace AssetSite.UnitTests.Services
             var result = sut.GetAsset(assetTypeId, assetId, revision);
             //Assert
             Assert.NotNull(result);
-            Assert.True(result.Editable);
-            Assert.False(result.Deletable);
         }
 
         [Theory, AutoDomainData]
@@ -139,8 +118,6 @@ namespace AssetSite.UnitTests.Services
             var result = sut.GetAsset(assetTypeId, assetId, null, uid);
             //Assert
             Assert.NotNull(result);
-            Assert.True(result.Editable);
-            Assert.False(result.Deletable);
         }
 
         [Theory, AutoDomainData]
@@ -295,19 +272,16 @@ namespace AssetSite.UnitTests.Services
             var fixture = new Fixture() { OmitAutoProperties = true }
                 .Customize(new AssetCustomization(unitOfWork))
                 .Customize(new AssetTypeCustomization(unitOfWork));
-            var userAssetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
+            var userAssetType = fixture.Create<AssetType>();
 
             assetTypeRepoMock
                 .Setup(r => r.GetPredefinedAssetType(PredefinedEntity.User))
                 .Returns(userAssetType);
 
-            var historyAssets = fixture.Create<List<AppFramework.Core.Classes.Asset>>();
-            historyAssets[0][AttributeNames.Revision].Value = "1";
-            historyAssets[1][AttributeNames.Revision].Value = "2";
-            historyAssets[2][AttributeNames.Revision].Value = "3";
-
-            historyAssets[0][AttributeNames.Name].Value = "asset 1";
-            historyAssets[1][AttributeNames.Name].Value = "asset 1-1";
+            var historyAssets = fixture.Create<List<Asset>>();
+            historyAssets[0].Revision = 1;
+            historyAssets[1].Revision = 2;
+            historyAssets[2].Revision = 3;
 
             assetsCoreServiceMock
                 .Setup(s => s.GetHistoryAssets(assetTypeId, assetId)) 
@@ -317,44 +291,7 @@ namespace AssetSite.UnitTests.Services
             var result = sut.GetAssetHistory(assetTypeId, assetId);
             // Assert
             Assert.NotEmpty(result.Revisions);
-            Assert.NotEqual(
-                result.Revisions[0].RevisionNumber, 
-                result.Revisions[1].RevisionNumber);
-            Assert.Empty(result.Revisions[0].ChangedValues);
-            Assert.Equal(1, result.Revisions[1].ChangedValues.Count);
-        }
-
-        [Theory, AutoDomainData]
-        public void AssetService_SaveAsset_ConvertsModelToAsset(
-            AssetModel model,
-            long userId,
-            IUnitOfWork unitOfWork,
-            [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
-            [Frozen]Mock<IAssetsService> assetsServiceMock,
-            AssetService sut)
-        {
-            // Arrange
-            model.Screens.First().IsDefault = true;
-            var fixture = new Fixture() { OmitAutoProperties = true }
-                .Customize(new AssetCustomization(unitOfWork))
-                .Customize(new AssetTypeCustomization(unitOfWork));
-
-            var assetType = fixture.Create<AssetType>();
-            var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
-            asset.Configuration = assetType;
-
-            assetTypeRepositoryMock
-                .Setup(r => r.GetById(model.AssetTypeId))
-                .Returns(assetType);
-
-            assetsServiceMock
-               .Setup(s => s.GetAssetById(model.Id, assetType))
-               .Returns(asset);
-
-            // Act 
-            sut.SaveAsset(model, userId);
-            // Assert
-            assetsServiceMock.Verify(s => s.InsertAsset(asset));
+            Assert.Equal(3, result.Revisions.Count);
         }
 
         [Theory, AutoDomainData]
@@ -393,15 +330,13 @@ namespace AssetSite.UnitTests.Services
 
         }
 
-        [Theory, AutoDomainData]
+        [Theory(Skip = "TBD"), AutoDomainData]
         public void AssetService_SaveAssetWithNewDocument_CreatesRelatedDocumentAsset(
             AssetService sut)
         {
             // Arrange
             // Act 
-            //var result = sut.SaveAsset();
             // Assert
-            throw new NotImplementedException("");
         }
     }
 }

@@ -2,13 +2,13 @@ using System;
 using Microsoft.Practices.Unity;
 using AppFramework.DataProxy;
 using AppFramework.Core.AC.Providers;
-using AssetManager.Infrastructure.Services;
-using AssetManager.Infrastructure;
 using AppFramework.Core;
 using System.Web;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Reports;
 using AssetManager.WebApi.Models.Search;
+using AppFramework.Email;
+using AssetManager.Infrastructure;
 
 namespace AssetManager.WebApi
 {
@@ -17,7 +17,6 @@ namespace AssetManager.WebApi
     /// </summary>
     public class UnityConfig
     {
-        #region Unity Container
         private static readonly Lazy<IUnityContainer> Container = new Lazy<IUnityContainer>(() =>
         {
             var container = new UnityContainer();
@@ -32,7 +31,6 @@ namespace AssetManager.WebApi
         {
             return Container.Value;
         }
-        #endregion
 
         /// <summary>Registers the type mappings with the Unity container.</summary>
         /// <param name="container">The unity container to configure.</param>
@@ -40,33 +38,20 @@ namespace AssetManager.WebApi
         /// change the defaults), as Unity allows resolving a concrete type even if it was not previously registered.</remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
-            // NOTE: To load from web.config uncomment the line below. Make sure to add a Microsoft.Practices.Unity.Configuration to the using statements.
-            // container.LoadConfiguration();
-
             container
                 .RegisterType<IUnitOfWork, UnitOfWork>(
                     new PerRequestLifetimeManager(),
                     new InjectionFactory(c => new UnitOfWork()))
-                .RegisterType<IAuthenticationStorageProvider,
-                    InMemoryAuthenticationStorageProvider>()
-                .RegisterType<IBarcodeService, BarcodeService>()
-                .RegisterType<IAssetService, AssetService>()
-                .RegisterType<IAssetTypeService, AssetTypeService>()
+                // TODO: next 3 registrations could be moved to CommonConfiguration (?)
+                .RegisterType<IAuthenticationStorageProvider, InMemoryAuthenticationStorageProvider>()
                 .RegisterType<ISearchService, SearchEngine>()
-                .RegisterType<IDataTypeService, DataTypeService>()
                 .RegisterType<ITypeSearch, TypeSearch>()
-                .RegisterType<IExportService, ExportService>()
-                .RegisterType<IFileService, FileService>()
-                .RegisterType<IEnvironmentSettings, EnvironmentSettings>()
-                .RegisterType<ITaxonomyService, TaxonomyService>()
-                .RegisterType<IDocumentService, DocumentService>()
-                .RegisterType<IModelFactory, ModelFactory>()
-                .RegisterType<IHistoryService, HistoryService>()
-                .RegisterType<ITasksService, TasksService>()
                 .RegisterType<IAdvanceSearchModelMapper, AdvanceSearchModelMapper>()
+                .AddNewExtension<InfrastructureConfiguration>()
+                .AddNewExtension<EmailConfiguration>()
                 .AddNewExtension<CommonConfiguration>()
-                .RegisterType<IHttpHandler, FileHandler>("/FileHandler.ashx")
-                .AddNewExtension<ReportsConfiguration>();
+                .AddNewExtension<ReportsConfiguration>()
+                .RegisterType<IHttpHandler, FileHandler>("/FileHandler.ashx");
         }
     }
 }

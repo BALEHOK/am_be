@@ -1,8 +1,9 @@
 ﻿using System.Web.Mvc;
 using AppFramework.Auth;
 using AppFramework.Auth.Users;
-using AssetManager.Auth.Email;
+using AppFramework.Email.Services;
 using AssetManager.Auth.Models;
+using AppFramework.Email;
 
 namespace AssetManager.Auth.Controllers
 {
@@ -10,12 +11,12 @@ namespace AssetManager.Auth.Controllers
     public class RecoverPasswordController : Controller
     {
         private readonly IUserManager _userManager;
-        private readonly IMailService _mailService;
+        private readonly IEmailService _mailService;
 
         public RecoverPasswordController()
         {
             _userManager = new UserManager();
-            _mailService = new AuthMailService();
+            _mailService = new EmailService(new ViewLoader());
         }
 
         // GET: RecoverPassword
@@ -51,15 +52,12 @@ namespace AssetManager.Auth.Controllers
                 return View(pageModel);
             }
 
-            var newPassword = user.ResetPassword();
+            _mailService.SendForgotPasswordMail(
+                user.Email, 
+                model.Username,
+                user.ResetPassword());
 
-            if (_mailService.SendForgotPasswordMail(user.Email, model.Username, newPassword))
-            {
-                return View("SuccessfulRecover", pageModel);
-            }
-
-            pageModel.Error = "Failed to send email to user specified";
-            return View(pageModel);
+            return View("SuccessfulRecover", pageModel);
         }
 
         private string GetLoginPageUrl()

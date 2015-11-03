@@ -115,6 +115,11 @@ namespace AppFramework.Core.Classes.SearchEngine
             List<SqlParameter> parameters;
 
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
+            if (!type.IsActive)
+            {
+                return new List<IIndexEntity>(0);
+            }
+
             var searchQuery = _generateTypeSearchQuery(searchId, type, elements, time, out parameters);
 
             return FindByTypeContext(searchId, userId, searchQuery, parameters, configsIds, taxonomyItemsIds, time,
@@ -139,6 +144,11 @@ namespace AppFramework.Core.Classes.SearchEngine
             if (assetTypeUid.HasValue)
             {
                 var type = _assetTypeRepository.GetByUid(assetTypeUid.Value);
+                if (!type.IsActive)
+                {
+                    return new List<IIndexEntity>(0);
+                }
+
                 searchQuery = _generateTypeSearchQuery(searchId, type,
                     elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(), time,
                     out parameters);

@@ -309,6 +309,7 @@
     <Compile Include="Controllers\Api\AssetTypeController.cs" />
     <Compile Include="Controllers\Api\AuthController.cs" />
     <Compile Include="Controllers\Api\BarcodeController.cs" />
+    <Compile Include="Controllers\Api\ContactsController.cs" />
     <Compile Include="Controllers\Api\CustomReportsController.cs" />
     <Compile Include="Controllers\Api\DataTypeController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
@@ -471,6 +472,10 @@
     <ProjectReference Include="..\AppFramework.DataProxy\AppFramework.DataProxy.csproj">
       <Project>{3b3dfa46-d697-40d8-81de-90eca111a546}</Project>
       <Name>AppFramework.DataProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Email\AppFramework.Email.csproj">
+      <Project>{f37064e9-580c-48a0-835e-280f6b0cf87c}</Project>
+      <Name>AppFramework.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\AppFramework.Entities\AppFramework.Entities.csproj">
       <Project>{658431c7-7442-46f1-81c8-7cc6744f7e46}</Project>

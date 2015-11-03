@@ -43,17 +43,12 @@ namespace AppFramework.Core.UnitTests
             string assetsIdentifier,
             string assetTypeName,
             IUnitOfWork unitOfWork,
-            IAssetsService assetsService,
-            IBatchJobManager manager,
-            IBatchActionFactory batchActionFactory,
-            IAssetTypeRepository assetTypeRepository,
+            [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
             BatchJobFactory sut)
         {
             // Arrange
-            var anonymousAssettype = new AssetType(new DynEntityConfig() { Name = assetTypeName },
-                unitOfWork);
-            var repository = new Mock<IAssetTypeRepository>();
-            repository.Setup(m => m.GetById(It.IsAny<long>())).Returns(anonymousAssettype);
+            assetTypeRepositoryMock.Setup(m => m.GetById(It.IsAny<long>()))
+                .Returns(new AssetType(new DynEntityConfig() { Name = assetTypeName }, unitOfWork));
             // Act
             var actualJob = sut.CreateSyncAssetsJob(
                 new SyncAssetsParameters(Guid.Empty, 0, 0, assetsIdentifier, "", ""));
@@ -69,17 +64,13 @@ namespace AppFramework.Core.UnitTests
             long assetTypeId,
             BindingInfo bindings,
             List<string> sheets,
-            [Frozen] IUnitOfWork unitOfWork,
-            IAssetsService assetsService,
-            IBatchJobManager manager,
-            IBatchActionFactory batchActionFactory,
+            IUnitOfWork unitOfWork,
+            [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
             BatchJobFactory sut)
         {
             // Arrange
-            var repository = new Mock<IAssetTypeRepository>();
-            repository.Setup(m => m.GetById(It.IsAny<long>()))
-                .Returns(new AssetType(new DynEntityConfig(), unitOfWork)
-                { Name = "Test" });
+            assetTypeRepositoryMock.Setup(m => m.GetById(It.IsAny<long>()))
+                .Returns(new AssetType(new DynEntityConfig { Name = "Test" }, unitOfWork));
             // Act
             var result = sut.CreateImportAssetsJob(currentUserId, filepath, assetTypeId, bindings, sheets, true);
             // Assert

@@ -525,7 +525,6 @@
     <Compile Include="Exceptions\FSObjectCreationException.cs" />
     <Compile Include="Helpers\Formatting.cs" />
     <Compile Include="Helpers\Randomization.cs" />
-    <Compile Include="Helpers\SmtpSettings.cs" />
     <Compile Include="Interceptors\TransactionAttribute.cs" />
     <Compile Include="Interceptors\TransactionInterceptor.cs" />
     <Compile Include="Interfaces\BaseEntity.cs" />
@@ -564,9 +563,7 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

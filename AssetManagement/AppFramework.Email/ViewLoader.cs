@@ -1,16 +1,20 @@
 ﻿using System.IO;
-using System.Web.Hosting;
 using RazorEngine;
 using RazorEngine.Templating;
+using System;
 
-namespace AssetManager.Auth.Email
+namespace AppFramework.Email
 {
     public class ViewLoader : IViewLoader
     {
         public string RenderViewToString(string viewPath,
             object model = null)
         {
-            var template = File.ReadAllText(HostingEnvironment.MapPath(viewPath));
+            var templatePath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, 
+                @"bin\EmailTemplates", 
+                viewPath);
+            var template = File.ReadAllText(templatePath);
             var result = Engine.Razor.RunCompile(template, viewPath, null, model);
             return result;
         }

@@ -1,0 +1,50 @@
+﻿@model AppFramework.Email.Models.ContactFormEmailModel
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        html {
+            height: 100%;
+            margin: 0px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Er is een bericht verstuurd via het Asset Manager contactformulier</h2>
+    <table width="100%">
+        <tr>
+            <td class="label">Subject:</td>
+            <td class="text">@Model.Subject</td>
+        </tr>
+        <tr>
+            <td class="label">Message:</td>
+            <td class="text">@Model.Message</td>
+        </tr>
+        <tr>
+            <td class="label">User Name:</td>
+            <td class="text">@Model.UserName</td>
+        </tr>
+        <tr>
+            <td class="label">Email:</td>
+            <td class="text"><a href="mailto:@Model.UserEmail">@Model.UserEmail</a></td>
+        </tr>
+    </table>
+    <p class="footer">
+        Yours sincerely,<br/>
+        Asset Manager<br/>
+        &copy;@DateTime.Now.Year
+    </p>
+</body>
+</html>

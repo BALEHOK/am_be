@@ -1,15 +1,10 @@
 ﻿using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.Classes.IE.Adapters;
 using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.Core.DAL;
-using AppFramework.DataProxy;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Web.Security;
 
 namespace AppFramework.Core.Classes
@@ -22,6 +17,22 @@ namespace AppFramework.Core.Classes
     public class AssetUser : MembershipUser
     {
         public long Id { get { return Asset.ID; } }
+
+        public string Email
+        {
+            get
+            {
+                return this[AttributeNames.Email].Value;
+            }
+        }
+
+        public string UserName
+        {
+            get
+            {
+                return this[AttributeNames.Name].Value;
+            }
+        }
 
         public bool IsAdministrator
         {

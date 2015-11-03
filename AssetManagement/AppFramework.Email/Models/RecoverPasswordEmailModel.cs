@@ -1,4 +1,4 @@
-﻿namespace AssetManager.Auth.Email.Models
+﻿namespace AppFramework.Email.Models
 {
     public class RecoverPasswordEmailModel
     {

@@ -268,7 +268,6 @@ namespace AssetManager.Infrastructure.Services
                              {
                                  RevisionNumber = revision[AttributeNames.Revision].Value,
                                  CreatedAt = revision[AttributeNames.UpdateDate].Value,
-                                 //AssetTypeUid = asset[AttributeNames.DynEntityConfigUid].Value,
                                  AssetTypeId = revision.Configuration.ID,
                                  AssetId = revision.ID,
                                  CreatedByUser = new PlainAssetDTO 

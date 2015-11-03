@@ -76,33 +76,5 @@ namespace AppFramework.Core.UnitTests
             Assert.NotNull(result);
             Assert.Equal(role.ToString(), result);
         }
-
-        [Theory]
-        [InlineAutoDomainData("anonymous string")]
-        public void AttributeValueFormatter_GetDynListValue_ReturnsDynListsNames(
-           string dynListValue,
-           long assetUid,
-           [Frozen]Mock<IDynamicListsService> dynamicListsServiceMock,
-           AttributeValueFormatter sut)
-        {
-            // Arrange 
-            var attributeConfig = new AssetTypeAttribute
-            {
-                DataType = new CustomDataType
-                {
-                    Code = Enumerators.DataType.DynList
-                },
-            };
-            dynamicListsServiceMock
-                .Setup(x => x.GetLegacyListValues(attributeConfig, assetUid))
-                .Returns(new List<DynamicListValue> 
-                {
-                    new DynamicListValue { Value = dynListValue }
-                });
-            // Act
-            string result = sut.GetDisplayValue(attributeConfig, null, true);
-            // Assert
-            Assert.Equal(dynListValue, result);
-        }
     }
 }

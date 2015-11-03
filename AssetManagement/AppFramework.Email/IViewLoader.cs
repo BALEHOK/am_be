@@ -1,4 +1,4 @@
-﻿namespace AssetManager.Auth.Email
+﻿namespace AppFramework.Email
 {
     public interface IViewLoader
     {

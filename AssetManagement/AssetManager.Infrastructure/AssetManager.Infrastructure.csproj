@@ -109,6 +109,7 @@
     <Compile Include="Helpers\AssetModelExtensions.cs" />
     <Compile Include="Helpers\CustomReportsModelExtensions.cs" />
     <Compile Include="Helpers\DynListModelExtensions.cs" />
+    <Compile Include="InfrastructureConfiguration.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="Helpers\ValidationExtension.cs" />
     <Compile Include="IModelFactory.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Models\AttributeValidationResultModel.cs" />
     <Compile Include="Models\BarcodeModel.cs" />
     <Compile Include="Models\ChildAssetType.cs" />
+    <Compile Include="Models\ContactFormMessage.cs" />
     <Compile Include="Models\CustomHtmlHelper.cs" />
     <Compile Include="Models\CustomReportModel.cs" />
     <Compile Include="Models\DynListItemModel.cs" />
@@ -170,7 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AppFramework.Core\AppFramework.Core.csproj">
@@ -190,6 +194,7 @@
       <Name>AppFramework.Reports</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

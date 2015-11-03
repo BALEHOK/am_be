@@ -57,7 +57,7 @@ namespace AssetManager.Infrastructure.Services
         public TypesInfoModel GetAssetTypes(bool loadAttributes = false, bool loadScreens = false)
         {
             var activeConfigs = _unitOfWork.DynEntityConfigRepository
-                .Get(c => c.ActiveVersion, include: c => c.DynEntityAttribConfigs.Select(a => a.DataType));
+                .Get(c => c.ActiveVersion && c.Active, include: c => c.DynEntityAttribConfigs.Select(a => a.DataType));
 
             // load types and attributes info
             var typesInfo = activeConfigs.Select(typeConfig => CreateAssetTypeModel(typeConfig, loadAttributes))

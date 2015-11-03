@@ -77,10 +77,6 @@ namespace AppFramework.Core.Classes
 			{
 				return _base.Name;
 			}
-			set
-			{
-				this.Name = value;
-			}
 		}
 
 		/// <summary>
