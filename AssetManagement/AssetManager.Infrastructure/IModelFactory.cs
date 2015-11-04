@@ -14,6 +14,7 @@ namespace AssetManager.Infrastructure
 
         void AssignInternalAttributes(Asset asset, long userId);
 
-        AssetModel GetAssetModel(Asset asset, Permission? permission = null);        
+        AssetModel GetAssetModel(Asset asset, Permission? permission = null);
+        void AssignValueUnconditional(AssetAttribute attribute, string value);
     }
 }

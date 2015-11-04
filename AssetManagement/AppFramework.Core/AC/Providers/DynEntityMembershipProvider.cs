@@ -19,7 +19,7 @@ namespace AppFramework.Core.AC.Providers
     /// <summary>
     /// Membership provider for accessing to ADynEntityUser table as membership info storage
     /// </summary>
-    public class DynEntityMembershipProvider : MembershipProvider
+    public class DynEntityMembershipProvider : MembershipProvider, IPasswordEncoder
     {
         [Dependency]
         public IUnitOfWork UnitOfWork
@@ -396,7 +396,7 @@ namespace AppFramework.Core.AC.Providers
         //   Encrypts, Hashes, or leaves the password clear based on the PasswordFormat.
         //
 
-        private string EncodePassword(string password)
+        public string EncodePassword(string password)
         {
             string encodedPassword = password;
 

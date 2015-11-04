@@ -1,4 +1,6 @@
-﻿using AssetManager.Infrastructure.Services;
+﻿using System.Web.Security;
+using AppFramework.Core.AC.Providers;
+using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
 
 namespace AssetManager.Infrastructure
@@ -10,6 +12,10 @@ namespace AssetManager.Infrastructure
             Container
                 .RegisterType<IBarcodeService, BarcodeService>()
                 .RegisterType<IAssetService, AssetService>()
+                .RegisterType<IPasswordEncoder>(
+                    new ContainerControlledLifetimeManager(),
+                    new InjectionFactory(c => (IPasswordEncoder)Membership.Provider)
+                )
                 .RegisterType<IAssetTypeService, AssetTypeService>()
                 .RegisterType<IDataTypeService, DataTypeService>()
                 .RegisterType<IExportService, ExportService>()

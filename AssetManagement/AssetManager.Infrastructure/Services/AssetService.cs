@@ -1,20 +1,22 @@
-﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes;
-using AssetManager.Infrastructure.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using AssetManager.Infrastructure.Helpers;
-using AppFramework.Core.DTO;
-using AppFramework.Core.ConstantsEnumerators;
+using System.Web.Security;
+using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
+using AppFramework.Core.AC.Providers;
+using AppFramework.Core.Calculation;
+using AppFramework.Core.Classes;
+using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.Core.DTO;
 using AppFramework.Core.Exceptions;
 using AppFramework.Core.Validation;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using Common.Logging;
-using AppFramework.Core.Calculation;
 using AppFramework.DataProxy;
+using AssetManager.Infrastructure.Helpers;
+using AssetManager.Infrastructure.Models;
+using Common.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace AssetManager.Infrastructure.Services
 {
@@ -28,9 +30,11 @@ namespace AssetManager.Infrastructure.Services
         private readonly IModelFactory _modelFactory;
         private readonly IFileService _fileService;
         private readonly ILog _logger;
+        private readonly IPasswordEncoder _passwordEncoder;
         private readonly IHistoryService _historyService;
         private readonly IAttributeCalculator _calculator;
         private readonly IUnitOfWork _unitOfWork;
+        private long _userTypeId;
 
         // TODO: more than 7 dependencies, needs to be decomposed
         public AssetService(
@@ -39,12 +43,13 @@ namespace AssetManager.Infrastructure.Services
             IAssetTypeRepository assetTypeRepository,
             IAuthenticationService authenticationService,
             IValidationServiceNew validationService,
-            IModelFactory modelFactory,            
+            IModelFactory modelFactory,
             IFileService fileService,
             IHistoryService historyService,
             IAttributeCalculator calculator,
             IUnitOfWork unitOfWork,
-            ILog logger)
+            ILog logger,
+            IPasswordEncoder passwordEncoder)
         {
             if (assetsService == null)
                 throw new ArgumentNullException("assetsService");
@@ -62,8 +67,8 @@ namespace AssetManager.Infrastructure.Services
                 throw new ArgumentNullException("validationService");
             _validationService = validationService;
             if (modelFactory == null)
-                throw new ArgumentNullException("attributeValueProvider");
-            _modelFactory = modelFactory;           
+                throw new ArgumentNullException("modelFactory");
+            _modelFactory = modelFactory;
             if (fileService == null)
                 throw new ArgumentNullException("fileService");
             _fileService = fileService;
@@ -79,12 +84,30 @@ namespace AssetManager.Infrastructure.Services
             if (logger == null)
                 throw new ArgumentNullException("logger");
             _logger = logger;
+            if (passwordEncoder == null)
+                throw new ArgumentNullException("passwordEncoder");
+            _passwordEncoder = passwordEncoder;
+        }
+
+        public long UserTypeId
+        {
+            get
+            {
+                if (_userTypeId == 0)
+                {
+                    var userTypeName = PredefinedEntity.User.ToString();
+                    var attr = _unitOfWork.PredefinedAttributesRepository.Single(x => x.Name == userTypeName);
+                    _userTypeId = attr.DynEntityConfigID;
+                }
+
+                return _userTypeId;
+            }
         }
 
         public AssetModel GetAsset(
-            long assetTypeId, 
-            long assetId, 
-            int? revision = null, 
+            long assetTypeId,
+            long assetId,
+            int? revision = null,
             long? uid = null,
             bool withChilds = false)
         {
@@ -92,7 +115,7 @@ namespace AssetManager.Infrastructure.Services
                 throw new ArgumentException("Cannot get asset by both revision and uid. Please pass one of those.");
 
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            AppFramework.Core.Classes.Asset asset;
+            Asset asset;
 
             if (revision > 0)
                 asset = _assetsService.GetAssetByIdAndRevison(assetId, assetType, revision.Value);
@@ -158,9 +181,30 @@ namespace AssetManager.Infrastructure.Services
                 if (IsNewDocument(modelAttribute, entityAttribute))
                 {
                     var document = CreateRelatedEntity(
-                        assetType.ID, entityAttribute, modelAttribute.Value, dependencies);
+                        assetType.ID, entityAttribute, modelAttribute.Value);
                     _modelFactory.AssignInternalAttributes(document, userId);
                     dependencies.Add(entityAttribute, document);
+                }
+                else if (entityAttribute.Configuration.DataTypeEnum == Enumerators.DataType.Password)
+                {
+                    var modelValue = modelAttribute.Value.Value<string>();
+
+                    string password;
+                    if (string.Equals(entityAttribute.Value, modelValue))
+                    {
+                        password = modelValue;
+                    }
+                    else
+                    {
+                        password = _passwordEncoder.EncodePassword(modelValue);
+
+                        if (model.AssetTypeId == UserTypeId)
+                        {
+                            asset["LastActivityDate"].Value = DateTime.Now.ToString();
+                        }
+                    }
+
+                    _modelFactory.AssignValueUnconditional(entityAttribute, password);
                 }
                 else
                 {
@@ -178,7 +222,7 @@ namespace AssetManager.Infrastructure.Services
             var assetId = _assetsService.InsertAsset(asset, dependencies).ID;
             return new Tuple<long, string>(assetId, asset.Name);
         }
-                
+
         public IEnumerable<AssetAttributeRelatedEntitiesModel> GetAssetRelatedEntities(
             long assetTypeId, long? assetId, int? revision = null, long? uid = null)
         {
@@ -186,7 +230,7 @@ namespace AssetManager.Infrastructure.Services
                 throw new ArgumentException("Cannot get asset by both revision and uid. Please pass one of those.");
 
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            AppFramework.Core.Classes.Asset asset;
+            Asset asset;
 
             if (assetId > 0 && revision > 0)
                 asset = _assetsService.GetAssetByIdAndRevison(assetId.Value, assetType, revision.Value);
@@ -246,7 +290,7 @@ namespace AssetManager.Infrastructure.Services
                         model.List = list.ToDto();
                         result.Add(model);
                         break;
-                }                
+                }
             }
             return result;
         }
@@ -262,28 +306,28 @@ namespace AssetManager.Infrastructure.Services
             var model = new AssetHistoryModel
             {
                 Revisions = (from revision in revisions
-                             let prevRevision = revisions.SingleOrDefault(r =>
-                                 r.Revision == revision.Revision - 1)
-                             select new AssetRevisionModel
-                             {
-                                 RevisionNumber = revision[AttributeNames.Revision].Value,
-                                 CreatedAt = revision[AttributeNames.UpdateDate].Value,
-                                 AssetTypeId = revision.Configuration.ID,
-                                 AssetId = revision.ID,
-                                 CreatedByUser = new PlainAssetDTO 
-                                 {
-                                     Name = revision[AttributeNames.UpdateUserId].Value,
-                                     Id = revision[AttributeNames.UpdateUserId].ValueAsId.Value,
-                                     AssetTypeId = assetTypeUser.ID
-                                 },
-                                 ChangedValues = _historyService.GetChangesBetweenRevisions(
-                                    revision, prevRevision).ToList()
-                             })
-                            .ToList()
+                    let prevRevision = revisions.SingleOrDefault(r =>
+                        r.Revision == revision.Revision - 1)
+                    select new AssetRevisionModel
+                    {
+                        RevisionNumber = revision[AttributeNames.Revision].Value,
+                        CreatedAt = revision[AttributeNames.UpdateDate].Value,
+                        AssetTypeId = revision.Configuration.ID,
+                        AssetId = revision.ID,
+                        CreatedByUser = new PlainAssetDTO
+                        {
+                            Name = revision[AttributeNames.UpdateUserId].Value,
+                            Id = revision[AttributeNames.UpdateUserId].ValueAsId.Value,
+                            AssetTypeId = assetTypeUser.ID
+                        },
+                        ChangedValues = _historyService.GetChangesBetweenRevisions(
+                            revision, prevRevision).ToList()
+                    })
+                    .ToList()
             };
             return model;
-        }       
-        
+        }
+
         public void RestoreAsset(long assetTypeId, long assetId)
         {
             var asset = _assetsService
@@ -292,19 +336,20 @@ namespace AssetManager.Infrastructure.Services
             _assetsService.RestoreAsset(asset);
         }
 
-        public IEnumerable<AssetModel> GetAssets(long assetTypeId, long userId, string query, int? rowStart, int? rowsNumber)
+        public IEnumerable<AssetModel> GetAssets(long assetTypeId, long userId, string query, int? rowStart,
+            int? rowsNumber)
         {
             var assets = _assetsService.GetAssetsByAssetTypeIdAndUser(
                 assetTypeId, userId, rowStart, rowsNumber);
 
             return from asset in assets
-                   where query == null || asset.Name.ToLower().Contains(query.ToLower())
-                   select new AssetModel
-                   {
-                       AssetTypeId = assetTypeId,
-                       Name = asset.Name,
-                       Id = asset.ID,
-                   };
+                where query == null || asset.Name.ToLower().Contains(query.ToLower())
+                select new AssetModel
+                {
+                    AssetTypeId = assetTypeId,
+                    Name = asset.Name,
+                    Id = asset.ID
+                };
         }
 
         public AssetModel CreateAsset(long assetTypeId, long userId)
@@ -317,11 +362,7 @@ namespace AssetManager.Infrastructure.Services
             return _modelFactory.GetAssetModel(asset);
         }
 
-        private Asset CreateRelatedEntity(
-            long assetTypeId,
-            AssetAttribute attribute,
-            JToken value,
-            IDictionary<AssetAttribute, Asset> dependencies)
+        private Asset CreateRelatedEntity(long assetTypeId, AssetAttribute attribute, JToken value)
         {
             var document = _assetsService.CreateAsset(PredefinedEntity.Document);
             document.Name = value["name"].Value<string>();
@@ -333,10 +374,10 @@ namespace AssetManager.Infrastructure.Services
             var filename = value["name"].Value<string>();
 
             var targetPath = _fileService.MoveFileOnAssetCreation(
-                assetTypeId, 
-                attribute.Configuration.ID, 
+                assetTypeId,
+                attribute.Configuration.ID,
                 document.Configuration.ID,
-                fileAttr.Configuration.ID, 
+                fileAttr.Configuration.ID,
                 filename);
 
             fileAttr.Value = Path.GetFileName(targetPath);
@@ -346,11 +387,11 @@ namespace AssetManager.Infrastructure.Services
         private static bool IsNewDocument(AttributeModel modelAttribute, AssetAttribute entityAttribute)
         {
             return entityAttribute.Configuration.DataTypeEnum == Enumerators.DataType.Document &&
-                modelAttribute.Value.HasValues &&
-                (modelAttribute.Value["id"].Type == JTokenType.Null ||
-                modelAttribute.Value["id"].Value<long>() == 0) &&
-                modelAttribute.Value["name"].Type == JTokenType.String &&
-                !string.IsNullOrEmpty(modelAttribute.Value["name"].Value<string>());
+                   modelAttribute.Value.HasValues &&
+                   (modelAttribute.Value["id"].Type == JTokenType.Null ||
+                    modelAttribute.Value["id"].Value<long>() == 0) &&
+                   modelAttribute.Value["name"].Type == JTokenType.String &&
+                   !string.IsNullOrEmpty(modelAttribute.Value["name"].Value<string>());
         }
 
         public AssetModel CalculateAsset(AssetModel model, long userId, long? screenId = null, bool overwrite = false)
@@ -378,7 +419,7 @@ namespace AssetManager.Infrastructure.Services
                     throw new Exception("Cannot bind model attribute to entity attribute");
 
                 _modelFactory.AssignValue(
-                        entityAttribute, modelAttribute.Value);
+                    entityAttribute, modelAttribute.Value);
             }
 
             _modelFactory.AssignInternalAttributes(asset, userId);

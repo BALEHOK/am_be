@@ -1,18 +1,17 @@
-﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.Classes;
-using AppFramework.Core.Classes.DynLists;
-using AppFramework.Core.Classes.ScreensServices;
-using AssetManager.Infrastructure.Models;
-using AssetManager.Infrastructure.Services;
-using AssetManager.Infrastructure.Helpers;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.AC.Authentication;
+using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
+using AppFramework.Core.Classes.DynLists;
+using AppFramework.Core.Classes.ScreensServices;
+using AppFramework.Core.ConstantsEnumerators;
+using AssetManager.Infrastructure.Helpers;
+using AssetManager.Infrastructure.Models;
+using AssetManager.Infrastructure.Services;
+using Newtonsoft.Json.Linq;
 
 namespace AssetManager.Infrastructure
 {
@@ -43,7 +42,7 @@ namespace AssetManager.Infrastructure
             _dynamicListsService = dynamicListsService;
             if (assetsService == null)
                 throw new ArgumentNullException("assetsService");
-            _assetsService = assetsService;    
+            _assetsService = assetsService;
             if (screensService == null)
                 throw new ArgumentNullException("screensService");
             _screensService = screensService;
@@ -75,7 +74,7 @@ namespace AssetManager.Infrastructure
                 Name = attributeConfig.Name,
                 Datatype = attributeConfig.DataTypeEnum.ToString().ToLower(),
                 Editable = attributeConfig.Editable,
-                Required = attributeConfig.IsRequired,
+                Required = attributeConfig.IsRequired
                 //HasFormula = attributeConfig
                 //    .Base
                 //    .AttributePanelAttributes
@@ -92,13 +91,13 @@ namespace AssetManager.Infrastructure
                 attributeConfig,
                 attributeData.Value,
                 isActive);
-            
+
             switch (attributeConfig.DataTypeEnum)
             {
-                case Enumerators.DataType.Asset:                    
+                case Enumerators.DataType.Asset:
                 case Enumerators.DataType.Document:
                 case Enumerators.DataType.Role:
-                    
+
                     if (attributeData.Value == null ||
                         string.IsNullOrEmpty(attributeData.Value.ToString()))
                     {
@@ -121,12 +120,12 @@ namespace AssetManager.Infrastructure
                             asset => new JObject(
                                 new JProperty("id", asset.Id),
                                 new JProperty("name", asset.Name)))
-                                .ToArray());
+                            .ToArray());
                     break;
 
                 case Enumerators.DataType.DynList:
                 case Enumerators.DataType.DynLists:
-                    var listValues = _dynamicListsService.GetLegacyListValues(attributeConfig, assetUid);
+                    var listValues = _dynamicListsService.GetLegacyListValues(attributeConfig, assetUid).ToList();
                     model.Value = new JObject(
                         new JProperty("id", string.Join(",", listValues.Select(lv => lv.DynamicListItemId).Take(1))),
                         new JProperty("value", _attributeValueFormatter.GetDisplayValue(listValues)));
@@ -135,18 +134,18 @@ namespace AssetManager.Infrastructure
                 case Enumerators.DataType.Zipcode:
                 case Enumerators.DataType.Place:
                     model.Value = new JObject(
-                            new JProperty("id", attributeData.Value),
-                            new JProperty("name", attributeData.Value));
+                        new JProperty("id", attributeData.Value),
+                        new JProperty("name", attributeData.Value));
                     break;
 
                 case Enumerators.DataType.Image:
                     if (!string.IsNullOrEmpty(attributeData.Value.ToString()))
                         model.Value = _fileService.GetRelativeFilepath(
-                                attribute.ParentAsset.Configuration.ID,
-                                attributeConfig.ID,
-                                model.Datatype,
-                                attributeData.Value.ToString())
-                            .TrimStart(new[] { '~' });
+                            attribute.ParentAsset.Configuration.ID,
+                            attributeConfig.ID,
+                            model.Datatype,
+                            attributeData.Value.ToString())
+                            .TrimStart('~');
                     break;
 
                 case Enumerators.DataType.DateTime:
@@ -157,12 +156,11 @@ namespace AssetManager.Infrastructure
                 default:
                     model.Value = new JValue(displayValue);
                     break;
-
-            }           
+            }
 
             return model;
         }
-        
+
         public void AssignValue(AssetAttribute attribute, JToken value)
         {
             if (attribute == null)
@@ -178,14 +176,14 @@ namespace AssetManager.Infrastructure
             {
                 case Enumerators.DataType.Asset:
                 case Enumerators.DataType.Document:
-                    if (value.HasValues && 
-                        value.Type == JTokenType.Object && 
+                    if (value.HasValues &&
+                        value.Type == JTokenType.Object &&
                         value["id"].Type == JTokenType.Integer)
                         attribute.ValueAsId = value["id"].Value<long>();
                     break;
 
                 case Enumerators.DataType.Role:
-                    if (value.HasValues && 
+                    if (value.HasValues &&
                         value.Type == JTokenType.Object &&
                         value["id"].Type == JTokenType.Integer)
                         attribute.ValueAsId = value["id"].Value<long>();
@@ -204,9 +202,9 @@ namespace AssetManager.Infrastructure
                         ids = value.Select(v => v.Value<long>("id")).ToArray();
                     }
                     else if (value.HasValues && value.Type == JTokenType.Object &&
-                        value["id"].Type == JTokenType.Integer)
+                             value["id"].Type == JTokenType.Integer)
                     {
-                        ids = new[] { value["id"].Value<long>() };
+                        ids = new[] {value["id"].Value<long>()};
                     }
 
                     if (ids != null)
@@ -245,7 +243,7 @@ namespace AssetManager.Infrastructure
                     var imageName = value.Value<string>();
                     if (!string.IsNullOrEmpty(imageName))
                         attribute.Value = imageName
-                            .Split(new[] { '/', '\\' })
+                            .Split('/', '\\')
                             .Last();
                     break;
 
@@ -254,7 +252,21 @@ namespace AssetManager.Infrastructure
                     break;
             }
         }
-    
+
+        public void AssignValueUnconditional(AssetAttribute attribute, string value)
+        {
+            if (attribute == null)
+                throw new ArgumentNullException("attribute");
+
+            if (value == null)
+            {
+                attribute.Value = null;
+                return;
+            }
+
+            attribute.Value = value;
+        }
+
         public AssetModel GetAssetModel(Asset asset, Permission? permission = null)
         {
             if (asset == null)
@@ -280,11 +292,11 @@ namespace AssetManager.Infrastructure
                 Deletable = permission.HasValue
                     ? permission.Value.CanDelete()
                     : true,
-                Barcode = asset.Barcode,           
+                Barcode = asset.Barcode
             };
             return model;
         }
-        
+
         public void AssignInternalAttributes(Asset asset, long userId)
         {
             asset[AttributeNames.ActiveVersion].Value = true.ToString();
@@ -297,21 +309,21 @@ namespace AssetManager.Infrastructure
         {
             var screens = _screensService.GetScreensByAssetTypeUid(asset.Configuration.UID);
             return from s in screens
-                   select new AssetScreenModel
-                   {
-                       Id = s.ScreenId,
-                       Name = s.Name,
-                       IsDefault = s.IsDefault,
-                       LayoutType = s.ScreenLayout.Type,
-                       Panels = _panelsAdapter.GetPanelsByScreen(asset, s)
-                           .ToPanelModels(GetAttributeModel),
-                       HasFormula = asset
-                           .Configuration
-                           .Panels
-                           .Where(p => p.ScreenId == s.ScreenId)
-                           .Any(p => p.Base.AttributePanelAttribute
-                           .Any(apa => apa.ScreenFormula != null)),
-                   };
+                select new AssetScreenModel
+                {
+                    Id = s.ScreenId,
+                    Name = s.Name,
+                    IsDefault = s.IsDefault,
+                    LayoutType = s.ScreenLayout.Type,
+                    Panels = _panelsAdapter.GetPanelsByScreen(asset, s)
+                        .ToPanelModels(GetAttributeModel),
+                    HasFormula = asset
+                        .Configuration
+                        .Panels
+                        .Where(p => p.ScreenId == s.ScreenId)
+                        .Any(p => p.Base.AttributePanelAttribute
+                            .Any(apa => apa.ScreenFormula != null))
+                };
         }
     }
 }

@@ -226,6 +226,7 @@
     <Compile Include="AC\Providers\DynEntityRoleProvider.cs" />
     <Compile Include="AC\Providers\InMemoryAuthenticationStorageProvider.cs" />
     <Compile Include="AC\Providers\InMemoryStorageContainer.cs" />
+    <Compile Include="AC\Providers\IPasswordEncoder.cs" />
     <Compile Include="AC\Providers\PasswordProvider.cs" />
     <Compile Include="AC\Providers\SessionAuthenticationStorageProvider.cs" />
     <Compile Include="AC\Providers\DynEntityMembershipProvider.cs" />
@@ -563,7 +564,9 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

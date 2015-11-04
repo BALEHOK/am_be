@@ -9,27 +9,18 @@
 * Revisions:
 * -------------------------------------------------------*/
 
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
 namespace AppFramework.Core.AC.Providers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Security.Cryptography;
-    using AppFramework.Core.Classes;
-
     public class PasswordProvider
     {
-        public PasswordProvider()
-        {
-        }
-
         public string Encrypt(string clearPassword)
         {
-            string encodedPassword = clearPassword;                        
             var sha1 = SHA1.Create();
-            encodedPassword = Convert.ToBase64String(sha1.ComputeHash(Encoding.Unicode.GetBytes(clearPassword)));
-            return encodedPassword;
+            return Convert.ToBase64String(sha1.ComputeHash(Encoding.Unicode.GetBytes(clearPassword)));
         }
     }
 }
