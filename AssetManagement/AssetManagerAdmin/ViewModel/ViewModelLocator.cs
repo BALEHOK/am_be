@@ -10,9 +10,6 @@
 */
 
 using System.Diagnostics.CodeAnalysis;
-using AssetManagerAdmin.Model;
-using AssetManagerAdmin.WebApi;
-using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
 namespace AssetManagerAdmin.ViewModel
@@ -28,27 +25,7 @@ namespace AssetManagerAdmin.ViewModel
     {
         static ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            //            if (ViewModelBase.IsInDesignModeStatic)
-            //            {
-            //                SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
-            //            }
-            //            else
-            //            {
-            //                SimpleIoc.Default.Register<IDataService, DataService>();
-            //            }
-
-            SimpleIoc.Default.Register<IAssetsApiManager, AssetsApiManager>();
-            SimpleIoc.Default.Register<IDataService, DataService>();
-            SimpleIoc.Default.Register<IDialogService, DialogService>();
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<WebAdminViewModel>();
-            SimpleIoc.Default.Register<FormulaBuilderViewModel>();
-            SimpleIoc.Default.Register<ValidationBuilderViewModel>();
-            SimpleIoc.Default.Register<ReportsBuilderViewModel>();
-            SimpleIoc.Default.Register<LoginViewModel>();
-            SimpleIoc.Default.Register<AuthViewModel>();
+            Registrations.RegisterDependencies();
         }
 
         /// <summary>

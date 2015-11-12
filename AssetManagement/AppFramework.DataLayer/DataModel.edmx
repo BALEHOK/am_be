@@ -700,6 +700,7 @@
           <Property Name="ExecutableType" Type="int" Nullable="false" />
           <Property Name="ExecutablePath" Type="nvarchar(max)" />
           <Property Name="DynEntityConfigId" Type="bigint" Nullable="false" />
+          <Property Name="DisplayInSidebar" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TaskRights">
           <Key>
@@ -1397,6 +1398,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="userId" Type="bigint" Mode="In" />
           <Parameter Name="TaxonomyItemId" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="f_cust_GetReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetReports" />
         <Function Name="f_cust_GetSqlServerAgentJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSqlServerAgentJobs" />
         <Function Name="f_cust_GetSrchCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSrchCount">
           <Parameter Name="SearchId" Type="bigint" Mode="In" />
@@ -1411,6 +1413,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="assetid" Type="bigint" Mode="In" />
           <Parameter Name="configid" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="f_cust_GetTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetTasks" />
         <Function Name="f_cust_GetUsersTree" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetUsersTree">
           <Parameter Name="UserId" Type="bigint" Mode="In" />
         </Function>
@@ -2030,6 +2033,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="ScreenLayout" EntitySet="ScreenLayout" />
             <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
           </AssociationSet>
+          <FunctionImport Name="f_cust_GetReports" ReturnType="Collection(DataModel.f_cust_GetReports_Result)" />
+          <FunctionImport Name="f_cust_GetTasks" ReturnType="Collection(DataModel.ActiveTask)" />
           </EntityContainer>
         <EntityType Name="AppSettings">
           <Key>
@@ -2718,6 +2723,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Int32" Name="ExecutableType" Nullable="false" />
           <Property Type="String" Name="ExecutablePath" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
+          <Property Name="DisplayInSidebar" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Report">
           <Key>
@@ -3509,6 +3515,21 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="f_cust_GetReports_Result">
+          <Property Type="Int64" Name="ReportUid" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="IsFinancial" Nullable="false" />
+          <Property Type="String" Name="ReportFile" Nullable="true" MaxLength="255" />
+          <Property Type="Int64" Name="DynEntityConfigId" Nullable="true" />
+          <Property Type="String" Name="DynEntityConfigName" Nullable="false" MaxLength="60" />
+          </ComplexType>
+        <ComplexType Name="ActiveTask">
+          <Property Type="Int64" Name="TaskId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="350" />
+          <Property Type="String" Name="Description" Nullable="true" />
+          <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
+          <Property Type="String" Name="DynEntityConfigName" Nullable="false" MaxLength="60" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3988,7 +4009,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
     <EntitySetMapping Name="Task">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.Task)">
         <MappingFragment StoreEntitySet="Task">
-          <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+          <ScalarProperty Name="DisplayInSidebar" ColumnName="DisplayInSidebar" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="FunctionData" ColumnName="FunctionData" />
@@ -4503,6 +4525,29 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               <ComplexTypeMapping TypeName="DataModel.f_cust_GetSqlServerAgentJobs_Result">
                 <ScalarProperty Name="job_id" ColumnName="job_id" />
                 <ScalarProperty Name="name" ColumnName="name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="f_cust_GetReports" FunctionName="DataModel.Store.f_cust_GetReports">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.f_cust_GetReports_Result">
+                <ScalarProperty Name="ReportUid" ColumnName="ReportUid" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsFinancial" ColumnName="IsFinancial" />
+                <ScalarProperty Name="ReportFile" ColumnName="ReportFile" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="DynEntityConfigName" ColumnName="DynEntityConfigName" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="f_cust_GetTasks" FunctionName="DataModel.Store.f_cust_GetTasks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.ActiveTask">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="DynEntityConfigName" ColumnName="DynEntityConfigName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

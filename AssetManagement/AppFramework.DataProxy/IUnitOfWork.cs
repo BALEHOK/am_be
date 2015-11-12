@@ -119,5 +119,7 @@ namespace AppFramework.DataProxy
 
         void Dispose();
         void Commit();
+        IEnumerable<f_cust_GetReports_Result> GetReports();
+        IEnumerable<ActiveTask> GetTasks();
     }
 }

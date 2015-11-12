@@ -1344,6 +1344,28 @@ namespace AppFramework.DataLayer
      
      
         } 
+     
+     
+        public ObjectResult<f_cust_GetReports_Result> f_cust_GetReports()     
+     
+        { 
+     
+     
+            return base.ExecuteFunction<f_cust_GetReports_Result>("f_cust_GetReports"); 
+     
+     
+        } 
+     
+     
+        public ObjectResult<ActiveTask> f_cust_GetTasks()     
+     
+        { 
+     
+     
+            return base.ExecuteFunction<ActiveTask>("f_cust_GetTasks"); 
+     
+     
+        } 
 
         #endregion
 

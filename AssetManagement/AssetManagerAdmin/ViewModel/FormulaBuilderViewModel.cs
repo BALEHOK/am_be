@@ -10,6 +10,7 @@ using AssetManagerAdmin.WebApi;
 using AssetManager.Infrastructure.Models.TypeModels;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Common.Logging;
 
 namespace AssetManagerAdmin.ViewModel
 {
@@ -37,8 +38,6 @@ namespace AssetManagerAdmin.ViewModel
         public AssetsDataProvider DataProvider { get; private set; }
 
         public bool IsActive { get; set; }
-
-        #region Properties
 
         public const string ExpressionParserPropertyName = "ExpressionParser";
         public ExpressionParser ExpressionParser
@@ -225,8 +224,6 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        #endregion
-
         #region Commands
 
         private RelayCommand _copyToClipboardCommand;
@@ -268,6 +265,7 @@ namespace AssetManagerAdmin.ViewModel
         }
 
         private RelayCommand _refreshAssetTypeListCommand;
+        private readonly ILog _logger;
 
         public RelayCommand RefreshAssetTypeListCommand
         {
@@ -596,8 +594,10 @@ namespace AssetManagerAdmin.ViewModel
 
         private void LoadTypesInfo(FormulaBuilderContext context)
         {
+            MessengerInstance.Send("Loading asset types...", AppActions.LoadingStarted);
             _dataService.GetTypesInfo(_server, (model, exception) =>
             {
+                MessengerInstance.Send("", AppActions.LoadingCompleted);
                 if (exception != null)
                 {
                     MessengerInstance.Send(new StatusMessage(exception));
@@ -647,10 +647,11 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public FormulaBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
+        public FormulaBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager, ILog logger)
         {
             _dataService = dataService;
             _assetsApiManager = assetsApiManager;
+            _logger = logger;
 
             DataProvider = new AssetsDataProvider();
 
@@ -659,7 +660,6 @@ namespace AssetManagerAdmin.ViewModel
                 new FormulaBuilderContext {Name = "Database Formulas", Type = FormulaBuilderContextType.DbFormulas},
                 new FormulaBuilderContext {Name = "Screen Formulas", Type = FormulaBuilderContextType.ScreenFormulas},
                 new FormulaBuilderContext {Name = "Validation", Type = FormulaBuilderContextType.Validation},
-//                new FormulaBuilderContext {Name = "Data Types Validation", Type = FormulaBuilderContextType.DataTypesValidation},
             };
             CurrentContext = Contexts.Single(c => c.Type == FormulaBuilderContextType.DbFormulas);
 

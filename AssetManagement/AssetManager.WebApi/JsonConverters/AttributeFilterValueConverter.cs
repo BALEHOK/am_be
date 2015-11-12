@@ -72,32 +72,14 @@ namespace AssetManager.WebApi.JsonConverters
             switch (reader.Value.ToString().ToLower())
             {
                 case "id":
-                    if (reader.Read())
-                    {
-                        obj.Id = GetStringValue(reader.Value);
-                        return true;
-                    }
-                    break;
+                    obj.Id = reader.ReadAsString();
+                    return true;
                 case "name":
-                    if (reader.Read())
-                    {
-                        obj.Name = GetStringValue(reader.Value);
-                        return true;
-                    }
-                    break;
+                    obj.Name = reader.ReadAsString();
+                    return true;
             }
 
             return false;
-        }
-
-        private static string GetStringValue(object value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            return value.ToString();
         }
 
         private void ReadTillEndOfObject(JsonReader reader)

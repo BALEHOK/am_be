@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Http;
-using AppFramework.DataProxy;
 using AppFramework.Reports.CustomReports;
 using AppFramework.Reports.Services;
 using AssetManager.Infrastructure.Models;
@@ -18,18 +16,15 @@ namespace AssetManager.WebApi.Controllers.Api
     [RoutePrefix("api/reports/custom")]
     public class CustomReportsController : ApiController
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomReportService<CustomDevExpressReport> _customReportService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="unitOfWork"></param>
         /// <param name="customReportService"></param>
-        public CustomReportsController(IUnitOfWork unitOfWork,
+        public CustomReportsController(
             ICustomReportService<CustomDevExpressReport> customReportService)
         {
-            _unitOfWork = unitOfWork;
             _customReportService = customReportService;
         }
 

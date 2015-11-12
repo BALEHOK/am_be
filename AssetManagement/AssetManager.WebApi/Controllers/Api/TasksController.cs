@@ -28,10 +28,25 @@ namespace AssetManager.WebApi.Controllers.Api
             _taskRunnerFactory = taskRunnerFactory;
         }
 
+        [Route("")]
+        public IEnumerable<TaskModel> GetTasks()
+        {
+            var tasks = _tasksService.GetActive();
+            return tasks.Select(t => new TaskModel
+            {
+                Id = t.TaskId,
+                Name = t.Name,
+                Description = t.Description,
+                DynEntityConfigId = t.DynEntityConfigId,
+                DynEntityConfigName = t.DynEntityConfigName
+            });
+        }
+
         [Route("assettype/{assetTypeId}")]
         public IEnumerable<TaskModel> GetTasksByAssetType(long assetTypeId)
         {
-            var tasks = _tasksService.GetByAssetTypeId(assetTypeId);
+            var tasks = _tasksService.GetByAssetTypeId(assetTypeId)
+                .Where(t => t.DisplayInSidebar);
             return tasks.Select(t => new TaskModel
             {
                 Id = t.TaskId,

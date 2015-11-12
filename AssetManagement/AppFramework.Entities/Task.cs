@@ -190,6 +190,21 @@ namespace AppFramework.Entities
             }
         }
         private long _dynEntityConfigId;
+    
+        [DataMember]
+        public bool DisplayInSidebar
+        {
+            get { return _displayInSidebar; }
+            set
+            {
+                if (_displayInSidebar != value)
+                {
+                    _displayInSidebar = value;
+                    OnPropertyChanged("DisplayInSidebar");
+                }
+            }
+        }
+        private bool _displayInSidebar;
 
         #endregion
 

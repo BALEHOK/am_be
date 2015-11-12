@@ -30,12 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="IdentityServer3, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityServer3.2.0.0\lib\net45\IdentityServer3.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -43,8 +51,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
@@ -57,18 +67,30 @@
     <Compile Include="AuthConstants.cs" />
     <Compile Include="Clients.cs" />
     <Compile Include="Config\AuthConfiguration.cs" />
+    <Compile Include="Data\AuthContext.cs" />
+    <Compile Include="Data\ConfigurationsExtensions.cs" />
+    <Compile Include="Data\Mappings\TokenMapping.cs" />
+    <Compile Include="Data\Models\TokenModel.cs" />
+    <Compile Include="Data\Models\TokenType.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scopes.cs" />
     <Compile Include="Security\CorsPolicyServiceFactory.cs" />
     <Compile Include="Security\RedirectUriValidator.cs" />
     <Compile Include="Security\CertificateFactory.cs" />
+    <Compile Include="Serialization\ClaimConverter.cs" />
+    <Compile Include="Serialization\ClaimsPrincipalConverter.cs" />
+    <Compile Include="Serialization\ClientConverter.cs" />
+    <Compile Include="Serialization\ScopeConverter.cs" />
+    <Compile Include="Services\TokenHandleStore.cs" />
     <Compile Include="Users\IUserManager.cs" />
     <Compile Include="Users\UserManager.cs" />
     <Compile Include="Users\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="auth.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

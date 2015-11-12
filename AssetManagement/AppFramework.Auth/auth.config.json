@@ -1,5 +1,5 @@
 ﻿{
-    "AuthServerUrl": "http://auth.facilitymanager.fmis.software/core",
+    "AuthServerUrl": "http://auth.am.local/core",
     "Certificate": {
         "File": "idsrv3test.pfx",
         "Password": "idsrv3test"

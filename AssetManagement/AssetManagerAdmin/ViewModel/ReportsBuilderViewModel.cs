@@ -199,43 +199,58 @@ namespace AssetManagerAdmin.ViewModel
             _dataService = dataService;
             _assetsApiManager = assetsApiManager;
 
+            MessengerInstance.Register<System.Type>(this, AppActions.DataContextChanged, currentView =>
+            {
+                if (currentView == typeof(ReportsBuilderViewModel))
+                {
+                    LoadReportsAndTypes();
+                }
+            });
+
             MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
             {
                 _server = server.ApiUrl;
-                var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
-                api.GetReportsList()
-                .ContinueWith(task => 
-                {
-                    if (task.Exception != null)
-                    {
-                        MessengerInstance.Send(
-                            new StatusMessage(task.Exception));
-                    }
-                    else
-                    {
-                        _allReports = task.Result;
-                    }
-                });
+            });
+        }
 
-                _dataService.GetTypesInfo(_server, (typesInfo, e) =>
+        private void LoadReportsAndTypes()
+        {
+            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            MessengerInstance.Send("Loading reports list...", AppActions.LoadingStarted);
+            api.GetReportsList().ContinueWith(task =>
+            {
+                MessengerInstance.Send("", AppActions.LoadingCompleted);
+                if (task.Exception != null)
                 {
-                    if (e != null)
+                    MessengerInstance.Send(
+                        new StatusMessage(task.Exception));
+                }
+                else
+                {
+                    _allReports = task.Result;
+                }
+            });
+
+            MessengerInstance.Send("Loading asset types...", AppActions.LoadingStarted);
+            _dataService.GetTypesInfo(_server, (typesInfo, e) =>
+            {
+                MessengerInstance.Send("", AppActions.LoadingCompleted);
+                if (e != null)
+                {
+                    MessengerInstance.Send(
+                        new StatusMessage(e));
+                }
+                else
+                {
+                    // do not modify original collection
+                    AssetTypesList = typesInfo.ActiveTypes.ToList();
+                    AssetTypesList.Insert(0, new AssetTypeModel
                     {
-                        MessengerInstance.Send(
-                            new StatusMessage(e));
-                    }
-                    else
-                    {
-                        // do not modify original collection
-                        AssetTypesList = typesInfo.ActiveTypes.ToList();
-                        AssetTypesList.Insert(0, new AssetTypeModel
-                        {
-                            Id = -1,
-                            DisplayName = "[All]"
-                        });
-                        ReportAssetType = AssetTypesList[0];
-                    }
-                });
+                        Id = -1,
+                        DisplayName = "[All]"
+                    });
+                    ReportAssetType = AssetTypesList[0];
+                }
             });
         }
     }

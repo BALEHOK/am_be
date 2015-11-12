@@ -42,6 +42,34 @@ namespace AssetManagerAdmin.ViewModel
 
         #region Properties
 
+        public const string IsLoadingPropertyName = "IsLoading";
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+
+            set
+            {
+                _isLoading = value;
+                RaisePropertyChanged(IsLoadingPropertyName);
+            }
+        }
+
+        public const string LoadingTextPropertyName = "LoadingText";
+        private string _loadingText = "Please wait...";
+
+        public string LoadingText
+        {
+            get { return _loadingText; }
+
+            set
+            {
+                _loadingText = value;
+                RaisePropertyChanged(LoadingTextPropertyName);
+            }
+        }
+
         public const string MainMenuItemsName = "MainMenuItems";
         private List<MainMenuItem> _mainMenuItems;
 
@@ -235,6 +263,11 @@ namespace AssetManagerAdmin.ViewModel
 
                 // endable attribute selector for formula and validation builders
                 IsAttributeSelectorEnabled = id == 2;
+
+                // let viewmodels know when to start loading data
+                if (CurrentView.DataContext != null)
+                    MessengerInstance.Send(CurrentView.DataContext.GetType(), 
+                        AppActions.DataContextChanged);
             }
             else if (propertyName == SelectedTypePropertyName)
             {
@@ -243,11 +276,10 @@ namespace AssetManagerAdmin.ViewModel
             else if (propertyName == SelectedAttributePropertyName)
             {
                 _dataService.CurrentAssetAttribute = SelectedAttribute;
+                // send notification on property change
+                var property = GetType().GetProperty(propertyName).GetValue(this);
+                MessengerInstance.Send(property, propertyName);
             }
-
-            // send notification on property change
-            var property = GetType().GetProperty(propertyName).GetValue(this);
-            MessengerInstance.Send(property, propertyName);
         }
 
         /// <summary>
@@ -301,6 +333,17 @@ namespace AssetManagerAdmin.ViewModel
                     msg.Message,
                     msg.Title,
                     msg.Status);
+            });
+
+            MessengerInstance.Register<string>(this, AppActions.LoadingStarted, message => 
+            {
+                IsLoading = true;
+                LoadingText = message;
+            });
+
+            MessengerInstance.Register<string>(this, AppActions.LoadingCompleted, (msg) => 
+            {
+                IsLoading = false;
             });
 
             IsViewsMenuEnabled = false;

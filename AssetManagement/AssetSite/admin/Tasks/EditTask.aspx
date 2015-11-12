@@ -73,6 +73,14 @@
                             <asp:RangeValidator runat="server" ControlToValidate="ddlFunctionType" MinimumValue="0" MaximumValue="7" ErrorMessage="Please select a function type" />
                         </td>
                     </tr>
+                    <tr> 
+                        <td class="labels">
+                            <asp:Label runat="server" Text="Display this task in the asset's sidebar" />
+                        </td>
+                        <td class="controls">
+                            <asp:CheckBox runat="server" ID="chkShowAtSidebar" />
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d ignore"
         Height="668"
         Width="1024"
@@ -97,7 +98,9 @@
         </Grid>
 
         <Grid Grid.Column="1" Grid.Row="3" Name="WorkingAreaGrid">
-            <ContentControl Content="{Binding CurrentView}" Margin="10"/>
+            <xctk:BusyIndicator IsBusy="{Binding IsLoading}" BusyContent="{Binding LoadingText}" >
+                <ContentControl Content="{Binding CurrentView}" Margin="10"/>
+            </xctk:BusyIndicator>
         </Grid>
     </Grid>
 </Window>

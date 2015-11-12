@@ -130,6 +130,16 @@
             return _noCacheContext.f_cust_GetMaxSearchId().First().Value;
         }
 
+        public IEnumerable<f_cust_GetReports_Result> GetReports()
+        {
+            return _noCacheContext.f_cust_GetReports();
+        } 
+
+        public IEnumerable<ActiveTask> GetTasks()
+        {
+            return _noCacheContext.f_cust_GetTasks();
+        } 
+
         #region IDataRepository: Repositories
 
         public IDataRepository<DeletedEntity> DeletedEntitiesRepository

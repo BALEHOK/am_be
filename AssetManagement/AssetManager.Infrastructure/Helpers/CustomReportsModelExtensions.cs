@@ -1,11 +1,6 @@
-﻿using AppFramework.Reports.CustomReports;
+﻿using System.IO;
+using AppFramework.Reports.CustomReports;
 using AssetManager.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AssetManager.Infrastructure.Helpers
 {
@@ -16,9 +11,11 @@ namespace AssetManager.Infrastructure.Helpers
             return new CustomReportModel
             {
                 Id = report.Id,
+                Name = report.Name,
                 AssetTypeId = report.AssetTypeId,
-                FileName = Path.GetFileName(report.FileName),
-                Name = report.Name
+                AssetTypeName = report.AssetTypeName,
+                IsFinancial = report.IsFinancial,
+                FileName = Path.GetFileName(report.FileName)
             };
         }
     }

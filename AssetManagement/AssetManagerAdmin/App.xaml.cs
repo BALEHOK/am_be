@@ -19,5 +19,11 @@ namespace AssetManagerAdmin
         {
             DispatcherHelper.Initialize();
         }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            log4net.Config.XmlConfigurator.Configure();
+            base.OnStartup(e);
+        }
     }
 }

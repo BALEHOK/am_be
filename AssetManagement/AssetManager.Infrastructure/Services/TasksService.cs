@@ -57,5 +57,10 @@ namespace AssetManager.Infrastructure.Services
             return _unitOfWork.TaskRepository
                 .Where(t => t.DynEntityConfigId == atId && t.IsActive);
         }
+
+        public IEnumerable<ActiveTask> GetActive()
+        {
+            return _unitOfWork.GetTasks();
+        }
     }
 }

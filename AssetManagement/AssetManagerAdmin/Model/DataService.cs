@@ -7,20 +7,24 @@ using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.WebApi;
 using AppFramework.ConstantsEnumerators;
 using System.Threading.Tasks;
+using Common.Logging;
 
 namespace AssetManagerAdmin.Model
 {
     public class DataService : IDataService
     {
         private readonly IAssetsApiManager _assetsApiManager;
+        private readonly ILog _logger;
+
         public UserInfo CurrentUser { get; set; }
         public AssetTypeModel CurrentAssetType { get; set; }
         public AttributeTypeModel CurrentAssetAttribute { get; set; }
         public ServerConfig SelectedServer { get; set; }
 
-        public DataService(IAssetsApiManager assetsApiManager)
+        public DataService(IAssetsApiManager assetsApiManager, ILog logger)
         {
             _assetsApiManager = assetsApiManager;
+            _logger = logger;
         }
 
         public void GetTypesInfo(string server, Action<TypesInfoModel, Exception> callback)
@@ -31,6 +35,7 @@ namespace AssetManagerAdmin.Model
             {
                 if (task.Exception != null)
                 {
+                    _logger.Error(task.Exception);
                     callback(null, task.Exception);
                     return;
                 }
@@ -43,8 +48,9 @@ namespace AssetManagerAdmin.Model
                 // connect relation types models
                 relationAttributes.ForEach(attr =>
                 {
-                    var relationType = result.ActiveTypes.Single(t => t.Id == attr.RelationId);
-                    attr.RelationType = relationType;
+                    var relationType = result.ActiveTypes.SingleOrDefault(t => t.Id == attr.RelationId);
+                    if (relationType != null)
+                        attr.RelationType = relationType;
                 });
 
                 // get all attributes

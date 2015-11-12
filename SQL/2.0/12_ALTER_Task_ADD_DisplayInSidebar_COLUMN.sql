@@ -1,0 +1,1 @@
+ALTER TABLE Task ADD DisplayInSidebar bit NOT NULL DEFAULT 0;

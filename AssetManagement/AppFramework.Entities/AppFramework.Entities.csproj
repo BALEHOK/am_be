@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveTask.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="AppSettings.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
@@ -145,6 +148,9 @@
     </Compile>
     <Compile Include="Enumerations.cs" />
     <Compile Include="f_cust_GetChildAssets_Result.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="f_cust_GetReports_Result.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="f_cust_GetSqlServerAgentJobs_Result.cs">

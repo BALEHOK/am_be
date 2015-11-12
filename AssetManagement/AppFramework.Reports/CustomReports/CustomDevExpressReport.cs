@@ -9,8 +9,10 @@ namespace AppFramework.Reports.CustomReports
         private readonly string _name;
         private readonly string _fileName;        
         private readonly long _assetTypeId;
+        private readonly string _assetTypeName;
         private readonly long _reportId;
         private string _filterString;
+        private readonly bool _isFinancial;
         private readonly string _connectionString;
 
         public CustomDevExpressReport(long reportId, long assetTypeId, string name, string fileName, string connectionString)
@@ -19,6 +21,17 @@ namespace AppFramework.Reports.CustomReports
             _assetTypeId = assetTypeId;
             _name = name;
             _fileName = fileName;
+            _connectionString = connectionString;
+        }
+
+        public CustomDevExpressReport(long reportId, long assetTypeId, string assetTypeName, string name, string fileName, bool isFinancial, string connectionString)
+        {
+            _reportId = reportId;
+            _assetTypeId = assetTypeId;
+            _assetTypeName = assetTypeName;
+            _name = name;
+            _fileName = fileName;
+            _isFinancial = isFinancial;
             _connectionString = connectionString;
         }
 
@@ -34,6 +47,11 @@ namespace AppFramework.Reports.CustomReports
             get { return _assetTypeId; }
         }
 
+        public string AssetTypeName
+        {
+            get { return _assetTypeName; }
+        }
+
         public XtraReport ReportObject
         {
             get { return _report ?? (_report = LoadReport()); }
@@ -47,6 +65,11 @@ namespace AppFramework.Reports.CustomReports
         public string FileName
         {
             get { return _fileName; }
+        }
+
+        public bool IsFinancial
+        {
+            get { return _isFinancial; }
         }
 
         #endregion

@@ -22,7 +22,7 @@ namespace AssetManager.Auth
 
             app.Map(AuthRoot, authApp =>
             {
-                var factory = Factory.Configure();
+                var factory = Factory.Configure("AuthEntities");
                 
                 // add custom CSS
                 var viewOptions = new DefaultViewServiceOptions();

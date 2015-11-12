@@ -143,9 +143,8 @@ namespace AssetManager.WebApi.Models.Search
             {
                 DateTime dt;
 
-                if (!DateTime.TryParse(currentFilter.Value.Id,
-                        ApplicationSettings.DisplayCultureInfo.DateTimeFormat,
-                        DateTimeStyles.None, out dt))
+                // use ISO8601 DateTime format on client
+                if (!DateTime.TryParse(currentFilter.Value.Id, out dt))
                 {
                     currentAttributeElement.Value = string.Empty;
                     return;

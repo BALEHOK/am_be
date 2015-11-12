@@ -6,7 +6,6 @@ using System.Web.Hosting;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 using AppFramework.Reports.CustomReports;
-using DevExpress.XtraReports.UI;
 
 namespace AppFramework.Reports.Services
 {
@@ -23,13 +22,13 @@ namespace AppFramework.Reports.Services
 
         public List<CustomDevExpressReport> GetAllReports()
         {
-            var reports = _unitOfWork.ReportRepository.Where(r => r.DynConfigId != null && r.Type == 10).ToList();
+            var reports = _unitOfWork.GetReports().ToList();
             var result =
                 reports.Select(
                     r =>
                         // ReSharper disable once PossibleInvalidOperationException
-                        new CustomDevExpressReport(r.ReportUid, (long)r.DynConfigId, r.Name,
-                            GetReportFilePath(r.ReportFile), _connectionString));
+                        new CustomDevExpressReport(r.ReportUid, (long)r.DynEntityConfigId, r.DynEntityConfigName, r.Name,
+                            GetReportFilePath(r.ReportFile), r.IsFinancial, _connectionString));
 
             return result.ToList();
         }

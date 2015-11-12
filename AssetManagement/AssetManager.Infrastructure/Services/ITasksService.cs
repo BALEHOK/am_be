@@ -12,5 +12,7 @@ namespace AssetManager.Infrastructure.Services
         Task GetTaskById(long id);
 
         void SaveTask(Task task, long userId);
+
+        IEnumerable<ActiveTask> GetActive();
     }
 }

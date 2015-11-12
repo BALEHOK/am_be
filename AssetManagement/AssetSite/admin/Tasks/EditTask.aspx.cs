@@ -45,57 +45,58 @@ namespace AssetSite.admin.Tasks
                 !String.IsNullOrEmpty(Request.QueryString["Edit"]) &&
                 !String.IsNullOrEmpty(Request.QueryString["TaskId"]))
             {
-                var toEdit = TasksService.GetTaskById(long.Parse(Request.QueryString["TaskId"]));
+                var task = TasksService.GetTaskById(long.Parse(Request.QueryString["TaskId"]));
 
-                txtName.Text = toEdit.Name;
-                txtDescription.Text = toEdit.Description;
+                txtName.Text = task.Name;
+                txtDescription.Text = task.Description;
+                chkShowAtSidebar.Checked = task.DisplayInSidebar;
 
-                int fType = (int)toEdit.FunctionType;
+                int fType = (int)task.FunctionType;
 
                 ddlFunctionType.SelectedValue = fType.ToString();
                 mvFunctions.ActiveViewIndex = fType;
 
-                InitTask(assetTypeId, toEdit);
+                InitTask(assetTypeId, task);
                 ddlFunctionType_SelectedIndexChanged(ddlFunctionType, null);
 
-                switch (toEdit.FunctionType)
+                switch (task.FunctionType)
                 {
                     case (int)TaskFunctionType.LaunchBatch:
-                        var batchData = BatchTaskParametersDescriptor.Deserialize(toEdit.FunctionData);
-                        BatchCommonParams.ExecutablePath = toEdit.ExecutablePath;
-                        BatchCommonParams.ExecutableType = (TaskExecutableType)toEdit.ExecutableType;
+                        var batchData = BatchTaskParametersDescriptor.Deserialize(task.FunctionData);
+                        BatchCommonParams.ExecutablePath = task.ExecutablePath;
+                        BatchCommonParams.ExecutableType = (TaskExecutableType)task.ExecutableType;
                         BatchCommonParams.FunctionData = batchData.Data;
                         btnSave.OnClientClick = "return CollectParams('" + BatchCommonParams.HiddenFieldId + "');";
                         break;
                     case (int)TaskFunctionType.ImportFile:
-                        ImportTaskParametersDescriptor importData = ImportTaskParametersDescriptor.Deserialize(toEdit.FunctionData);
-                        importParams.ExecutablePath = toEdit.ExecutablePath;
-                        importParams.ExecutableType = (TaskExecutableType)toEdit.ExecutableType;
+                        ImportTaskParametersDescriptor importData = ImportTaskParametersDescriptor.Deserialize(task.FunctionData);
+                        importParams.ExecutablePath = task.ExecutablePath;
+                        importParams.ExecutableType = (TaskExecutableType)task.ExecutableType;
                         importParams.FunctionData = importData.Data;
                         btnSave.OnClientClick = "return CollectParams('" + importParams.HiddenFieldId + "');";
                         ddlOutputFileType.SelectedValue = ((int)importData.FileType).ToString();
                         break;
                     case (int)TaskFunctionType.ExportFileSSIS:
-                        var exportData = ExportTaskParametersDescriptor.Deserialize(toEdit.FunctionData);
-                        exportParams.ExecutablePath = toEdit.ExecutablePath;
+                        var exportData = ExportTaskParametersDescriptor.Deserialize(task.FunctionData);
+                        exportParams.ExecutablePath = task.ExecutablePath;
                         exportParams.FunctionData = exportData.Data;
                         break;
                     case (int)TaskFunctionType.CreateAsset:
                         SetScreensDataSource();
                         ddlView.DataBound += (s, args) =>
                         {
-                            var newAssetData = NewAssetTaskParametrsDescriptor.Deserialize(toEdit.FunctionData);
+                            var newAssetData = NewAssetTaskParametrsDescriptor.Deserialize(task.FunctionData);
                             if (newAssetData.ScreenId.HasValue)
                                 ddlView.SelectedValue = newAssetData.ScreenId.ToString();
                         };
                         break;
                     case (int)TaskFunctionType.PrintReport:
-                        SetCurrentReport(assetTypeId, toEdit.FunctionData);
+                        SetCurrentReport(assetTypeId, task.FunctionData);
                         break;
                     case (int)TaskFunctionType.ExecuteSearch:
                     case (int)TaskFunctionType.ExportFileSearch:
-                        var runner = TaskRunnerFactory.GetRunner(toEdit, AuthenticationService.CurrentUserId, null);
-                        var result = runner.Run(toEdit);
+                        var runner = TaskRunnerFactory.GetRunner(task, AuthenticationService.CurrentUserId, null);
+                        var result = runner.Run(task);
                         if (result.Status == TaskStatus.Sussess && result.ActionOnComplete == TaskActionOnComplete.Navigate)
                         {
                             ifSearch.Attributes.Add("src", result.NavigationResult);
@@ -213,6 +214,7 @@ namespace AssetSite.admin.Tasks
             currentTask.Description = txtDescription.Text;
             currentTask.FunctionType = (int)selectedType;
             currentTask.IsActive = true;
+            currentTask.DisplayInSidebar = chkShowAtSidebar.Checked;
 
             switch (selectedType)
             {
