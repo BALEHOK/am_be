@@ -10,19 +10,23 @@ using Newtonsoft.Json.Linq;
 
 namespace AssetManagerAdmin.ViewModel
 {
-    public class AuthViewModel : ViewModelBase, ICommonViewModel
+    public class AuthViewModel : ViewModelBase
     {
-        private readonly IDataService _dataService;
+        public UserInfo CurrentUser { get; set; }
 
-        public AuthViewModel(IDataService dataService)
-        {
-            _dataService = dataService;
-        }
+        public ServerConfig SelectedServer { get; private set; }
 
-        public void OnLoggedIn(AuthorizeResponse authorizeResponse)
+        public void OnLoggedIn(ServerConfig server, AuthorizeResponse authorizeResponse)
         {
-            _dataService.CurrentUser = CreateUser(authorizeResponse);
-            MessengerInstance.Send(_dataService.SelectedServer, AppActions.LoginDone);
+            SelectedServer = server;
+            CurrentUser = CreateUser(authorizeResponse);
+            MessengerInstance.Send(
+                new LoginDoneModel
+                {
+                    Server = SelectedServer,
+                    User = CurrentUser
+                }, 
+                AppActions.LoginDone);
         }
 
         private UserInfo CreateUser(AuthorizeResponse authorizeResponse)
@@ -54,12 +58,9 @@ namespace AssetManagerAdmin.ViewModel
             return JObject.Parse(part);
         }
 
-        public bool IsActive { get; set; }
-
         public void OnLoggedOut()
         {
-            _dataService.CurrentUser = null;
-            MessengerInstance.Send(_dataService.SelectedServer, AppActions.LogoutDone);
+            MessengerInstance.Send(SelectedServer, AppActions.LogoutDone);
         }
     }
 }

@@ -1377,7 +1377,6 @@
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
@@ -1517,7 +1516,6 @@
     </Compile>
     <Compile Include="Asset\History.aspx.cs">
       <DependentUpon>History.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\History.aspx.designer.cs">
       <DependentUpon>History.aspx</DependentUpon>
@@ -2826,4 +2824,9 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\OctoPack.3.0.44\tools\OctoPack.targets" Condition="Exists('..\packages\OctoPack.3.0.44\tools\OctoPack.targets')" />
+  <Target Name="EnsureOctoPackImported" BeforeTargets="BeforeBuild" Condition="'$(OctoPackImported)' == ''">
+    <Error Condition="!Exists('..\packages\OctoPack.3.0.44\tools\OctoPack.targets') And ('$(RunOctoPack)' != '' And $(RunOctoPack))" Text="You are trying to build with OctoPack, but the NuGet targets file that OctoPack depends on is not available on this computer. This is probably because the OctoPack package has not been committed to source control, or NuGet Package Restore is not enabled. Please enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\OctoPack.3.0.44\tools\OctoPack.targets') And ('$(RunOctoPack)' != '' And $(RunOctoPack))" Text="OctoPack cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
 </Project>

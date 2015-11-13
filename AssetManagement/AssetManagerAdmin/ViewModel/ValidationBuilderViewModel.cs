@@ -13,13 +13,15 @@ namespace AssetManagerAdmin.ViewModel
         string ValidationExpression { get; set; }
     }
 
-    public class ValidationBuilderViewModel : ViewModelBase, IValidationBuilderViewModel, ICommonViewModel
+    public class ValidationBuilderViewModel : ViewModelBase, IValidationBuilderViewModel
     {
+        public ServerConfig CurrentServer { get; private set; }
+
+        public UserInfo CurrentUser { get; private set; }
+
         private readonly IDataService _dataService;
         private readonly IAssetsApiManager _assetsApiManager;
-        private string _server;
 
-        public bool IsActive { get; set; }
         public event EventHandler<string> OnNewOperator;
 
         #region Properties
@@ -140,7 +142,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteTestValidationCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
             api.ValidateAttributeAsync(_dataService.CurrentAssetAttribute.Id, ValidationTest, ValidationExpression)
                 .ContinueWith(a =>
                 {
@@ -167,7 +169,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteSaveValidatorCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
             api.SaveValidation(_dataService.CurrentAssetType, _dataService.CurrentAssetAttribute.DbName, ValidationExpression)
                 .ContinueWith(a =>
                 {
@@ -192,9 +194,10 @@ namespace AssetManagerAdmin.ViewModel
             _dataService = dataService;
             _assetsApiManager = assetsApiManager;
 
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                _server = server.ApiUrl;
+                CurrentServer = model.Server;
+                CurrentUser = model.User;
                 ValidationExpression = ValidationError = ValidationTest = string.Empty;
             });
 
@@ -204,10 +207,7 @@ namespace AssetManagerAdmin.ViewModel
                     ValidationExpression = _dataService.CurrentAssetAttribute.ValidationExpression;
             });
 
-            dataService.GetValidationButtons((buttons, exception) =>
-            {
-                ValidationButtons = buttons;
-            });
+            ValidationButtons = _dataService.GetValidationButtons();
         }
     }
 }

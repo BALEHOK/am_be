@@ -28,16 +28,17 @@ namespace AssetManagerAdmin.ViewModel
         public string Name { get; set; }
     }
 
-    public sealed class FormulaBuilderViewModel : ViewModelBase, ICommonViewModel
+    public sealed class FormulaBuilderViewModel : ViewModelBase
     {
+        public ServerConfig CurrentServer { get; private set; }
+
+        public UserInfo CurrentUser { get; private set; }
+
         private ExpressionParser _expressionParser;
         private readonly IDataService _dataService;
         private readonly IAssetsApiManager _assetsApiManager;
-        private string _server;
 
         public AssetsDataProvider DataProvider { get; private set; }
-
-        public bool IsActive { get; set; }
 
         public const string ExpressionParserPropertyName = "ExpressionParser";
         public ExpressionParser ExpressionParser
@@ -146,6 +147,8 @@ namespace AssetManagerAdmin.ViewModel
             {
                 _currentContext = value;
                 RaisePropertyChanged(CurrentContextPropertyName);
+                if (_canChangeContext)
+                    ChangeContext(_currentContext);
             }
         }
 
@@ -266,6 +269,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private RelayCommand _refreshAssetTypeListCommand;
         private readonly ILog _logger;
+        private bool _canChangeContext;
 
         public RelayCommand RefreshAssetTypeListCommand
         {
@@ -284,7 +288,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteSaveFormulaCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
 
             var formulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
 
@@ -574,38 +578,19 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public async Task WaitForServerName()
-        {
-            while (string.IsNullOrEmpty(_server))
-            {
-                await Task.Delay(500).ConfigureAwait(false);
-            }
-        }
-
         private async void ChangeContext(FormulaBuilderContext context)
         {
             if (Builder != null)
                 Builder.Reset();
-
-            await WaitForServerName();
-
             LoadTypesInfo(context);
         }
 
         private void LoadTypesInfo(FormulaBuilderContext context)
         {
-            MessengerInstance.Send("Loading asset types...", AppActions.LoadingStarted);
-            _dataService.GetTypesInfo(_server, (model, exception) =>
+            _dataService.GetTypesInfo(CurrentUser, CurrentServer.ApiUrl).ContinueWith(result =>
             {
-                MessengerInstance.Send("", AppActions.LoadingCompleted);
-                if (exception != null)
-                {
-                    MessengerInstance.Send(new StatusMessage(exception));
-                    return;
-                }
-
                 // do not modify original collection
-                DataProvider.AssetTypes = model.ActiveTypes.ToList();
+                DataProvider.AssetTypes = result.Result.ActiveTypes.ToList();
 
                 DataProvider.AssetTypes.ForEach(t =>
                 {
@@ -634,17 +619,8 @@ namespace AssetManagerAdmin.ViewModel
                     FormulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
                 };
                 ExpressionParser = new ExpressionParser(DataProvider, Builder, Grammar);
-            });
-        }
-
-        protected override void RaisePropertyChanged(string propertyName)
-        {
-            base.RaisePropertyChanged(propertyName);
-
-            if (propertyName == CurrentContextPropertyName)
-            {
-                ChangeContext(CurrentContext);
-            }
+            }, 
+            TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         public FormulaBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager, ILog logger)
@@ -661,11 +637,15 @@ namespace AssetManagerAdmin.ViewModel
                 new FormulaBuilderContext {Name = "Screen Formulas", Type = FormulaBuilderContextType.ScreenFormulas},
                 new FormulaBuilderContext {Name = "Validation", Type = FormulaBuilderContextType.Validation},
             };
+
             CurrentContext = Contexts.Single(c => c.Type == FormulaBuilderContextType.DbFormulas);
 
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                _server = server.ApiUrl;
+                CurrentServer = model.Server;
+                CurrentUser = model.User;
+                LoadTypesInfo(CurrentContext);
+                _canChangeContext = true; 
             });
         }
     }

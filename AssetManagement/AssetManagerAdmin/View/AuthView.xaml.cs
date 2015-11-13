@@ -17,6 +17,8 @@ namespace AssetManagerAdmin.View
         private readonly WebBrowser _logoutWebView;
         private const string CallbackUrl = "oob://localhost/AMATclient";
 
+        public ServerConfig Server { get; private set; }
+
         public AuthView()
         {
             _loginWebView = new WebBrowser();
@@ -29,9 +31,10 @@ namespace AssetManagerAdmin.View
             InitializeComponent();
         }
 
-        public void Login(string authUrl)
+        public void Login(ServerConfig server)
         {
-            var request = new AuthorizeRequest(authUrl + AuthConstants.Endpoints.Authorize);
+            Server = server;
+            var request = new AuthorizeRequest(server.AuthUrl + AuthConstants.Endpoints.Authorize);
 
             const string requiredScopes =
                 AuthConstants.Scopes.OpenId + " " + AuthConstants.Scopes.Profile + " " + AuthConstants.Scopes.WebApi;
@@ -73,7 +76,7 @@ namespace AssetManagerAdmin.View
 
                 _loginWebView.Visibility = Visibility.Collapsed;
 
-                ((AuthViewModel) DataContext).OnLoggedIn(authorizeResponse);
+                ((AuthViewModel) DataContext).OnLoggedIn(Server, authorizeResponse);
             }
         }
 

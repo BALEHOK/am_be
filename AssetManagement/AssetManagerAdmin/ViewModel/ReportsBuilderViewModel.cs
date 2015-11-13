@@ -12,7 +12,10 @@ namespace AssetManagerAdmin.ViewModel
 {
     public class ReportsBuilderViewModel : ViewModelBase
     {
-        private string _server;
+        public ServerConfig CurrentServer { get; private set; }
+
+        public UserInfo CurrentUser { get; private set; }
+
         private readonly IDataService _dataService;
         private readonly IAssetsApiManager _assetsApiManager;
         private bool _isPublishing;
@@ -146,9 +149,9 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecutePublishReportCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
             var fileName = ReportFileName;
             _isPublishing = true;
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
             api.PublishReport(ReportName, fileName, ReportAssetType.Id).ContinueWith(r =>
             {
                 api.GetReportsList().ContinueWith(e =>
@@ -170,11 +173,11 @@ namespace AssetManagerAdmin.ViewModel
                        (_deleteReportCommand =
                            new RelayCommand<CustomReportModel>(ExecuteDeleteReportCommand, model => true));
             }
-        }               
+        }
 
         private void ExecuteDeleteReportCommand(CustomReportModel reportModel)
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
             api.DeleteReport(reportModel.Name, reportModel.AssetTypeId).ContinueWith(e =>
             {
                 _allReports.Remove(reportModel);
@@ -207,15 +210,16 @@ namespace AssetManagerAdmin.ViewModel
                 }
             });
 
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                _server = server.ApiUrl;
+                CurrentServer = model.Server;
+                CurrentUser = model.User;
             });
         }
 
         private void LoadReportsAndTypes()
         {
-            var api = _assetsApiManager.GetAssetApi(_server, _dataService.CurrentUser);
+            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
             MessengerInstance.Send("Loading reports list...", AppActions.LoadingStarted);
             api.GetReportsList().ContinueWith(task =>
             {
@@ -232,18 +236,18 @@ namespace AssetManagerAdmin.ViewModel
             });
 
             MessengerInstance.Send("Loading asset types...", AppActions.LoadingStarted);
-            _dataService.GetTypesInfo(_server, (typesInfo, e) =>
+            _dataService.GetTypesInfo(CurrentUser, CurrentServer.ApiUrl).ContinueWith(result =>
             {
                 MessengerInstance.Send("", AppActions.LoadingCompleted);
-                if (e != null)
+                if (result.Exception != null)
                 {
                     MessengerInstance.Send(
-                        new StatusMessage(e));
+                        new StatusMessage(result.Exception));
                 }
                 else
                 {
                     // do not modify original collection
-                    AssetTypesList = typesInfo.ActiveTypes.ToList();
+                    AssetTypesList = result.Result.ActiveTypes.ToList();
                     AssetTypesList.Insert(0, new AssetTypeModel
                     {
                         Id = -1,

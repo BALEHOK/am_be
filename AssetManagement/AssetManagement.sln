@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetSite", "AssetSite\Asse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Core", "AppFramework.Core\AppFramework.Core.csproj", "{890BDD21-2741-4028-9D20-9102D51AD64D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetManagementBatch", "AssetManagementBatch\AssetManagementBatch.csproj", "{289E4353-968B-4080-A1E9-2CD0FD0C8BEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetManager.Service", "AssetManagementBatch\AssetManager.Service.csproj", "{289E4353-968B-4080-A1E9-2CD0FD0C8BEB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.DataProxy", "AppFramework.DataProxy\AppFramework.DataProxy.csproj", "{3B3DFA46-D697-40D8-81DE-90ECA111A546}"
 EndProject
@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Web.UnitTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculationTests", "CalculationTests\CalculationTests.csproj", "{89B7D244-94E8-470C-948C-3F9BD0F304C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetManagerAdmin", "AssetManagerAdmin\AssetManagerAdmin.csproj", "{394F3C15-D8AE-4535-A5D1-B48D87CD3006}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetManager.Toolkit", "AssetManagerAdmin\AssetManager.Toolkit.csproj", "{394F3C15-D8AE-4535-A5D1-B48D87CD3006}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Reports", "AppFramework.Reports\AppFramework.Reports.csproj", "{41E0C02C-E115-4781-B686-B779A2B4EB6E}"
 EndProject

@@ -6,14 +6,13 @@ using mshtml;
 
 namespace AssetManagerAdmin.ViewModel
 {
-    public class WebAdminViewModel : ViewModelBase, ICommonViewModel
+    public class WebAdminViewModel : ViewModelBase
     {
-        private readonly IDataService _dataService;
+        public UserInfo CurrentUser { get; private set; }
+
         private RelayCommand _mainMenuCommand;
         private string _server;
         private bool _isLoggingIn;
-
-        public bool IsActive { get; set; }
 
         #region Properties
 
@@ -74,23 +73,23 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteHandlePageLoadCommand(PageLoadedEventArgs args)
         {
-            var user = _dataService.CurrentUser;
-            if (user != null)
-                AutoLogin(args.Document, user);
+            if (CurrentUser != null)
+                AutoLogin(args.Document, CurrentUser);
         }
 
         #endregion
 
-        public WebAdminViewModel(IDataService dataService)
+        public WebAdminViewModel()
         {
-            _dataService = dataService;
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                _server = server.AdminUrl;
-                if (_dataService.CurrentUser.UserModel.UserRole == "Administrators" ||
-                    _dataService.CurrentUser.UserModel.UserRole == "SuperUser")
+                CurrentUser = model.User;
+                _server = model.Server.AdminUrl;
+                if (CurrentUser.UserModel.UserRole == "Administrators" ||
+                    CurrentUser.UserModel.UserRole == "SuperUser")
                     GoHome();
             });
+
             MessengerInstance.Register<object>(this, AppActions.LogoutDone, obj =>
             {
                 BrowserUrl = string.Format("{0}/logout", _server);

@@ -9,28 +9,22 @@ using AssetManagerAdmin.Model;
 using AssetManagerAdmin.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
 namespace AssetManagerAdmin.ViewModel
 {
-    public interface ICommonViewModel
-    {
-        bool IsActive { get; set; }
-    }
-
     /// <summary>
     /// This class contains properties that the main View can data bind to.
     /// <para>
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase, ICommonViewModel
+    public class MainViewModel : ViewModelBase
     {
+        public UserInfo CurrentUser { get; private set; }
+
         private readonly IDataService _dataService;
         private readonly Dictionary<int, ContentControl> _views;
-
-        public bool IsActive { get; set; }
 
         public IDialogService DialogService
         {
@@ -230,7 +224,7 @@ namespace AssetManagerAdmin.ViewModel
 
             var authView = new AuthView();
             CurrentView = authView;
-            authView.Logout(_dataService.SelectedServer.AuthUrl, _dataService.CurrentUser);
+            authView.Logout(SelectedServer.AuthUrl, CurrentUser);
             MessengerInstance.Send(new object(), AppActions.LoggingOut);
         }
 
@@ -287,6 +281,8 @@ namespace AssetManagerAdmin.ViewModel
         /// </summary>
         public MainViewModel(IDataService dataService)
         {
+            _dataService = dataService;
+
             EventManager.RegisterClassHandler(typeof(UserControl), UIElement.KeyUpEvent, new KeyEventHandler(
                 (sender, args) =>
                 {
@@ -302,24 +298,22 @@ namespace AssetManagerAdmin.ViewModel
                 {3, new ReportsBuilderView()} 
             };
 
-            _dataService = dataService;
-
             MessengerInstance.Register<ServerConfig>(this, AppActions.LoggingIn, server =>
             {
                 var authView = new AuthView();
                 CurrentView = authView;
-                authView.Login(server.AuthUrl);
+                authView.Login(server);
             });
 
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoginDone, server =>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                _dataService.GetMainMenuItems((menuItems, exception) =>
-                {
-                    SelectedServer = server;
-                    MainMenuItems = menuItems;
-                    SelectedMenuItem = MainMenuItems.First();
-                    IsViewsMenuEnabled = true;
-                });
+                SelectedServer = model.Server;
+                CurrentUser = model.User;
+
+                var menuItems = _dataService.GetMainMenuItems(CurrentUser);
+                MainMenuItems = menuItems;
+                SelectedMenuItem = MainMenuItems.First();
+                IsViewsMenuEnabled = true;
             });
 
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, server =>
