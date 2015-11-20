@@ -1377,6 +1377,7 @@
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
@@ -1516,6 +1517,7 @@
     </Compile>
     <Compile Include="Asset\History.aspx.cs">
       <DependentUpon>History.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\History.aspx.designer.cs">
       <DependentUpon>History.aspx</DependentUpon>
@@ -2168,12 +2170,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Config.Files\connectionStrings.Staging.AssetManager.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Config.Files\connectionStrings.Staging.SOBBUB.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Config.Files\appSettings.Staging.SOBBUB.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2194,13 +2190,6 @@
     <None Include="Properties\PublishProfiles\sobenbub- spb2.daxx.ru.pubxml" />
     <None Include="Properties\PublishProfiles\spb2.daxx.ru.pubxml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
-    <None Include="Web.Staging-AssetManager.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web.Staging-SOBBUB.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="admin\Contexts\Default.aspx" />

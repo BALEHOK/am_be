@@ -31,6 +31,10 @@ namespace AssetManager.WebApi.Models.Search
         [JsonConverter(typeof(AttributeFilterValueConverter))]
         public IdNamePair<string, string> Value { get; set; }
 
+        public bool UseComplexValue { get; set; }
+
+        public AttributeFilter[] ComplexValue { get; set; }
+
         public AttributeTypeModel ReferenceAttrib { get; set; }
     }
 }

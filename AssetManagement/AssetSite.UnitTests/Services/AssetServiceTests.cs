@@ -66,7 +66,7 @@ namespace AssetSite.UnitTests.Services
             var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
 
             assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
+                .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             assetsCoreServiceMock
@@ -103,7 +103,7 @@ namespace AssetSite.UnitTests.Services
             var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
 
             assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
+                .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             assetsCoreServiceMock
@@ -153,7 +153,7 @@ namespace AssetSite.UnitTests.Services
             var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
 
             assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
+                .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             assetsCoreServiceMock
@@ -200,7 +200,7 @@ namespace AssetSite.UnitTests.Services
             var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
 
             assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
+                .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             dynListServiceMock
@@ -313,7 +313,7 @@ namespace AssetSite.UnitTests.Services
             var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
 
             assetTypeRepoMock
-                .Setup(x => x.GetById(assetTypeId))
+                .Setup(x => x.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             assetsCoreServiceMock

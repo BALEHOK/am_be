@@ -19,7 +19,7 @@
                     AssetTypeRepository.GetById(
                         PredefinedAttribute.Get(
                             AppFramework.ConstantsEnumerators.PredefinedEntity.Document
-                        ).DynEntityConfigID
+                            ).DynEntityConfigID
                     );
 
             asset = AssetsService.CreateAsset(at);

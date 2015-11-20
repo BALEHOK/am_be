@@ -6,11 +6,6 @@ using AssetSite.UnitTests.Fixtures;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Xunit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions;
 
@@ -32,14 +27,14 @@ namespace AssetSite.UnitTests.Services
             var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
 
             assetTypeRepositoryMock
-                .Setup(r => r.GetById(assetTypeId))
+                .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
                 .Returns(assetType);
 
             unitOfWorkMock
                 .Setup(uow => uow
                     .TaxonomyItemRepository
                     .GetTaxonomyItemsByAssetTypeId(assetTypeId))
-                .Returns(new TaxonomyItem[] {
+                .Returns(new[] {
                     new TaxonomyItem
                     {
                         Name = "second",

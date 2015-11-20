@@ -115,7 +115,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             List<SqlParameter> parameters;
 
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
-            if (!type.IsActive)
+            if (type == null)
             {
                 return new List<IIndexEntity>(0);
             }
@@ -144,7 +144,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             if (assetTypeUid.HasValue)
             {
                 var type = _assetTypeRepository.GetByUid(assetTypeUid.Value);
-                if (!type.IsActive)
+                if (type == null)
                 {
                     return new List<IIndexEntity>(0);
                 }
@@ -156,7 +156,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             else
             {
                 searchQuery = _generateContextSearchQuery(searchId,
-                    elements.ToSearchChains(new ContextForSearch(_unitOfWork)).ToList(), time,
+                    elements.ToSearchChains(new ContextForSearch(_unitOfWork)).ToList(),
                     out parameters);
             }
 
@@ -282,9 +282,6 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <summary>
         /// Because we cannot pass dynamic set of parameters to the SP, we have to pre-fill the temporary table
         /// </summary>
-        /// <param name="searchQuery"></param>
-        /// <param name="parameters"></param>
-        /// <param name="unitOfWork"></param>
         private static void _prefillTemporaryTable(long searchId, string searchQuery, List<SqlParameter> parameters,
             IUnitOfWork unitOfWork)
         {
@@ -326,23 +323,28 @@ namespace AppFramework.Core.Classes.SearchEngine
             var joins = new HashSet<string>();
             foreach (var element in complexChains)
             {
-                var joinLine = string.Empty;
+                string joinLine;
 
-                if (element.ElementType == Enumerators.DataType.Assets)
+                // join related asset table to be able to apply complex WHERE condition
+                if (element.ElementType == Enumerators.DataType.Asset)
                 {
-                    throw new NotImplementedException();
-                    //joinLine = string.Format(" LEFT JOIN {0} ON {0}.[{1}] = maa.RelatedDynEntityId AND {0}.{2} = 1 ",
-                    //                                    element.FieldSql.Split(new char[] { '.' })[0],
-                    //                                    AttributeNames.DynEntityId,
-                    //                                    AttributeNames.ActiveVersion);
+                    joinLine =
+                        string.Format(
+                            @" LEFT JOIN [{0}] ON [{1}].[{2}] = [{0}].[DynEntityId] AND [{0}]." + AttributeNames.ActiveVersion + " = 1 ",
+                            element.ComplexValue.ReferencedAssetType.DBTableName,
+                            at.DBTableName,
+                            element.FieldSql);
                 }
-                if (element.ElementType == Enumerators.DataType.DynList ||
-                    element.ElementType == Enumerators.DataType.DynLists)
+                else if (IsDynamicList(element))
                 {
                     joinLine =
                         string.Format(
                             @" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
                             at.DBTableName);
+                }
+                else if (element.ElementType == Enumerators.DataType.Assets)
+                {
+                    throw new NotImplementedException("Assets ElementType is not supported in search");
                 }
                 else
                 {
@@ -366,8 +368,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             return query;
         }
 
-        private static string _generateContextSearchQuery(long searchId, List<AttributeElement> elements,
-            TimePeriodForSearch time, out List<SqlParameter> parameters)
+        private static string _generateContextSearchQuery(long searchId, List<AttributeElement> elements, out List<SqlParameter> parameters)
         {
             //construct select statment
             var selectStatement = string.Format("SELECT {3}, [{0}], [{1}] FROM [{2}] WHERE ",
@@ -375,19 +376,6 @@ namespace AppFramework.Core.Classes.SearchEngine
                 PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.DynEntityConfigUid),
                 typeof (DynEntityContextAttributesValues).Name,
                 searchId);
-
-            string timeQuery;
-
-            if (time == TimePeriodForSearch.CurrentTime)
-            {
-                timeQuery = String.Format(" AND {0} = 1",
-                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.IsActive));
-            }
-            else if (time == TimePeriodForSearch.History)
-            {
-                timeQuery = String.Format(" AND {0} = 0",
-                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.IsActive));
-            }
 
             parameters = new List<SqlParameter>();
 
@@ -419,114 +407,138 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <summary>
         /// Returns the SQL where statement
         /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="period"></param>
-        /// <returns></returns>
         private static string _getWhereStatement(List<AttributeElement> elements, TimePeriodForSearch period,
             string tableName, out List<SqlParameter> parameters, bool skipBrackets = false)
         {
-            var query = string.Empty;
+            var query = new StringBuilder();
             parameters = new List<SqlParameter>();
 
+            query.Append(" WHERE ");
             if (elements.Count > 0)
             {
-                query = " WHERE ";
-                query += "( ";
+                query.Append("( ");
 
-                for (var i = 0; i < elements.Count; i++)
+                BuildQuery(elements, tableName, parameters, skipBrackets, query);
+
+                query.Append(") And ");
+            }
+
+            query.AppendFormat(" [{0}].[{1}] = {2}",
+                tableName,
+                AttributeNames.ActiveVersion,
+                period == TimePeriodForSearch.CurrentTime ? "1" : "2");
+
+            return query.ToString();
+        }
+
+        private static void BuildQuery(List<AttributeElement> elements, string tableName, List<SqlParameter> parameters, bool skipBrackets, StringBuilder query)
+        {
+            for (var i = 0; i < elements.Count; i++)
+            {
+                var element = elements[i];
+
+                if (element.IsComplex && element.ElementType == Enumerators.DataType.Asset)
                 {
-                    var t = elements[i].GetSearchTerm(tableName);
-
-                    switch (elements[i].ElementType)
+                    if (!skipBrackets)
                     {
-                        case Enumerators.DataType.CurrentDate:
-                        case Enumerators.DataType.DateTime:
-                            DateTime time;
-                            if (DateTime.TryParse(elements[i].Value, out time))
-                            {
-                                t.Parameter.Value = time;
-                            }
-                            else
-                            {
-                                t.Parameter.Value = SqlDateTime.MinValue.Value;
-                            }
-                            
-                            break;
-                        case Enumerators.DataType.Int:
-                            int intvalue;
-                            int.TryParse(elements[i].Value, out intvalue);
-                            t.Parameter.Value = intvalue;
-                            break;
-                        case Enumerators.DataType.Long:
-                            long longvalue;
-                            long.TryParse(elements[i].Value, out longvalue);
-                            t.Parameter.Value = longvalue;
-                            break;
-                        case Enumerators.DataType.Float:
-                            float fvalue;
-                            float.TryParse(elements[i].Value, out fvalue);
-                            t.Parameter.Value = fvalue;
-                            break;
-                        case Enumerators.DataType.Bool:
-                            var bValue = false;
-                            if (elements[i].Value.ToLower() == "true" || elements[i].Value == "1")
-                            {
-                                bValue = true;
-                            }
-                            else
-                            {
-                                bool.TryParse(elements[i].Value, out bValue);
-                            }
-                            t.Parameter.Value = bValue;
-                            break;
-                        case Enumerators.DataType.Money:
-                        case Enumerators.DataType.Euro:
-                            decimal dvalue;
-                            decimal.TryParse(elements[i].Value, out dvalue);
-                            t.Parameter.Value = dvalue;
-                            break;
+                        query.Append(element.StartBrackets);
                     }
 
-                    if (t.Parameter != null)
+                    var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
+                    if (oper is AssetNotInOperator)
                     {
-                        parameters.Add(t.Parameter);
+                        query.Append(" NOT");
+                    }
+                    query.Append(" (");
+
+                    BuildQuery(element.ComplexValue.Elements, element.ComplexValue.ReferencedAssetType.DBTableName, parameters, skipBrackets, query);
+                    query.Append(") ");
+
+                    if (!skipBrackets)
+                    {
+                        query.Append(element.EndBrackets);
                     }
 
-                    query += skipBrackets ? string.Empty : elements[i].StartBrackets;
-                    query += t.CommandText;
-                    query += skipBrackets ? string.Empty : elements[i].EndBrackets;
                     if (i < elements.Count - 1)
                     {
-                        // it's not last element and it's dynlist(s) and next element is also dynlist => use only OR concatenation
-                        if (ChainIsDynamicList(elements[i]) && ChainIsDynamicList(elements[i + 1]))
+                        query.Append(element.AndOr == 0 ? " AND " : " OR ");
+                    }
+                    continue;
+                }
+
+                var t = element.GetSearchTerm(tableName);
+
+                switch (element.ElementType)
+                {
+                    case Enumerators.DataType.CurrentDate:
+                    case Enumerators.DataType.DateTime:
+                        DateTime time;
+                        if (DateTime.TryParse(element.Value, out time))
                         {
-                            query += " OR ";
+                            t.Parameter.Value = time;
                         }
                         else
                         {
-                            query += elements[i].AndOr == 0 ? " AND " : " OR ";
+                            t.Parameter.Value = SqlDateTime.MinValue.Value;
                         }
-                    }
+
+                        break;
+                    case Enumerators.DataType.Int:
+                        int intvalue;
+                        int.TryParse(element.Value, out intvalue);
+                        t.Parameter.Value = intvalue;
+                        break;
+                    case Enumerators.DataType.Long:
+                        long longvalue;
+                        long.TryParse(element.Value, out longvalue);
+                        t.Parameter.Value = longvalue;
+                        break;
+                    case Enumerators.DataType.Float:
+                        float fvalue;
+                        float.TryParse(element.Value, out fvalue);
+                        t.Parameter.Value = fvalue;
+                        break;
+                    case Enumerators.DataType.Bool:
+                        bool bValue;
+                        if (element.Value.ToLower() == "true" || element.Value == "1")
+                        {
+                            bValue = true;
+                        }
+                        else
+                        {
+                            bool.TryParse(element.Value, out bValue);
+                        }
+                        t.Parameter.Value = bValue;
+                        break;
+                    case Enumerators.DataType.Money:
+                    case Enumerators.DataType.Euro:
+                        decimal dvalue;
+                        decimal.TryParse(element.Value, out dvalue);
+                        t.Parameter.Value = dvalue;
+                        break;
                 }
 
-                query += ") ";
-            }
+                if (t.Parameter != null)
+                {
+                    parameters.Add(t.Parameter);
+                }
 
-            switch (period)
-            {
-                case TimePeriodForSearch.CurrentTime:
-                    query += elements.Count > 0 ? " And " : " WHERE ";
-                    query += string.Format(" [{0}].[{1}] = 1", tableName, AttributeNames.ActiveVersion);
-                    break;
-                case TimePeriodForSearch.History:
-                    query += elements.Count > 0 ? " And " : " WHERE ";
-                    query += string.Format(" [{0}].[{1}] = 0", tableName, AttributeNames.ActiveVersion);
-                    break;
-                default:
-                    break;
-            }
+                if (skipBrackets)
+                {
+                    query.Append(t.CommandText);
+                }
+                else
+                {
+                    query.Append(element.StartBrackets);
+                    query.Append(t.CommandText);
+                    query.Append(element.EndBrackets);
+                }
 
-            return query;
+                if (i < elements.Count - 1)
+                {
+                    query.Append(element.AndOr == 0 ? " AND " : " OR ");
+                }
+            }
         }
 
         /// <summary>
@@ -534,7 +546,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private static bool ChainIsDynamicList(AttributeElement element)
+        private static bool IsDynamicList(AttributeElement element)
         {
             return element.ElementType == Enumerators.DataType.DynList ||
                    element.ElementType == Enumerators.DataType.DynLists;

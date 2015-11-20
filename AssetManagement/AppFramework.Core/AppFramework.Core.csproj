@@ -247,6 +247,9 @@
     <Compile Include="Classes\LayoutType.cs" />
     <Compile Include="Classes\SearchEngine\ISearchTracker.cs" />
     <Compile Include="Classes\SearchEngine\ITypeSearch.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\AssetInOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\AssetNotInOperator.cs" />
+    <Compile Include="Classes\SearchEngine\TypeSearchElements\AttributeElementCoplexValue.cs" />
     <Compile Include="Classes\Tasks\Runners\ITaskRunnerFactory.cs" />
     <Compile Include="Classes\Tasks\TaskResult.cs" />
     <Compile Include="ConstantsEnumerators\SecuredModules.cs" />
@@ -564,7 +567,9 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

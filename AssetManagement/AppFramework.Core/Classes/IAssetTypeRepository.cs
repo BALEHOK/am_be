@@ -6,8 +6,8 @@ namespace AppFramework.Core.Classes
 {
     public interface IAssetTypeRepository
     {
-        AssetType GetById(long id);
-        AssetType GetByUid(long uid);
+        AssetType GetById(long id, bool activeOnly = true);
+        AssetType GetByUid(long uid, bool activeOnly = true);
         void Save(AssetType assetType, long currentUserId, List<TaxonomyContainer> containers = null);
         AssetType GetGeneralAssetType();
         Dictionary<long, AssetType> GetTypeRevisions(long typeId);

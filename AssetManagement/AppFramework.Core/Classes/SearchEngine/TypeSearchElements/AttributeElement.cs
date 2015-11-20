@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes.SearchEngine.SearchOperators;
@@ -68,9 +69,10 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
         {
             get
             {
-                return this.ElementType == Enumerators.DataType.Assets
-                    || this.ElementType == Enumerators.DataType.DynList
-                    || this.ElementType == Enumerators.DataType.DynLists;
+                return (ElementType == Enumerators.DataType.Asset && ComplexValue != null)
+                    || ElementType == Enumerators.DataType.Assets
+                    || ElementType == Enumerators.DataType.DynList
+                    || ElementType == Enumerators.DataType.DynLists;
             }
         }
 
@@ -90,6 +92,8 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
             set { _value = Formatting.Escape(value); }
         }
         private string _value;
+
+        public AttributeElementCoplexValue ComplexValue { get; set; }
 
         [DataMember]
         public long ContextUID { get; set; }

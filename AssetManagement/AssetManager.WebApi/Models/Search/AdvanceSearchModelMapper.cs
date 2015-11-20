@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
@@ -13,12 +12,17 @@ namespace AssetManager.WebApi.Models.Search
     public class AdvanceSearchModelMapper : IAdvanceSearchModelMapper
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAssetTypeRepository _assetTypeRepository;
 
-        public AdvanceSearchModelMapper(IUnitOfWork unitOfWork)
+        public AdvanceSearchModelMapper(IUnitOfWork unitOfWork, IAssetTypeRepository assetTypeRepository)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
+
+            if (assetTypeRepository == null)
+                throw new ArgumentNullException("assetTypeRepository");
+            _assetTypeRepository = assetTypeRepository;
         }
 
         /// <summary>
@@ -31,28 +35,28 @@ namespace AssetManager.WebApi.Models.Search
                 return new List<AttributeElement>(0);
             }
 
-            var assetType = _unitOfWork.DynEntityConfigRepository
-                .Single(c => c.DynEntityConfigId == searchModel.AssetTypeId && c.ActiveVersion,
-                    c => c.DynEntityAttribConfigs.Select(ac => ac.DataType));
+            var assetType = _assetTypeRepository.GetById(searchModel.AssetTypeId);
 
             var operators = _unitOfWork.SearchOperatorsRepository.Get().ToList();
 
-            var attributeFilters = searchModel.Attributes;
+            return GetAttributeElements(searchModel.Attributes, assetType, operators);
+        }
 
+        private List<AttributeElement> GetAttributeElements(AttributeFilter[] attributeFilters, AssetType assetType, List<SearchOperators> operators)
+        {
             var attributeElements = new List<AttributeElement>();
-            AttributeElement currentAttributeElement = null;
 
             var currentFilter = attributeFilters[0];
             for (var i = 0; i < attributeFilters.Length;)
             {
-                currentAttributeElement = new AttributeElement();
+                var currentAttributeElement = new AttributeElement();
 
                 CollectOpenParentheses(attributeFilters, currentAttributeElement, ref currentFilter, ref i);
 
                 if (currentFilter.Parenthesis == AttributeFilter.ParenthesisType.None)
                 {
-                    var attribute = assetType.DynEntityAttribConfigs.Single(
-                        a => a.DynEntityAttribConfigId == currentFilter.ReferenceAttrib.Id && a.ActiveVersion);
+                    var attribute = assetType.Attributes.Single(
+                        a => a.ID == currentFilter.ReferenceAttrib.Id);
 
                     SetAttributeElementProperties(attribute, operators, currentFilter, currentAttributeElement);
 
@@ -116,11 +120,11 @@ namespace AssetManager.WebApi.Models.Search
         /// <param name="operators"></param>
         /// <param name="currentFilter">Attribute filter view model</param>
         /// <param name="currentAttributeElement">Attribute filter business model</param>
-        private void SetAttributeElementProperties(DynEntityAttribConfig attribute, List<SearchOperators> operators,
+        private void SetAttributeElementProperties(AssetTypeAttribute attribute, List<SearchOperators> operators,
             AttributeFilter currentFilter, AttributeElement currentAttributeElement)
         {
             currentAttributeElement.FieldName = attribute.Name;
-            currentAttributeElement.FieldSql = attribute.DBTableFieldname;
+            currentAttributeElement.FieldSql = attribute.DBTableFieldName;
             SetLogicalOperator(currentFilter, currentAttributeElement);
 
             var oper = operators.Single(o => o.SearchOperatorUid == currentFilter.OperatorId);
@@ -132,6 +136,18 @@ namespace AssetManager.WebApi.Models.Search
                 throw new Exception("Can't parse attribute type " + attribute.DataType.Name);
             }
             currentAttributeElement.ElementType = attributeDataType;
+
+            if (attributeDataType == Enumerators.DataType.Asset && currentFilter.UseComplexValue)
+            {
+                var referencedAssetType = _assetTypeRepository.GetById(currentFilter.ReferenceAttrib.RelationId);
+                currentAttributeElement.ComplexValue = new AttributeElementCoplexValue
+                {
+                    ReferencedAssetType = referencedAssetType,
+                    Elements = GetAttributeElements(currentFilter.ComplexValue, referencedAssetType, operators)
+                };
+
+                return;
+            }
 
             if (currentFilter.Value == null || currentFilter.Value.Id == null)
             {

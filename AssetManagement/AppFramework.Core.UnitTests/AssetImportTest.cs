@@ -1,5 +1,4 @@
-﻿using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.Classes;
+﻿using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.Classes.IE;
 using AppFramework.Core.Classes.IE.Adapters;
@@ -9,7 +8,6 @@ using AppFramework.Core.UnitTests.Fixtures;
 using AppFramework.Core.UnitTests.Fixtures.AssetTypes;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
-using AppFramework.UnitTests.Common.Fixtures;
 using Common.Logging;
 using Moq;
 using Ploeh.AutoFixture.Xunit;
@@ -51,7 +49,7 @@ namespace AppFramework.Core.UnitTests
             var bindings = new WerkloosheidBindingsFixture(anonymousAssetType);
 
             var repositoryMock = repo.Create<IAssetTypeRepository>();
-            repositoryMock.Setup(r => r.GetById(It.IsAny<long>()))
+            repositoryMock.Setup(r => r.GetById(It.IsAny<long>(), It.IsAny<bool>()))
                 .Returns(anonymousAssetType);
             var excelToXmlAdapterMock = repo.Create<IExcelToXmlConverter>();
             excelToXmlAdapterMock.Setup(a => a.ConvertToXml(It.IsAny<string>(),

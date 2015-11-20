@@ -1,4 +1,8 @@
-﻿using AppFramework.ConstantsEnumerators;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Transactions;
+using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.Classes.Caching;
@@ -8,23 +12,19 @@ using AppFramework.Core.DAL;
 using AppFramework.Core.DAL.Adapters;
 using AppFramework.Core.Exceptions;
 using AppFramework.Core.Interceptors;
+using AppFramework.Core.Properties;
 using AppFramework.Core.Services;
 using AppFramework.Core.Validation;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 using AutoMapper;
 using LinqKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Transactions;
 
 namespace AppFramework.Core.Classes
 {
     public class AssetTypeRepository : IAssetTypeRepository
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDataTypeService _dataTypeService;
         private readonly IValidationRulesService _validationRulesService;
         private readonly IDynColumnAdapter _dynColumnAdapter;
         private readonly IAssetTypeTaxonomyManager _assetTypeTaxonomyManager;
@@ -32,7 +32,6 @@ namespace AppFramework.Core.Classes
 
         public AssetTypeRepository(
             IUnitOfWork unitOfWork,
-            IDataTypeService dataTypeService,
             IValidationRulesService validationRulesService,
             IDynColumnAdapter dynColumnAdapter,
             IAssetTypeTaxonomyManager assetTypeTaxonomyManager,
@@ -44,9 +43,6 @@ namespace AppFramework.Core.Classes
             if (dynColumnAdapter == null)
                 throw new ArgumentNullException("dynColumnAdapter");
             _dynColumnAdapter = dynColumnAdapter;
-            if (dataTypeService == null)
-                throw new ArgumentNullException("dataTypeService");
-            _dataTypeService = dataTypeService;
             if (validationRulesService == null)
                 throw new ArgumentNullException("validationRulesService");
             _validationRulesService = validationRulesService;
@@ -62,19 +58,16 @@ namespace AppFramework.Core.Classes
         public static AssetTypeRepository Create(IUnitOfWork unitOfWork)
         {
             if (unitOfWork == null)
-                throw new ArgumentNullException("IUnitOfWork");
-            
+                throw new ArgumentNullException("unitOfWork");
+
             var dataTypeService = new DataTypeService(unitOfWork);
             var dynColumnAdapter = new DynColumnAdapter(dataTypeService);
             var validationRulesService = new ValidationRulesService(unitOfWork,
                 new ValidationOperatorFactory(unitOfWork, new DefaultBarcodeProvider()));
             var assetTypeTaxonomyManager = new AssetTypeTaxonomyManager(unitOfWork);
-            var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
-            var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
             return new AssetTypeRepository(unitOfWork,
-                dataTypeService, 
-                validationRulesService, 
+                validationRulesService,
                 dynColumnAdapter,
                 assetTypeTaxonomyManager,
                 rightsService);
@@ -84,17 +77,18 @@ namespace AppFramework.Core.Classes
         /// Gets the assetType by UID
         /// </summary>
         /// <param name="uid">The uid.</param>
+        /// <param name="activeOnly"></param>
         /// <returns></returns>
-        public AssetType GetByUid(long uid)
+        public AssetType GetByUid(long uid, bool activeOnly = true)
         {
             var ibuilder = new IncludesBuilder<DynEntityConfig>();
-            ibuilder.Add((e) => e.DynEntityAttribConfigs.Select(a => a.DataType));
-            ibuilder.Add((e) => e.AttributePanel
+            ibuilder.Add(e => e.DynEntityAttribConfigs.Select(a => a.DataType));
+            ibuilder.Add(e => e.AttributePanel
                 .Select(a => a.AttributePanelAttribute
                     .Select(apa => apa.DynEntityAttribConfig)));
             var data = _unitOfWork.DynEntityConfigRepository
                 .SingleOrDefault(
-                    d => d.DynEntityConfigUid == uid,
+                    d => d.DynEntityConfigUid == uid && (d.Active || !activeOnly),
                     ibuilder.Get());
 
             return data != null
@@ -106,23 +100,25 @@ namespace AppFramework.Core.Classes
         /// Returns AssetType by ID where version is active - using cache
         /// </summary>
         /// <param name="id">The id.</param>
+        /// <param name="activeOnly"></param>
         /// <returns></returns>
-        public AssetType GetById(long id)
+        public AssetType GetById(long id, bool activeOnly = true)
         {
             var ibuilder = new IncludesBuilder<DynEntityConfig>();
-            ibuilder.Add((e) => e.DynEntityAttribConfigs
+            ibuilder.Add(e => e.DynEntityAttribConfigs
                 .Select(a => a.DataType.ValidationList
                     .Select(l => l.ValidationOperator)));
-            ibuilder.Add((e) => e.AttributePanel
+            ibuilder.Add(e => e.AttributePanel
                 .Select(ap => ap.AttributePanelAttribute
                     .Select(a => a.DynEntityAttribConfig)));
             var data = _unitOfWork.DynEntityConfigRepository
                 .SingleOrDefault(
                     dec =>
-                        dec.DynEntityConfigId == id &&
-                        dec.ActiveVersion,
+                        dec.DynEntityConfigId == id
+                        && dec.ActiveVersion
+                        && (dec.Active || !activeOnly),
                     ibuilder.Get());
-            
+
             if (data == null)
                 throw new AssetTypeNotFoundException();
 
@@ -135,7 +131,7 @@ namespace AppFramework.Core.Classes
         /// <returns></returns>
         public AssetType GetGeneralAssetType()
         {
-            AssetType at = ImportExportManager.GetBasicAssetTypeConfiguration(
+            var at = ImportExportManager.GetBasicAssetTypeConfiguration(
                 Enumerators.AssetTypeClass.NormalAssetType, _unitOfWork, new LayoutRepository(_unitOfWork));
             return at;
         }
@@ -155,9 +151,9 @@ namespace AppFramework.Core.Classes
         public IEnumerable<AssetType> GetAllReservable()
         {
             var predicate = PredicateBuilder.True<DynEntityConfig>();
-            predicate = predicate.And(dec => dec.ActiveVersion == true);
-            predicate = predicate.And(dec => dec.Active == true);
-            predicate = predicate.And(dec => dec.AllowBorrow == true);
+            predicate = predicate.And(dec => dec.ActiveVersion);
+            predicate = predicate.And(dec => dec.Active);
+            predicate = predicate.And(dec => dec.AllowBorrow);
             predicate = predicate.And(dec => dec.IsUnpublished == false);
             return _unitOfWork.DynEntityConfigRepository
                 .Get(predicate, entities => entities.OrderBy(e => e.Name))
@@ -171,8 +167,8 @@ namespace AppFramework.Core.Classes
         public IEnumerable<AssetType> GetRecent()
         {
             var predicate = PredicateBuilder.True<DynEntityConfig>();
-            predicate = predicate.And(dec => dec.ActiveVersion == true);
-            predicate = predicate.And(dec => dec.Active == true);
+            predicate = predicate.And(dec => dec.ActiveVersion);
+            predicate = predicate.And(dec => dec.Active);
             predicate = predicate.And(dec => dec.IsUnpublished == false);
             foreach (var item in _unitOfWork.DynEntityConfigRepository
                 .Get(predicate, items => items.OrderByDescending(i => i.UpdateDate)).Take(10))
@@ -188,8 +184,8 @@ namespace AppFramework.Core.Classes
         public IEnumerable<AssetType> GetAllPublished()
         {
             var predicate = PredicateBuilder.True<DynEntityConfig>();
-            predicate = predicate.And(dec => dec.ActiveVersion == true);
-            predicate = predicate.And(dec => dec.Active == true);
+            predicate = predicate.And(dec => dec.ActiveVersion);
+            predicate = predicate.And(dec => dec.Active);
             predicate = predicate.And(dec => dec.IsUnpublished == false);
             return _unitOfWork.DynEntityConfigRepository
                 .Get(predicate, items => items.OrderBy(i => i.Name))
@@ -308,16 +304,16 @@ namespace AppFramework.Core.Classes
                             && deav.DynEntityAttribConfigId == attribute.Base.DynEntityAttribConfigId);
                     if (attributeValidation == null)
                     {
-                        long configId = attribute.Base.DynEntityAttribConfigId != 0
+                        var configId = attribute.Base.DynEntityAttribConfigId != 0
                             ? attribute.Base.DynEntityAttribConfigId
                             : assetType.Base.DynEntityAttribConfigs.FirstOrDefault(
                                 a => a.DBTableFieldname == attribute.Base.DBTableFieldname).DynEntityAttribConfigUid;
                         _unitOfWork.DynEntityAttribValidationRepository.Insert(
-                        new DynEntityAttribValidation
-                        {
-                            DynEntityAttribConfigId = configId,
-                            ValidationUid = rule.ValidationList.ValidationUid
-                        });
+                            new DynEntityAttribValidation
+                            {
+                                DynEntityAttribConfigId = configId,
+                                ValidationUid = rule.ValidationList.ValidationUid
+                            });
                     }
                     else
                     {
@@ -338,7 +334,7 @@ namespace AppFramework.Core.Classes
                             v.ValidationOperandUid == op.Base.OperandUid);
                         if (vovEntity == null)
                         {
-                            _unitOfWork.ValidationOperandValueRepository.Insert(new Entities.ValidationOperandValue()
+                            _unitOfWork.ValidationOperandValueRepository.Insert(new ValidationOperandValue
                             {
                                 Value = op.Value.ToString(),
                                 ValidationListUid = rule.ValidationList.ValidationUid,
@@ -365,7 +361,7 @@ namespace AppFramework.Core.Classes
             if (isNew)
             {
                 _rightsService.SetPermissionsForUser(
-                    new[] { new RightsEntry { AssetTypeID = assetType.ID, Permission = Permission.ReadWriteDelete } },
+                    new[] {new RightsEntry {AssetTypeID = assetType.ID, Permission = Permission.ReadWriteDelete}},
                     currentUserId,
                     currentUserId);
             }
@@ -376,14 +372,14 @@ namespace AppFramework.Core.Classes
             var _base = assetType.Base;
             var revision = new DynEntityConfig();
             Mapper.Map(_base, revision);
-            
+
             if (_base.DynEntityAttribConfigs.Count == 0)
                 throw new Exception("DynEntityAttribConfig property not loaded");
 
             // create attributes revisions
-            for (int i = 0; i < _base.DynEntityAttribConfigs.Count; i++)
+            for (var i = 0; i < _base.DynEntityAttribConfigs.Count; i++)
             {
-                var attributeRevision = new Entities.DynEntityAttribConfig();
+                var attributeRevision = new DynEntityAttribConfig();
                 Mapper.Map(_base.DynEntityAttribConfigs[i], attributeRevision);
                 revision.DynEntityAttribConfigs.Add(attributeRevision);
             }
@@ -392,9 +388,9 @@ namespace AppFramework.Core.Classes
                 throw new Exception("AttributePanel property not loaded");
 
             // create panels revisions
-            for (int i = 0; i < _base.AttributePanel.Count; i++)
+            for (var i = 0; i < _base.AttributePanel.Count; i++)
             {
-                var panelRevision = new Entities.AttributePanel();
+                var panelRevision = new AttributePanel();
                 Mapper.Map(_base.AttributePanel[i], panelRevision);
 
                 // create attributes to panels revisions
@@ -403,7 +399,7 @@ namespace AppFramework.Core.Classes
                     if (assetType.Panels[i].AssignedAttributes.ElementAtOrDefault(j) == null)
                         continue;
 
-                    var apaRevision = new Entities.AttributePanelAttribute
+                    var apaRevision = new AttributePanelAttribute
                     {
                         UpdateUserId = currentUserId,
                         UpdateDate = DateTime.Now,
@@ -444,14 +440,14 @@ namespace AppFramework.Core.Classes
                 ApplicationSettings.ApplicationType == ApplicationType.Combined)
             {
                 // create screens revisions
-                for (int i = 0; i < _base.AssetTypeScreen.Count; i++)
+                for (var i = 0; i < _base.AssetTypeScreen.Count; i++)
                 {
-                    var screenRevision = new Entities.AssetTypeScreen();
-                    Mapper.Map<Entities.AssetTypeScreen, Entities.AssetTypeScreen>(_base.AssetTypeScreen[i],
+                    var screenRevision = new AssetTypeScreen();
+                    Mapper.Map(_base.AssetTypeScreen[i],
                         screenRevision);
 
                     // update connections between screens and panels
-                    for (int j = 0; j < revision.AttributePanel.Count; j++)
+                    for (var j = 0; j < revision.AttributePanel.Count; j++)
                     {
                         if (revision.AttributePanel[j].ScreenId == _base.AssetTypeScreen[i].ScreenId)
                             revision.AttributePanel[j].AssetTypeScreen = screenRevision;
@@ -462,13 +458,13 @@ namespace AppFramework.Core.Classes
                         _unitOfWork.AssetTypeScreenRepository.LoadProperty(_base.AssetTypeScreen[i],
                             e => e.DynEntityAttribScreens);
 
-                    for (int j = 0; j < _base.AssetTypeScreen[i].DynEntityAttribScreens.Count; j++)
+                    for (var j = 0; j < _base.AssetTypeScreen[i].DynEntityAttribScreens.Count; j++)
                     {
                         var arrtibuteRevision = revision.DynEntityAttribConfigs.Single(a =>
                             a.DynEntityAttribConfigUid ==
                             _base.AssetTypeScreen[i].DynEntityAttribScreens[j].DynEntityAttribUid);
 
-                        arrtibuteRevision.DynEntityAttribScreens.Add(new Entities.DynEntityAttribScreens()
+                        arrtibuteRevision.DynEntityAttribScreens.Add(new DynEntityAttribScreens
                         {
                             AssetTypeScreen = screenRevision
                         });
@@ -539,7 +535,7 @@ namespace AppFramework.Core.Classes
                 ? new AssetTypeAttribute(data, _unitOfWork)
                 : null;
         }
-        
+
         public AssetType GetPredefinedAssetType(PredefinedEntity entity)
         {
             var name = entity.ToString();
@@ -555,12 +551,12 @@ namespace AppFramework.Core.Classes
             // try to find asset type with same ID and revision greater than this one, but not active version
             // and with maximum revision number
             var draft = _unitOfWork.DynEntityConfigRepository
-                .Where(dec => dec.DynEntityConfigId == assetTypeId 
-                    && dec.ActiveVersion == false
-                    && dec.Revision > currentRevision)
+                .Where(dec => dec.DynEntityConfigId == assetTypeId
+                              && dec.ActiveVersion == false
+                              && dec.Revision > currentRevision)
                 .OrderBy(dec => dec.Revision)
                 .LastOrDefault();
-            return draft != null 
+            return draft != null
                 ? GetByUid(draft.DynEntityConfigUid)
                 : null;
         }
@@ -580,8 +576,8 @@ namespace AppFramework.Core.Classes
         {
             var existing =
                 _unitOfWork.DynEntityConfigRepository.Get(
-                    config => config.DBTableName == assetTypeName && 
-                    config.DynEntityConfigId != assetTypeId)
+                    config => config.DBTableName == assetTypeName &&
+                              config.DynEntityConfigId != assetTypeId)
                     .Any();
 
             if (existing)
@@ -593,7 +589,7 @@ namespace AppFramework.Core.Classes
                         {
                             new ValidationResultLine(string.Empty)
                             {
-                                Message = Properties.Resources.AssetTypeAlreadyExistsError
+                                Message = Resources.AssetTypeAlreadyExistsError
                             }
                         }
                 };

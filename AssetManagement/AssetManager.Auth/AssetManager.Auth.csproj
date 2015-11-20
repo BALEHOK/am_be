@@ -163,10 +163,6 @@
       <Project>{f37064e9-580c-48a0-835e-280f6b0cf87c}</Project>
       <Name>AppFramework.Email</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AssetManager.Infrastructure\AssetManager.Infrastructure.csproj">
-      <Project>{87d76790-81cc-45bb-9f7e-b3cdea2564c0}</Project>
-      <Name>AssetManager.Infrastructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\RecoverPassword\Index.cshtml" />
