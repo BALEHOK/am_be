@@ -1,4 +1,5 @@
-﻿using AppFramework.Entities;
+﻿using System;
+using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes.SearchEngine
 {
@@ -8,7 +9,7 @@ namespace AppFramework.Core.Classes.SearchEngine
 
         public long? id { get; set; }
 
-        public long? SearchId { get; set; }
+        public Guid? SearchId { get; set; }
 
         public string Type { get; set; }
 

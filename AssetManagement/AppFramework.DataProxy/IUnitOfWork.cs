@@ -52,7 +52,6 @@ namespace AppFramework.DataProxy
         ObjectResult<StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId);
         IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId);
         bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId);
-        int GetMaxSearchId();
         ITaxonomyItemRepository TaxonomyItemRepository { get; }
         TaxonomyRepository TaxonomyRepository { get; }
 

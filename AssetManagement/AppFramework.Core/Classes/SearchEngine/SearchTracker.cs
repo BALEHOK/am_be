@@ -22,6 +22,7 @@
         /// <summary>
         /// Logs search action
         /// </summary>
+        /// <param name="searchId"></param>
         /// <param name="type"></param>
         /// <param name="parameters"></param>
         /// <param name="resultCount"></param>
