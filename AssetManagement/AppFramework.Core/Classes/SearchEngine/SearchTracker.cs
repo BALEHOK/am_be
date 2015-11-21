@@ -26,7 +26,7 @@
         /// <param name="parameters"></param>
         /// <param name="resultCount"></param>
         public void LogSearchRequest(
-            long searchId,
+            Guid searchId,
             SearchType type, 
             string verboseString, 
             SearchParameters parameters, 
@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="trackingId"></param>
         /// <returns></returns>
-        public SearchTracking GetTrackingBySearchIdUserId(long searchId, long userId)
+        public SearchTracking GetTrackingBySearchIdUserId(Guid searchId, long userId)
         {
             return _unitOfWork.SearchTrackingRepository
                 .SingleOrDefault(s => s.SearchId == searchId && s.UpdateUser == userId);

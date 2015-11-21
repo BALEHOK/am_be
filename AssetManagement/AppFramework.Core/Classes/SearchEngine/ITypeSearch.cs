@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
@@ -25,7 +26,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Type search
         /// </summary>
         List<Entities.IIndexEntity> FindByTypeContext(
-            long searchId,
+            Guid searchId,
             long userId,
             long? assetTypeUid,
             IEnumerable<AttributeElement> elements,
@@ -51,7 +52,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="pageSize"></param>
         /// <returns></returns>
         List<Entities.IIndexEntity> FindByType(
-            long searchId,
+            Guid searchId,
             long userId,
             long assetTypeUid,
             List<AttributeElement> elements,

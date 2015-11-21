@@ -852,7 +852,7 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<f_cust_SearchByKeywords_Result> f_cust_SearchByKeywords(Nullable<long> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize)     
+        public ObjectResult<f_cust_SearchByKeywords_Result> f_cust_SearchByKeywords(Nullable<System.Guid> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize)     
      
         { 
      
@@ -865,7 +865,7 @@ namespace AppFramework.DataLayer
             } 
             else 
             { 
-                searchIdParameter = new ObjectParameter("SearchId", typeof(long)); 
+                searchIdParameter = new ObjectParameter("SearchId", typeof(System.Guid)); 
             } 
      
      
@@ -1006,7 +1006,7 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<f_cust_SearchByTypeContext_Result> f_cust_SearchByTypeContext(Nullable<long> searchId, Nullable<long> userId, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize)     
+        public ObjectResult<f_cust_SearchByTypeContext_Result> f_cust_SearchByTypeContext(Nullable<System.Guid> searchId, Nullable<long> userId, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize)     
      
         { 
      
@@ -1019,7 +1019,7 @@ namespace AppFramework.DataLayer
             } 
             else 
             { 
-                searchIdParameter = new ObjectParameter("SearchId", typeof(long)); 
+                searchIdParameter = new ObjectParameter("SearchId", typeof(System.Guid)); 
             } 
      
      
@@ -1113,7 +1113,7 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<f_cust_GetSrchCount_Result> f_cust_GetSrchCount(Nullable<long> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<bool> type)     
+        public ObjectResult<f_cust_GetSrchCount_Result> f_cust_GetSrchCount(Nullable<System.Guid> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<bool> type)     
      
         { 
      
@@ -1126,7 +1126,7 @@ namespace AppFramework.DataLayer
             } 
             else 
             { 
-                searchIdParameter = new ObjectParameter("SearchId", typeof(long)); 
+                searchIdParameter = new ObjectParameter("SearchId", typeof(System.Guid)); 
             } 
      
      

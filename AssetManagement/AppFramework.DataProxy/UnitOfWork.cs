@@ -25,7 +25,7 @@
         }
 
         public ObjectResult<f_cust_SearchByKeywords_Result> SearchByKeywords(
-            long searchId,
+            Guid searchId,
             long userId,
             string keywords,
             string configIds = "",
@@ -48,7 +48,7 @@
         }
 
         public ObjectResult<f_cust_SearchByTypeContext_Result> SearchByTypeContext(
-            long searchId,
+            Guid searchId,
             long userId,
             string configIds = "",
             string taxonomyItemsIds = "",
@@ -69,7 +69,7 @@
         }
 
         public ObjectResult<f_cust_GetSrchCount_Result> GetSearchResultCounters(
-            long searchId,
+            Guid searchId,
             long userId,
             string keywords = "",
             string configIds = "",

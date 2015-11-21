@@ -37,7 +37,7 @@ namespace AssetManager.WebApi.Controllers
         /// </summary>
         /// <param name="searchId">Search Id</param>
         /// <returns></returns>
-        public ActionResult Index(long searchId, string format)
+        public ActionResult Index(Guid searchId, string format)
         {
             var formatLower = format.ToLower();
             if (!AllowedFormats.Any(f => f == formatLower))

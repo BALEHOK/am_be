@@ -642,7 +642,7 @@ namespace AssetSite
 
         [WebMethod(true)]
         public List<SearchCounter> GetSearchCounters(
-            long searchId,
+            Guid searchId,
             string keywords,
             string configsIds,
             string taxonomyItemsIds,

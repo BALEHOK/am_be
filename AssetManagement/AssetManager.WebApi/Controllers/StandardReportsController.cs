@@ -37,7 +37,7 @@ namespace AssetManager.WebApi.Controllers
             _reportDataProviderFactory = reportDataProviderFactory;
         }
 
-        public ActionResult SearchResult(long searchId, int? reportLayout = null)
+        public ActionResult SearchResult(Guid searchId, int? reportLayout = null)
         {
             //TODO: get actual current user
             long userId = 1;

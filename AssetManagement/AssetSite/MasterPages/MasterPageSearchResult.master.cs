@@ -11,17 +11,16 @@ namespace AssetSite.MasterPages
 {
     public partial class MasterPageSearchResult : System.Web.UI.MasterPage
     {
-        public int SearchId
+        public Guid SearchId
         {
             get
             {
-                if (Request["SearchId"] != null)
-                    return int.Parse(Request["SearchId"]);
-                else return default(int);
+                Guid result;
+                return Guid.TryParse(Request["SearchId"], out result) ? result : Guid.Empty;
             }
         }
 
-        public Dictionary<int, List<IIndexEntity>> ResultSet
+        public Dictionary<Guid, List<IIndexEntity>> ResultSet
         {
             get
             {
@@ -29,7 +28,7 @@ namespace AssetSite.MasterPages
                 {
                     Session["InitialResult"] = new Dictionary<int, List<IIndexEntity>>();
                 }
-                return Session["InitialResult"] as Dictionary<int, List<IIndexEntity>>;
+                return Session["InitialResult"] as Dictionary<Guid, List<IIndexEntity>>;
             }
         }
 

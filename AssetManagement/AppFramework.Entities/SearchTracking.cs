@@ -117,7 +117,7 @@ namespace AppFramework.Entities
         private string _verboseString;
     
         [DataMember]
-        public long SearchId
+        public Guid SearchId
         {
             get { return _searchId; }
             set
@@ -129,7 +129,7 @@ namespace AppFramework.Entities
                 }
             }
         }
-        private long _searchId;
+        private Guid _searchId;
 
         #endregion
 

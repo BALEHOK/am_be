@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using AppFramework.DataProxy;
 using Dapper;
@@ -14,7 +15,7 @@ namespace AppFramework.Reports.CustomReports
             _unitOfWork = unitOfWork;
         }
 
-        public string GetFilterString(long searchId)
+        public string GetFilterString(Guid searchId)
         {
             var queryParameters = new DynamicParameters();
             queryParameters.Add("SearchId", searchId);

@@ -57,7 +57,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             string tableName,
             IEnumerable<AttributeElement> elements)
         {
-            var searchId = _unitOfWork.GetMaxSearchId() + 1;
+            var searchId = Guid.NewGuid();
             var dataTable = new DataTable();
 
             List<SqlParameter> parameters;
@@ -101,7 +101,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="pageSize"></param>
         /// <returns></returns>
         public List<IIndexEntity> FindByType(
-            long searchId,
+            Guid searchId,
             long userId,
             long assetTypeUid,
             List<AttributeElement> elements,
@@ -127,7 +127,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         }
 
         public List<IIndexEntity> FindByTypeContext(
-            long searchId,
+            Guid searchId,
             long userId,
             long? assetTypeUid,
             IEnumerable<AttributeElement> elements,
@@ -168,7 +168,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Type search
         /// </summary>
         private List<IIndexEntity> FindByTypeContext(
-            long searchId,
+            Guid searchId,
             long userId,
             string searchQuery,
             List<SqlParameter> parameters,
@@ -282,7 +282,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <summary>
         /// Because we cannot pass dynamic set of parameters to the SP, we have to pre-fill the temporary table
         /// </summary>
-        private static void _prefillTemporaryTable(long searchId, string searchQuery, List<SqlParameter> parameters,
+        private static void _prefillTemporaryTable(Guid searchId, string searchQuery, List<SqlParameter> parameters,
             IUnitOfWork unitOfWork)
         {
             var parametersDefinition = string.Join(", ", from p in parameters
@@ -311,7 +311,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Complex search performs when there are complex attributes dynlists, multipleassets) in search chains
         /// </summary>
         /// <returns></returns>
-        private static string _generateTypeSearchQuery(long searchId, AssetType at, List<AttributeElement> elements,
+        private static string _generateTypeSearchQuery(Guid searchId, AssetType at, List<AttributeElement> elements,
             TimePeriodForSearch period, out List<SqlParameter> parameters)
         {
             #region Build select statement with joins
@@ -368,7 +368,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             return query;
         }
 
-        private static string _generateContextSearchQuery(long searchId, List<AttributeElement> elements, out List<SqlParameter> parameters)
+        private static string _generateContextSearchQuery(Guid searchId, List<AttributeElement> elements, out List<SqlParameter> parameters)
         {
             //construct select statment
             var selectStatement = string.Format("SELECT {3}, [{0}], [{1}] FROM [{2}] WHERE ",
