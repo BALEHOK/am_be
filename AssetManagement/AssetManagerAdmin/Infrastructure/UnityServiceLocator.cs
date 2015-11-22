@@ -7,6 +7,10 @@ namespace AssetManagerAdmin
 {
     public class UnityServiceLocator : IServiceLocator
     {
+        public IUnityContainer Container
+        {
+            get { return _unityContainer; }
+        }
         private readonly IUnityContainer _unityContainer;
 
         public UnityServiceLocator(IUnityContainer unityContainer)

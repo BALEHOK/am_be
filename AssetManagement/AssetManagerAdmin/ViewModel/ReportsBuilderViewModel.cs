@@ -3,21 +3,14 @@ using System.Linq;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
-using AssetManagerAdmin.WebApi;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 
 namespace AssetManagerAdmin.ViewModel
 {
-    public class ReportsBuilderViewModel : ViewModelBase
+    public class ReportsBuilderViewModel : ToolkitViewModelBase
     {
-        public ServerConfig CurrentServer { get; private set; }
-
-        public UserInfo CurrentUser { get; private set; }
-
         private readonly IDataService _dataService;
-        private readonly IAssetsApiManager _assetsApiManager;
         private bool _isPublishing;
         private List<CustomReportModel> _allReports;
 
@@ -151,10 +144,9 @@ namespace AssetManagerAdmin.ViewModel
         {
             var fileName = ReportFileName;
             _isPublishing = true;
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-            api.PublishReport(ReportName, fileName, ReportAssetType.Id).ContinueWith(r =>
+            Api.PublishReport(ReportName, fileName, ReportAssetType.Id).ContinueWith(r =>
             {
-                api.GetReportsList().ContinueWith(e =>
+                Api.GetReportsList().ContinueWith(e =>
                 {
                     ReportsList = e.Result;
                     ReportName = ReportFileName = string.Empty;
@@ -177,8 +169,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteDeleteReportCommand(CustomReportModel reportModel)
         {
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-            api.DeleteReport(reportModel.Name, reportModel.AssetTypeId).ContinueWith(e =>
+            Api.DeleteReport(reportModel.Name, reportModel.AssetTypeId).ContinueWith(e =>
             {
                 _allReports.Remove(reportModel);
                 RaisePropertyChanged(ReportAssetTypePropertyName);
@@ -197,64 +188,34 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public ReportsBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
+        public ReportsBuilderViewModel(IDataService dataService)
         {
             _dataService = dataService;
-            _assetsApiManager = assetsApiManager;
 
-            MessengerInstance.Register<System.Type>(this, AppActions.DataContextChanged, currentView =>
+            OnViewActivated = () =>
             {
-                if (currentView == typeof(ReportsBuilderViewModel))
-                {
-                    LoadReportsAndTypes();
-                }
-            });
-
-            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
-            {
-                CurrentServer = model.Server;
-                CurrentUser = model.User;
-            });
+                LoadReportsAndTypes();
+            };
         }
 
         private void LoadReportsAndTypes()
         {
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-            MessengerInstance.Send("Loading reports list...", AppActions.LoadingStarted);
-            api.GetReportsList().ContinueWith(task =>
+            Api.GetReportsList().ContinueWith(task =>
             {
-                MessengerInstance.Send("", AppActions.LoadingCompleted);
-                if (task.Exception != null)
-                {
-                    MessengerInstance.Send(
-                        new StatusMessage(task.Exception));
-                }
-                else
-                {
-                    _allReports = task.Result;
-                }
+                _allReports = task.Result;
+                RaisePropertyChanged(ReportAssetTypePropertyName);
             });
 
-            MessengerInstance.Send("Loading asset types...", AppActions.LoadingStarted);
             _dataService.GetTypesInfo(CurrentUser, CurrentServer.ApiUrl).ContinueWith(result =>
             {
-                MessengerInstance.Send("", AppActions.LoadingCompleted);
-                if (result.Exception != null)
+                // do not modify original collection
+                AssetTypesList = result.Result.ActiveTypes.ToList();
+                AssetTypesList.Insert(0, new AssetTypeModel
                 {
-                    MessengerInstance.Send(
-                        new StatusMessage(result.Exception));
-                }
-                else
-                {
-                    // do not modify original collection
-                    AssetTypesList = result.Result.ActiveTypes.ToList();
-                    AssetTypesList.Insert(0, new AssetTypeModel
-                    {
-                        Id = -1,
-                        DisplayName = "[All]"
-                    });
-                    ReportAssetType = AssetTypesList[0];
-                }
+                    Id = -1,
+                    DisplayName = "[All]"
+                });
+                ReportAssetType = AssetTypesList[0];
             });
         }
     }

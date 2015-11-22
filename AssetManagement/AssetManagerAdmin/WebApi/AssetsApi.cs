@@ -86,6 +86,7 @@ namespace AssetManagerAdmin.WebApi
                 var apiRequest = GetApiUrl("/api/reports/custom/list");
 
                 var response = await client.GetStringAsync(apiRequest);
+                
                 return _js.Deserialize<List<CustomReportModel>>(response);
             }
         }

@@ -36,8 +36,10 @@
                         <Label Content="Name:" FontWeight="Bold" Grid.Column="0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="10" VerticalAlignment="Center"/>
                         <Button Grid.Column="2" Height="20" Width="60" 
-                                Command="{Binding Source={StaticResource Locator}, Path=ReportsBuilder.DeleteReportCommand}"
-                                CommandParameter="{Binding}">delete</Button>
+                                Command="{Binding 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                    Path=DataContext.DeleteReportCommand}"
+                                CommandParameter="{Binding }">delete</Button>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

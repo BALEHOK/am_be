@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AssetManagerAdmin.Model;
-using AssetManagerAdmin.WebApi;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace AssetManagerAdmin.ViewModel
@@ -13,14 +11,9 @@ namespace AssetManagerAdmin.ViewModel
         string ValidationExpression { get; set; }
     }
 
-    public class ValidationBuilderViewModel : ViewModelBase, IValidationBuilderViewModel
+    public class ValidationBuilderViewModel : ToolkitViewModelBase, IValidationBuilderViewModel
     {
-        public ServerConfig CurrentServer { get; private set; }
-
-        public UserInfo CurrentUser { get; private set; }
-
         private readonly IDataService _dataService;
-        private readonly IAssetsApiManager _assetsApiManager;
 
         public event EventHandler<string> OnNewOperator;
 
@@ -142,8 +135,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteTestValidationCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-            api.ValidateAttributeAsync(_dataService.CurrentAssetAttribute.Id, ValidationTest, ValidationExpression)
+            Api.ValidateAttributeAsync(_dataService.CurrentAssetAttribute.Id, ValidationTest, ValidationExpression)
                 .ContinueWith(a =>
                 {
                     var validationResult = a.Result;
@@ -169,8 +161,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteSaveValidatorCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-            api.SaveValidation(_dataService.CurrentAssetType, _dataService.CurrentAssetAttribute.DbName, ValidationExpression)
+            Api.SaveValidation(_dataService.CurrentAssetType, _dataService.CurrentAssetAttribute.DbName, ValidationExpression)
                 .ContinueWith(a =>
                 {
                     _dataService.CurrentAssetAttribute.ValidationExpression = ValidationExpression;
@@ -189,17 +180,14 @@ namespace AssetManagerAdmin.ViewModel
                 OnNewOperator(this, operatorText);
         }
 
-        public ValidationBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager)
+        public ValidationBuilderViewModel(IDataService dataService)
         {
             _dataService = dataService;
-            _assetsApiManager = assetsApiManager;
 
-            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
+            OnLoginDone = (model) =>
             {
-                CurrentServer = model.Server;
-                CurrentUser = model.User;
                 ValidationExpression = ValidationError = ValidationTest = string.Empty;
-            });
+            };
 
             MessengerInstance.Register(this, MainViewModel.SelectedAttributePropertyName, (object attribute) =>
             {

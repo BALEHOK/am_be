@@ -219,6 +219,7 @@
     <Compile Include="ViewModel\AuthViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\ReportsBuilderViewModel.cs" />
+    <Compile Include="ViewModel\ToolkitViewModelBase.cs" />
     <Compile Include="ViewModel\ValidationBuilderViewModel.cs" />
     <Compile Include="ViewModel\WebAdminViewModel.cs" />
     <Compile Include="FormulaBuilder\Controls\FormulaBuilderControl.xaml.cs">

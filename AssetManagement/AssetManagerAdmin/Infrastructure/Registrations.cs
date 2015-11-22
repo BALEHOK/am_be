@@ -20,10 +20,13 @@ namespace AssetManagerAdmin
             container.AddNewExtension<Interception>();
             container.RegisterType<ILog>(new InjectionFactory((x, t, s) => LogManager.GetLogger(t)));
             container.RegisterType<IMessenger>(new InjectionFactory((x, t, s) => Messenger.Default));
-            container.RegisterType<IAssetsApiManager, AssetsApiManager>();
-            container.RegisterType<IDataService, DataService>(
-              new Interceptor<InterfaceInterceptor>(),
-              new InterceptionBehavior<ProgressBarInterceptionBehavior>());
+            container.RegisterType<IAssetsApiManager, AssetsApiManager>(
+                new ContainerControlledLifetimeManager());
+            container.RegisterType<IDataService, DataService>();
+            container.RegisterType<IAssetsApi, AssetsApiCacheDecorator>(
+                new PerResolveLifetimeManager(),
+                new Interceptor<InterfaceInterceptor>(),
+                new InterceptionBehavior<ProgressBarInterceptionBehavior>());
             container.RegisterType<IDialogService, DialogService>();
             container.RegisterType<MainViewModel>();
             container.RegisterType<WebAdminViewModel>();

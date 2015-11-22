@@ -1,8 +1,9 @@
 ﻿using System;
 using AssetManagerAdmin.Model;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
 
 namespace AssetManagerAdmin.WebApi
 {
@@ -10,12 +11,6 @@ namespace AssetManagerAdmin.WebApi
     {
         private readonly IMessenger _messenger;
         private IAssetsApi _assetsApi;
-
-        [PreferredConstructor]
-        public AssetsApiManager()
-            : this(Messenger.Default)
-        {
-        }
 
         public AssetsApiManager(IMessenger messenger)
         {
@@ -38,7 +33,14 @@ namespace AssetManagerAdmin.WebApi
             // [Aleksandr Shukletsov]
             // it's impossible to have AssetAPIs for different servers/users at the same time by design
             // therefore we have a simple local variable for AssetAPI instance 
-            return _assetsApi ?? (_assetsApi = new AssetsApiCacheDecorator(baseAddress, user));
+            if (_assetsApi == null)
+            {
+                var locator = (UnityServiceLocator)ServiceLocator.Current;
+                _assetsApi = locator.Container.Resolve<IAssetsApi>(
+                    new ParameterOverride("baseAddress", baseAddress),
+                    new ParameterOverride("user", user));
+            }
+            return _assetsApi;
         }
 
         public void Cleanup()

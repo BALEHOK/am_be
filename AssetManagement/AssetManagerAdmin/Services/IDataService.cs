@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetManager.Infrastructure.Models.TypeModels;
 using System.Threading.Tasks;
-using AssetManagerAdmin.Infrastructure;
 
 namespace AssetManagerAdmin.Model
 {
@@ -12,8 +11,7 @@ namespace AssetManagerAdmin.Model
         AttributeTypeModel CurrentAssetAttribute { get; set; }
 
         List<MainMenuItem> GetMainMenuItems(UserInfo user);
-
-        [ProgressBar("Loading asset types...")]
+                
         Task<TypesInfoModel> GetTypesInfo(UserInfo user, string server);
 
         List<ValidationButton> GetValidationButtons();

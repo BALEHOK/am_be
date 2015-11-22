@@ -1,17 +1,13 @@
 ﻿using AssetManagerAdmin.Model;
 using AssetManagerAdmin.View;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using mshtml;
 
 namespace AssetManagerAdmin.ViewModel
 {
-    public class WebAdminViewModel : ViewModelBase
+    public class WebAdminViewModel : ToolkitViewModelBase
     {
-        public UserInfo CurrentUser { get; private set; }
-
         private RelayCommand _mainMenuCommand;
-        private string _server;
         private bool _isLoggingIn;
 
         #region Properties
@@ -81,28 +77,27 @@ namespace AssetManagerAdmin.ViewModel
 
         public WebAdminViewModel()
         {
-            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
+            OnLoginDone = (model) =>
             {
-                CurrentUser = model.User;
-                _server = model.Server.AdminUrl;
                 if (CurrentUser.UserModel.UserRole == "Administrators" ||
                     CurrentUser.UserModel.UserRole == "SuperUser")
                     GoHome();
-            });
+            };
+           
 
             MessengerInstance.Register<object>(this, AppActions.LogoutDone, obj =>
             {
-                BrowserUrl = string.Format("{0}/logout", _server);
+                BrowserUrl = string.Format("{0}/logout", CurrentServer.AdminUrl);
             });
         }
 
         private void GoHome()
         {
-            if (string.IsNullOrEmpty(_server))
+            if (string.IsNullOrEmpty(CurrentServer.AdminUrl))
                 return;
 
             BrowserUrl = null;
-            BrowserUrl = string.Format("{0}/admin/", _server);
+            BrowserUrl = string.Format("{0}/admin/", CurrentServer.AdminUrl);
         }
 
         private void AutoLogin(HTMLDocument document, UserInfo user)

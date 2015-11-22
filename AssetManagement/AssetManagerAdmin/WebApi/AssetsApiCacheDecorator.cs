@@ -16,11 +16,6 @@ namespace AssetManagerAdmin.WebApi
 
         private bool _disposed;
 
-        public AssetsApiCacheDecorator(string baseAddress, UserInfo user)
-            : this(baseAddress, user, Messenger.Default)
-        {
-        }
-
         public AssetsApiCacheDecorator(string baseAddress, UserInfo user, IMessenger messenger)
             : base(baseAddress, user)
         {

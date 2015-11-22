@@ -7,7 +7,6 @@ using System.Windows.Input;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
 using AssetManagerAdmin.View;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 
@@ -19,10 +18,8 @@ namespace AssetManagerAdmin.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ToolkitViewModelBase
     {
-        public UserInfo CurrentUser { get; private set; }
-
         private readonly IDataService _dataService;
         private readonly Dictionary<int, ContentControl> _views;
 
@@ -259,7 +256,7 @@ namespace AssetManagerAdmin.ViewModel
                 IsAttributeSelectorEnabled = id == 2;
 
                 // let viewmodels know when to start loading data
-                if (CurrentView.DataContext != null)
+                if (CurrentView != null && CurrentView.DataContext != null)
                     MessengerInstance.Send(CurrentView.DataContext.GetType(), 
                         AppActions.DataContextChanged);
             }
@@ -305,17 +302,15 @@ namespace AssetManagerAdmin.ViewModel
                 authView.Login(server);
             });
 
-            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
+            OnLoginDone = (model) =>
             {
                 SelectedServer = model.Server;
-                CurrentUser = model.User;
-
                 var menuItems = _dataService.GetMainMenuItems(CurrentUser);
                 MainMenuItems = menuItems;
                 SelectedMenuItem = MainMenuItems.First();
                 IsViewsMenuEnabled = true;
-            });
-
+            };
+          
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, server =>
             {
                 CurrentView = new LoginView();

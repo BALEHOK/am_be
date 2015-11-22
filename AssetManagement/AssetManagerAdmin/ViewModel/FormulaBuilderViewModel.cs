@@ -6,9 +6,7 @@ using System.Windows;
 using AssetManagerAdmin.FormulaBuilder.Expressions;
 using AssetManagerAdmin.FormulaBuilder.Expressions.ExpressionTypes;
 using AssetManagerAdmin.Model;
-using AssetManagerAdmin.WebApi;
 using AssetManager.Infrastructure.Models.TypeModels;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Common.Logging;
 
@@ -28,15 +26,10 @@ namespace AssetManagerAdmin.ViewModel
         public string Name { get; set; }
     }
 
-    public sealed class FormulaBuilderViewModel : ViewModelBase
+    public sealed class FormulaBuilderViewModel : ToolkitViewModelBase
     {
-        public ServerConfig CurrentServer { get; private set; }
-
-        public UserInfo CurrentUser { get; private set; }
-
         private ExpressionParser _expressionParser;
         private readonly IDataService _dataService;
-        private readonly IAssetsApiManager _assetsApiManager;
 
         public AssetsDataProvider DataProvider { get; private set; }
 
@@ -288,14 +281,12 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteSaveFormulaCommand()
         {
-            var api = _assetsApiManager.GetAssetApi(CurrentServer.ApiUrl, CurrentUser);
-
             var formulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
 
             switch (CurrentContext.Type)
             {
                 case FormulaBuilderContextType.DbFormulas:
-                    api.SaveFormula(DataProvider.CurrentAssetType, AttributeType.DbName, formulaText)
+                    Api.SaveFormula(DataProvider.CurrentAssetType, AttributeType.DbName, formulaText)
                         .ContinueWith(a =>
                         {
                             AttributeType.CalculationFormula = FormulaText;
@@ -305,7 +296,7 @@ namespace AssetManagerAdmin.ViewModel
 
                 case FormulaBuilderContextType.ScreenFormulas:
                     ScreenAttribute.ScreenFormula = FormulaText;
-                    api.SaveScreenFormula(ScreenAttribute).ContinueWith(a =>
+                    Api.SaveScreenFormula(ScreenAttribute).ContinueWith(a =>
                     {
                         ScreenAttribute.AttributeModel.ScreenFormula = formulaText;
                         MessageBox.Show(a.Result);
@@ -314,7 +305,7 @@ namespace AssetManagerAdmin.ViewModel
                     break;
 
                 case FormulaBuilderContextType.Validation:
-                    api.SaveValidation(DataProvider.CurrentAssetType, AttributeType.DbName,
+                    Api.SaveValidation(DataProvider.CurrentAssetType, AttributeType.DbName,
                         formulaText)
                         .ContinueWith(a =>
                         {
@@ -623,10 +614,9 @@ namespace AssetManagerAdmin.ViewModel
             TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        public FormulaBuilderViewModel(IDataService dataService, IAssetsApiManager assetsApiManager, ILog logger)
+        public FormulaBuilderViewModel(IDataService dataService, ILog logger)
         {
             _dataService = dataService;
-            _assetsApiManager = assetsApiManager;
             _logger = logger;
 
             DataProvider = new AssetsDataProvider();
@@ -640,13 +630,11 @@ namespace AssetManagerAdmin.ViewModel
 
             CurrentContext = Contexts.Single(c => c.Type == FormulaBuilderContextType.DbFormulas);
 
-            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
+            OnLoginDone = (model) => 
             {
-                CurrentServer = model.Server;
-                CurrentUser = model.User;
                 LoadTypesInfo(CurrentContext);
-                _canChangeContext = true; 
-            });
+                _canChangeContext = true;
+            };
         }
     }
 }
