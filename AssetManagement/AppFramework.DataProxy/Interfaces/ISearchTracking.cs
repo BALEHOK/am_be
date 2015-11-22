@@ -8,9 +8,7 @@ namespace AppFramework.DataProxy.Interfaces
         /// Id : 
         /// </summary>
         /// <remarks>Member of the primary key of the underlying table "SearchTracking"</remarks>
-        long Id { get; set; }
-
-
+        System.Int64 Id { get; set; }
 
         /// <summary>
         /// SearchType : 

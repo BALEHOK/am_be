@@ -124,12 +124,7 @@
             _noCacheContext.IsValueUnique(dynEntityTableName, columnName, value, excludeDynEntityId, outputParameter);
             return (bool)outputParameter.Value;
         }
-
-        public int GetMaxSearchId()
-        {
-            return _noCacheContext.f_cust_GetMaxSearchId().First().Value;
-        }
-
+        
         public IEnumerable<f_cust_GetReports_Result> GetReports()
         {
             return _noCacheContext.f_cust_GetReports();
