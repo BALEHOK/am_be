@@ -357,7 +357,7 @@ namespace AppFramework.Core.Classes.SearchEngine
 
             #endregion
 
-            var query = string.Format(@"SELECT {3}, [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
+            var query = string.Format(@"SELECT ''{3}'', [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
                                            FROM   [{0}] 
                                            {1} 
                                            {2}",
