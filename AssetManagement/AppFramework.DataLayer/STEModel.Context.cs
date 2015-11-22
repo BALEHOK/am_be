@@ -1266,17 +1266,6 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<Nullable<int>> f_cust_GetMaxSearchId()     
-     
-        { 
-     
-     
-            return base.ExecuteFunction<Nullable<int>>("f_cust_GetMaxSearchId"); 
-     
-     
-        } 
-     
-     
         public void RestoreDeletedItem(Nullable<long> dynEntityId, Nullable<long> dynEntityConfigId)     
      
         { 

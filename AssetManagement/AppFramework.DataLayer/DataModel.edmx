@@ -1382,7 +1382,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
         <Function Name="f_cust_GetChildAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetChildAssets">
           <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="f_cust_GetMaxSearchId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetMaxSearchId" />
         <Function Name="f_cust_GetPermittedAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetPermittedAssets">
           <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
           <Parameter Name="userId" Type="bigint" Mode="In" />
@@ -2012,7 +2011,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="BatchJob" EntitySet="BatchJobs" />
             <End Role="BatchAction" EntitySet="BatchActions" />
           </AssociationSet>
-          <FunctionImport Name="f_cust_GetMaxSearchId" ReturnType="Collection(Int32)" />
           <FunctionImport Name="RestoreDeletedItem">
             <Parameter Name="DynEntityId" Mode="In" Type="Int64" />
             <Parameter Name="DynEntityConfigId" Mode="In" Type="Int64" />
@@ -4473,7 +4471,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="f_cust_GetMaxSearchId" FunctionName="DataModel.Store.f_cust_GetMaxSearchId" />
           <FunctionImportMapping FunctionImportName="RestoreDeletedItem" FunctionName="DataModel.Store.RestoreDeletedItem" />
           <FunctionImportMapping FunctionImportName="f_cust_RebuildTriggers" FunctionName="DataModel.Store.f_cust_RebuildTriggers" />
           <EntitySetMapping Name="BatchSchedules">

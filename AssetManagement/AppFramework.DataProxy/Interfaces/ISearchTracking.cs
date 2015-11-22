@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AppFramework.DataProxy.Interfaces
+﻿namespace AppFramework.DataProxy.Interfaces
 {
     public interface ISearchTracking
     {
@@ -9,6 +7,8 @@ namespace AppFramework.DataProxy.Interfaces
         /// </summary>
         /// <remarks>Member of the primary key of the underlying table "SearchTracking"</remarks>
         System.Int64 Id { get; set; }
+
+
 
         /// <summary>
         /// SearchType : 
