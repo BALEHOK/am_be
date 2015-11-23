@@ -1,6 +1,10 @@
+/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount]    Script Date: 22.11.2015 17:16:56 ******/
+SET ANSI_NULLS ON
 GO
-begin tran
+SET QUOTED_IDENTIFIER ON
+GO
 
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.SearchTracking') AND type IN (N'U'))
 DROP TABLE SearchTracking
 
 CREATE TABLE SearchTracking (
@@ -20,6 +24,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_SearchTracking_SearchId] ON [dbo].[SearchTr
 GO
 
 
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._search_srchcount') AND type IN (N'U'))
 DROP TABLE _search_srchcount
 
 CREATE TABLE _search_srchcount (
@@ -35,6 +40,23 @@ ALTER TABLE [dbo].[_search_srchcount] ADD  DEFAULT (getdate()) FOR [SearchDateTi
 GO
 
 
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._search_srchres') AND type IN (N'U'))
+DROP TABLE _search_srchres
+
+CREATE TABLE dbo._search_srchres(
+	SearchId uniqueidentifier NULL,
+	UserId bigint NULL,
+	IndexUid bigint NULL,
+	Active bit NULL,
+	DynEntityConfigId bigint NULL,
+	TaxonomyItemsIds nvarchar(1000) NULL,
+	rownumber int NULL,
+	SearchDateTimeStamp datetime NOT NULL DEFAULT (getdate())
+) ON [PRIMARY]
+
+GO
+
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._search_srchTypeContext') AND type IN (N'U'))
 DROP TABLE _search_srchTypeContext
 
 CREATE TABLE _search_srchTypeContext (
@@ -43,12 +65,6 @@ CREATE TABLE _search_srchTypeContext (
 	DynEntityConfigUid bigint NOT NULL
 )
 
-GO
-
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount]    Script Date: 22.11.2015 17:16:56 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Wouter Steegmans
@@ -150,10 +166,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount4Top_Keywords_Active]    Script Date: 22.11.2015 17:18:27 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -243,10 +255,6 @@ BEGIN
 		
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount4Top_Keywords_History]    Script Date: 22.11.2015 17:19:35 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -336,10 +344,6 @@ BEGIN
 		
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount4Top_TypeContext_Active]    Script Date: 22.11.2015 17:20:39 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -419,10 +423,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchCount4Top_TypeContext_History]    Script Date: 22.11.2015 17:21:23 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -503,10 +503,6 @@ BEGIN
 		 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_GetSrchResPage]    Script Date: 22.11.2015 17:21:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Wouter Steegmans
@@ -546,10 +542,6 @@ BEGIN
 	
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByKeywords]    Script Date: 22.11.2015 17:22:12 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -640,10 +632,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByKeywords_Active]    Script Date: 22.11.2015 17:22:40 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -732,10 +720,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByKeywords_History]    Script Date: 22.11.2015 17:22:55 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -823,10 +807,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByTypeContext]    Script Date: 22.11.2015 17:23:13 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -910,10 +890,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByTypeContext_Active]    Script Date: 22.11.2015 17:23:27 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -987,10 +963,6 @@ BEGIN
 
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchByTypeContext_History]    Script Date: 22.11.2015 17:23:36 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -1064,10 +1036,6 @@ BEGIN
 		
 END
 
-/****** Object:  StoredProcedure [dbo].[_cust_SearchCustomQuery]    Script Date: 22.11.2015 17:23:50 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
@@ -1107,7 +1075,5 @@ BEGIN
 		END
 */
 END
-
-commit tran
 
 GO
