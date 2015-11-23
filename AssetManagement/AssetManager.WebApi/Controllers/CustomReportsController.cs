@@ -29,7 +29,7 @@ namespace AssetManager.WebApi.Controllers
             _reportFilter = new SearchResultReportFilter(unitOfWork);
         }
 
-        public ActionResult Index(long id, long? assetId = null, long? searchId = null)
+        public ActionResult Index(long id, long? assetId = null, Guid? searchId = null)
         {            
             var report = _reportService.GetReportById(id);
             if (assetId.HasValue)

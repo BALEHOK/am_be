@@ -44,14 +44,14 @@ namespace AssetManager.WebApi.Controllers.Api
             string query,
             int page = 1,
             int context = 1,
-            int? searchId = null,
+            Guid? searchId = null,
             int? assetType = null,
             int? taxonomy = null,
             int? sortBy = null)
         {
             if (!searchId.HasValue)
             {
-                searchId = _searchService.NewSearchId();
+                searchId = Guid.NewGuid();
             }
 
             var userId = User.GetId();
@@ -85,9 +85,9 @@ namespace AssetManager.WebApi.Controllers.Api
         [CacheOutput(ClientTimeSpan = 120, ServerTimeSpan = 120)]
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
-            if (model.SearchId == 0)
+            if (model.SearchId == Guid.Empty)
             {
-                model.SearchId = _searchService.NewSearchId();
+                model.SearchId = Guid.NewGuid();
             }
 
             var userId = User.GetId();
@@ -116,7 +116,7 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <returns></returns>
         [Route("counters"), HttpGet]
         [CacheOutput(ClientTimeSpan = 30, ServerTimeSpan = 30)]
-        public SearchCountersModel GetCounters(long searchId, string query = null)
+        public SearchCountersModel GetCounters(Guid searchId, string query = null)
         {
             var userId = User.GetId();
 
@@ -156,7 +156,7 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <param name="searchId"></param>
         /// <returns></returns>
         [Route("tracking"), HttpGet]
-        public SearchTrackingModel GetTrackingInfo(long searchId)
+        public SearchTrackingModel GetTrackingInfo(Guid searchId)
         {
             var userId = User.GetId();
             var tracking = _searchService.GetTrackingBySearchId(searchId, userId);

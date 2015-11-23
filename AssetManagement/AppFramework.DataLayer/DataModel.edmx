@@ -674,7 +674,7 @@
           <Property Name="UpdateUser" Type="bigint" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
           <Property Name="VerboseString" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="SearchId" Type="bigint" Nullable="false" />
+          <Property Name="SearchId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="StringResources">
           <Key>
@@ -1382,7 +1382,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
         <Function Name="f_cust_GetChildAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetChildAssets">
           <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="f_cust_GetMaxSearchId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetMaxSearchId" />
         <Function Name="f_cust_GetPermittedAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetPermittedAssets">
           <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
           <Parameter Name="userId" Type="bigint" Mode="In" />
@@ -1401,7 +1400,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
         <Function Name="f_cust_GetReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetReports" />
         <Function Name="f_cust_GetSqlServerAgentJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSqlServerAgentJobs" />
         <Function Name="f_cust_GetSrchCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSrchCount">
-          <Parameter Name="SearchId" Type="bigint" Mode="In" />
+          <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="UserId" Type="bigint" Mode="In" />
           <Parameter Name="keywords" Type="nvarchar" Mode="In" />
           <Parameter Name="ConfigIds" Type="varchar(max)" Mode="In" />
@@ -1435,7 +1434,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="dynEntityConfigUid" Type="bigint" Mode="In" />
         </Function>
         <Function Name="f_cust_SearchByKeywords" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_SearchByKeywords">
-          <Parameter Name="SearchId" Type="bigint" Mode="In" />
+          <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="UserId" Type="bigint" Mode="In" />
           <Parameter Name="keywords" Type="nvarchar" Mode="In" />
           <Parameter Name="ConfigIds" Type="varchar(max)" Mode="In" />
@@ -1446,7 +1445,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="PageSize" Type="int" Mode="In" />
         </Function>
         <Function Name="f_cust_SearchByTypeContext" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_SearchByTypeContext">
-          <Parameter Name="SearchId" Type="bigint" Mode="In" />
+          <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="UserId" Type="bigint" Mode="In" />
           <Parameter Name="ConfigIds" Type="varchar(max)" Mode="In" />
           <Parameter Name="taxonomyItemsIds" Type="varchar(max)" Mode="In" />
@@ -1907,7 +1906,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <EntitySet Name="IndexActiveDynEntities" EntityType="DataModel.IndexActiveDynEntities" />
           <EntitySet Name="IndexHistoryDynEntities" EntityType="DataModel.IndexHistoryDynEntities" />
           <FunctionImport Name="f_cust_SearchByKeywords" ReturnType="Collection(DataModel.f_cust_SearchByKeywords_Result)">
-            <Parameter Name="SearchId" Mode="In" Type="Int64" />
+            <Parameter Name="SearchId" Mode="In" Type="Guid" />
             <Parameter Name="UserId" Mode="In" Type="Int64" />
             <Parameter Name="keywords" Mode="In" Type="String" />
             <Parameter Name="ConfigIds" Mode="In" Type="String" />
@@ -1928,7 +1927,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <Parameter Name="configid" Mode="In" Type="Int64" />
           </FunctionImport>
           <FunctionImport Name="f_cust_SearchByTypeContext" ReturnType="Collection(DataModel.f_cust_SearchByTypeContext_Result)">
-            <Parameter Name="SearchId" Mode="In" Type="Int64" />
+            <Parameter Name="SearchId" Mode="In" Type="Guid" />
             <Parameter Name="UserId" Mode="In" Type="Int64" />
             <Parameter Name="ConfigIds" Mode="In" Type="String" />
             <Parameter Name="taxonomyItemsIds" Mode="In" Type="String" />
@@ -1938,7 +1937,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="f_cust_GetSrchCount" ReturnType="Collection(DataModel.f_cust_GetSrchCount_Result)">
-            <Parameter Name="SearchId" Mode="In" Type="Int64" />
+            <Parameter Name="SearchId" Mode="In" Type="Guid" />
             <Parameter Name="UserId" Mode="In" Type="Int64" />
             <Parameter Name="keywords" Mode="In" Type="String" />
             <Parameter Name="ConfigIds" Mode="In" Type="String" />
@@ -2012,7 +2011,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="BatchJob" EntitySet="BatchJobs" />
             <End Role="BatchAction" EntitySet="BatchActions" />
           </AssociationSet>
-          <FunctionImport Name="f_cust_GetMaxSearchId" ReturnType="Collection(Int32)" />
           <FunctionImport Name="RestoreDeletedItem">
             <Parameter Name="DynEntityId" Mode="In" Type="Int64" />
             <Parameter Name="DynEntityConfigId" Mode="In" Type="Int64" />
@@ -3177,7 +3175,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Int32" Name="rownumber" Nullable="true" />
         </ComplexType>
         <ComplexType Name="f_cust_GetSrchCount_Result">
-          <Property Type="Int64" Name="SearchId" Nullable="true" />
+          <Property Type="Guid" Name="SearchId" Nullable="true" />
           <Property Type="Int64" Name="UserId" Nullable="true" />
           <Property Type="String" Name="Type" Nullable="true" MaxLength="50" />
           <Property Type="Int64" Name="id" Nullable="true" />
@@ -3492,7 +3490,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Name="UpdateUser" Type="Int64" Nullable="false" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="VerboseString" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SearchId" Type="Int64" Nullable="false" />
+          <Property Name="SearchId" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="ScreenLayout">
           <Key>
@@ -4473,7 +4471,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="f_cust_GetMaxSearchId" FunctionName="DataModel.Store.f_cust_GetMaxSearchId" />
           <FunctionImportMapping FunctionImportName="RestoreDeletedItem" FunctionName="DataModel.Store.RestoreDeletedItem" />
           <FunctionImportMapping FunctionImportName="f_cust_RebuildTriggers" FunctionName="DataModel.Store.f_cust_RebuildTriggers" />
           <EntitySetMapping Name="BatchSchedules">

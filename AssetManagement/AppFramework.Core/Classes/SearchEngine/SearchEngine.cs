@@ -48,25 +48,6 @@ namespace AppFramework.Core.Classes.SearchEngine
             _typeSearch = typeSearch;
         }
 
-        /// <summary>
-        /// Generates a new SearchId
-        /// </summary>
-        /// <returns></returns>
-        public int NewSearchId()
-        {
-            if (HttpContext.Current.Application["SearchId"] == null)
-            {
-                HttpContext.Current.Application["SearchId"] = _unitOfWork.GetMaxSearchId();
-            }
-
-            var searchId = (int) HttpContext.Current.Application["SearchId"] == int.MaxValue
-                ? 0
-                : (int) HttpContext.Current.Application["SearchId"];
-
-            HttpContext.Current.Application["SearchId"] = ++searchId;
-            return searchId;
-        }
-
         public IEnumerable<Asset> FindByBarcode(string barcode)
         {
             throw new NotImplementedException();
@@ -77,7 +58,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         public IEnumerable<IIndexEntity> FindByKeywords(
             string querystring,
-            long searchId,
+            Guid searchId,
             long userId,
             string configsIds = "",
             string taxonomyItemsIds = "",
@@ -202,7 +183,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Find by Type
         /// </summary>
         /// <returns></returns>
-        public List<IIndexEntity> FindByType(long searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20)
+        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20)
         {
             var result = _typeSearch.FindByType(searchId, userId, assetTypeUid, elements, configsIds,
                 taxonomyItemsIds, time, order, pageNumber, pageSize);
@@ -259,7 +240,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         }
 
         public List<SearchCounter> GetCounters(
-            long searchId,
+            Guid searchId,
             long userId,
             string keywords,
             string configsIds,
@@ -304,12 +285,12 @@ namespace AppFramework.Core.Classes.SearchEngine
             return counters;
         }
 
-        public SearchTracking GetTrackingBySearchId(long searchId, long userId)
+        public SearchTracking GetTrackingBySearchId(Guid searchId, long userId)
         {
             return _searchTracker.GetTrackingBySearchIdUserId(searchId, userId);
         }
 
-        public IEnumerable<IIndexEntity> GetSearchResultsBySearchId(long searchId, long userId)
+        public IEnumerable<IIndexEntity> GetSearchResultsBySearchId(Guid searchId, long userId)
         {
             var searchTracking = GetTrackingBySearchId(searchId, userId);
             if (searchTracking == null)

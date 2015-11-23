@@ -1,4 +1,5 @@
-﻿using AppFramework.Core.Classes.SearchEngine.Enumerations;
+﻿using System;
+using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
 using Newtonsoft.Json;
 
@@ -14,7 +15,7 @@ namespace AssetManager.WebApi.Models.Search
         [JsonProperty(PropertyName = "attribs")]
         public AttributeFilter[] Attributes { get; set; }
 
-        public int SearchId { get; set; }
+        public Guid SearchId { get; set; }
 
         public string Taxonomy { get; set; }
 

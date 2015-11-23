@@ -53,7 +53,11 @@ namespace AssetSite.Reports
                 }
             }
             
-            var searchId = int.Parse(Request["SearchId"]);
+            Guid searchId; 
+            if (!Guid.TryParse(Request["SearchId"], out searchId))
+            {
+                searchId = Guid.NewGuid();
+            }
             var reportId = long.Parse(Request["ReportId"]);
 
             var report = ReportService.GetReportById(reportId);

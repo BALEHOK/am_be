@@ -12,7 +12,7 @@ namespace AppFramework.DataProxy
         ObjectResult<f_cust_GetSqlServerAgentJobs_Result> GetSqlServerAgentJobs();
 
         ObjectResult<f_cust_SearchByKeywords_Result> SearchByKeywords(
-            long searchId,
+            Guid searchId,
             long userId,
             string keywords,
             string configIds = "",
@@ -23,7 +23,7 @@ namespace AppFramework.DataProxy
             int pageSize = 20);
 
         ObjectResult<f_cust_SearchByTypeContext_Result> SearchByTypeContext(
-            long searchId,
+            Guid searchId,
             long userId,
             string configIds = "",
             string taxonomyItemsIds = "",
@@ -33,7 +33,7 @@ namespace AppFramework.DataProxy
             int pageSize = 20);
 
         ObjectResult<f_cust_GetSrchCount_Result> GetSearchResultCounters(
-            long searchId,
+            Guid searchId,
             long userId,
             string keywords = "",
             string configIds = "",
@@ -52,7 +52,6 @@ namespace AppFramework.DataProxy
         ObjectResult<StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId);
         IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId);
         bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId);
-        int GetMaxSearchId();
         ITaxonomyItemRepository TaxonomyItemRepository { get; }
         TaxonomyRepository TaxonomyRepository { get; }
 
