@@ -190,6 +190,23 @@ namespace AppFramework.Core.Classes.SearchEngine
             return result;
         }
 
+        public void SaveSearchQuery(SearchQuery searchQuery)
+        {
+            var query = _unitOfWork.SearchQueryRepository.SingleOrDefault(q => q.SearchId == searchQuery.SearchId);
+            if (query != null)
+            {
+                _unitOfWork.SearchQueryRepository.Delete(query);
+            }
+            _unitOfWork.SearchQueryRepository.Insert(searchQuery);
+        }
+
+        public SearchQuery GetSearchQuery(Guid searchId)
+        {
+            return _unitOfWork.SearchQueryRepository
+                .SingleOrDefault(q => q.SearchId == searchId,
+                q => q.SearchQueryAttributes.Select(a => a.ComplexValue));
+        }
+
         public static List<KeyValuePair<long, string>> FindIdNameBySearchPattern(IUnitOfWork unitOfWork, long assetTypeId, long assetTypeAttributeId, out int totalCount, string searchPattern = "", int pageNumber = 1, int pageSize = 100)
         {
             var at = AssetType.GetByID(assetTypeId);

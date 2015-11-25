@@ -116,6 +116,8 @@ namespace AppFramework.DataProxy
         /// </summary>
         IDataProvider SqlProvider { get; set; }
 
+        IDataRepository<SearchQuery> SearchQueryRepository { get; }
+
         void Dispose();
         void Commit();
         IEnumerable<f_cust_GetReports_Result> GetReports();

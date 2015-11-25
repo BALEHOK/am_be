@@ -23,7 +23,7 @@ namespace AppFramework.Entities
         #region Primitive Properties
     
         [DataMember]
-        public Nullable<Guid> SearchId
+        public Nullable<System.Guid> SearchId
         {
             get { return _searchId; }
             set
@@ -36,7 +36,7 @@ namespace AppFramework.Entities
                 }
             }
         }
-        private Nullable<Guid> _searchId;
+        private Nullable<System.Guid> _searchId;
     
         [DataMember]
         public Nullable<long> UserId

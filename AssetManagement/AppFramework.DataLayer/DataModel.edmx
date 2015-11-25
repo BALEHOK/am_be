@@ -664,6 +664,32 @@
           <Property Name="ServiceMethod" Type="nvarchar" MaxLength="100" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="SearchQueries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SearchId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="AssetTypeId" Type="bigint" Nullable="false" />
+          <Property Name="Context" Type="tinyint" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SearchQueryAttributes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SearchQueryId" Type="bigint" />
+          <Property Name="ParentId" Type="bigint" />
+          <Property Name="Parenthesis" Type="tinyint" />
+          <Property Name="LogicalOperator" Type="tinyint" Nullable="false" />
+          <Property Name="OperatorId" Type="int" />
+          <Property Name="ValueLabel" Type="nvarchar(max)" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="ReferencedAttributeId" Type="bigint" Nullable="false" />
+          <Property Name="Index" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="SearchTracking">
           <Key>
             <PropertyRef Name="Id" />
@@ -1196,6 +1222,32 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SearchQueryAttributes_SearchQueries">
+          <End Role="SearchQueries" Type="Self.SearchQueries" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SearchQueryAttributes" Type="Self.SearchQueryAttributes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchQueries">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchQueryAttributes">
+              <PropertyRef Name="SearchQueryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchQueryAttributes_SearchQueryAttributes">
+          <End Role="SearchQueryAttributes" Type="Self.SearchQueryAttributes" Multiplicity="0..1" />
+          <End Role="SearchQueryAttributes1" Type="Self.SearchQueryAttributes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchQueryAttributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchQueryAttributes1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TaxonomyItem_Taxonomy">
           <End Role="Taxonomy" Type="Self.Taxonomy" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -1507,6 +1559,8 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="Rights" EntityType="Self.Rights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScreenLayout" EntityType="Self.ScreenLayout" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchOperators" EntityType="Self.SearchOperators" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchQueries" EntityType="Self.SearchQueries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchQueryAttributes" EntityType="Self.SearchQueryAttributes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchTracking" EntityType="Self.SearchTracking" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StringResources" EntityType="Self.StringResources" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
@@ -1646,6 +1700,14 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="FK_ReportField_Report" Association="Self.FK_ReportField_Report">
             <End Role="Report" EntitySet="Report" />
             <End Role="ReportField" EntitySet="ReportField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchQueryAttributes_SearchQueries" Association="Self.FK_SearchQueryAttributes_SearchQueries">
+            <End Role="SearchQueries" EntitySet="SearchQueries" />
+            <End Role="SearchQueryAttributes" EntitySet="SearchQueryAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchQueryAttributes_SearchQueryAttributes" Association="Self.FK_SearchQueryAttributes_SearchQueryAttributes">
+            <End Role="SearchQueryAttributes" EntitySet="SearchQueryAttributes" />
+            <End Role="SearchQueryAttributes1" EntitySet="SearchQueryAttributes" />
           </AssociationSet>
           <AssociationSet Name="FK_TaxonomyItem_Taxonomy" Association="Self.FK_TaxonomyItem_Taxonomy">
             <End Role="Taxonomy" EntitySet="Taxonomy" />
@@ -2033,6 +2095,16 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           </AssociationSet>
           <FunctionImport Name="f_cust_GetReports" ReturnType="Collection(DataModel.f_cust_GetReports_Result)" />
           <FunctionImport Name="f_cust_GetTasks" ReturnType="Collection(DataModel.ActiveTask)" />
+          <EntitySet Name="SearchQueries" EntityType="DataModel.SearchQuery" />
+          <EntitySet Name="SearchQueryAttributes" EntityType="DataModel.SearchQueryAttribute" />
+          <AssociationSet Name="FK_SearchQueryAttributes_SearchQueries" Association="DataModel.FK_SearchQueryAttributes_SearchQueries">
+            <End Role="SearchQuery" EntitySet="SearchQueries" />
+            <End Role="SearchQueryAttribute" EntitySet="SearchQueryAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchQueryAttributes_SearchQueryAttributes" Association="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes">
+            <End Role="SearchQueryAttribute" EntitySet="SearchQueryAttributes" />
+            <End Role="SearchQueryAttribute1" EntitySet="SearchQueryAttributes" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="AppSettings">
           <Key>
@@ -3528,6 +3600,60 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
           <Property Type="String" Name="DynEntityConfigName" Nullable="false" MaxLength="60" />
         </ComplexType>
+        <EntityType Name="SearchQuery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SearchId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AssetTypeId" Type="Int64" Nullable="false" />
+          <Property Name="Context" Type="Byte" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="SearchQueryAttributes" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueries" FromRole="SearchQuery" ToRole="SearchQueryAttribute" />
+        </EntityType>
+        <EntityType Name="SearchQueryAttribute">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SearchQueryId" Type="Int64" />
+          <Property Name="ParentId" Type="Int64" />
+          <Property Name="Parenthesis" Type="Byte" />
+          <Property Name="OperatorId" Type="Int32" />
+          <Property Name="ValueLabel" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReferencedAttributeId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="SearchQuery" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueries" FromRole="SearchQueryAttribute" ToRole="SearchQuery" />
+          <NavigationProperty Name="ComplexValue" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" FromRole="SearchQueryAttribute" ToRole="SearchQueryAttribute1" />
+          <NavigationProperty Name="Parent" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" FromRole="SearchQueryAttribute1" ToRole="SearchQueryAttribute" />
+          <Property Name="Index" Type="Int32" Nullable="false" />
+          <Property Name="LogicalOperator" Type="Byte" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_SearchQueryAttributes_SearchQueries">
+          <End Type="DataModel.SearchQuery" Role="SearchQuery" Multiplicity="0..1" />
+          <End Type="DataModel.SearchQueryAttribute" Role="SearchQueryAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchQuery">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchQueryAttribute">
+              <PropertyRef Name="SearchQueryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchQueryAttributes_SearchQueryAttributes">
+          <End Type="DataModel.SearchQueryAttribute" Role="SearchQueryAttribute" Multiplicity="0..1" />
+          <End Type="DataModel.SearchQueryAttribute" Role="SearchQueryAttribute1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchQueryAttribute">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchQueryAttribute1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4548,6 +4674,34 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="SearchQueries">
+            <EntityTypeMapping TypeName="DataModel.SearchQuery">
+              <MappingFragment StoreEntitySet="SearchQueries">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Context" ColumnName="Context" />
+                <ScalarProperty Name="AssetTypeId" ColumnName="AssetTypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SearchId" ColumnName="SearchId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchQueryAttributes">
+            <EntityTypeMapping TypeName="DataModel.SearchQueryAttribute">
+              <MappingFragment StoreEntitySet="SearchQueryAttributes">
+                <ScalarProperty Name="LogicalOperator" ColumnName="LogicalOperator" />
+                <ScalarProperty Name="Index" ColumnName="Index" />
+                <ScalarProperty Name="ReferencedAttributeId" ColumnName="ReferencedAttributeId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ValueLabel" ColumnName="ValueLabel" />
+                <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
+                <ScalarProperty Name="Parenthesis" ColumnName="Parenthesis" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="SearchQueryId" ColumnName="SearchQueryId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -4561,7 +4715,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
         <DesignerProperty Name="UseLegacyProvider" Value="True" />
@@ -4949,6 +5103,10 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         <EntityTypeShape EntityType="DataModel.SearchTracking" Width="1.5" PointX="20.375" PointY="11.75" />
         <EntityTypeShape EntityType="DataModel.ScreenLayout" Width="1.5" PointX="21.375" PointY="15.875" />
         <AssociationConnector Association="DataModel.FK_AssetTypeScreen_ScreenLayout" />
+        <EntityTypeShape EntityType="DataModel.SearchQuery" Width="1.5" PointX="21.375" PointY="19.375" />
+        <EntityTypeShape EntityType="DataModel.SearchQueryAttribute" Width="1.5" PointX="23.625" PointY="19" />
+        <AssociationConnector Association="DataModel.FK_SearchQueryAttributes_SearchQueries" />
+        <AssociationConnector Association="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" />
         </Diagram>
     </Diagrams>
   </Designer>

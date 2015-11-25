@@ -241,6 +241,12 @@
     <Compile Include="SearchOperators.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SearchQuery.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchQueryAttribute.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SearchTracking.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>

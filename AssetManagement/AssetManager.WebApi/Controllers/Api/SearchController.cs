@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
@@ -17,8 +18,12 @@ namespace AssetManager.WebApi.Controllers.Api
     {
         private readonly ISearchService _searchService;
         private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
+        private readonly IAdvanceSearchModelSearchQueryMapper _advanceSearchModelSearchQueryMapper;
 
-        public SearchController(ISearchService searchService, IAdvanceSearchModelMapper advanceSearchModelMapper)
+        public SearchController(
+            ISearchService searchService,
+            IAdvanceSearchModelMapper advanceSearchModelMapper,
+            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
@@ -27,6 +32,10 @@ namespace AssetManager.WebApi.Controllers.Api
             if (advanceSearchModelMapper == null)
                 throw new ArgumentNullException("advanceSearchModelMapper");
             _advanceSearchModelMapper = advanceSearchModelMapper;
+
+            if (advanceSearchModelSearchQueryMapper == null)
+                throw new ArgumentNullException("advanceSearchModelSearchQueryMapper");
+            _advanceSearchModelSearchQueryMapper = advanceSearchModelSearchQueryMapper;
         }
 
         /// <summary>
@@ -85,19 +94,16 @@ namespace AssetManager.WebApi.Controllers.Api
         [CacheOutput(ClientTimeSpan = 120, ServerTimeSpan = 120)]
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
-            if (model.SearchId == Guid.Empty)
-            {
-                model.SearchId = Guid.NewGuid();
-            }
+            EnsureSearchId(model);
 
             var userId = User.GetId();
             var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);
             var result = _searchService.FindByType(
                 model.SearchId,
                 userId,
-                model.AssetTypeId,
+                model.AssetType.Id,
                 attributeElements,
-                time: model.Context,
+                time: model.AssetTypeContext,
                 order: model.SortBy,
                 pageNumber: model.Page);
 
@@ -106,6 +112,30 @@ namespace AssetManager.WebApi.Controllers.Api
                 SearchId = model.SearchId,
                 Entities = result.ToList()
             };
+        }
+
+        [Route("bytype/model"), HttpPost]
+        public string PutSearchByTypeModel(AdvanceSearchModel model)
+        {
+            EnsureSearchId(model);
+
+            var searchQuery = _advanceSearchModelSearchQueryMapper.GetSearchQuery(model);
+
+            _searchService.SaveSearchQuery(searchQuery);
+
+            return model.SearchId.ToString();
+        }
+
+        [Route("bytype/model"), HttpGet]
+        public AdvanceSearchModel GetSearchByTypeModel(Guid searchId)
+        {
+            var searchQuery = _searchService.GetSearchQuery(searchId);
+            if (searchQuery == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return _advanceSearchModelSearchQueryMapper.GetAdvanceSearchModel(searchQuery);
         }
 
         /// <summary>
@@ -167,6 +197,14 @@ namespace AssetManager.WebApi.Controllers.Api
             {
                 VerboseString = tracking.VerboseString
             };
+        }
+
+        private static void EnsureSearchId(AdvanceSearchModel model)
+        {
+            if (model.SearchId == Guid.Empty)
+            {
+                model.SearchId = Guid.NewGuid();
+            }
         }
     }
 }

@@ -1,18 +1,15 @@
 ﻿using System;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
-using Newtonsoft.Json;
 
 namespace AssetManager.WebApi.Models.Search
 {
     public class AdvanceSearchModel
     {
-        [JsonProperty(PropertyName = "assetType")]
-        public long AssetTypeId { get; set; }
+        public IdNamePair<long, string> AssetType { get; set; }
 
-        public TimePeriodForSearch Context { get; set; }
+        public TimePeriodForSearch AssetTypeContext { get; set; }
 
-        [JsonProperty(PropertyName = "attribs")]
         public AttributeFilter[] Attributes { get; set; }
 
         public Guid SearchId { get; set; }
@@ -26,7 +23,7 @@ namespace AssetManager.WebApi.Models.Search
         public AdvanceSearchModel()
         {
             Page = 1;
-            Context = TimePeriodForSearch.CurrentTime;
+            AssetTypeContext = TimePeriodForSearch.CurrentTime;
         }
     }
 }

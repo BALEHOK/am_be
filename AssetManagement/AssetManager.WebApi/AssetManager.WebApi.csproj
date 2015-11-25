@@ -305,6 +305,7 @@
     <Compile Include="App_Start\HttpContextUserNameProvider.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpService.cs" />
     <Compile Include="Controllers\Api\AdminAppController.cs" />
+    <Compile Include="Controllers\Api\AdvanceSearchModelSearchQueryMapper.cs" />
     <Compile Include="Controllers\Api\AssetController.cs" />
     <Compile Include="Controllers\Api\AssetTypeController.cs" />
     <Compile Include="Controllers\Api\AuthController.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="Controllers\Api\DynListController.cs" />
     <Compile Include="Controllers\Api\FaqController.cs" />
     <Compile Include="Controllers\Api\FilesController.cs" />
+    <Compile Include="Controllers\Api\IAdvanceSearchModelSearchQueryMapper.cs" />
     <Compile Include="Controllers\Api\PlacesController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />

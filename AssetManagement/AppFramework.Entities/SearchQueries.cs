@@ -18,7 +18,8 @@ using System.Runtime.Serialization;
 namespace AppFramework.Entities
 {
     [DataContract(IsReference = true)]
-    public partial class SearchTracking: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
+    [KnownType(typeof(SearchQueryAttributes))]
+    public partial class SearchQueries: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
     {
         #region Primitive Properties
     
@@ -42,82 +43,7 @@ namespace AppFramework.Entities
         private long _id;
     
         [DataMember]
-        public short SearchType
-        {
-            get { return _searchType; }
-            set
-            {
-                if (_searchType != value)
-                {
-                    _searchType = value;
-                    OnPropertyChanged("SearchType");
-                }
-            }
-        }
-        private short _searchType;
-    
-        [DataMember]
-        public string Parameters
-        {
-            get { return _parameters; }
-            set
-            {
-                if (_parameters != value)
-                {
-                    _parameters = value;
-                    OnPropertyChanged("Parameters");
-                }
-            }
-        }
-        private string _parameters;
-    
-        [DataMember]
-        public long UpdateUser
-        {
-            get { return _updateUser; }
-            set
-            {
-                if (_updateUser != value)
-                {
-                    _updateUser = value;
-                    OnPropertyChanged("UpdateUser");
-                }
-            }
-        }
-        private long _updateUser;
-    
-        [DataMember]
-        public System.DateTime UpdateDate
-        {
-            get { return _updateDate; }
-            set
-            {
-                if (_updateDate != value)
-                {
-                    _updateDate = value;
-                    OnPropertyChanged("UpdateDate");
-                }
-            }
-        }
-        private System.DateTime _updateDate;
-    
-        [DataMember]
-        public string VerboseString
-        {
-            get { return _verboseString; }
-            set
-            {
-                if (_verboseString != value)
-                {
-                    _verboseString = value;
-                    OnPropertyChanged("VerboseString");
-                }
-            }
-        }
-        private string _verboseString;
-    
-        [DataMember]
-        public System.Guid SearchId
+        public string SearchId
         {
             get { return _searchId; }
             set
@@ -129,7 +55,108 @@ namespace AppFramework.Entities
                 }
             }
         }
-        private System.Guid _searchId;
+        private string _searchId;
+    
+        [DataMember]
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged("Name");
+                }
+            }
+        }
+        private string _name;
+    
+        [DataMember]
+        public long AssetTypeId
+        {
+            get { return _assetTypeId; }
+            set
+            {
+                if (_assetTypeId != value)
+                {
+                    _assetTypeId = value;
+                    OnPropertyChanged("AssetTypeId");
+                }
+            }
+        }
+        private long _assetTypeId;
+    
+        [DataMember]
+        public bool Context
+        {
+            get { return _context; }
+            set
+            {
+                if (_context != value)
+                {
+                    _context = value;
+                    OnPropertyChanged("Context");
+                }
+            }
+        }
+        private bool _context;
+    
+        [DataMember]
+        public System.DateTime Created
+        {
+            get { return _created; }
+            set
+            {
+                if (_created != value)
+                {
+                    _created = value;
+                    OnPropertyChanged("Created");
+                }
+            }
+        }
+        private System.DateTime _created;
+
+        #endregion
+
+        #region Navigation Properties
+    
+        [DataMember]
+        public TrackableCollection<SearchQueryAttributes> SearchQueryAttributes
+        {
+            get
+            {
+                if (_searchQueryAttributes == null)
+                {
+                    _searchQueryAttributes = new TrackableCollection<SearchQueryAttributes>();
+                    _searchQueryAttributes.CollectionChanged += FixupSearchQueryAttributes;
+    				_searchQueryAttributes.IsLoaded = false;
+                }
+                return _searchQueryAttributes;
+            }
+            set
+            {
+                if (!ReferenceEquals(_searchQueryAttributes, value))
+                {
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+                    if (_searchQueryAttributes != null)
+                    {
+                        _searchQueryAttributes.CollectionChanged -= FixupSearchQueryAttributes;
+                    }
+                    _searchQueryAttributes = value;
+    				_searchQueryAttributes.IsLoaded = true;
+                    if (_searchQueryAttributes != null)
+                    {
+                        _searchQueryAttributes.CollectionChanged += FixupSearchQueryAttributes;
+                    }
+                    OnNavigationPropertyChanged("SearchQueryAttributes");
+                }
+            }
+        }
+        private TrackableCollection<SearchQueryAttributes> _searchQueryAttributes;
 
         #endregion
 
@@ -210,6 +237,50 @@ namespace AppFramework.Entities
     
         protected virtual void ClearNavigationProperties()
         {
+            SearchQueryAttributes.Clear();
+        }
+
+        #endregion
+
+        #region Association Fixup
+    
+        private void FixupSearchQueryAttributes(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+    
+            if (e.NewItems != null)
+            {
+                foreach (SearchQueryAttributes item in e.NewItems)
+                {
+                    item.SearchQuery = this;
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.ChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        ChangeTracker.RecordAdditionToCollectionProperties("SearchQueryAttributes", item);
+                    }
+                }
+            }
+    
+            if (e.OldItems != null)
+            {
+                foreach (SearchQueryAttributes item in e.OldItems)
+                {
+                    if (ReferenceEquals(item.SearchQuery, this))
+                    {
+                        item.SearchQuery = null;
+                    }
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        ChangeTracker.RecordRemovalFromCollectionProperties("SearchQueryAttributes", item);
+                    }
+                }
+            }
         }
 
         #endregion

@@ -1,8 +1,19 @@
 ﻿namespace AssetManager.WebApi.Models.Search
 {
-    public class IdNamePair<TId, TValue>
+    public class IdNamePair<TId, TName>
     {
+        public IdNamePair()
+        {
+            
+        }
+
+        public IdNamePair(TId id, TName name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         public TId Id { get; set; }
-        public TValue Name { get; set; }
+        public TName Name { get; set; }
     }
 }

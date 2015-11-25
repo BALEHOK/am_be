@@ -40,5 +40,8 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         /// <returns></returns>
         List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20);
+
+        void SaveSearchQuery(SearchQuery searchQuery);
+        SearchQuery GetSearchQuery(Guid searchId);
     }
 }

@@ -36,5 +36,7 @@ namespace AssetManager.WebApi.Models.Search
         public AttributeFilter[] ComplexValue { get; set; }
 
         public AttributeTypeModel ReferenceAttrib { get; set; }
+
+        public int Index { get; set; }
     }
 }

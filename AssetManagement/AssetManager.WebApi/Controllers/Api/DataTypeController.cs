@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using AppFramework.ConstantsEnumerators;
 using AssetManager.Infrastructure.Services;
+using AssetManager.WebApi.Models.Search;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -28,11 +29,8 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("{typeName}/operators"), HttpGet]
         public IEnumerable<object> GetAttributeTypeOperators(string typeName)
         {
-            return _dataTypeService.GetDataTypeOperators(typeName).Select(o => new
-            {
-                id = o.SearchOperatorUid,
-                name = o.Operator
-            });
+            return _dataTypeService.GetDataTypeOperators(typeName)
+                .Select(o => new IdNamePair<long, string>(o.SearchOperatorUid, o.Operator));
         }
     }
 }

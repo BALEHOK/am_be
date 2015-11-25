@@ -817,6 +817,19 @@
             }
         }
 
+        private IDataRepository<SearchQuery> _searchQueryRepository;
+        public IDataRepository<SearchQuery> SearchQueryRepository
+        {
+            get
+            {
+                if (_searchQueryRepository == null)
+                {
+                    _searchQueryRepository = new DataRepository<SearchQuery>(_context);
+                }
+                return _searchQueryRepository;
+            }
+        }
+
         #endregion
 
         #region IDataProvider: Base providers for plain SQL querying

@@ -35,7 +35,7 @@ namespace AssetManager.WebApi.Models.Search
                 return new List<AttributeElement>(0);
             }
 
-            var assetType = _assetTypeRepository.GetById(searchModel.AssetTypeId);
+            var assetType = _assetTypeRepository.GetById(searchModel.AssetType.Id);
 
             var operators = _unitOfWork.SearchOperatorsRepository.Get().ToList();
 

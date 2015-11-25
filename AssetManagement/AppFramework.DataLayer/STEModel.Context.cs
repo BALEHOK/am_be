@@ -437,6 +437,18 @@ namespace AppFramework.DataLayer
             get { return _screenLayout  ?? (_screenLayout = CreateObjectSet<ScreenLayout>("ScreenLayout")); }
         }
         private ObjectSet<ScreenLayout> _screenLayout;
+    
+        public ObjectSet<SearchQuery> SearchQueries
+        {
+            get { return _searchQueries  ?? (_searchQueries = CreateObjectSet<SearchQuery>("SearchQueries")); }
+        }
+        private ObjectSet<SearchQuery> _searchQueries;
+    
+        public ObjectSet<SearchQueryAttribute> SearchQueryAttributes
+        {
+            get { return _searchQueryAttributes  ?? (_searchQueryAttributes = CreateObjectSet<SearchQueryAttribute>("SearchQueryAttributes")); }
+        }
+        private ObjectSet<SearchQueryAttribute> _searchQueryAttributes;
 
         #endregion
 
