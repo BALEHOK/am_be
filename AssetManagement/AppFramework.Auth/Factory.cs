@@ -23,7 +23,10 @@ namespace AppFramework.Auth
             factory.Register(new Registration<IUserManager, UserManager>());
 
             factory.Register(new Registration<AuthContext>(r => new AuthContext(connectionString)));
+            factory.AuthorizationCodeStore = new Registration<IAuthorizationCodeStore, AuthorizationCodeStore>();
+            factory.RefreshTokenStore = new Registration<IRefreshTokenStore, IRefreshTokenStore>();
             factory.TokenHandleStore = new Registration<ITokenHandleStore, TokenHandleStore>();
+            factory.ConsentStore = new Registration<IConsentStore, ConsentStore>();
 
             factory.CorsPolicyService = new Registration<ICorsPolicyService>(CorsPolicyServiceFactory.Get());
 

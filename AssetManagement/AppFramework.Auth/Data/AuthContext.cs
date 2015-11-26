@@ -1,7 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Reflection;
 using AppFramework.Auth.Data.Models;
-using IdentityServer3.Core.Models;
 
 namespace AppFramework.Auth.Data
 {
@@ -15,11 +14,11 @@ namespace AppFramework.Auth.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.ComplexType<Token>();
             modelBuilder.Configurations.AddFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<TokenModel> Tokens { get; set; }
+        public DbSet<ConsentModel> Consents{ get; set; }
     }
 }
