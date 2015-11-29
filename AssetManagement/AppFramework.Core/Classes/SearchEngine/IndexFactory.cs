@@ -1,4 +1,5 @@
 ﻿using AppFramework.DataProxy;
+using Newtonsoft.Json;
 
 namespace AppFramework.Core.Classes.SearchEngine
 {
@@ -130,23 +131,21 @@ namespace AppFramework.Core.Classes.SearchEngine
                     : context.Name;
             }
 
-            var shortDetails = string.Join(", ", from attribute in asset.Attributes
-                where attribute.GetConfiguration().DisplayOnResultList
-                      && !string.IsNullOrWhiteSpace(attribute.Value)
-                orderby attribute.GetConfiguration().DisplayOrderResultList
-                select
-                    attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime
-                        ? attribute.GetValueAsDateTime().ToString("dd/MM/yyyy")
-                        : attribute.Value.Trim());
+            var shortDetailsArray = (from attribute in asset.Attributes
+                                     where attribute.GetConfiguration().DisplayOnResultList
+                                           && !string.IsNullOrWhiteSpace(attribute.Value)
+                                     orderby attribute.GetConfiguration().DisplayOrderExtResultList
+                                     select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
+                                         attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
+                                         attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim())).ToArray();
 
-            var extendedDetails = string.Join(", ", from attribute in asset.Attributes
-                where attribute.GetConfiguration().DisplayOnExtResultList
-                      && !string.IsNullOrWhiteSpace(attribute.Value)
-                orderby attribute.GetConfiguration().DisplayOrderExtResultList
-                select
-                    attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime
-                        ? attribute.GetValueAsDateTime().ToString("dd/MM/yyyy")
-                        : attribute.Value.Trim());
+            var extendedDetailsArray = (from attribute in asset.Attributes
+                                        where attribute.GetConfiguration().DisplayOnExtResultList
+                                                && !string.IsNullOrWhiteSpace(attribute.Value)
+                                        orderby attribute.GetConfiguration().DisplayOrderExtResultList
+                                        select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
+                                              attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
+                                              attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim())).ToArray();
 
             var entity = (IIndexEntity) Activator.CreateInstance<T>();
             entity.DynEntityUid = asset.UID;
@@ -183,8 +182,8 @@ namespace AppFramework.Core.Classes.SearchEngine
                 : DateTime.Now;
             entity.DynEntityConfigId = assetType.ID;
             entity.DynEntityId = asset.ID;
-            entity.DisplayValues = shortDetails;
-            entity.DisplayExtValues = extendedDetails;
+            entity.DisplayValues = JsonConvert.SerializeObject(shortDetailsArray);
+            entity.DisplayExtValues = JsonConvert.SerializeObject(extendedDetailsArray);
 
             if (asset[AttributeNames.LocationId] != null
                 && asset[AttributeNames.LocationId].RelatedAsset != null)
