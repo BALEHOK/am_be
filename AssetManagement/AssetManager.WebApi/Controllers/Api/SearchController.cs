@@ -8,6 +8,7 @@ using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
+using AssetManager.Infrastructure.Services;
 using AssetManager.WebApi.Extensions;
 using AssetManager.WebApi.Models.Search;
 using WebApi.OutputCache.V2;
@@ -18,13 +19,14 @@ namespace AssetManager.WebApi.Controllers.Api
     public class SearchController : ApiController
     {
         private readonly ISearchService _searchService;
+        private readonly IDataConverterService _dataConverterService;
         private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
         private readonly IAdvanceSearchModelSearchQueryMapper _advanceSearchModelSearchQueryMapper;
 
         public SearchController(
             ISearchService searchService,
             IAdvanceSearchModelMapper advanceSearchModelMapper,
-            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper)
+            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper, IDataConverterService dataConverterService)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
@@ -37,6 +39,9 @@ namespace AssetManager.WebApi.Controllers.Api
             if (advanceSearchModelSearchQueryMapper == null)
                 throw new ArgumentNullException("advanceSearchModelSearchQueryMapper");
             _advanceSearchModelSearchQueryMapper = advanceSearchModelSearchQueryMapper;
+            if (advanceSearchModelSearchQueryMapper == null)
+                throw new ArgumentNullException("dataConverterService");
+            _dataConverterService = dataConverterService;
         }
 
         /// <summary>
@@ -71,11 +76,7 @@ namespace AssetManager.WebApi.Controllers.Api
                     assetId: model.AssetId.GetValueOrDefault()
             );
 
-            return new SearchResultModel
-            {
-                SearchId = model.SearchId.Value,
-                Entities = result.ToList()
-            };
+            return _dataConverterService.GetSearchResultModel(searchId.Value, result);
         }
 
         private static bool ValidateAndUpdateSimpleSearchModel(SimpleSearchModel model)
@@ -112,11 +113,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 order: model.SortBy,
                 pageNumber: model.Page);
 
-            return new SearchResultModel
-            {
-                SearchId = model.SearchId.Value,
-                Entities = result.ToList()
-            };
+			return _dataConverterService.GetSearchResultModel(model.SearchId, result);
         }
 
         [Route("bytype/model"), HttpPost]
