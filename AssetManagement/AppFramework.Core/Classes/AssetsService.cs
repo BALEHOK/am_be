@@ -30,25 +30,31 @@ namespace AppFramework.Core.Classes
         private readonly IAttributeValueFormatter _attributeValueFormatter;
         private readonly IIndexationService _indexationService;
         private readonly IAssetTypeRepository _assetTypeRepository;
+        private readonly IAttributeRepository _attributeRepository;
         private readonly DynColumnAdapter _columnAdapter;
         private readonly IAttributeCalculator _attributeCalculator;
         private readonly IDynamicListsService _dynamicListsService;
         private readonly IRightsService _rightsService;
 
+        // ToDo fix circular dependency AssetsService - AttributeCalculator
         public AssetsService(
             IUnitOfWork unitOfWork,
             IAssetTypeRepository assetTypeRepository,
+            IAttributeRepository attributeRepository,
             IAttributeValueFormatter attributeValueFormatter,
             IRightsService rightsService)
         {
             if (unitOfWork == null)
-                throw new ArgumentNullException("IUnitOfWork");
+                throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
             if (assetTypeRepository == null)
-                throw new ArgumentNullException("IAssetTypeRepository");
+                throw new ArgumentNullException("assetTypeRepository");
+            if (attributeRepository == null)
+                throw new ArgumentNullException("attributeRepository");
             _assetTypeRepository = assetTypeRepository;
+            _attributeRepository = attributeRepository;
             if (attributeValueFormatter == null)
-                throw new ArgumentNullException("IAttributeValueFormatter");
+                throw new ArgumentNullException("attributeValueFormatter");
             _attributeValueFormatter = attributeValueFormatter;
             if (rightsService == null)
                 throw new ArgumentNullException("rightsService");
@@ -59,8 +65,8 @@ namespace AppFramework.Core.Classes
             _columnAdapter = new DynColumnAdapter(dtService);
             _tableProvider = new DynTableProvider(_unitOfWork, _columnAdapter);
             _indexationService = new IndexationService(_unitOfWork, _assetTypeRepository, this);
-            _attributeCalculator = new AttributeCalculator(_unitOfWork, this, _assetTypeRepository);
-            _dynamicListsService = new DynamicListsService(_unitOfWork);
+            _attributeCalculator = new AttributeCalculator(_unitOfWork, this, _assetTypeRepository, attributeRepository);
+            _dynamicListsService = new DynamicListsService(_unitOfWork, attributeRepository);
         }
 
         public IEnumerable<Asset> GetAssetsByParameters(string tableName, Dictionary<string, string> parameters)
@@ -668,7 +674,7 @@ namespace AppFramework.Core.Classes
                 Timeout = TransactionManager.MaximumTimeout
             };
 
-            var dependenciesFinder = new DependenciesFinder(_unitOfWork, this, _assetTypeRepository);
+            var dependenciesFinder = new DependenciesFinder(this, _assetTypeRepository, _attributeRepository);
             var dependencies = dependenciesFinder.GetDependentAssets(deletingAsset);
 
             using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))

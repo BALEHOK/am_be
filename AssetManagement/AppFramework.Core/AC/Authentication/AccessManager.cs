@@ -63,11 +63,12 @@ namespace AppFramework.Core.AC.Authentication
                 {
                     var unitOfWork = new UnitOfWork();
                     var rightsService = new RightsService(unitOfWork);
-                    var assetTypeRepository = AssetTypeRepository.Create(unitOfWork);
+                    var atRepository = AssetTypeRepository.Create(unitOfWork);
                     var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
                     var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
-                    var assetsService = new AssetsService(unitOfWork, assetTypeRepository, attributeValueFormatter, rightsService);
-                    var userService = new UserService(unitOfWork, assetTypeRepository, assetsService);
+                    var attributeRepository = new AttributeRepository(unitOfWork);
+                    var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+                    var userService = new UserService(unitOfWork, atRepository, assetsService);
                     _authService = new AuthenticationService(unitOfWork, userService);
                 }
                 return _authService;

@@ -21,6 +21,8 @@ namespace AssetSite
         [Dependency]
         public IAssetTypeRepository AssetTypeRepository { get; set; }
         [Dependency]
+        public IAttributeRepository AttributeRepository { get; set; }
+        [Dependency]
         public IAssetsService AssetsService { get; set; }
         [Dependency]
         public IUserService UserService { get; set; }

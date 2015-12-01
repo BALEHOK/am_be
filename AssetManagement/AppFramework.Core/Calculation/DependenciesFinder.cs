@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using AppFramework.Core.Classes;
 using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.DataProxy;
 using QuickGraph;
 using QuickGraph.Algorithms;
 
@@ -12,15 +11,15 @@ namespace AppFramework.Core.Calculation
 {
     public class DependenciesFinder
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IAssetTypeRepository _typeRepository;
+        private readonly IAttributeRepository _attributeRepository;
         private readonly IAssetsService _assetsService;
 
-        public DependenciesFinder(IUnitOfWork unitOfWork, IAssetsService assetsService,
-            IAssetTypeRepository assetTypeRepository)
+        public DependenciesFinder(IAssetsService assetsService,
+            IAssetTypeRepository assetTypeRepository, IAttributeRepository attributeRepository)
         {
-            _unitOfWork = unitOfWork;
             _typeRepository = assetTypeRepository;
+            _attributeRepository = attributeRepository;
             _assetsService = assetsService;
         }
 
@@ -44,11 +43,9 @@ namespace AppFramework.Core.Calculation
 
             var parameterName = string.Format("[{0}{1}]", AttributeCalculator.ParameterPrefix, assetType.DBTableName);
 
-            var calculatable =
-                _unitOfWork.DynEntityAttribConfigRepository.Get(
-                    c => c.ActiveVersion && !string.IsNullOrEmpty(c.CalculationFormula) &&
-                         (c.RelatedAssetTypeID == type.ID || c.CalculationFormula.Contains(parameterName)))
-                    .ToList();
+            var calculatable = _attributeRepository.FindPublished(c => 
+                !string.IsNullOrEmpty(c.CalculationFormula)
+                && (c.RelatedAssetTypeID == type.ID || c.CalculationFormula.Contains(parameterName)));
 
             var calculatedTypesUids = calculatable.Select(c => c.DynEntityConfigUid).Distinct().ToList();
 
@@ -115,13 +112,13 @@ namespace AppFramework.Core.Calculation
             AddVertex(graph, asset);
 
             var assetTypeId = asset.GetConfiguration().ID;
+
             // find types with formulas which contain references to related assets ([RelatedAsset@FieldName])
-            var relatedTypes = _unitOfWork.DynEntityAttribConfigRepository
-                .Get(a => a.ActiveVersion && a.RelatedAssetTypeID == assetTypeId)
+            var relatedTypes = _attributeRepository.FindPublished(a => a.RelatedAssetTypeID == assetTypeId)
                 .Select(a => new
                 {
                     attribute = a,
-                    type = _typeRepository.GetByUid(a.DynEntityConfigUid)
+                    type = _typeRepository.GetByUid(a.DynEntityConfigUid) // ToDo this issues a huge number of heavy AssetType sql requests
                 });
 
             foreach (var relation in relatedTypes)

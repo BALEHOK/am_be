@@ -239,8 +239,11 @@
     <Compile Include="Calculation\FunctionsFactory.cs" />
     <Compile Include="Calculation\IAttributeCalculator.cs" />
     <Compile Include="Calculation\ParametersFinder.cs" />
+    <Compile Include="Classes\AttributeRepository.cs" />
     <Compile Include="Classes\AttributeValueFormatter.cs" />
     <Compile Include="Classes\DataFactory.cs" />
+    <Compile Include="Classes\Extensions\DynEntityAttribConfigExtensions.cs" />
+    <Compile Include="Classes\IAttributeRepository.cs" />
     <Compile Include="Classes\IAttributeValueFormatter.cs" />
     <Compile Include="Classes\IE\IImportExportManager.cs" />
     <Compile Include="Classes\Layout.cs" />
@@ -567,9 +570,7 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />

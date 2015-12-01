@@ -5,8 +5,9 @@ using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
+using AssetManagerAdmin.Infrastructure;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     public class ReportsBuilderViewModel : ToolkitViewModelBase
     {
@@ -155,6 +156,23 @@ namespace AssetManagerAdmin.ViewModel
             });
         }
 
+        private RelayCommand<CustomReportModel> _viewReportCommand;
+
+        public RelayCommand<CustomReportModel> ViewReportCommand
+        {
+            get
+            {
+                return _viewReportCommand ??
+                       (_viewReportCommand =
+                           new RelayCommand<CustomReportModel>(ExecuteViewReportCommand, model => true));
+            }
+        }
+
+        private void ExecuteViewReportCommand(CustomReportModel reportModel)
+        {
+            
+        }
+
         private RelayCommand<CustomReportModel> _deleteReportCommand;
 
         public RelayCommand<CustomReportModel> DeleteReportCommand
@@ -188,14 +206,11 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public ReportsBuilderViewModel(IDataService dataService)
+        public ReportsBuilderViewModel(IDataService dataService, IAppContext context)
+            : base(context)
         {
             _dataService = dataService;
-
-            OnViewActivated = () =>
-            {
-                LoadReportsAndTypes();
-            };
+            LoadReportsAndTypes();
         }
 
         private void LoadReportsAndTypes()
@@ -206,7 +221,8 @@ namespace AssetManagerAdmin.ViewModel
                 RaisePropertyChanged(ReportAssetTypePropertyName);
             });
 
-            _dataService.GetTypesInfo(CurrentUser, CurrentServer.ApiUrl).ContinueWith(result =>
+            _dataService.GetTypesInfo(Context.CurrentUser, Context.CurrentServer.ApiUrl)
+                .ContinueWith(result =>
             {
                 // do not modify original collection
                 AssetTypesList = result.Result.ActiveTypes.ToList();

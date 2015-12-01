@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using AppFramework.Core.Classes;
-using AssetManagerAdmin.ViewModel;
+using AssetManagerAdmin.ViewModels;
 
 namespace AssetManagerAdmin.View
 {

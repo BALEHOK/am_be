@@ -6,6 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="917"
              DataContext="{Binding ReportsBuilder, Source={StaticResource Locator}}">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -31,11 +32,17 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Label Content="Name:" FontWeight="Bold" Grid.Column="0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="10" VerticalAlignment="Center"/>
                         <Button Grid.Column="2" Height="20" Width="60" 
+                                Command="{Binding 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                    Path=DataContext.ViewReportCommand}"
+                                CommandParameter="{Binding }">view</Button>
+                        <Button Grid.Column="3" Height="20" Width="60" 
                                 Command="{Binding 
                                     RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
                                     Path=DataContext.DeleteReportCommand}"

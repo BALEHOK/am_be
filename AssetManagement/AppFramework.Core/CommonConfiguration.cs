@@ -1,5 +1,4 @@
 ﻿using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.AC.Providers;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
@@ -31,6 +30,7 @@ namespace AppFramework.Core
                 .RegisterType<IAssetTypeRepository, AssetTypeRepository>(
                     new Interceptor<InterfaceInterceptor>(),
                     new InterceptionBehavior<TransactionInterceptor>())
+                .RegisterType<IAttributeRepository, AttributeRepository>()
                 .RegisterType<IAssetsService, AssetsService>()
                 .RegisterType<IDataTypeService, DataTypeService>()
                 .RegisterType<IAuthenticationService, AuthenticationService>()

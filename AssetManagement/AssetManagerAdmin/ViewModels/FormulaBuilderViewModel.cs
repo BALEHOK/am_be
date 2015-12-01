@@ -9,29 +9,18 @@ using AssetManagerAdmin.Model;
 using AssetManager.Infrastructure.Models.TypeModels;
 using GalaSoft.MvvmLight.Command;
 using Common.Logging;
+using AssetManagerAdmin.Infrastructure;
+using AssetManagerAdmin.Services;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
-    public enum FormulaBuilderContextType
-    {
-        DbFormulas = 0,
-        ScreenFormulas,
-        Validation,
-        DataTypesValidation
-    }
-
-    public struct FormulaBuilderContext
-    {
-        public FormulaBuilderContextType Type { get; set; }
-        public string Name { get; set; }
-    }
-
     public sealed class FormulaBuilderViewModel : ToolkitViewModelBase
     {
+        private FormulaBuilderContextType _currentFormulaContext
+            = FormulaBuilderContextType.DbFormulas;
         private ExpressionParser _expressionParser;
         private readonly IDataService _dataService;
-
-        public AssetsDataProvider DataProvider { get; private set; }
+        private readonly IAssetsDataProvider _dataProvider;
 
         public const string ExpressionParserPropertyName = "ExpressionParser";
         public ExpressionParser ExpressionParser
@@ -113,37 +102,7 @@ namespace AssetManagerAdmin.ViewModel
                 _builder = value;
                 RaisePropertyChanged(BuilderPropertyName);
             }
-        }
-
-        public const string ContextsPropertyName = "Contexts";
-        private List<FormulaBuilderContext> _contexts;
-
-        public List<FormulaBuilderContext> Contexts
-        {
-            get { return _contexts; }
-
-            set
-            {
-                _contexts = value;
-                RaisePropertyChanged(ContextsPropertyName);
-            }
-        }
-
-        public const string CurrentContextPropertyName = "CurrentContext";
-        private FormulaBuilderContext _currentContext;
-
-        public FormulaBuilderContext CurrentContext
-        {
-            get { return _currentContext; }
-
-            set
-            {
-                _currentContext = value;
-                RaisePropertyChanged(CurrentContextPropertyName);
-                if (_canChangeContext)
-                    ChangeContext(_currentContext);
-            }
-        }
+        }  
 
         public const string AssetTypesListPropertyName = "AssetTypesList";
         private List<AssetTypeModel> _assetTypesList;
@@ -262,7 +221,7 @@ namespace AssetManagerAdmin.ViewModel
 
         private RelayCommand _refreshAssetTypeListCommand;
         private readonly ILog _logger;
-        private bool _canChangeContext;
+        private readonly IFrameNavigationService _navigationService;
 
         public RelayCommand RefreshAssetTypeListCommand
         {
@@ -276,17 +235,17 @@ namespace AssetManagerAdmin.ViewModel
         private void ExecuteRefreshAssetTypeListCommand()
         {
             MessengerInstance.Send((object)null, AppActions.ClearTypesInfoCache);
-            LoadTypesInfo(CurrentContext);
+            LoadTypesInfo(_currentFormulaContext);
         }
 
         private void ExecuteSaveFormulaCommand()
         {
             var formulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
 
-            switch (CurrentContext.Type)
+            switch (_currentFormulaContext)
             {
                 case FormulaBuilderContextType.DbFormulas:
-                    Api.SaveFormula(DataProvider.CurrentAssetType, AttributeType.DbName, formulaText)
+                    Api.SaveFormula(_dataProvider.CurrentAssetType, AttributeType.DbName, formulaText)
                         .ContinueWith(a =>
                         {
                             AttributeType.CalculationFormula = FormulaText;
@@ -305,7 +264,7 @@ namespace AssetManagerAdmin.ViewModel
                     break;
 
                 case FormulaBuilderContextType.Validation:
-                    Api.SaveValidation(DataProvider.CurrentAssetType, AttributeType.DbName,
+                    Api.SaveValidation(_dataProvider.CurrentAssetType, AttributeType.DbName,
                         formulaText)
                         .ContinueWith(a =>
                         {
@@ -325,11 +284,11 @@ namespace AssetManagerAdmin.ViewModel
             if (attributeInfo == null)
                 return;
 
-            DataProvider.CurrentAttributeType = attributeInfo;
+            _dataProvider.CurrentAttributeType = attributeInfo;
 
             string formulaText;
 
-            switch (CurrentContext.Type)
+            switch (_currentFormulaContext)
             {
                 case FormulaBuilderContextType.DbFormulas:
                     formulaText = attributeInfo.CalculationFormula;
@@ -569,71 +528,60 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        private async void ChangeContext(FormulaBuilderContext context)
+        private void LoadTypesInfo(FormulaBuilderContextType context)
         {
-            if (Builder != null)
-                Builder.Reset();
-            LoadTypesInfo(context);
-        }
-
-        private void LoadTypesInfo(FormulaBuilderContext context)
-        {
-            _dataService.GetTypesInfo(CurrentUser, CurrentServer.ApiUrl).ContinueWith(result =>
+            _dataService.GetTypesInfo(Context.CurrentUser, Context.CurrentServer.ApiUrl)
+                .ContinueWith(result =>
             {
                 // do not modify original collection
-                DataProvider.AssetTypes = result.Result.ActiveTypes.ToList();
+                _dataProvider.AssetTypes = result.Result.ActiveTypes.ToList();
 
-                DataProvider.AssetTypes.ForEach(t =>
+                _dataProvider.AssetTypes.ForEach(t =>
                 {
                     t.IsHighlighted =
-                        context.Type == FormulaBuilderContextType.DbFormulas && t.HasCalculatedAttributes ||
-                        context.Type == FormulaBuilderContextType.ScreenFormulas && t.HasScreenFormulas ||
-                        context.Type == FormulaBuilderContextType.Validation && t.HasValidationExpressions;
+                        context == FormulaBuilderContextType.DbFormulas && t.HasCalculatedAttributes ||
+                        context == FormulaBuilderContextType.ScreenFormulas && t.HasScreenFormulas ||
+                        context == FormulaBuilderContextType.Validation && t.HasValidationExpressions;
 
                     t.Attributes.ForEach(a => a.IsHighlighted =
-                        context.Type == FormulaBuilderContextType.DbFormulas && a.HasDatabaseFormula ||
-                        context.Type == FormulaBuilderContextType.ScreenFormulas && a.HasScreenFormula ||
-                        context.Type == FormulaBuilderContextType.Validation && a.HasValidationExpression);
+                        context == FormulaBuilderContextType.DbFormulas && a.HasDatabaseFormula ||
+                        context == FormulaBuilderContextType.ScreenFormulas && a.HasScreenFormula ||
+                        context == FormulaBuilderContextType.Validation && a.HasValidationExpression);
                 });
 
-                IsAttributesSelectorVisible = context.Type == FormulaBuilderContextType.DbFormulas ||
-                                              context.Type == FormulaBuilderContextType.Validation;
-                IsScreenAttributesSelectorVisible = context.Type == FormulaBuilderContextType.ScreenFormulas;
+                IsAttributesSelectorVisible = context == FormulaBuilderContextType.DbFormulas ||
+                                              context == FormulaBuilderContextType.Validation;
+                IsScreenAttributesSelectorVisible = context == FormulaBuilderContextType.ScreenFormulas;
 
-                AssetTypesList = DataProvider.AssetTypes;
+                AssetTypesList = _dataProvider.AssetTypes;
 
 
-                Grammar = GetGrammar(CurrentContext.Type);
-                Builder = new ExpressionBuilder(DataProvider, Grammar);
+                Grammar = GetGrammar(context);
+                Builder = new ExpressionBuilder(_dataProvider, Grammar);
                 Builder.OnExpressionChanged += (sender, args) =>
                 {
                     FormulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
                 };
-                ExpressionParser = new ExpressionParser(DataProvider, Builder, Grammar);
+                ExpressionParser = new ExpressionParser(_dataProvider, Builder, Grammar);
             }, 
             TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        public FormulaBuilderViewModel(IDataService dataService, ILog logger)
+        public FormulaBuilderViewModel(
+            IDataService dataService,
+            IAssetsDataProvider dataProvider,
+            IAppContext context,
+            ILog logger) : base(context)
         {
             _dataService = dataService;
+            _dataProvider = dataProvider;
             _logger = logger;
 
-            DataProvider = new AssetsDataProvider();
-
-            Contexts = new List<FormulaBuilderContext>
+            OnNavigated += (parameter) =>
             {
-                new FormulaBuilderContext {Name = "Database Formulas", Type = FormulaBuilderContextType.DbFormulas},
-                new FormulaBuilderContext {Name = "Screen Formulas", Type = FormulaBuilderContextType.ScreenFormulas},
-                new FormulaBuilderContext {Name = "Validation", Type = FormulaBuilderContextType.Validation},
-            };
-
-            CurrentContext = Contexts.Single(c => c.Type == FormulaBuilderContextType.DbFormulas);
-
-            OnLoginDone = (model) => 
-            {
-                LoadTypesInfo(CurrentContext);
-                _canChangeContext = true;
+                if (parameter is FormulaBuilderContextType)
+                    _currentFormulaContext = (FormulaBuilderContextType)parameter;
+                LoadTypesInfo(_currentFormulaContext);
             };
         }
     }

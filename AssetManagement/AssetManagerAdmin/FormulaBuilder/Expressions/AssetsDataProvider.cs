@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AssetManagerAdmin.FormulaBuilder.Expressions.ExpressionTypes;
@@ -6,7 +5,7 @@ using AssetManager.Infrastructure.Models.TypeModels;
 
 namespace AssetManagerAdmin.FormulaBuilder.Expressions
 {
-    public class AssetsDataProvider : IEntryFactoryDataProvider
+    public class AssetsDataProvider : IAssetsDataProvider
     {
         public List<AssetTypeModel> AssetTypes { get; set; }
         public AssetTypeModel CurrentAssetType { get; set; }

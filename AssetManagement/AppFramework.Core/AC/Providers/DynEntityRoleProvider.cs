@@ -42,7 +42,8 @@ namespace AppFramework.Core.AC.Providers
                     var linkedEntityFinder = new LinkedEntityFinder(UnitOfWork);
                     var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
                     var rightsService = new RightsService(UnitOfWork);
-                    var assetsService = new AssetsService(UnitOfWork, atRepository, attributeValueFormatter, rightsService);
+                    var attributeRepository = new AttributeRepository(UnitOfWork);
+                    var assetsService = new AssetsService(UnitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
                     _userService = new UserService(UnitOfWork, atRepository, assetsService);
                 }
                 return _userService;

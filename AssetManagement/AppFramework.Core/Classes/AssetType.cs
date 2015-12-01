@@ -536,13 +536,14 @@ namespace AppFramework.Core.Classes
 		public static IEnumerable<AssetType> GetAllAvailableForAssets()
 		{
 			var unitOfWork = new UnitOfWork();
-            var assetTypeRepository = AssetTypeRepository.Create(unitOfWork);
+            var attributeRepository = new AttributeRepository(unitOfWork);
 			var predicate = PredicateBuilder.True<DynEntityConfig>();
 			predicate = predicate.And(dec => dec.ActiveVersion == true);
 			predicate = predicate.And(dec => dec.Active == true);
 			foreach (DynEntityConfig item in unitOfWork.DynEntityConfigRepository.Get(predicate, orderBy: items => items.OrderBy(i => i.Name)))
 			{
-                if (assetTypeRepository.GetAttributeByRelatedAssetTypeAttributeId(item.DynEntityConfigId) != null)
+			    var itemId = item.DynEntityConfigId;
+                if (attributeRepository.FindPublishedSingleOrDefault(a => a.RelatedAssetTypeID == itemId) != null)
 				{
 					yield return new AssetType(item, unitOfWork);
 				}

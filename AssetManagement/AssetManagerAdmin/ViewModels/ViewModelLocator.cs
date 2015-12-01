@@ -9,10 +9,9 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.ServiceLocation;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -23,17 +22,24 @@ namespace AssetManagerAdmin.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
+        public const string AuthViewKey = "AuthView";
+
+        public const string LoginViewKey = "LoginView";
+
+        public const string FormulaBuilderKey = "FormulaBuilder";
+
+        public const string ReportsBuilderKey = "ReportsBuilder";
+
+        public const string ValidationBuilderKey = "ValidationBuilder";
+
         static ViewModelLocator()
         {
-            Registrations.RegisterDependencies();
+            Infrastructure.Registrations.Configuration.RegisterDependencies();
         }
 
         /// <summary>
         /// Gets the Main property.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance",
-            "CA1822:MarkMembersAsStatic",
-            Justification = "This non-static member is needed for data binding purposes.")]
         public MainViewModel Main
         {
             get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
@@ -67,6 +73,11 @@ namespace AssetManagerAdmin.ViewModel
         public AuthViewModel Auth
         {
             get { return ServiceLocator.Current.GetInstance<AuthViewModel>(); }
+        }
+
+        public RenderReportViewModel RenderReport
+        {
+            get { return ServiceLocator.Current.GetInstance<RenderReportViewModel>(); }
         }
 
         /// <summary>

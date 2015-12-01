@@ -2,12 +2,13 @@
 using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using AssetManagerAdmin.Services;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        #region Properties
+        private readonly IFrameNavigationService _navigationService;
 
         public const string ServersListPropertyName = "ServersList";
         private List<ServerConfig> _serversList;
@@ -38,9 +39,7 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        #endregion
-
-        private RelayCommand _loginCommand;
+        private RelayCommand _loginCommand;        
 
         public RelayCommand LoginCommand
         {
@@ -54,11 +53,12 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteLoginCommand()
         {
-            MessengerInstance.Send(SelectedServer, AppActions.LoggingIn);
+            _navigationService.NavigateTo(ViewModelLocator.AuthViewKey, SelectedServer);
         }
 
-        public LoginViewModel()
+        public LoginViewModel(IFrameNavigationService navigationService)
         {
+            _navigationService = navigationService;
             ServersList = AppConfig.GetServersList().ToList();
             SelectedServer = ServersList.First();
         }

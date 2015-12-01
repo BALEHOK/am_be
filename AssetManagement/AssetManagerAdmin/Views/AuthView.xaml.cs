@@ -4,10 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using AppFramework.Auth;
-using AssetManagerAdmin.Model;
-using AssetManagerAdmin.ViewModel;
 using IdentityModel.Client;
 using mshtml;
+using AssetManagerAdmin.ViewModels;
 
 namespace AssetManagerAdmin.View
 {
@@ -16,8 +15,8 @@ namespace AssetManagerAdmin.View
         private readonly WebBrowser _loginWebView;
         private readonly WebBrowser _logoutWebView;
         private const string CallbackUrl = "oob://localhost/AMATclient";
-
-        public ServerConfig Server { get; private set; }
+        private const string LogoutUrlFormat = "{0}" + AuthConstants.Endpoints.Logout + "?id_token_hint={1}&post_logout_redirect_uri=" + CallbackUrl;
+        private const string RequiredScopes = AuthConstants.Scopes.OpenId + " " + AuthConstants.Scopes.Profile + " " + AuthConstants.Scopes.WebApi;
 
         public AuthView()
         {
@@ -28,22 +27,29 @@ namespace AssetManagerAdmin.View
             _logoutWebView.Navigating += WebView_Navigating_Logout;
             _logoutWebView.Navigated += WebView_Navigated_Logout;
 
+            DataContextChanged += (sender, args) =>
+            {
+                ((AuthViewModel)DataContext).OnLoggingIn += (server) =>
+                {
+                    var request = new AuthorizeRequest(server.AuthUrl + AuthConstants.Endpoints.Authorize);
+                    var loginUrl = request.CreateAuthorizeUrl("AMAT", "id_token token", RequiredScopes,
+                        CallbackUrl, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+
+                    _loginWebView.Visibility = Visibility.Visible;
+                    _loginWebView.Navigate(new Uri(loginUrl));
+                    WebView.Content = _loginWebView;
+                };
+
+                ((AuthViewModel)DataContext).OnLoggingOut += (authUrl, user) =>
+                {
+                    var logoutUrl = string.Format(LogoutUrlFormat, authUrl, user.IdToken);
+                    _logoutWebView.Visibility = Visibility.Visible;
+                    _logoutWebView.Navigate(new Uri(logoutUrl));
+                    WebView.Content = _logoutWebView;
+                };
+            };
+
             InitializeComponent();
-        }
-
-        public void Login(ServerConfig server)
-        {
-            Server = server;
-            var request = new AuthorizeRequest(server.AuthUrl + AuthConstants.Endpoints.Authorize);
-
-            const string requiredScopes =
-                AuthConstants.Scopes.OpenId + " " + AuthConstants.Scopes.Profile + " " + AuthConstants.Scopes.WebApi;
-            var loginUrl = request.CreateAuthorizeUrl("AMAT", "id_token token", requiredScopes,
-                CallbackUrl, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-
-            _loginWebView.Visibility = Visibility.Visible;
-            _loginWebView.Navigate(new Uri(loginUrl));
-            WebView.Content = _loginWebView;
         }
 
         public void WebView_Navigating_Login(object sender, NavigatingCancelEventArgs e)
@@ -76,20 +82,8 @@ namespace AssetManagerAdmin.View
 
                 _loginWebView.Visibility = Visibility.Collapsed;
 
-                ((AuthViewModel) DataContext).OnLoggedIn(Server, authorizeResponse);
+                ((AuthViewModel) DataContext).OnLoggedIn(authorizeResponse);
             }
-        }
-
-        public void Logout(string authUrl, UserInfo currentUser)
-        {
-            const string logoutUrlFormat =
-                "{0}" + AuthConstants.Endpoints.Logout + "?id_token_hint={1}&post_logout_redirect_uri=" + CallbackUrl;
-
-            var logoutUrl = string.Format(logoutUrlFormat, authUrl, currentUser.IdToken);
-
-            _logoutWebView.Visibility = Visibility.Visible;
-            _logoutWebView.Navigate(new Uri(logoutUrl));
-            WebView.Content = _logoutWebView;
         }
 
         /// <summary>
@@ -126,7 +120,6 @@ namespace AssetManagerAdmin.View
         private void Logout()
         {
             _logoutWebView.Visibility = Visibility.Collapsed;
-
             ((AuthViewModel) DataContext).OnLoggedOut();
         }
     }

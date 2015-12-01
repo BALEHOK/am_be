@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
-using AssetManagerAdmin.View;
 using GalaSoft.MvvmLight.Command;
-using Microsoft.Practices.ServiceLocation;
+using AssetManagerAdmin.Infrastructure;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     /// <summary>
     /// This class contains properties that the main View can data bind to.
@@ -21,15 +18,6 @@ namespace AssetManagerAdmin.ViewModel
     public class MainViewModel : ToolkitViewModelBase
     {
         private readonly IDataService _dataService;
-        private readonly Dictionary<int, ContentControl> _views;
-
-        public IDialogService DialogService
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<IDialogService>();
-            }
-        }
 
         #region Properties
 
@@ -62,9 +50,9 @@ namespace AssetManagerAdmin.ViewModel
         }
 
         public const string MainMenuItemsName = "MainMenuItems";
-        private List<MainMenuItem> _mainMenuItems;
+        private List<MenuItemViewModel> _mainMenuItems;
 
-        public List<MainMenuItem> MainMenuItems
+        public List<MenuItemViewModel> MainMenuItems
         {
             get { return _mainMenuItems; }
             set
@@ -75,9 +63,9 @@ namespace AssetManagerAdmin.ViewModel
         }
 
         public const string SelectedMenuItemName = "SelectedMenuItem";
-        private MainMenuItem _selectedMenuItem;
+        private MenuItemViewModel _selectedMenuItem;
 
-        public MainMenuItem SelectedMenuItem
+        public MenuItemViewModel SelectedMenuItem
         {
             get { return _selectedMenuItem; }
             set
@@ -100,21 +88,7 @@ namespace AssetManagerAdmin.ViewModel
                 RaisePropertyChanged(ServersListPropertyName);
             }
         }
-
-        public const string SelectedServerPropertyName = "SelectedServer";
-        private ServerConfig _selectedServer;
-
-        public ServerConfig SelectedServer
-        {
-            get { return _selectedServer; }
-
-            set
-            {
-                _selectedServer = value;
-                RaisePropertyChanged(SelectedServerPropertyName);
-            }
-        }
-
+                
         public const string TypeInfoListPropertyName = "TypeInfoList";
         private List<AssetTypeModel> _typeInfoList;
 
@@ -171,17 +145,17 @@ namespace AssetManagerAdmin.ViewModel
             }
         }
 
-        public const string IsViewsMenuEnabledPropertyName = "IsViewsMenuEnabled";
-        private bool _isViewsMenuEnabled;
+        public const string IsMenuVisiblePropertyName = "IsMenuVisible";
+        private bool _isMenuVisible = false;
 
-        public bool IsViewsMenuEnabled
+        public bool IsMenuVisible
         {
-            get { return _isViewsMenuEnabled; }
+            get { return _isMenuVisible; }
 
             set
             {
-                _isViewsMenuEnabled = value;
-                RaisePropertyChanged(IsViewsMenuEnabledPropertyName);
+                _isMenuVisible = value;
+                RaisePropertyChanged(IsMenuVisiblePropertyName);
             }
         }
 
@@ -203,28 +177,6 @@ namespace AssetManagerAdmin.ViewModel
 
         #region Commands
 
-        private RelayCommand _logoutCommand;
-
-        public RelayCommand LogoutCommand
-        {
-            get
-            {
-                return _logoutCommand ??
-                       (_logoutCommand = new RelayCommand(ExecuteLogoutCommand, () => true));
-            }
-        }
-
-        private void ExecuteLogoutCommand()
-        {
-            IsViewsMenuEnabled = false;
-            IsAttributeSelectorEnabled = false;
-
-            var authView = new AuthView();
-            CurrentView = authView;
-            authView.Logout(SelectedServer.AuthUrl, CurrentUser);
-            MessengerInstance.Send(new object(), AppActions.LoggingOut);
-        }
-
         private RelayCommand _openSiteCommand;
 
         public RelayCommand OpenSiteCommand
@@ -238,87 +190,39 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteOpenSiteCommand()
         {
-            Process.Start(new ProcessStartInfo(SelectedServer.AdminUrl));
+            Process.Start(new ProcessStartInfo(Context.CurrentServer.AdminUrl));
         }
 
         #endregion
 
-        protected override void RaisePropertyChanged(string propertyName)
-        {
-            base.RaisePropertyChanged(propertyName);
-
-            if (propertyName == SelectedMenuItemName && SelectedMenuItem != null)
-            {
-                var id = SelectedMenuItem.Id;
-                CurrentView = _views.ContainsKey(id) ? _views[id] : null;
-
-                // endable attribute selector for formula and validation builders
-                IsAttributeSelectorEnabled = id == 2;
-
-                // let viewmodels know when to start loading data
-                if (CurrentView != null && CurrentView.DataContext != null)
-                    MessengerInstance.Send(CurrentView.DataContext.GetType(), 
-                        AppActions.DataContextChanged);
-            }
-            else if (propertyName == SelectedTypePropertyName)
-            {
-                _dataService.CurrentAssetType = SelectedType;
-            }
-            else if (propertyName == SelectedAttributePropertyName)
-            {
-                _dataService.CurrentAssetAttribute = SelectedAttribute;
-                // send notification on property change
-                var property = GetType().GetProperty(propertyName).GetValue(this);
-                MessengerInstance.Send(property, propertyName);
-            }
-        }
-
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel(IDataService dataService)
+        public MainViewModel(
+            IDataService dataService, 
+            IAppContext context,
+            IDialogService dialogService)
+            : base(context)
         {
             _dataService = dataService;
 
-            EventManager.RegisterClassHandler(typeof(UserControl), UIElement.KeyUpEvent, new KeyEventHandler(
-                (sender, args) =>
-                {
-                    if (args.OriginalSource is UserControl)
-                        MessengerInstance.Send(args, CurrentView.DataContext.ToString());
-                }));
-
-            _views = new Dictionary<int,ContentControl>
+            MessengerInstance.Register<LoginDoneModel>(this, AppActions.LoginDone, model =>
             {
-                // {0, new WebAdminView()},
-                {1, new FormulaBuilderView()},
-                {2, new ValidationBuilderView()},
-                {3, new ReportsBuilderView()} 
-            };
-
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LoggingIn, server =>
-            {
-                var authView = new AuthView();
-                CurrentView = authView;
-                authView.Login(server);
-            });
-
-            OnLoginDone = (model) =>
-            {
-                SelectedServer = model.Server;
-                var menuItems = _dataService.GetMainMenuItems(CurrentUser);
+                var menuItems = _dataService.GetMainMenuItems(Context.CurrentUser);
                 MainMenuItems = menuItems;
                 SelectedMenuItem = MainMenuItems.First();
-                IsViewsMenuEnabled = true;
-            };
-          
-            MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, server =>
+                IsMenuVisible = true;
+                NavigationService.NavigateTo(ViewModelLocator.FormulaBuilderKey);
+            });
+
+            MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, (server) =>
             {
-                CurrentView = new LoginView();
+                IsMenuVisible = false;
             });
 
             MessengerInstance.Register<StatusMessage>(this, msg => 
             {
-                DialogService.ShowMessage(
+                dialogService.ShowMessage(
                     msg.Message,
                     msg.Title,
                     msg.Status);
@@ -334,9 +238,6 @@ namespace AssetManagerAdmin.ViewModel
             {
                 IsLoading = false;
             });
-
-            IsViewsMenuEnabled = false;
-            CurrentView = new LoginView();
         }
     }
 }

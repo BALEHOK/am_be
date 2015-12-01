@@ -62,11 +62,17 @@
       <HintPath>..\packages\FontAwesome.WPF.4.4.0.5\lib\FontAwesome.WPF.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
-      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.WPF45">
-      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.2.0.37226, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityModel.1.1.0\lib\net45\IdentityModel.Net45.dll</HintPath>
@@ -122,7 +128,8 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.4.2.30.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -165,10 +172,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FormulaBuilder\Expressions\IAssetsDataProvider.cs" />
     <Compile Include="Infrastructure\AppActions.cs" />
     <Compile Include="Infrastructure\AppConfig.cs" />
     <Compile Include="Converters\BooleanToFontWeightConverter.cs" />
     <Compile Include="Converters\FileNameConverter.cs" />
+    <Compile Include="Infrastructure\AppContext.cs" />
     <Compile Include="Infrastructure\DialogService.cs" />
     <Compile Include="FormulaBuilder\Expressions\AssetsDataProvider.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\ValidationFieldValueEntry.cs" />
@@ -191,8 +200,13 @@
       <DependentUpon>PlaceHolderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Infrastructure\FormulaBuilderContextType.cs" />
+    <Compile Include="Infrastructure\IAppContext.cs" />
     <Compile Include="Infrastructure\IDialogService.cs" />
+    <Compile Include="Infrastructure\MenuConfig.cs" />
     <Compile Include="Infrastructure\ProgressBarAttribute.cs" />
+    <Compile Include="Infrastructure\Registrations\NavigationRegistration.cs" />
+    <Compile Include="Infrastructure\Registrations\Configuration.cs" />
     <Compile Include="Model\LoginDoneModel.cs" />
     <Compile Include="Model\StatusMessage.cs" />
     <Compile Include="Model\ValidationButton.cs" />
@@ -211,58 +225,63 @@
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\IdentifierEntry.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionVisitor.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\ValueEntry.cs" />
-    <Compile Include="Infrastructure\Registrations.cs" />
     <Compile Include="Infrastructure\ServerConfig.cs" />
     <Compile Include="Infrastructure\UnityServiceLocator.cs" />
-    <Compile Include="ViewModel\FormulaBuilderViewModel.cs" />
+    <Compile Include="Services\FrameNavigationService.cs" />
+    <Compile Include="Services\IFrameNavigationService.cs" />
+    <Compile Include="ViewModels\FormulaBuilderViewModel.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionParser.cs" />
-    <Compile Include="ViewModel\AuthViewModel.cs" />
-    <Compile Include="ViewModel\LoginViewModel.cs" />
-    <Compile Include="ViewModel\ReportsBuilderViewModel.cs" />
-    <Compile Include="ViewModel\ToolkitViewModelBase.cs" />
-    <Compile Include="ViewModel\ValidationBuilderViewModel.cs" />
-    <Compile Include="ViewModel\WebAdminViewModel.cs" />
+    <Compile Include="ViewModels\AuthViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\RenderReportViewModel.cs" />
+    <Compile Include="ViewModels\ReportsBuilderViewModel.cs" />
+    <Compile Include="ViewModels\ToolkitViewModelBase.cs" />
+    <Compile Include="ViewModels\ValidationBuilderViewModel.cs" />
+    <Compile Include="ViewModels\WebAdminViewModel.cs" />
     <Compile Include="FormulaBuilder\Controls\FormulaBuilderControl.xaml.cs">
       <DependentUpon>FormulaBuilderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AuthView.xaml.cs">
+    <Compile Include="Views\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Controls\AttributesSelector.xaml.cs">
+    <Compile Include="Views\Controls\AttributesSelector.xaml.cs">
       <DependentUpon>AttributesSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Controls\ScreenAttributesSelector.xaml.cs">
+    <Compile Include="Views\Controls\ScreenAttributesSelector.xaml.cs">
       <DependentUpon>ScreenAttributesSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Controls\TypesSelector.xaml.cs">
+    <Compile Include="Views\Controls\TypesSelector.xaml.cs">
       <DependentUpon>TypesSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\FormulaBuilderView.xaml.cs">
+    <Compile Include="Views\FormulaBuilderView.xaml.cs">
       <DependentUpon>FormulaBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LoginView.xaml.cs">
+    <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FormulaBuilder\Controls\OperationButtonsControl.xaml.cs">
       <DependentUpon>OperationButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReportsBuilderView.xaml.cs">
+    <Compile Include="Views\RenderReportView.xaml.cs">
+      <DependentUpon>RenderReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReportsBuilderView.xaml.cs">
       <DependentUpon>ReportsBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ValidationBuilderView.xaml.cs">
+    <Compile Include="Views\ValidationBuilderView.xaml.cs">
       <DependentUpon>ValidationBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WebAdminView.xaml.cs">
+    <Compile Include="Views\WebAdminView.xaml.cs">
       <DependentUpon>WebAdminView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WebApi\AssetsApiCacheDecorator.cs" />
     <Compile Include="WebApi\AssetsApi.cs" />
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\IDataService.cs" />
-    <Compile Include="Model\MainMenuItem.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="View\WebBrowserWrapper.xaml.cs">
+    <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Views\WebBrowserWrapper.xaml.cs">
       <DependentUpon>WebBrowserWrapper.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\UserInfo.cs" />
@@ -309,27 +328,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AuthView.xaml">
+    <Page Include="Views\AuthView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Controls\AttributesSelector.xaml">
+    <Page Include="Views\Controls\AttributesSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Controls\ScreenAttributesSelector.xaml">
+    <Page Include="Views\Controls\ScreenAttributesSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Controls\TypesSelector.xaml">
+    <Page Include="Views\Controls\TypesSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\FormulaBuilderView.xaml">
+    <Page Include="Views\FormulaBuilderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\LoginView.xaml">
+    <Page Include="Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -337,19 +356,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReportsBuilderView.xaml">
+    <Page Include="Views\RenderReportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ValidationBuilderView.xaml">
+    <Page Include="Views\ReportsBuilderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WebAdminView.xaml">
+    <Page Include="Views\ValidationBuilderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WebBrowserWrapper.xaml">
+    <Page Include="Views\WebAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WebBrowserWrapper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -374,7 +397,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

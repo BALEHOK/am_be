@@ -8,6 +8,9 @@ using AssetManagerAdmin.WebApi;
 using AppFramework.ConstantsEnumerators;
 using Common.Logging;
 using System.Threading.Tasks;
+using AssetManagerAdmin.ViewModels;
+using AssetManagerAdmin.Services;
+using AssetManagerAdmin.Infrastructure;
 
 namespace AssetManagerAdmin.Model
 {
@@ -15,12 +18,17 @@ namespace AssetManagerAdmin.Model
     {
         private readonly IAssetsApiManager _assetsApiManager;
         private readonly ILog _logger;
+        private readonly IFrameNavigationService _navigationService;
 
         public AssetTypeModel CurrentAssetType { get; set; }
         public AttributeTypeModel CurrentAssetAttribute { get; set; }
 
-        public DataService(IAssetsApiManager assetsApiManager, ILog logger)
+        public DataService(
+            IAssetsApiManager assetsApiManager, 
+            IFrameNavigationService navigationService,
+            ILog logger)
         {
+            _navigationService = navigationService;
             _assetsApiManager = assetsApiManager;
             _logger = logger;
         }
@@ -74,44 +82,12 @@ namespace AssetManagerAdmin.Model
             return api.GetTypesInfo().ContinueWith(result => transform(result));
         }
 
-        public List<MainMenuItem> GetMainMenuItems(UserInfo user)
+        public List<MenuItemViewModel> GetMainMenuItems(UserInfo user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var mainMenu = new List<MainMenuItem>
-            {
-                //new MainMenuItem
-                //{
-                //    Id = 0,
-                //    Name = "Administration"
-                //},
-                new MainMenuItem
-                {
-                    Id = 1,
-                    Name = "Calculation and Validation"
-                },
-//                new MainMenuItem
-//                {
-//                    Id = 2,
-//                    Name = "Validation builder"
-//                },
-                new MainMenuItem
-                {
-                    Id = 3,
-                    Name = "Reports"
-                },
-                new MainMenuItem
-                {
-                    Id = 4,
-                    Name = "Inventory scanner"
-                },
-                new MainMenuItem
-                {
-                    Id = 5,
-                    Name = "Stock scanner"
-                }
-            };
+            var mainMenu = MenuConfig.GetMenu(_navigationService);
 
             if (user.UserModel.UserRole != PredefinedRoles.Administrators.ToString())
             {

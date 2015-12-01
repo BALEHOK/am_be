@@ -54,7 +54,9 @@ namespace AppFramework.Core.Classes
             _rightsService = rightsService;
         }
 
-        [Obsolete("This method will be removed in the next version. Use dependency injection to provide IAssetTypeRepository instance for your class.")]
+        [Obsolete(
+            "This method will be removed in the next version. Use dependency injection to provide IAssetTypeRepository instance for your class."
+            )]
         public static AssetTypeRepository Create(IUnitOfWork unitOfWork)
         {
             if (unitOfWork == null)
@@ -491,46 +493,15 @@ namespace AppFramework.Core.Classes
         }
 
         /// <summary>
-        /// Returns the existing AssetType attribute by its ID
-        /// </summary>
-        /// <param name="id">Unique ID of AssetType attribute</param>
-        /// <returns>AssetTypeAttribute object</returns>        
-        public AssetTypeAttribute GetAttributeById(long id)
-        {
-            var data = _unitOfWork.DynEntityAttribConfigRepository
-                .SingleOrDefault(
-                    deac =>
-                        deac.DynEntityAttribConfigId == id &&
-                        deac.ActiveVersion,
-                    i => i.DynEntityConfig);
-            return data != null
-                ? new AssetTypeAttribute(data, _unitOfWork)
-                : null;
-        }
-
-        /// <summary>
         /// Returns the existing AssetType attribute by its UID
         /// </summary>
         /// <param name="uid">Unique ID of AssetType attribute</param>
-        /// <returns>AssetTypeAttribute object</returns>        
+        /// <returns>AssetTypeAttribute object</returns>
+        [Obsolete("Use methods of AttributeRepository")]      
         public AssetTypeAttribute GetAttributeByUid(long uid)
         {
             var data = _unitOfWork.DynEntityAttribConfigRepository
                 .SingleOrDefault(deac => deac.DynEntityAttribConfigUid == uid);
-            return data != null
-                ? new AssetTypeAttribute(data, _unitOfWork)
-                : null;
-        }
-
-        /// <summary>
-        /// Returns the existing AssetType attribute by RelatedAssetTypeAttributeID
-        /// </summary>
-        /// <param name="uid">Unique ID of AssetType attribute</param>
-        /// <returns>AssetTypeAttribute object</returns>        
-        public AssetTypeAttribute GetAttributeByRelatedAssetTypeAttributeId(long uid)
-        {
-            var data = _unitOfWork.DynEntityAttribConfigRepository
-                .Get(deac => deac.RelatedAssetTypeID == uid && deac.ActiveVersion).FirstOrDefault();
             return data != null
                 ? new AssetTypeAttribute(data, _unitOfWork)
                 : null;

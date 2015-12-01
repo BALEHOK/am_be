@@ -3,27 +3,27 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using AppFramework.Core.Exceptions;
-using AppFramework.DataProxy;
 using AssetManager.Infrastructure.Models;
 using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes;
 
 namespace AssetManager.Infrastructure.Services
 {
     public class FileService : IFileService
     {
         private readonly IEnvironmentSettings _environmentSettings;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttributeRepository _attributeRepository;
 
         public FileService(
             IEnvironmentSettings environmentSettings,
-            IUnitOfWork unitOfWork)
+            IAttributeRepository attributeRepository)
         {
             if (environmentSettings == null)
                 throw new ArgumentNullException("environmentSettings");
             _environmentSettings = environmentSettings;
-            if (unitOfWork == null)
-                throw new ArgumentNullException("unitOfWork");
-            _unitOfWork = unitOfWork;            
+            if (attributeRepository == null)
+                throw new ArgumentNullException("attributeRepository");
+            _attributeRepository = attributeRepository;         
         }
 
         public Enumerators.MediaType GetAttributeMediaType(long assetTypeId, long attributeId)
@@ -31,9 +31,7 @@ namespace AssetManager.Infrastructure.Services
             if (assetTypeId == 0 && attributeId == 0)
                 return Enumerators.MediaType.ReportTemplate;
 
-            var attribute = _unitOfWork.DynEntityAttribConfigRepository
-            .SingleOrDefault(d => d.DynEntityAttribConfigId == attributeId && d.ActiveVersion,
-                i => i.DataType);
+            var attribute = _attributeRepository.GetPublishedById(attributeId, a => a.DataType);
             if (attribute == null)
                 throw new EntityNotFoundException("attribute");
 

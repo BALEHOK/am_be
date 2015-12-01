@@ -3,23 +3,43 @@ using System.Text;
 using AppFramework.Auth;
 using AssetManager.Infrastructure.Models;
 using AssetManagerAdmin.Model;
-using GalaSoft.MvvmLight;
 using IdentityModel;
 using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
+using AssetManagerAdmin.Infrastructure;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
-    public class AuthViewModel : ViewModelBase
+    public class AuthViewModel : ToolkitViewModelBase
     {
+        public event Action<ServerConfig> OnLoggingIn;
+
+        public event Action<string, UserInfo> OnLoggingOut;
+
         public UserInfo CurrentUser { get; set; }
 
         public ServerConfig SelectedServer { get; private set; }
 
-        public void OnLoggedIn(ServerConfig server, AuthorizeResponse authorizeResponse)
+        public AuthViewModel(IAppContext context)
+            : base (context)
         {
-            SelectedServer = server;
-            CurrentUser = CreateUser(authorizeResponse);
+            OnNavigated += (parameter) =>
+            {
+                if (parameter is ServerConfig && OnLoggingIn != null)
+                {
+                    OnLoggingIn((ServerConfig)parameter);
+                    SelectedServer = (ServerConfig)parameter;
+                }
+
+                // when navigated to logout, raise event to notify the view
+                if (parameter is string && (string)parameter == AppActions.LoggingOut && OnLoggingOut != null)
+                    OnLoggingOut(Context.CurrentServer.AuthUrl, Context.CurrentUser);
+            };
+        }
+
+        public void OnLoggedIn(AuthorizeResponse authorizeResponse)
+        {
+            CurrentUser = _createUser(authorizeResponse);
             MessengerInstance.Send(
                 new LoginDoneModel
                 {
@@ -29,7 +49,13 @@ namespace AssetManagerAdmin.ViewModel
                 AppActions.LoginDone);
         }
 
-        private UserInfo CreateUser(AuthorizeResponse authorizeResponse)
+        public void OnLoggedOut()
+        {
+            MessengerInstance.Send(SelectedServer, AppActions.LogoutDone);
+            NavigationService.NavigateTo(ViewModelLocator.LoginViewKey);
+        }
+
+        private UserInfo _createUser(AuthorizeResponse authorizeResponse)
         {
             var parsedToken = ParseJwt(authorizeResponse.IdentityToken);
 
@@ -56,11 +82,6 @@ namespace AssetManagerAdmin.ViewModel
             var part = Encoding.UTF8.GetString(Base64Url.Decode(parts[1]));
 
             return JObject.Parse(part);
-        }
-
-        public void OnLoggedOut()
-        {
-            MessengerInstance.Send(SelectedServer, AppActions.LogoutDone);
         }
     }
 }

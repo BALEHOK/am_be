@@ -50,26 +50,17 @@ namespace AppFramework.Core.Classes
     public class DynamicListsService : IDynamicListsService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private IAssetTypeRepository _assetTypeRepository;
+        private readonly IAttributeRepository _attributeRepository;
 
-        public DynamicListsService(IUnitOfWork unitOfWork)
+        public DynamicListsService(IUnitOfWork unitOfWork, IAttributeRepository attributeRepository)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
-        }
 
-        // TODO: 
-        // Constructor injection isn't possible: it's necessary to refactor legacy code 
-        // to get rid of direct DynamicListsService instantiation (see AssetTypeAttribute class).
-        // After that it will become possible to pass IAssetTypeRepository as a constructor's argument 
-        // and remove this method.
-        [InjectionMethod]
-        public void Initialize(IAssetTypeRepository assetTypeRepository)
-        {
-            if (assetTypeRepository == null)
-                throw new ArgumentNullException("assetTypeRepository");
-            _assetTypeRepository = assetTypeRepository;
+            if (attributeRepository == null)
+                throw new ArgumentNullException("attributeRepository");
+            _attributeRepository = attributeRepository;
         }
 
         /// <summary>
@@ -167,8 +158,8 @@ namespace AppFramework.Core.Classes
                
         public DynamicList GetByAttributeId(long attributeId)
         {
-            var attribute = _assetTypeRepository.GetAttributeById(attributeId);
-            return GetByUid(attribute.DynamicListUid.Value);
+            var attribute = _attributeRepository.GetPublishedById(attributeId);
+            return GetByUid(attribute.DynListUid.GetValueOrDefault());
         }
 
         public DynListItem GetListItemById(long dynListItemId)

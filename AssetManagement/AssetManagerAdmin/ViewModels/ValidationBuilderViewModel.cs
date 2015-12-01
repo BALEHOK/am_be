@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using AssetManagerAdmin.Model;
 using GalaSoft.MvvmLight.Command;
+using AssetManagerAdmin.Infrastructure;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     public interface IValidationBuilderViewModel
     {
@@ -180,14 +181,12 @@ namespace AssetManagerAdmin.ViewModel
                 OnNewOperator(this, operatorText);
         }
 
-        public ValidationBuilderViewModel(IDataService dataService)
+        public ValidationBuilderViewModel(IDataService dataService, IAppContext context)
+            : base(context)
         {
             _dataService = dataService;
 
-            OnLoginDone = (model) =>
-            {
-                ValidationExpression = ValidationError = ValidationTest = string.Empty;
-            };
+            ValidationExpression = ValidationError = ValidationTest = string.Empty;
 
             MessengerInstance.Register(this, MainViewModel.SelectedAttributePropertyName, (object attribute) =>
             {

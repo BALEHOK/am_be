@@ -587,7 +587,7 @@ namespace AppFramework.Core.Classes
             _base = data;
             _base.StartTracking();
             _dataTypeService = new DataTypeService(unitOfWork);
-            _dynListsService = new DynamicListsService(unitOfWork);
+            _dynListsService = new DynamicListsService(unitOfWork, new AttributeRepository(unitOfWork));
             Parent = parent;
         }
         

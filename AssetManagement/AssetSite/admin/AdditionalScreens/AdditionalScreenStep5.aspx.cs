@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Entities;
 using Microsoft.Practices.Unity;
@@ -30,8 +31,9 @@ namespace AssetSite.admin.AdditionalScreens
                     .ToList();
 
                 // fixture to hide attributes which are formely linked assets
-                AttributesToAttribute.Add(0, linkedAssetTypeAttributesUids); 
+                AttributesToAttribute.Add(0, linkedAssetTypeAttributesUids);
 
+                // do not invoke UnitOfWork.DynEntityAttribConfigRepository, use AttributeRepository instead
                 var attributesSource = UnitOfWork.DynEntityAttribConfigRepository.AsQueryable();
                 var configsSource = UnitOfWork.DynEntityConfigRepository.AsQueryable();
                 var configurations = (from a in attributesSource
@@ -108,7 +110,7 @@ namespace AssetSite.admin.AdditionalScreens
                 {
                     if (!parentNames.ContainsKey(attr.ReferencingDynEntityAttribConfigId.Value))
                         parentNames.Add(attr.ReferencingDynEntityAttribConfigId.Value,
-                            AssetTypeRepository.GetAttributeById(attr.ReferencingDynEntityAttribConfigId.Value).NameLocalized);
+                            AttributeRepository.GetPublishedById(attr.ReferencingDynEntityAttribConfigId.Value).NameLocalized());
                     parentName = parentNames[attr.ReferencingDynEntityAttribConfigId.Value];
                 }
                 else

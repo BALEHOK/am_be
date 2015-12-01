@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Classes;
+using AppFramework.Core.Exceptions;
 using AppFramework.Core.Helpers;
 using AppFramework.DataProxy;
 using Common.Logging;
 using NCalc;
-using AppFramework.Core.Exceptions;
 
 namespace AppFramework.Core.Calculation
 {
@@ -20,10 +18,7 @@ namespace AppFramework.Core.Calculation
         public static string RelationOperator = "@";
 
         private readonly Dictionary<string, Expression> _expressionsCache = new Dictionary<string, Expression>();
-        private readonly Dictionary<long, string> _screenFormulasCache = new Dictionary<long, string>();
 
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IAssetTypeRepository _typeRepository;
         private readonly IAssetsService _assetsService;
         private readonly CalculationFunctions _calculationFunctions;
         private readonly ILog _logger = LogManager.GetCurrentClassLogger();
@@ -43,18 +38,18 @@ namespace AppFramework.Core.Calculation
         /// </summary>
         public string Error { get; private set; }
 
+        // ToDo fix circular dependency AssetsService - AttributeCalculator
         public AttributeCalculator(
             IUnitOfWork unitOfWork,
             IAssetsService assetsService,
-            IAssetTypeRepository assetTypeRepository)
+            IAssetTypeRepository assetTypeRepository,
+            IAttributeRepository attributeRepository)
         {
             _currentUserId = 1;
 
-            _unitOfWork = unitOfWork;
-            _typeRepository = assetTypeRepository;
             _assetsService = assetsService;
-            _dependenciesFinder = new DependenciesFinder(_unitOfWork, _assetsService, _typeRepository);
-            _calculationFunctions = new CalculationFunctions(_unitOfWork, _typeRepository, _assetsService, this);
+            _dependenciesFinder = new DependenciesFinder(assetsService, assetTypeRepository, attributeRepository);
+            _calculationFunctions = new CalculationFunctions(unitOfWork, assetTypeRepository, assetsService, this);
         }
 
         /// <summary>
@@ -62,7 +57,6 @@ namespace AppFramework.Core.Calculation
         /// Works only for attributes within same asset.
         /// </summary>
         /// <param name="asset">Asset instance</param>
-        /// <param name="attribute">Calculating attribute type (can be null if <param name="expressionString"/> is specified)</param>
         /// <param name="expressionString">Custom formula text</param>
         /// <param name="callingAsset"></param>
         /// <returns>Calculated value</returns>
@@ -77,7 +71,7 @@ namespace AppFramework.Core.Calculation
             Error = null;
 
             // try to get screen formula from cache
-            var expression = GetExpression(asset, expressionString);
+            var expression = GetExpression(expressionString);
 
             // clean old parameters for cached expression
             expression.Parameters.Clear();
@@ -135,7 +129,7 @@ namespace AppFramework.Core.Calculation
             return null;
         }
 
-        private Expression GetExpression(Asset asset, string expressionText)
+        private Expression GetExpression(string expressionText)
         {
             Expression expression;
             _expressionsCache.TryGetValue(expressionText, out expression);
@@ -210,12 +204,9 @@ namespace AppFramework.Core.Calculation
                 return result;
             }
 
-            if (callingAsset != -1)
-            {
-                result = CallingAsset[parameterName].Value;
-            }
-            else
-                result = TypesHelper.GetTypedValue(asset, asset[parameterName].Configuration);
+            result = callingAsset != -1
+                ? CallingAsset[parameterName].Value
+                : TypesHelper.GetTypedValue(asset, asset[parameterName].Configuration);
 
             return result;
         }
@@ -229,15 +220,16 @@ namespace AppFramework.Core.Calculation
                 from panel in asset
                     .GetConfiguration()
                     .Panels
-                    .Where(p => screenId == null || p.ScreenId == screenId) // for all screens or just for one particular
+                    .Where(p => screenId == null || p.ScreenId == screenId)
+                // for all screens or just for one particular
                 let tuples = panel.Base
                     .AttributePanelAttribute
                     .Where(apa => apa.ScreenFormula != null) // with screen formulas
-                    .Select(apa => new Tuple<long, string>(apa.DynEntityAttribConfigUId, apa.ScreenFormula)) 
+                    .Select(apa => new Tuple<long, string>(apa.DynEntityAttribConfigUId, apa.ScreenFormula))
                 from attribute in panel.AssignedAttributes
                 from tuple in tuples
                 where attribute.UID == tuple.Item1
-                select Tuple.Create(attribute, tuple.Item2); 
+                select Tuple.Create(attribute, tuple.Item2);
 
             _calculateAttributes(asset, attributesFormulas.ToList());
 
@@ -246,12 +238,13 @@ namespace AppFramework.Core.Calculation
 
         public Asset PostCalculateAsset(Asset asset, bool calculateDependencies = true)
         {
-            _logger.DebugFormat("Calculating asset \"{0}\" (uid #{1}, DynEntityConfigUid #{2})", 
+            _logger.DebugFormat("Calculating asset \"{0}\" (uid #{1}, DynEntityConfigUid #{2})",
                 asset.Name, asset.UID, asset.DynEntityConfigUid);
 
             var attributesFormulas = asset.GetConfiguration()
                 .AllAttributes
-                .Where(a => a.IsCalculated && !string.IsNullOrEmpty(a.FormulaText)) // for all attributes with table formulas
+                .Where(a => a.IsCalculated && !string.IsNullOrEmpty(a.FormulaText))
+                // for all attributes with table formulas
                 .Select(a => Tuple.Create(a, a.FormulaText));
 
             _calculateAttributes(asset, attributesFormulas.ToList());
@@ -306,6 +299,5 @@ namespace AppFramework.Core.Calculation
                 attributesToCalc.Remove(current);
             }
         }
-
     }
 }

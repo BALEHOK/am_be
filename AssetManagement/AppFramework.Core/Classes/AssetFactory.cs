@@ -32,7 +32,8 @@ namespace AppFramework.Core.Classes
             var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeValueFormatter, rightsService);
+            var attributeRepository = new AttributeRepository(unitOfWork);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
             var assetType = atRepository.GetById(assetTypeId);
             var userService = new UserService(unitOfWork, atRepository, assetsService);
 		    var currentUserId = userService.GetCurrentUser().Id;
@@ -53,7 +54,8 @@ namespace AppFramework.Core.Classes
             var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeValueFormatter, rightsService);
+            var attributeRepository = new AttributeRepository(unitOfWork);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
             var assetType = atRepository.GetById(assetTypeId);
             var userService = new UserService(unitOfWork, atRepository, assetsService);
             var currentUser = userService.GetCurrentUser();
@@ -82,10 +84,11 @@ namespace AppFramework.Core.Classes
             var unitOfWork = new UnitOfWork();
             var atRepository = AssetTypeRepository.Create(unitOfWork);
             var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
-            var dynamicListsService = new DynamicListsService(unitOfWork);
+            var attributeRepository = new AttributeRepository(unitOfWork);
+            var dynamicListsService = new DynamicListsService(unitOfWork, attributeRepository);
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeValueFormatter, rightsService);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
             var dataTypeService = new DataTypeService(unitOfWork);
             var tableProvider = new DynTableProvider(unitOfWork, new DynColumnAdapter(dataTypeService));
             var assetType = atRepository.GetById(assetTypeId);

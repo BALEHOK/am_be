@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AssetManager.Infrastructure.Models.TypeModels;
 using System.Threading.Tasks;
+using AssetManagerAdmin.ViewModels;
 
 namespace AssetManagerAdmin.Model
 {
@@ -10,7 +11,7 @@ namespace AssetManagerAdmin.Model
 
         AttributeTypeModel CurrentAssetAttribute { get; set; }
 
-        List<MainMenuItem> GetMainMenuItems(UserInfo user);
+        List<MenuItemViewModel> GetMainMenuItems(UserInfo user);
                 
         Task<TypesInfoModel> GetTypesInfo(UserInfo user, string server);
 

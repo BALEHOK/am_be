@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Validation;
 
@@ -14,9 +15,9 @@ namespace AppFramework.Core.Classes
         IEnumerable<AssetType> GetAllPublished();
         IEnumerable<AssetType> GetRecent();
         AssetType FindByName(string assetTypeName);
-        AssetTypeAttribute GetAttributeById(long id);
+
+        [Obsolete("Use methods of AttributeRepository")] 
         AssetTypeAttribute GetAttributeByUid(long uid);
-        AssetTypeAttribute GetAttributeByRelatedAssetTypeAttributeId(long uid);
         AssetType GetPredefinedAssetType(PredefinedEntity entity);
         AssetType GetDraftById(long assetTypeId, int currentRevision);
         void Delete(AssetType assetType);

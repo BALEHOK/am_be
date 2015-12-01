@@ -148,6 +148,13 @@ namespace AssetSite.Search
             if (CurrentAttributes[index] != null)
             {
                 var currentType = AvailableAssetTypes.FirstOrDefault(at => at.ID == long.Parse(ddlTypes.SelectedValue));
+
+                /*
+                 * [Alexander Shukletsov] AssetTypeRepository.GetAttributeByRelatedAssetTypeAttributeId is removed
+                 * this page have been throwing an exception, so this doesn't hurt
+                 */
+                throw new NotImplementedException("you are calling some old stuff. don't do it again"); 
+                /*
                 CurrentAttributes[index].AssetAttribute = new AssetAttribute(
                     AssetTypeRepository.GetAttributeByRelatedAssetTypeAttributeId(currentType.ID),
                     new DynColumn(), 
@@ -157,6 +164,7 @@ namespace AssetSite.Search
                     AssetsService,
                     UnitOfWork,
                     DynamicListsService);
+                 */
             }
             UpdateRepeater();
         }
@@ -508,6 +516,12 @@ namespace AssetSite.Search
                         if (attribute.AssetAttribute == null)
                         {
                             var currentType = AvailableAssetTypes.FirstOrDefault();
+                            /*
+                             * [Alexander Shukletsov] AssetTypeRepository.GetAttributeByRelatedAssetTypeAttributeId is removed
+                             * this page have been throwing an exception, so this doesn't hurt
+                             */
+                            throw new NotImplementedException("you are calling some old stuff. don't do it again");
+                            /*
                             attribute.AssetAttribute = new AssetAttribute(
                                 AssetTypeRepository.GetAttributeByRelatedAssetTypeAttributeId(currentType.ID),
                                 new DynColumn(), 
@@ -517,6 +531,7 @@ namespace AssetSite.Search
                                 AssetsService,
                                 UnitOfWork,
                                 DynamicListsService);
+                             */
                         }
                         ddlTypes.SelectedValue = attribute.AssetAttribute.Configuration.RelatedAssetTypeID.ToString();
                         AssetDropDownListEx adlAssets = e.Item.FindControl("adlAssets") as AssetDropDownListEx;

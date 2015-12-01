@@ -1,9 +1,10 @@
-﻿using AssetManagerAdmin.Model;
+﻿using AssetManagerAdmin.Infrastructure;
+using AssetManagerAdmin.Model;
 using AssetManagerAdmin.View;
 using GalaSoft.MvvmLight.Command;
 using mshtml;
 
-namespace AssetManagerAdmin.ViewModel
+namespace AssetManagerAdmin.ViewModels
 {
     public class WebAdminViewModel : ToolkitViewModelBase
     {
@@ -69,35 +70,32 @@ namespace AssetManagerAdmin.ViewModel
 
         private void ExecuteHandlePageLoadCommand(PageLoadedEventArgs args)
         {
-            if (CurrentUser != null)
-                AutoLogin(args.Document, CurrentUser);
+            if (Context.CurrentUser != null)
+                AutoLogin(args.Document, Context.CurrentUser);
         }
 
         #endregion
 
-        public WebAdminViewModel()
+        public WebAdminViewModel(IAppContext context)
+            : base(context)
         {
-            OnLoginDone = (model) =>
-            {
-                if (CurrentUser.UserModel.UserRole == "Administrators" ||
-                    CurrentUser.UserModel.UserRole == "SuperUser")
-                    GoHome();
-            };
-           
+            if (Context.CurrentUser.UserModel.UserRole == "Administrators" ||
+                Context.CurrentUser.UserModel.UserRole == "SuperUser")
+                GoHome();
 
             MessengerInstance.Register<object>(this, AppActions.LogoutDone, obj =>
             {
-                BrowserUrl = string.Format("{0}/logout", CurrentServer.AdminUrl);
+                BrowserUrl = string.Format("{0}/logout", Context.CurrentServer.AdminUrl);
             });
         }
 
         private void GoHome()
         {
-            if (string.IsNullOrEmpty(CurrentServer.AdminUrl))
+            if (string.IsNullOrEmpty(Context.CurrentServer.AdminUrl))
                 return;
 
             BrowserUrl = null;
-            BrowserUrl = string.Format("{0}/admin/", CurrentServer.AdminUrl);
+            BrowserUrl = string.Format("{0}/admin/", Context.CurrentServer.AdminUrl);
         }
 
         private void AutoLogin(HTMLDocument document, UserInfo user)
