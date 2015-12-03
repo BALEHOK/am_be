@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -41,49 +42,52 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <summary>
         /// Performs search by query
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="page"></param>
-        /// <param name="assetType"></param>
-        /// <param name="taxonomy"></param>
-        /// <param name="sortBy"></param>
-        /// <returns></returns>
         [Route(""), HttpGet]
         [CacheOutput(ClientTimeSpan = 120, ServerTimeSpan = 120)]
-        public SearchResultModel BySimpleQuery(
-            string query,
-            int page = 1,
-            int context = 1,
-            Guid? searchId = null,
-            int? assetType = null,
-            int? taxonomy = null,
-            int? sortBy = null)
+        public SearchResultModel BySimpleQuery([FromUri]SimpleSearchModel model)
         {
-            if (!searchId.HasValue)
+            if (!ValidateAndUpdateSimpleSearchModel(model))
             {
-                searchId = Guid.NewGuid();
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+            Debug.Assert(model.SearchId != null, "model.SearchId == null");
 
             var userId = User.GetId();
+            
             var result = _searchService.FindByKeywords(
-                query,
-                searchId.Value,
+                model.Query,
+                model.SearchId.Value,
                 userId,
-                pageNumber: page,
-                configsIds: assetType.HasValue ? assetType.ToString() : "",
-                taxonomyItemsIds: taxonomy.HasValue ? taxonomy.ToString() : "",
-                order: sortBy.HasValue
-                    ? (Enumerations.SearchOrder) sortBy.Value
+                pageNumber: model.Page,
+                configsIds: model.AssetType.HasValue ? model.AssetType.ToString() : string.Empty,
+                taxonomyItemsIds: model.Taxonomy.HasValue ? model.Taxonomy.ToString() : string.Empty,
+                order: model.SortBy.HasValue
+                    ? (Enumerations.SearchOrder)model.SortBy.Value
                     : Enumerations.SearchOrder.Relevance,
-                time: context == 1
+                time: model.Context == 1
                     ? TimePeriodForSearch.CurrentTime
-                    : TimePeriodForSearch.History
-                );
+                    : TimePeriodForSearch.History,
+                    attributeId: model.AttributeId.GetValueOrDefault(),
+                    assetId: model.AssetId.GetValueOrDefault()
+            );
 
             return new SearchResultModel
             {
-                SearchId = searchId.Value,
+                SearchId = model.SearchId.Value,
                 Entities = result.ToList()
             };
+        }
+
+        private static bool ValidateAndUpdateSimpleSearchModel(SimpleSearchModel model)
+        {
+            EnsureSearchId(model);
+
+            if (model.AttributeId.HasValue || model.AssetId.HasValue)
+            {
+                return model.AttributeId.HasValue && model.AssetId.HasValue && model.AssetType.HasValue;
+            }
+
+            return true;
         }
 
 
@@ -95,11 +99,12 @@ namespace AssetManager.WebApi.Controllers.Api
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
             EnsureSearchId(model);
+            Debug.Assert(model.SearchId != null, "model.SearchId == null");
 
             var userId = User.GetId();
             var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);
             var result = _searchService.FindByType(
-                model.SearchId,
+                model.SearchId.Value,
                 userId,
                 model.AssetType.Id,
                 attributeElements,
@@ -109,7 +114,7 @@ namespace AssetManager.WebApi.Controllers.Api
 
             return new SearchResultModel
             {
-                SearchId = model.SearchId,
+                SearchId = model.SearchId.Value,
                 Entities = result.ToList()
             };
         }
@@ -199,9 +204,9 @@ namespace AssetManager.WebApi.Controllers.Api
             };
         }
 
-        private static void EnsureSearchId(AdvanceSearchModel model)
+        private static void EnsureSearchId(SearchModelBase model)
         {
-            if (model.SearchId == Guid.Empty)
+            if (!model.SearchId.HasValue || model.SearchId == Guid.Empty)
             {
                 model.SearchId = Guid.NewGuid();
             }

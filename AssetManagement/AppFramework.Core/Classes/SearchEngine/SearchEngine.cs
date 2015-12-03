@@ -66,7 +66,9 @@ namespace AppFramework.Core.Classes.SearchEngine
             Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance,
             int pageNumber = 1,
             int pageSize = 20,
-            bool enableTracking = true)
+            bool enableTracking = true,
+            long attributeId = 0,
+            long assetId = 0)
         {
             if (enableTracking)
             {
@@ -99,7 +101,9 @@ namespace AppFramework.Core.Classes.SearchEngine
                     new SqlParameter("active", time == TimePeriodForSearch.CurrentTime),
                     new SqlParameter("orderby", (byte) order),
                     new SqlParameter("PageNumber", pageNumber),
-                    new SqlParameter("PageSize", pageSize)
+                    new SqlParameter("PageSize", pageSize),
+                    new SqlParameter("attributeId", attributeId),
+                    new SqlParameter("assetId", assetId)
                 },
                 CommandType.StoredProcedure);
 

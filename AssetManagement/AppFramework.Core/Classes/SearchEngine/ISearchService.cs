@@ -20,7 +20,9 @@ namespace AppFramework.Core.Classes.SearchEngine
             Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, 
             int pageNumber = 1, 
             int pageSize = 20,
-            bool enableTracking = true);
+            bool enableTracking = true,
+            long attributeId = 0,
+            long assetId = 0);
 
         List<SearchCounter> GetCounters(
             Guid searchId, 

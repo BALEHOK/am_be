@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
-using AssetManager.WebApi.Models.Search;
 
-namespace AssetManager.WebApi.Controllers.Api
+namespace AssetManager.WebApi.Models.Search
 {
     public class AdvanceSearchModelSearchQueryMapper : IAdvanceSearchModelSearchQueryMapper
     {
@@ -22,11 +22,13 @@ namespace AssetManager.WebApi.Controllers.Api
 
         public SearchQuery GetSearchQuery(AdvanceSearchModel model)
         {
+            Debug.Assert(model.SearchId != null, "model.SearchId == null");
+
             var searchQuery = new SearchQuery
             {
                 AssetTypeId = model.AssetType.Id,
                 Context = (byte) model.AssetTypeContext,
-                SearchId = model.SearchId,
+                SearchId = model.SearchId.Value,
                 Created = DateTime.UtcNow
             };
 
@@ -108,6 +110,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 {
                     filter.ReferenceAttrib = assetTypeAtributes.Single(a => a.Id == attribute.ReferencedAttributeId);
 
+                    Debug.Assert(attribute.OperatorId != null, "attribute.OperatorId == null");
                     filter.OperatorId = attribute.OperatorId.Value;
 
                     if (attribute.ComplexValue != null && attribute.ComplexValue.Count > 0)
