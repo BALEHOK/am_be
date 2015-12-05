@@ -25,7 +25,8 @@ namespace AssetManager.Infrastructure
                 .RegisterType<IDocumentService, DocumentService>()
                 .RegisterType<IModelFactory, ModelFactory>()
                 .RegisterType<IHistoryService, HistoryService>()
-                .RegisterType<ITasksService, TasksService>();
+                .RegisterType<ITasksService, TasksService>()
+                .RegisterType<IFaqService, FaqService>();
         }
     }
 }

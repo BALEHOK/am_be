@@ -158,12 +158,14 @@
     <Compile Include="Services\DataTypeService.cs" />
     <Compile Include="Services\DocumentsService.cs" />
     <Compile Include="Services\ExportService.cs" />
+    <Compile Include="Services\FaqService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\HistoryService.cs" />
     <Compile Include="Services\IAssetService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\IDataTypeService.cs" />
     <Compile Include="Services\IExportService.cs" />
+    <Compile Include="Services\IFaqService.cs" />
     <Compile Include="Services\IFileService.cs" />
     <Compile Include="Services\ITasksService.cs" />
     <Compile Include="Services\ITaxonomyService.cs" />

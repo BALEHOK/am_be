@@ -2,11 +2,9 @@ using AppFramework.Core;
 using AppFramework.Core.AC.Providers;
 using AppFramework.DataProxy;
 using Microsoft.Practices.Unity;
-using System.Web;
 using AppFramework.Core.Classes.SearchEngine;
-using AssetManager.Infrastructure.Services;
-using AssetManager.Infrastructure;
 using AppFramework.Reports;
+using AssetManager.Infrastructure;
 
 namespace AssetSite
 {
@@ -19,17 +17,8 @@ namespace AssetSite
                     new InjectionFactory(c => new UnitOfWork()))
                 .RegisterType<IAuthenticationStorageProvider,
                     InMemoryAuthenticationStorageProvider>()
-                .RegisterType<IBarcodeService, BarcodeService>()
-                .RegisterType<IAssetService, AssetService>()
-                .RegisterType<IAssetTypeService, AssetTypeService>()
                 .RegisterType<ITypeSearch, TypeSearch>()
-                .RegisterType<IExportService, ExportService>()
-                .RegisterType<IFileService, FileService>()
-                .RegisterType<IEnvironmentSettings, EnvironmentSettings>()
-                .RegisterType<ITaxonomyService, TaxonomyService>()
-                .RegisterType<IDocumentService, DocumentService>()
-                .RegisterType<IModelFactory, ModelFactory>()
-                .RegisterType<ITasksService, TasksService>()                
+                .AddNewExtension<InfrastructureConfiguration>()
                 .AddNewExtension<CommonConfiguration>()
                 .AddNewExtension<ReportsConfiguration>();
         }

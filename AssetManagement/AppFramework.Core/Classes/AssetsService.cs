@@ -49,9 +49,9 @@ namespace AppFramework.Core.Classes
             _unitOfWork = unitOfWork;
             if (assetTypeRepository == null)
                 throw new ArgumentNullException("assetTypeRepository");
+            _assetTypeRepository = assetTypeRepository;
             if (attributeRepository == null)
                 throw new ArgumentNullException("attributeRepository");
-            _assetTypeRepository = assetTypeRepository;
             _attributeRepository = attributeRepository;
             if (attributeValueFormatter == null)
                 throw new ArgumentNullException("attributeValueFormatter");
@@ -510,36 +510,6 @@ namespace AppFramework.Core.Classes
                                     _dynamicListsService));
             }
             return result;
-        }
-
-        /// <summary>
-        /// Get items for FAQ section
-        /// </summary>
-        /// <param name="cultureName">Culture name from Languege table</param>
-        /// <returns></returns>
-        public IEnumerable<Asset> GetFaqItems(System.Globalization.CultureInfo culture = null, int itemsNumber = 1000)
-        {
-            var currentAT = _assetTypeRepository.GetPredefinedAssetType(PredefinedEntity.Faq);
-            if (!currentAT.Attributes.Any(a => a.DBTableFieldName == "Language"))
-                throw new Exception("Language attribute missing for FAQ");
-
-            var options = new Dictionary<string, string>() { { AttributeNames.ActiveVersion, bool.TrueString } };
-            var rows = _tableProvider.GetRows(currentAT.Base, options, 0, itemsNumber);
-            var faqItems = (from row in rows
-                            where row != null
-                            select new Asset(
-                                    currentAT,
-                                    row,
-                                    _attributeValueFormatter,
-                                    _assetTypeRepository,
-                                    this,
-                                    _unitOfWork,
-                                    _dynamicListsService)).ToList();
-
-            if (culture != null)
-                faqItems = faqItems.Where(i => i["Language"].Value == culture.Name).ToList();
-
-            return faqItems;
         }
 
         /// <summary>

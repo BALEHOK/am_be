@@ -1,7 +1,8 @@
 ﻿using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
-using AppFramework.DataProxy;
+using AssetManager.Infrastructure.Services;
 using AssetSite.Helpers;
+using Microsoft.Practices.Unity;
 using System;
 using System.Globalization;
 using System.Web.UI;
@@ -11,6 +12,9 @@ namespace AssetSite.admin
 {
     public partial class FAQItems : BasePage
     {
+        [Dependency]
+        public IFaqService FaqService { get; set; }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -46,7 +50,7 @@ namespace AssetSite.admin
         private void BindFaqItems()
         {
             string cultureName = Session["curCult"].ToString();
-            gvFaqItems.DataSource = AssetsService.GetFaqItems(CultureInfo.GetCultureInfo(cultureName));
+            gvFaqItems.DataSource = FaqService.GetFaqItems(CultureInfo.GetCultureInfo(cultureName));
             gvFaqItems.DataBind();
         }
 

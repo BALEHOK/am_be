@@ -24,8 +24,7 @@ namespace AppFramework.Core.Classes
         Asset GetAssetByParameters(AssetType assetType, List<SqlParameter> parameters);
         Asset GetAssetByParameters(AssetType assetType, Dictionary<string, string> parameters);
         Asset GetFirstActiveAsset(AssetType assetType);
-        IEnumerable<Asset> GetHistoryAssets(long assetTypeId, long assetId);
-        IEnumerable<Asset> GetFaqItems(System.Globalization.CultureInfo culture = null, int itemsNumber = 1000);
+        IEnumerable<Asset> GetHistoryAssets(long assetTypeId, long assetId);        
         IEnumerable<Asset> GetAssetsByAssetType(AssetType assetType, int? rowStart = null,
             int? rowsNumber = null);
         IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeUid, long currentUserId, int? rowStart = null,
