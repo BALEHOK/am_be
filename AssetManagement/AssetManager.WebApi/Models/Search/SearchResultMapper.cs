@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
 using Newtonsoft.Json;
 
-namespace AssetManager.Infrastructure.Services
+namespace AssetManager.WebApi.Models.Search
 {
-    public class DataConverterService : IDataConverterService
+    public class SearchResultMapper : ISearchResultMapper
     {
         public SearchResultModel GetSearchResultModel(Guid searchId, IEnumerable<IIndexEntity> indexEntities)
         {
@@ -45,28 +45,10 @@ namespace AssetManager.Infrastructure.Services
             {
                 AllAttribValues = indexEntity.AllAttribValues,
                 AllAttrib2IndexValues = indexEntity.AllAttrib2IndexValues,
-                AllContextAttribValues = indexEntity.AllContextAttribValues,
-                BarCode = indexEntity.BarCode,
                 CategoryKeywords = indexEntity.CategoryKeywords,
-                Department = indexEntity.Department,
-                DepartmentId = indexEntity.DepartmentId,
-                Description = indexEntity.Description,
                 DynEntityConfigId = indexEntity.DynEntityConfigId,
-                DynEntityConfigUid = indexEntity.DynEntityConfigUid,
                 DynEntityId = indexEntity.DynEntityId,
                 DynEntityUid = indexEntity.DynEntityUid,
-                EntityConfigKeywords = indexEntity.EntityConfigKeywords,
-                Keywords = indexEntity.Keywords,
-                Location = indexEntity.Location,
-                LocationUid = indexEntity.LocationUid,
-                Name = indexEntity.Name,
-                OwnerId = indexEntity.OwnerId,
-                Subtitle = indexEntity.Subtitle,
-                TaxonomyItemsIds = indexEntity.TaxonomyItemsIds,
-                TaxonomyKeywords = indexEntity.TaxonomyKeywords,
-                UpdateDate = indexEntity.UpdateDate,
-                User = indexEntity.User,
-                UserId = indexEntity.UserId,
                 DisplayValues = displayValues,
                 DisplayExtValues = displayExtValues
             };

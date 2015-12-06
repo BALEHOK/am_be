@@ -8,7 +8,6 @@ using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
-using AssetManager.Infrastructure.Services;
 using AssetManager.WebApi.Extensions;
 using AssetManager.WebApi.Models.Search;
 using WebApi.OutputCache.V2;
@@ -19,14 +18,14 @@ namespace AssetManager.WebApi.Controllers.Api
     public class SearchController : ApiController
     {
         private readonly ISearchService _searchService;
-        private readonly IDataConverterService _dataConverterService;
+        private readonly ISearchResultMapper _searchResultMapper;
         private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
         private readonly IAdvanceSearchModelSearchQueryMapper _advanceSearchModelSearchQueryMapper;
 
         public SearchController(
             ISearchService searchService,
             IAdvanceSearchModelMapper advanceSearchModelMapper,
-            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper, IDataConverterService dataConverterService)
+            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper, ISearchResultMapper searchResultMapper)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
@@ -39,9 +38,9 @@ namespace AssetManager.WebApi.Controllers.Api
             if (advanceSearchModelSearchQueryMapper == null)
                 throw new ArgumentNullException("advanceSearchModelSearchQueryMapper");
             _advanceSearchModelSearchQueryMapper = advanceSearchModelSearchQueryMapper;
-            if (advanceSearchModelSearchQueryMapper == null)
-                throw new ArgumentNullException("dataConverterService");
-            _dataConverterService = dataConverterService;
+            if (searchResultMapper == null)
+                throw new ArgumentNullException("searchResultMapper");
+            _searchResultMapper = searchResultMapper;
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace AssetManager.WebApi.Controllers.Api
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            Debug.Assert(model.SearchId != null, "model.SearchId == null");
+            Debug.Assert(model.SearchId != null, "model.SearchId != null");
 
             var userId = User.GetId();
             
@@ -76,7 +75,7 @@ namespace AssetManager.WebApi.Controllers.Api
                     assetId: model.AssetId.GetValueOrDefault()
             );
 
-            return _dataConverterService.GetSearchResultModel(searchId.Value, result);
+            return _searchResultMapper.GetSearchResultModel(model.SearchId.Value, result);
         }
 
         private static bool ValidateAndUpdateSimpleSearchModel(SimpleSearchModel model)
@@ -100,7 +99,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
             EnsureSearchId(model);
-            Debug.Assert(model.SearchId != null, "model.SearchId == null");
+            Debug.Assert(model.SearchId != null, "model.SearchId != null");
 
             var userId = User.GetId();
             var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);
@@ -113,7 +112,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 order: model.SortBy,
                 pageNumber: model.Page);
 
-			return _dataConverterService.GetSearchResultModel(model.SearchId, result);
+			return _searchResultMapper.GetSearchResultModel(model.SearchId.Value, result);
         }
 
         [Route("bytype/model"), HttpPost]

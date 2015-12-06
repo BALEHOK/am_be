@@ -131,21 +131,21 @@ namespace AppFramework.Core.Classes.SearchEngine
                     : context.Name;
             }
 
-            var shortDetailsArray = (from attribute in asset.Attributes
-                                     where attribute.GetConfiguration().DisplayOnResultList
-                                           && !string.IsNullOrWhiteSpace(attribute.Value)
-                                     orderby attribute.GetConfiguration().DisplayOrderExtResultList
-                                     select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
-                                         attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
-                                         attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim())).ToArray();
+            var shortDetailsArray = from attribute in asset.Attributes
+                                    where attribute.GetConfiguration().DisplayOnResultList
+                                          && !string.IsNullOrWhiteSpace(attribute.Value)
+                                    orderby attribute.GetConfiguration().DisplayOrderExtResultList
+                                    select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
+                                        attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
+                                            attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim());
 
-            var extendedDetailsArray = (from attribute in asset.Attributes
-                                        where attribute.GetConfiguration().DisplayOnExtResultList
-                                                && !string.IsNullOrWhiteSpace(attribute.Value)
-                                        orderby attribute.GetConfiguration().DisplayOrderExtResultList
-                                        select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
-                                              attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
-                                              attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim())).ToArray();
+            var extendedDetailsArray = from attribute in asset.Attributes
+                                       where attribute.GetConfiguration().DisplayOnExtResultList
+                                               && !string.IsNullOrWhiteSpace(attribute.Value)
+                                       orderby attribute.GetConfiguration().DisplayOrderExtResultList
+                                       select new KeyValuePair<string, string>(attribute.GetConfiguration().Name,
+                                           attribute.GetConfiguration().DataTypeEnum == Enumerators.DataType.DateTime ?
+                                               attribute.GetValueAsDateTime().ToString("dd/MM/yyyy") : attribute.Value.Trim());
 
             var entity = (IIndexEntity) Activator.CreateInstance<T>();
             entity.DynEntityUid = asset.UID;

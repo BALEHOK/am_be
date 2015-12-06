@@ -156,7 +156,6 @@
     <Compile Include="Services\AssetService.cs" />
     <Compile Include="Services\AssetTypeService.cs" />
     <Compile Include="Services\BarcodeService.cs" />
-    <Compile Include="Services\DataConverterService.cs" />
     <Compile Include="Services\DataTypeService.cs" />
     <Compile Include="Services\DocumentsService.cs" />
     <Compile Include="Services\ExportService.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="Services\HistoryService.cs" />
     <Compile Include="Services\IAssetService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
-    <Compile Include="Services\IDataConverterService.cs" />
     <Compile Include="Services\IDataTypeService.cs" />
     <Compile Include="Services\IExportService.cs" />
     <Compile Include="Services\IFaqService.cs" />

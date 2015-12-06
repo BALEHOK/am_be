@@ -49,6 +49,7 @@ namespace AssetManager.WebApi
                 .RegisterType<ITypeSearch, TypeSearch>()
                 .RegisterType<IAdvanceSearchModelMapper, AdvanceSearchModelMapper>()
                 .RegisterType<IAdvanceSearchModelSearchQueryMapper, AdvanceSearchModelSearchQueryMapper>()
+                .RegisterType<ISearchResultMapper, SearchResultMapper>()
                 .AddNewExtension<InfrastructureConfiguration>()
                 .AddNewExtension<EmailConfiguration>()
                 .AddNewExtension<CommonConfiguration>()
