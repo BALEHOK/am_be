@@ -9,7 +9,6 @@ using AppFramework.Reports;
 using AssetManager.WebApi.Models.Search;
 using AppFramework.Email;
 using AssetManager.Infrastructure;
-using AssetManager.WebApi.Controllers.Api;
 
 namespace AssetManager.WebApi
 {

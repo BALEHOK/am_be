@@ -54,7 +54,7 @@ namespace AssetManager.WebApi.Controllers.Api
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            Debug.Assert(model.SearchId != null, "model.SearchId != null");
+            Debug.Assert(model.SearchId != null, "model.SearchId == null");
 
             var userId = User.GetId();
             
@@ -99,7 +99,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
             EnsureSearchId(model);
-            Debug.Assert(model.SearchId != null, "model.SearchId != null");
+            Debug.Assert(model.SearchId != null, "model.SearchId == null");
 
             var userId = User.GetId();
             var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);

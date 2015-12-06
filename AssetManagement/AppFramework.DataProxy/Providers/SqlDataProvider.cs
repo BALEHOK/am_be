@@ -1,12 +1,9 @@
 ﻿namespace AppFramework.DataProxy.Providers
 {
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Data;
     using System.Data.Objects;
     using System.Data.SqlClient;
-    using System.Globalization;
-    using System.Threading;
 
     /// <summary>
     /// Provides the data-related operations using plain SQL
