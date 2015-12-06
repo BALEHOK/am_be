@@ -26,7 +26,7 @@
         /// <param name="type"></param>
         /// <param name="parameters"></param>
         /// <param name="resultCount"></param>
-        public void LogSearchBySimpleQueryRequest(
+        public void LogSearchByKeywordsRequest(
             Guid searchId,
             SearchType type, 
             string verboseString, 
@@ -50,7 +50,7 @@
             _unitOfWork.Commit();
         }
 
-        public void LogSearchByTypeRequest(Guid searchId, long userId, long assetTypeUid)
+        public void LogSearchByTypeRequest(Guid searchId, long userId, long assetTypeUid, SearchParameters parameters)
         {
             var tracking = _unitOfWork.SearchTrackingRepository
                 .SingleOrDefault(t => t.SearchId == searchId);
@@ -61,10 +61,10 @@
             {
                 SearchId = searchId,
                 SearchType = (short)SearchType.SearchByType,
-                Parameters = string.Empty,
+                Parameters = parameters.ToXml(),
                 UpdateUser = userId,
                 UpdateDate = DateTime.Now,
-                VerboseString = assetTypeUid.ToString()
+                VerboseString = string.Empty
             });
             _unitOfWork.Commit();
         }

@@ -72,7 +72,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             if (enableTracking)
             {
-                _searchTracker.LogSearchBySimpleQueryRequest(
+                _searchTracker.LogSearchByKeywordsRequest(
                     searchId,
                     SearchType.SearchByKeywords,
                     querystring,
@@ -191,10 +191,22 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             if (enableTracking)
             {
+                var parameters = new SearchParameters
+                {
+                    {"elements", elements}, 
+                    {"atUid", assetTypeUid}
+                };
+
+                parameters.Time = time;
+                parameters.Order = order;
+                parameters.TaxonomyItemsIds = taxonomyItemsIds;
+                parameters.ConfigsIds = configsIds;
+
                 _searchTracker.LogSearchByTypeRequest(
                     searchId,
                     userId,
-                    assetTypeUid);
+                    assetTypeUid,
+                    parameters);
             }
             
             var result = _typeSearch.FindByType(searchId, userId, assetTypeUid, elements, configsIds,
