@@ -72,7 +72,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             if (enableTracking)
             {
-                _searchTracker.LogSearchRequest(
+                _searchTracker.LogSearchBySimpleQueryRequest(
                     searchId,
                     SearchType.SearchByKeywords,
                     querystring,
@@ -187,8 +187,16 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Find by Type
         /// </summary>
         /// <returns></returns>
-        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20)
+        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20, bool enableTracking = true)
         {
+            if (enableTracking)
+            {
+                _searchTracker.LogSearchByTypeRequest(
+                    searchId,
+                    userId,
+                    assetTypeUid);
+            }
+            
             var result = _typeSearch.FindByType(searchId, userId, assetTypeUid, elements, configsIds,
                 taxonomyItemsIds, time, order, pageNumber, pageSize);
             return result;

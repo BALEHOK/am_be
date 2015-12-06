@@ -26,7 +26,7 @@
         /// <param name="type"></param>
         /// <param name="parameters"></param>
         /// <param name="resultCount"></param>
-        public void LogSearchRequest(
+        public void LogSearchBySimpleQueryRequest(
             Guid searchId,
             SearchType type, 
             string verboseString, 
@@ -49,6 +49,26 @@
             });
             _unitOfWork.Commit();
         }
+
+        public void LogSearchByTypeRequest(Guid searchId, long userId, long assetTypeUid)
+        {
+            var tracking = _unitOfWork.SearchTrackingRepository
+                .SingleOrDefault(t => t.SearchId == searchId);
+            // don't allow multiple trackings with same search id
+            if (tracking != null)
+                _unitOfWork.SearchTrackingRepository.Delete(tracking);
+            _unitOfWork.SearchTrackingRepository.Insert(new Entities.SearchTracking()
+            {
+                SearchId = searchId,
+                SearchType = (short)SearchType.SearchByType,
+                Parameters = string.Empty,
+                UpdateUser = userId,
+                UpdateDate = DateTime.Now,
+                VerboseString = assetTypeUid.ToString()
+            });
+            _unitOfWork.Commit();
+        }
+
 
         /// <summary>
         /// Returns tracked search action by its id

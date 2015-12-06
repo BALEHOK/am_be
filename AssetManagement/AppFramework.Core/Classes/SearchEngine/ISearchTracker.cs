@@ -6,6 +6,7 @@ namespace AppFramework.Core.Classes.SearchEngine
     {
         AppFramework.Entities.SearchTracking GetTrackingById(long trackingId);
         AppFramework.Entities.SearchTracking GetTrackingBySearchIdUserId(Guid searchId, long userId);
-        void LogSearchRequest(Guid searchId, SearchType type, string verboseString, SearchParameters parameters, long userId);
+        void LogSearchBySimpleQueryRequest(Guid searchId, SearchType type, string verboseString, SearchParameters parameters, long userId);
+        void LogSearchByTypeRequest(Guid searchId, long userId, long assetTypeUid);
     }
 }
