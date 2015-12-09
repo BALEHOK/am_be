@@ -131,6 +131,7 @@
     <Compile Include="Models\CustomReportModel.cs" />
     <Compile Include="Models\DynListItemModel.cs" />
     <Compile Include="Models\DynListModel.cs" />
+    <Compile Include="Models\FaqContainer.cs" />
     <Compile Include="Models\FaqModel.cs" />
     <Compile Include="Models\PlaceModel.cs" />
     <Compile Include="Models\ResultBase.cs" />
