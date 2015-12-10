@@ -28,7 +28,6 @@
         /// <param name="resultCount"></param>
         public void LogSearchByKeywordsRequest(
             Guid searchId,
-            SearchType type, 
             string verboseString, 
             SearchParameters parameters, 
             long userId)
@@ -41,7 +40,7 @@
             _unitOfWork.SearchTrackingRepository.Insert(new Entities.SearchTracking()
             {
                 SearchId = searchId,
-                SearchType = (short)type,
+                SearchType = (short)SearchType.SearchByKeywords,
                 Parameters = parameters.ToXml(),
                 UpdateUser = userId,
                 UpdateDate = DateTime.Now,

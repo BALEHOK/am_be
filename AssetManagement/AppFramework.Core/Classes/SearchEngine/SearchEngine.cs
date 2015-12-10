@@ -74,7 +74,6 @@ namespace AppFramework.Core.Classes.SearchEngine
             {
                 _searchTracker.LogSearchByKeywordsRequest(
                     searchId,
-                    SearchType.SearchByKeywords,
                     querystring,
                     new SearchParameters
                     {
