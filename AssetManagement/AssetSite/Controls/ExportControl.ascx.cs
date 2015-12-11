@@ -5,7 +5,6 @@ using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 using AssetSite.Controls.SearchControls;
-using AssetSite.Helpers;
 using AssetSite.Search;
 using System;
 using System.Linq;
@@ -184,28 +183,11 @@ namespace AssetSite.Controls
             {
                 // type
                 var page = (Page as NewResultByType);
-                result = typeSearch.FindByTypeContext(
+                result = typeSearch.FindByType(
                     page.SearchId,
                     (long)AuthenticationService.CurrentUser.ProviderUserKey,
                     long.Parse(Request.QueryString["TypeUID"]),
                     (Session[Request.QueryString["Params"]] as List<AttributeElement>),
-                    page.ConfigsIds,
-                    page.TaxonomyItemsIds,
-                    page.Period,
-                    page.OrderBy,
-                    startRow,
-                    endRow);
-            }
-            else if (pageType == typeof (NewResultByContext))
-            {
-                // context
-                var page = (Page as NewResultByContext);
-                result = typeSearch.FindByTypeContext(
-                    page.SearchId,
-                    (long)AuthenticationService.CurrentUser.ProviderUserKey,
-                    null,
-                    (Session[Request.QueryString["Params"]] as List<AttributeElement>),
-                    page.ConfigsIds,
                     page.TaxonomyItemsIds,
                     page.Period,
                     page.OrderBy,

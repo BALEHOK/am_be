@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.DataProxy;
@@ -20,9 +21,9 @@ namespace AssetManager.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScreensService _screensService;
-        private readonly IDataFactory _dataFactory;
+        private readonly IAssetTypeRepository _assetTypeRepository;
 
-        public AssetTypeService(IUnitOfWork unitOfWork, IScreensService screensService, IDataFactory dataFactory)
+        public AssetTypeService(IUnitOfWork unitOfWork, IScreensService screensService, IAssetTypeRepository assetTypeRepository)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
@@ -30,9 +31,9 @@ namespace AssetManager.Infrastructure.Services
             if (screensService == null)
                 throw new ArgumentNullException("screensService");
             _screensService = screensService;
-            if (dataFactory == null)
-                throw new ArgumentNullException("dataFactory");
-            _dataFactory = dataFactory;
+            if (assetTypeRepository == null)
+                throw new ArgumentNullException("assetTypeRepository");
+            _assetTypeRepository = assetTypeRepository;
         }
 
         public AssetTypeModel GetAssetType(long id, bool loadAttributes = false)
@@ -73,8 +74,6 @@ namespace AssetManager.Infrastructure.Services
             };
         }
 
-
-
         private static AssetTypeModel CreateAssetTypeModel(DynEntityConfig typeConfig, bool loadAttributes, bool showOnPanelOnlyAttributes = false)
         {
             return new AssetTypeModel
@@ -93,6 +92,7 @@ namespace AssetManager.Infrastructure.Services
 
         private static List<AttributeTypeModel> LoadAttributes(DynEntityConfig config, bool showOnPanelOnlyAttributes)
         {
+            var dataTypeEnum = typeof (Enumerators.DataType);
             var attributes =
                 config.DynEntityAttribConfigs.Where(a => !showOnPanelOnlyAttributes || a.IsShownOnPanel).Select(
                     a =>
@@ -106,7 +106,7 @@ namespace AssetManager.Infrastructure.Services
                             DisplayOrder = a.DisplayOrder,
                             ValidationExpression = a.ValidationExpr,
                             CalculationFormula = a.CalculationFormula,
-                            DataType = a.DataType.Name
+                            DataType = (Enumerators.DataType)Enum.Parse(dataTypeEnum, a.DataType.Name, true)
                         };
                         return attributeInfo;
                     }).OrderBy(a => a.DisplayOrder).ToList();
@@ -117,7 +117,7 @@ namespace AssetManager.Infrastructure.Services
         {
             typesInfo.ForEach(type =>
             {
-                var assetType = _dataFactory.Get<AssetType>(type.Id);
+                var assetType = _assetTypeRepository.GetById(type.Id);
                 var screens = _screensService.GetScreensByAssetTypeUid(assetType.UID);
 
                 var screensModel = screens.Select(screen =>

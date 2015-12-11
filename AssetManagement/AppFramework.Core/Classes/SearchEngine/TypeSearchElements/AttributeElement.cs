@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes.SearchEngine.SearchOperators;
 using Newtonsoft.Json;
 using Formatting = AppFramework.Core.Helpers.Formatting;
+using System.Collections.Generic;
 
 namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
 {
@@ -69,12 +69,17 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
         {
             get
             {
-                return (ElementType == Enumerators.DataType.Asset && ComplexValue != null)
+                return (ElementType == Enumerators.DataType.Asset && UseComplexValue)
                     || ElementType == Enumerators.DataType.Assets
                     || ElementType == Enumerators.DataType.DynList
                     || ElementType == Enumerators.DataType.DynLists;
             }
         }
+
+        /// <summary>
+        /// Which value of element to use: simple or complex
+        /// </summary>
+        public bool UseComplexValue { get; set; }
 
         [DataMember]
         public string ServiceMethod { get; set; }
@@ -93,7 +98,8 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
         }
         private string _value;
 
-        public AttributeElementCoplexValue ComplexValue { get; set; }
+        public AssetType ReferencedAssetType { get; set; }
+        public List<AttributeElement> ComplexValue { get; set; }
 
         [DataMember]
         public long ContextUID { get; set; }
@@ -109,36 +115,6 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
             Text = "";
             AscDesc = 0;
             AndOr = 0;
-        }
-
-        /// <summary>
-        /// Returns the SQL statement for current chain
-        /// </summary>
-        /// <param name="tableName">Table which contains searching value</param>
-        /// <returns></returns>
-        public SearchTerm GetSearchTerm(string tableName)
-        {
-            if (string.IsNullOrEmpty(FieldSql) && !string.IsNullOrEmpty(FieldName))
-                FieldSql = FieldName;
-            else if (string.IsNullOrEmpty(FieldSql) && string.IsNullOrEmpty(FieldName))
-                throw new ArgumentException("Chain properties not set");
-
-            string fieldName = string.Empty;
-
-            //if field sql contains additional operations TODO:Refactor
-            if (this.FieldSql.Contains("("))
-            {
-                fieldName = this.FieldSql.Replace(this.FieldName, "[" + tableName + "].[" + this.FieldName + "]");
-            }
-            else
-            {
-                // convert field name to the full name within table context
-                fieldName = this.FieldSql.Contains("].[") ? this.FieldSql :
-                    string.Format("[{0}].[{1}]", tableName, this.FieldSql.Trim(new char[] { '[', ']' }));
-            }
-
-            return BaseOperator.GetOperatorByClassName(this.ServiceMethod).
-                    Generate(this.Value, fieldName);
         }
     }
 }

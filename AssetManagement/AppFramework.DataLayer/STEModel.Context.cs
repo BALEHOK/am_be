@@ -864,7 +864,7 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<f_cust_SearchByKeywords_Result> f_cust_SearchByKeywords(Nullable<System.Guid> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize)     
+        public ObjectResult<f_cust_SearchByKeywords_Result> f_cust_SearchByKeywords(Nullable<System.Guid> searchId, Nullable<long> userId, string keywords, string configIds, string taxonomyItemsIds, Nullable<bool> active, Nullable<byte> orderby, Nullable<int> pageNumber, Nullable<int> pageSize, Nullable<long> attributeId, Nullable<long> assetId)     
      
         { 
      
@@ -977,7 +977,31 @@ namespace AppFramework.DataLayer
             } 
      
      
-            return base.ExecuteFunction<f_cust_SearchByKeywords_Result>("f_cust_SearchByKeywords", searchIdParameter, userIdParameter, keywordsParameter, configIdsParameter, taxonomyItemsIdsParameter, activeParameter, orderbyParameter, pageNumberParameter, pageSizeParameter); 
+            ObjectParameter attributeIdParameter; 
+     
+            if (attributeId.HasValue) 
+            { 
+                attributeIdParameter = new ObjectParameter("attributeId", attributeId); 
+            } 
+            else 
+            { 
+                attributeIdParameter = new ObjectParameter("attributeId", typeof(long)); 
+            } 
+     
+     
+            ObjectParameter assetIdParameter; 
+     
+            if (assetId.HasValue) 
+            { 
+                assetIdParameter = new ObjectParameter("assetId", assetId); 
+            } 
+            else 
+            { 
+                assetIdParameter = new ObjectParameter("assetId", typeof(long)); 
+            } 
+     
+     
+            return base.ExecuteFunction<f_cust_SearchByKeywords_Result>("f_cust_SearchByKeywords", searchIdParameter, userIdParameter, keywordsParameter, configIdsParameter, taxonomyItemsIdsParameter, activeParameter, orderbyParameter, pageNumberParameter, pageSizeParameter, attributeIdParameter, assetIdParameter); 
      
      
         } 

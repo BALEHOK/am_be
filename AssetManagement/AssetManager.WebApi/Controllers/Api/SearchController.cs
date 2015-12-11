@@ -200,6 +200,7 @@ namespace AssetManager.WebApi.Controllers.Api
                     "SearchTracking with given searchId doesn't exists or not accessible.");
             return new SearchTrackingModel
             {
+                SearchType = (SearchType) tracking.SearchType,
                 VerboseString = tracking.VerboseString
             };
         }

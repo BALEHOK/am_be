@@ -91,12 +91,11 @@ namespace AssetSite.Search
                     AssetTypeRepository,
                     AssetsService);
 
-                var result = typeSearch.FindByTypeContext(
+                var result = typeSearch.FindByType(
                     SearchId,
                     AuthenticationService.CurrentUserId,
                     assetTypeUid,
                     (Session[_strparams] as List<AttributeElement>),
-                    ConfigsIds,
                     TaxonomyItemsIds,
                     Period,
                     OrderBy,
