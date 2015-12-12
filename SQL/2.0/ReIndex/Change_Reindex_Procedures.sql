@@ -2,70 +2,11 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
--- Author:		Wouter Steegmans
--- Create date: 11/12/2015
--- Description:	
--- =============================================
-CREATE PROCEDURE [dbo].[_cust_Reindex_BuildIndexField_ForDisplayValues] 
-	-- Add the parameters for the stored procedure here
-	@DynEntityConfigUid bigint,
-	@FieldType int = 0,
-	@field nvarchar(max) OUTPUT, 
-	@from nvarchar(max) OUTPUT,
-	@creatett nvarchar(max) OUTPUT, 
-	@droptt nvarchar(max) OUTPUT,
-	@culture nvarchar(10),
-	@delimiter nvarchar(max) = ', ',
-	@PrimaryTable nvarchar(max) = 'prim'
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
-	DECLARE @DISPLAYVALUES int = 5;
-	DECLARE @DISPLAYEXTVALUES int = 6;
-
-	DECLARE @DynEntityAttribConfigUid bigint;	
-	DECLARE @DataType nvarchar(60);
-	DECLARE @tAttributes TABLE (DynEntityAttribConfigUid bigint, DataType nvarchar(60));
-	DECLARE @AssetLinkedTable varchar(100);
-	DECLARE @AssetDynEntityConfigUid bigint;
-	
-		
-	-- Build Dynamic SQL
-	INSERT @tAttributes
-	SELECT ac.DynEntityAttribConfigUid, dt.Name
-	  FROM DynEntityAttribConfig ac
-		INNER JOIN DataType dt ON dt.DataTypeUid = ac.DataTypeUid
-     WHERE ac.DynEntityConfigUid = @DynEntityConfigUid
-	   AND (((@FieldType = @DISPLAYVALUES) AND (DisplayOnResultList = 1)) 
-	   OR  ((@FieldType = @DISPLAYEXTVALUES) AND (DisplayOnExtResultList = 1)))
-	 ORDER BY CASE @FieldType WHEN @DISPLAYVALUES THEN DisplayOrderResultList WHEN @DISPLAYEXTVALUES THEN DisplayOrderExtResultList ELSE 1 END;
-	 	   
-
-	WHILE EXISTS (SELECT 1 FROM @tAttributes)
-	BEGIN
-		SELECT TOP 1 @DynEntityAttribConfigUid = DynEntityAttribConfigUid, @DataType = DataType FROM @tAttributes
-				
-		EXEC _cust_ReIndex_BuildJsonObject @DynEntityAttribConfigUid, @field OUTPUT, @from OUTPUT, @creatett OUTPUT, @droptt OUTPUT,
-									@culture, @delimiter, @PrimaryTable, @AssetLinkedTable OUTPUT, @AssetDynEntityConfigUid OUTPUT;			
-			
-		DELETE FROM @tAttributes WHERE DynEntityAttribConfigUid = @DynEntityAttribConfigUid
-	END;
-
-	set @field = '''['' + ' + @field + ' + '']'''
-END
-
-SET ANSI_NULLS ON
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._cust_ReIndex_BuildJsonObject') AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE [dbo].[_cust_ReIndex_BuildJsonObject]
 GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Create date: 12/12/2015
--- Description:	
--- =============================================
+
 CREATE PROCEDURE [dbo].[_cust_ReIndex_BuildJsonObject] 
 	-- Add the parameters for the stored procedure here
 	@DynEntityAttribConfigUid bigint, 
@@ -318,16 +259,69 @@ BEGIN
 		
 END
 
-SET ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._cust_Reindex_BuildIndexField_ForDisplayValues') AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE [dbo].[_cust_Reindex_BuildIndexField_ForDisplayValues]
 GO
--- =============================================
--- Author:		Steegmans Wouter
--- Create date: 25/01/2013
--- Description:	Reindex items of certain asset/item type
--- =============================================
-ALTER PROCEDURE [dbo].[_cust_ReIndex]
+
+CREATE PROCEDURE [dbo].[_cust_Reindex_BuildIndexField_ForDisplayValues] 
+	-- Add the parameters for the stored procedure here
+	@DynEntityConfigUid bigint,
+	@FieldType int = 0,
+	@field nvarchar(max) OUTPUT, 
+	@from nvarchar(max) OUTPUT,
+	@creatett nvarchar(max) OUTPUT, 
+	@droptt nvarchar(max) OUTPUT,
+	@culture nvarchar(10),
+	@delimiter nvarchar(max) = ', ',
+	@PrimaryTable nvarchar(max) = 'prim'
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	DECLARE @DISPLAYVALUES int = 5;
+	DECLARE @DISPLAYEXTVALUES int = 6;
+
+	DECLARE @DynEntityAttribConfigUid bigint;	
+	DECLARE @DataType nvarchar(60);
+	DECLARE @tAttributes TABLE (DynEntityAttribConfigUid bigint, DataType nvarchar(60));
+	DECLARE @AssetLinkedTable varchar(100);
+	DECLARE @AssetDynEntityConfigUid bigint;
+	
+		
+	-- Build Dynamic SQL
+	INSERT @tAttributes
+	SELECT ac.DynEntityAttribConfigUid, dt.Name
+	  FROM DynEntityAttribConfig ac
+		INNER JOIN DataType dt ON dt.DataTypeUid = ac.DataTypeUid
+     WHERE ac.DynEntityConfigUid = @DynEntityConfigUid
+	   AND (((@FieldType = @DISPLAYVALUES) AND (DisplayOnResultList = 1)) 
+	   OR  ((@FieldType = @DISPLAYEXTVALUES) AND (DisplayOnExtResultList = 1)))
+	 ORDER BY CASE @FieldType WHEN @DISPLAYVALUES THEN DisplayOrderResultList WHEN @DISPLAYEXTVALUES THEN DisplayOrderExtResultList ELSE 1 END;
+	 	   
+
+	WHILE EXISTS (SELECT 1 FROM @tAttributes)
+	BEGIN
+		SELECT TOP 1 @DynEntityAttribConfigUid = DynEntityAttribConfigUid, @DataType = DataType FROM @tAttributes
+				
+		EXEC _cust_ReIndex_BuildJsonObject @DynEntityAttribConfigUid, @field OUTPUT, @from OUTPUT, @creatett OUTPUT, @droptt OUTPUT,
+									@culture, @delimiter, @PrimaryTable, @AssetLinkedTable OUTPUT, @AssetDynEntityConfigUid OUTPUT;			
+			
+		DELETE FROM @tAttributes WHERE DynEntityAttribConfigUid = @DynEntityAttribConfigUid
+	END;
+
+	set @field = '''['' + ' + @field + ' + '']'''
+END
+
+GO
+
+IF EXISTS ( SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo._cust_ReIndex') AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE [dbo].[_cust_ReIndex]
+GO
+
+CREATE PROCEDURE [dbo].[_cust_ReIndex]
 	-- Add the parameters for the stored procedure here
 	@DynEntityConfigId bigint = NULL, 
 	@active bit = 1,
