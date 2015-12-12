@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
+using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes.SearchEngine
 {
@@ -23,44 +24,18 @@ namespace AppFramework.Core.Classes.SearchEngine
             IEnumerable<AttributeElement> elements);
 
         /// <summary>
-        /// Type search
-        /// </summary>
-        List<Entities.IIndexEntity> FindByTypeContext(
-            Guid searchId,
-            long userId,
-            long? assetTypeUid,
-            IEnumerable<AttributeElement> elements,
-            string configsIds,
-            string taxonomyItemsIds,
-            TimePeriodForSearch time,
-            Entities.Enumerations.SearchOrder order,
-            int pageNumber,
-            int pageSize);
-
-        /// <summary>
         /// Advance search by type. Overload for v2
         /// </summary>
         /// <param name="searchId"></param>
         /// <param name="userId">current user id</param>
-        /// <param name="assetTypeUid">asset type uid</param>
+        /// <param name="assetTypeId">asset type uid</param>
         /// <param name="elements">Attribute elements converted to search chain</param>
-        /// <param name="configsIds"></param>
         /// <param name="taxonomyItemsIds"></param>
         /// <param name="time"></param>
         /// <param name="order"></param>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        List<Entities.IIndexEntity> FindByType(
-            Guid searchId,
-            long userId,
-            long assetTypeUid,
-            List<AttributeElement> elements,
-            string configsIds,
-            string taxonomyItemsIds,
-            TimePeriodForSearch time,
-            Entities.Enumerations.SearchOrder order,
-            int pageNumber,
-            int pageSize);
+        List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeId, List<AttributeElement> elements, string taxonomyItemsIds, TimePeriodForSearch time, Entities.Enumerations.SearchOrder order, int pageNumber, int pageSize);
     }
 }

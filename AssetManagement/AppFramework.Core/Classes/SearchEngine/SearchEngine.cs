@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Classes.SearchEngine.Presentation;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
@@ -72,10 +71,9 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             if (enableTracking)
             {
-                _searchTracker.LogSearchRequest(
+                _searchTracker.LogSearchByKeywordsRequest(
                     searchId,
-                    SearchType.SearchByKeywords,
-                    querystring,
+                    userId,
                     new SearchParameters
                     {
                         QueryString = querystring,
@@ -83,8 +81,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                         TaxonomyItemsIds = taxonomyItemsIds,
                         Time = time,
                         Order = order
-                    },
-                    userId);
+                    }, querystring);
             }
 
             var rdResults = _unitOfWork.SqlProvider.ExecuteReader(
@@ -187,9 +184,24 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// Find by Type
         /// </summary>
         /// <returns></returns>
-        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeUid, List<AttributeElement> elements, string configsIds = "", string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20)
+        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeId, List<AttributeElement> elements, string taxonomyItemsIds = "", TimePeriodForSearch time = TimePeriodForSearch.CurrentTime, Entities.Enumerations.SearchOrder order = Entities.Enumerations.SearchOrder.Relevance, int pageNumber = 1, int pageSize = 20, bool enableTracking = true)
         {
-            var result = _typeSearch.FindByType(searchId, userId, assetTypeUid, elements, configsIds,
+            if (enableTracking)
+            {
+                _searchTracker.LogSearchByTypeRequest(
+                    searchId,
+                    userId,
+                    new SearchParameters
+                    {
+                        Elements = elements,
+                        ConfigsIds = assetTypeId.ToString(),
+                        TaxonomyItemsIds = taxonomyItemsIds,
+                        Time = time,
+                        Order = order
+                    });
+            }
+            
+            var result = _typeSearch.FindByType(searchId, userId, assetTypeId, elements,
                 taxonomyItemsIds, time, order, pageNumber, pageSize);
             return result;
         }

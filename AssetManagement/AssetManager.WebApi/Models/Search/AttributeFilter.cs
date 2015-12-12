@@ -38,5 +38,17 @@ namespace AssetManager.WebApi.Models.Search
         public AttributeTypeModel ReferenceAttrib { get; set; }
 
         public int Index { get; set; }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return Parenthesis == ParenthesisType.None
+                    && (
+                        (UseComplexValue && (ComplexValue == null || ComplexValue.Length == 0))
+                            || (!UseComplexValue && (Value == null || string.IsNullOrEmpty(Value.Id)))
+                        );
+            }
+        }
     }
 }

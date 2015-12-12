@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Text;
 using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes.SearchEngine.ContextSearchElements;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Classes.SearchEngine.Presentation;
-using AppFramework.Core.Classes.SearchEngine.SearchOperators;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
-using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.Core.Helpers;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 
@@ -63,7 +57,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             List<SqlParameter> parameters;
 
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
-            var searchQuery = _generateTypeSearchQuery(
+            var searchQuery = SearchQueryBuilder.GenerateTypeSearchQuery(
                 searchId,
                 type,
                 elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(),
@@ -91,93 +85,38 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// </summary>
         /// <param name="searchId"></param>
         /// <param name="userId"></param>
-        /// <param name="assetTypeUid"></param>
+        /// <param name="assetTypeId"></param>
         /// <param name="elements">Attribute elements converted to search chain</param>
-        /// <param name="configsIds"></param>
         /// <param name="taxonomyItemsIds"></param>
         /// <param name="time"></param>
         /// <param name="order"></param>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public List<IIndexEntity> FindByType(
-            Guid searchId,
-            long userId,
-            long assetTypeUid,
-            List<AttributeElement> elements,
-            string configsIds,
-            string taxonomyItemsIds,
-            TimePeriodForSearch time,
-            Entities.Enumerations.SearchOrder order,
-            int pageNumber,
-            int pageSize)
+        public List<IIndexEntity> FindByType(Guid searchId, long userId, long assetTypeId,
+            List<AttributeElement> elements, string taxonomyItemsIds, TimePeriodForSearch time,
+            Entities.Enumerations.SearchOrder order, int pageNumber, int pageSize)
         {
             List<SqlParameter> parameters;
 
-            var type = _assetTypeRepository.GetByUid(assetTypeUid);
+            var type = _assetTypeRepository.GetById(assetTypeId);
             if (type == null)
             {
                 return new List<IIndexEntity>(0);
             }
 
-            var searchQuery = _generateTypeSearchQuery(searchId, type, elements, time, out parameters);
+            var searchQuery = SearchQueryBuilder.GenerateTypeSearchQuery(searchId, type, elements, time, out parameters);
 
-            return FindByTypeContext(searchId, userId, searchQuery, parameters, configsIds, taxonomyItemsIds, time,
-                order, pageNumber, pageSize);
-        }
-
-        public List<IIndexEntity> FindByTypeContext(
-            Guid searchId,
-            long userId,
-            long? assetTypeUid,
-            IEnumerable<AttributeElement> elements,
-            string configsIds,
-            string taxonomyItemsIds,
-            TimePeriodForSearch time,
-            Entities.Enumerations.SearchOrder order,
-            int pageNumber,
-            int pageSize)
-        {
-            List<SqlParameter> parameters;
-            string searchQuery;
-
-            if (assetTypeUid.HasValue)
-            {
-                var type = _assetTypeRepository.GetByUid(assetTypeUid.Value);
-                if (type == null)
-                {
-                    return new List<IIndexEntity>(0);
-                }
-
-                searchQuery = _generateTypeSearchQuery(searchId, type,
-                    elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(), time,
-                    out parameters);
-            }
-            else
-            {
-                searchQuery = _generateContextSearchQuery(searchId,
-                    elements.ToSearchChains(new ContextForSearch(_unitOfWork)).ToList(),
-                    out parameters);
-            }
-
-            return FindByTypeContext(searchId, userId, searchQuery, parameters, configsIds, taxonomyItemsIds, time,
+            return FindByType(searchId, userId, searchQuery, parameters, taxonomyItemsIds, time,
                 order, pageNumber, pageSize);
         }
 
         /// <summary>
         /// Type search
         /// </summary>
-        private List<IIndexEntity> FindByTypeContext(
-            Guid searchId,
-            long userId,
-            string searchQuery,
-            List<SqlParameter> parameters,
-            string configsIds,
-            string taxonomyItemsIds,
-            TimePeriodForSearch time,
-            Entities.Enumerations.SearchOrder order,
-            int pageNumber,
-            int pageSize)
+        private List<IIndexEntity> FindByType(Guid searchId, long userId, string searchQuery,
+            List<SqlParameter> parameters, string taxonomyItemsIds, TimePeriodForSearch time,
+            Entities.Enumerations.SearchOrder order, int pageNumber, int pageSize)
         {
             var entities = new List<IIndexEntity>();
 
@@ -189,10 +128,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 {
                     new SqlParameter("SearchId", searchId),
                     new SqlParameter("UserId", userId),
-                    new SqlParameter("ConfigIds",
-                        configsIds != null
-                            ? string.Join(" ", configsIds.Split(','))
-                            : null),
+                    new SqlParameter("ConfigIds", null),
                     new SqlParameter("taxonomyItemsIds",
                         taxonomyItemsIds != null
                             ? string.Join(" ", taxonomyItemsIds.Split(','))
@@ -305,251 +241,6 @@ namespace AppFramework.Core.Classes.SearchEngine
                     : string.Empty
                 );
             unitOfWork.SqlProvider.ExecuteNonQuery(query, parameters.ToArray(), CommandType.Text, false);
-        }
-
-        /// <summary>
-        /// Complex search performs when there are complex attributes dynlists, multipleassets) in search chains
-        /// </summary>
-        /// <returns></returns>
-        private static string _generateTypeSearchQuery(Guid searchId, AssetType at, List<AttributeElement> elements,
-            TimePeriodForSearch period, out List<SqlParameter> parameters)
-        {
-            #region Build select statement with joins
-
-            // retrieve complex chains
-            var complexChains = elements.Where(el => el.IsComplex);
-
-            // join appropriate assets tables for multiple assets elements
-            var joins = new HashSet<string>();
-            foreach (var element in complexChains)
-            {
-                string joinLine;
-
-                // join related asset table to be able to apply complex WHERE condition
-                if (element.ElementType == Enumerators.DataType.Asset)
-                {
-                    joinLine =
-                        string.Format(
-                            @" LEFT JOIN [{0}] ON [{1}].[{2}] = [{0}].[DynEntityId] AND [{0}]." + AttributeNames.ActiveVersion + " = 1 ",
-                            element.ComplexValue.ReferencedAssetType.DBTableName,
-                            at.DBTableName,
-                            element.FieldSql);
-                }
-                else if (IsDynamicList(element))
-                {
-                    joinLine =
-                        string.Format(
-                            @" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
-                            at.DBTableName);
-                }
-                else if (element.ElementType == Enumerators.DataType.Assets)
-                {
-                    throw new NotImplementedException("Assets ElementType is not supported in search");
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-
-                if (!joins.Contains(joinLine))
-                    joins.Add(joinLine);
-            }
-
-            #endregion
-
-            var query = string.Format(@"SELECT ''{3}'', [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
-                                           FROM   [{0}] 
-                                           {1} 
-                                           {2}",
-                at.DBTableName,
-                string.Join(" ", joins),
-                _getWhereStatement(elements, period, at.DBTableName, out parameters),
-                searchId);
-            return query;
-        }
-
-        private static string _generateContextSearchQuery(Guid searchId, List<AttributeElement> elements, out List<SqlParameter> parameters)
-        {
-            //construct select statment
-            var selectStatement = string.Format("SELECT {3}, [{0}], [{1}] FROM [{2}] WHERE ",
-                PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.DynEntityUid),
-                PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.DynEntityConfigUid),
-                typeof (DynEntityContextAttributesValues).Name,
-                searchId);
-
-            parameters = new List<SqlParameter>();
-
-            var chainQuery = new StringBuilder();
-            var i = 0;
-            foreach (var chain in elements)
-            {
-                var t = BaseOperator.GetOperatorByClassName(chain.ServiceMethod).GenerateForContext(chain);
-
-                parameters.Add(t.Parameter);
-
-                chainQuery.Append(chain.StartBrackets);
-                chainQuery.Append(selectStatement);
-                chainQuery.AppendFormat("( [{2}] = {0} AND {1} )", chain.ContextUID, t.CommandText,
-                    PropertyUtil.GetName<DynEntityContextAttributesValues>(e => e.ContextId));
-                chainQuery.Append(chain.EndBrackets);
-
-                if (i != elements.Count - 1)
-                {
-                    chainQuery.Append(chain.AndOr == 0 ? " INTERSECT " : " UNION ");
-                }
-                i++;
-            }
-
-
-            return chainQuery.ToString();
-        }
-
-        /// <summary>
-        /// Returns the SQL where statement
-        /// </summary>
-        private static string _getWhereStatement(List<AttributeElement> elements, TimePeriodForSearch period,
-            string tableName, out List<SqlParameter> parameters, bool skipBrackets = false)
-        {
-            var query = new StringBuilder();
-            parameters = new List<SqlParameter>();
-
-            query.Append(" WHERE ");
-            if (elements.Count > 0)
-            {
-                query.Append("( ");
-
-                BuildQuery(elements, tableName, parameters, skipBrackets, query);
-
-                query.Append(") And ");
-            }
-
-            query.AppendFormat(" [{0}].[{1}] = {2}",
-                tableName,
-                AttributeNames.ActiveVersion,
-                period == TimePeriodForSearch.CurrentTime ? "1" : "2");
-
-            return query.ToString();
-        }
-
-        private static void BuildQuery(List<AttributeElement> elements, string tableName, List<SqlParameter> parameters, bool skipBrackets, StringBuilder query)
-        {
-            for (var i = 0; i < elements.Count; i++)
-            {
-                var element = elements[i];
-
-                if (element.IsComplex && element.ElementType == Enumerators.DataType.Asset)
-                {
-                    if (!skipBrackets)
-                    {
-                        query.Append(element.StartBrackets);
-                    }
-
-                    var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
-                    if (oper is AssetNotInOperator)
-                    {
-                        query.Append(" NOT");
-                    }
-                    query.Append(" (");
-
-                    BuildQuery(element.ComplexValue.Elements, element.ComplexValue.ReferencedAssetType.DBTableName, parameters, skipBrackets, query);
-                    query.Append(") ");
-
-                    if (!skipBrackets)
-                    {
-                        query.Append(element.EndBrackets);
-                    }
-
-                    if (i < elements.Count - 1)
-                    {
-                        query.Append(element.AndOr == 0 ? " AND " : " OR ");
-                    }
-                    continue;
-                }
-
-                var t = element.GetSearchTerm(tableName);
-
-                switch (element.ElementType)
-                {
-                    case Enumerators.DataType.CurrentDate:
-                    case Enumerators.DataType.DateTime:
-                        DateTime time;
-                        if (DateTime.TryParse(element.Value, out time))
-                        {
-                            t.Parameter.Value = time;
-                        }
-                        else
-                        {
-                            t.Parameter.Value = SqlDateTime.MinValue.Value;
-                        }
-
-                        break;
-                    case Enumerators.DataType.Int:
-                        int intvalue;
-                        int.TryParse(element.Value, out intvalue);
-                        t.Parameter.Value = intvalue;
-                        break;
-                    case Enumerators.DataType.Long:
-                        long longvalue;
-                        long.TryParse(element.Value, out longvalue);
-                        t.Parameter.Value = longvalue;
-                        break;
-                    case Enumerators.DataType.Float:
-                        float fvalue;
-                        float.TryParse(element.Value, out fvalue);
-                        t.Parameter.Value = fvalue;
-                        break;
-                    case Enumerators.DataType.Bool:
-                        bool bValue;
-                        if (element.Value.ToLower() == "true" || element.Value == "1")
-                        {
-                            bValue = true;
-                        }
-                        else
-                        {
-                            bool.TryParse(element.Value, out bValue);
-                        }
-                        t.Parameter.Value = bValue;
-                        break;
-                    case Enumerators.DataType.Money:
-                    case Enumerators.DataType.Euro:
-                        decimal dvalue;
-                        decimal.TryParse(element.Value, out dvalue);
-                        t.Parameter.Value = dvalue;
-                        break;
-                }
-
-                if (t.Parameter != null)
-                {
-                    parameters.Add(t.Parameter);
-                }
-
-                if (skipBrackets)
-                {
-                    query.Append(t.CommandText);
-                }
-                else
-                {
-                    query.Append(element.StartBrackets);
-                    query.Append(t.CommandText);
-                    query.Append(element.EndBrackets);
-                }
-
-                if (i < elements.Count - 1)
-                {
-                    query.Append(element.AndOr == 0 ? " AND " : " OR ");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns if chain is Dymanic List(s) or not
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        private static bool IsDynamicList(AttributeElement element)
-        {
-            return element.ElementType == Enumerators.DataType.DynList ||
-                   element.ElementType == Enumerators.DataType.DynLists;
         }
     }
 }

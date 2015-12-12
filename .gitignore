@@ -3,8 +3,8 @@ syntax: glob
 *.pdb
 *.csproj.user
 *.suo
-bin\*
-obj\*
+bin
+obj
 *.log
 *.pfx
 AssetManagement/Backup/*

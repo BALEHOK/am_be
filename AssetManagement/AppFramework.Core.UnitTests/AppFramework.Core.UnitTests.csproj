@@ -77,10 +77,10 @@
   <ItemGroup>
     <Compile Include="AssetImportTest.cs" />
     <Compile Include="AssetsExportTest.cs" />
-    <Compile Include="AssetTypeAttributeFactoryTests.cs" />
     <Compile Include="AssetTypeRepositorySaveTest.cs" />
     <Compile Include="AttributeValueFormatterTests.cs" />
     <Compile Include="BatchJobFactoryTest.cs" />
+    <Compile Include="Classes\SearchEngine\SearchQueryBuilderTest.cs" />
     <Compile Include="ExcelToXmlConverterTests.cs" />
     <Compile Include="Fixtures\AssetTypes\AssetTypeFixture.cs">
       <SubType>Code</SubType>

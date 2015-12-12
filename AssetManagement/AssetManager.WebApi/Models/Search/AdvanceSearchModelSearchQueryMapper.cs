@@ -6,18 +6,26 @@ using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes;
+using AppFramework.Core.Classes.Extensions;
 
 namespace AssetManager.WebApi.Models.Search
 {
     public class AdvanceSearchModelSearchQueryMapper : IAdvanceSearchModelSearchQueryMapper
     {
         private readonly IAssetTypeService _assetTypeService;
+        private readonly IAttributeRepository _attributeRepository;
 
-        public AdvanceSearchModelSearchQueryMapper(IAssetTypeService assetTypeService)
+        public AdvanceSearchModelSearchQueryMapper(IAssetTypeService assetTypeService, IAttributeRepository attributeRepository)
         {
             if (assetTypeService == null)
                 throw new ArgumentNullException("assetTypeService");
             _assetTypeService = assetTypeService;
+
+            if (attributeRepository == null)
+                throw new ArgumentNullException("attributeRepository");
+            _attributeRepository = attributeRepository;
         }
 
         public SearchQuery GetSearchQuery(AdvanceSearchModel model)
@@ -72,6 +80,7 @@ namespace AssetManager.WebApi.Models.Search
                 {
                     attribute.OperatorId = filter.OperatorId;
                     attribute.ReferencedAttributeId = filter.ReferenceAttrib.Id;
+                    attribute.ChildAssets = filter.ReferenceAttrib.IsChildAssets;
 
                     if (filter.UseComplexValue)
                     {
@@ -108,7 +117,24 @@ namespace AssetManager.WebApi.Models.Search
                 }
                 else
                 {
-                    filter.ReferenceAttrib = assetTypeAtributes.Single(a => a.Id == attribute.ReferencedAttributeId);
+                    if (attribute.ChildAssets)
+                    { 
+                        var refAttrib = _attributeRepository.GetPublishedById(attribute.ReferencedAttributeId, a => a.DynEntityConfig);
+                        var refAssetType = refAttrib.DynEntityConfig;
+
+                        filter.ReferenceAttrib = new AttributeTypeModel
+                        {
+                            Id = refAttrib.DynEntityAttribConfigId,
+                            DisplayName = "=> " + refAssetType.NameLocalized(),
+                            RelationId = refAssetType.DynEntityConfigId,
+                            DataType = Enumerators.DataType.ChildAssets,
+                            IsChildAssets = true
+                        };
+                    }
+                    else
+                    {
+                        filter.ReferenceAttrib = assetTypeAtributes.Single(a => a.Id == attribute.ReferencedAttributeId);
+                    }
 
                     Debug.Assert(attribute.OperatorId != null, "attribute.OperatorId == null");
                     filter.OperatorId = attribute.OperatorId.Value;

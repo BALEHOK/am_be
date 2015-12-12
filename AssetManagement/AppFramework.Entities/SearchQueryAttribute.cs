@@ -193,6 +193,21 @@ namespace AppFramework.Entities
             }
         }
         private byte _logicalOperator;
+    
+        [DataMember]
+        public bool ChildAssets
+        {
+            get { return _childAssets; }
+            set
+            {
+                if (_childAssets != value)
+                {
+                    _childAssets = value;
+                    OnPropertyChanged("ChildAssets");
+                }
+            }
+        }
+        private bool _childAssets;
 
         #endregion
 

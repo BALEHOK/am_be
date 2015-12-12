@@ -45,17 +45,30 @@ namespace AssetManager.WebApi.Models.Search
         private List<AttributeElement> GetAttributeElements(AttributeFilter[] attributeFilters, AssetType assetType, List<SearchOperators> operators)
         {
             var attributeElements = new List<AttributeElement>();
+            if (attributeFilters.Length == 0)
+            {
+                return attributeElements;
+            }
 
             var currentFilter = attributeFilters[0];
             for (var i = 0; i < attributeFilters.Length;)
             {
+                if (currentFilter.IsEmpty)
+                {
+                    MoveForward(attributeFilters, ref currentFilter, ref i);
+                    continue;
+                }
+
                 var currentAttributeElement = new AttributeElement();
 
                 CollectOpenParentheses(attributeFilters, currentAttributeElement, ref currentFilter, ref i);
 
                 if (currentFilter.Parenthesis == AttributeFilter.ParenthesisType.None)
                 {
-                    var attribute = assetType.Attributes.Single(
+                    var type = currentFilter.ReferenceAttrib.DataType == Enumerators.DataType.ChildAssets
+                        ? _assetTypeRepository.GetById(currentFilter.ReferenceAttrib.RelationId)
+                        : assetType;
+                    var attribute = type.Attributes.Single(
                         a => a.ID == currentFilter.ReferenceAttrib.Id);
 
                     SetAttributeElementProperties(attribute, operators, currentFilter, currentAttributeElement);
@@ -130,23 +143,26 @@ namespace AssetManager.WebApi.Models.Search
             var oper = operators.Single(o => o.SearchOperatorUid == currentFilter.OperatorId);
             currentAttributeElement.ServiceMethod = oper.ServiceMethod;
 
-            Enumerators.DataType attributeDataType;
-            if (!Enum.TryParse(attribute.DataType.Name, true, out attributeDataType))
-            {
-                throw new Exception("Can't parse attribute type " + attribute.DataType.Name);
-            }
+            var attributeDataType = currentFilter.ReferenceAttrib.DataType;
             currentAttributeElement.ElementType = attributeDataType;
 
-            if (attributeDataType == Enumerators.DataType.Asset && currentFilter.UseComplexValue)
+            currentAttributeElement.UseComplexValue = currentFilter.UseComplexValue;
+
+            // complex condition case
+            if (currentFilter.UseComplexValue)
             {
                 var referencedAssetType = _assetTypeRepository.GetById(currentFilter.ReferenceAttrib.RelationId);
-                currentAttributeElement.ComplexValue = new AttributeElementCoplexValue
-                {
-                    ReferencedAssetType = referencedAssetType,
-                    Elements = GetAttributeElements(currentFilter.ComplexValue, referencedAssetType, operators)
-                };
+                currentAttributeElement.ReferencedAssetType = referencedAssetType;
+                currentAttributeElement.ComplexValue = GetAttributeElements(currentFilter.ComplexValue, referencedAssetType, operators);
 
                 return;
+            }
+            
+            // simple value condition for ChildAssets
+            if (attributeDataType == Enumerators.DataType.ChildAssets)
+            {
+                var referencedAssetType = _assetTypeRepository.GetById(currentFilter.ReferenceAttrib.RelationId);
+                currentAttributeElement.ReferencedAssetType = referencedAssetType;
             }
 
             if (currentFilter.Value == null || currentFilter.Value.Id == null)

@@ -20,7 +20,9 @@ namespace AppFramework.DataProxy
             bool isActive = true,
             Enumerations.SearchOrder order = Enumerations.SearchOrder.Date,
             int pageNumber = 1,
-            int pageSize = 20);
+            int pageSize = 20,
+            long? attributeId = null,
+            long? assetId = null);
 
         ObjectResult<f_cust_SearchByTypeContext_Result> SearchByTypeContext(
             Guid searchId,
