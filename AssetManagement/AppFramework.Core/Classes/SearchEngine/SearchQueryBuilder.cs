@@ -21,259 +21,238 @@ namespace AppFramework.Core.Classes.SearchEngine
         public static string GenerateTypeSearchQuery(Guid searchId, AssetType at, List<AttributeElement> elements,
             TimePeriodForSearch period, out List<SqlParameter> parameters)
         {
-            #region Build select statement with joins
-
-            // retrieve complex chains
-            var complexChains = elements.Where(el => el.IsComplex);
-
-            // join appropriate assets tables for multiple assets elements
             var joins = new HashSet<string>();
-            foreach (var element in complexChains)
+            var whereSb = new StringBuilder();
+            parameters = new List<SqlParameter>();
+
+            foreach (var complexElement in elements.Where(el => el.IsComplex))
             {
-                string joinLine;
-
-                // join related asset table to be able to apply complex WHERE condition
-                if (element.ElementType == Enumerators.DataType.Asset)
+                var joinString = GetJoinTableForComplexValue(complexElement, period, at.DBTableName);
+                if (!joins.Contains(joinString))
                 {
-                    var joinFormat = " LEFT JOIN [{0}] ON [{1}].[{2}] = [{0}].[DynEntityId]";
-                    if (period == TimePeriodForSearch.CurrentTime)
-                    {
-                        joinFormat += " AND [{0}].[" + AttributeNames.ActiveVersion + "] = 1 ";
-                    }
-                    joinLine =
-                        string.Format(
-                            joinFormat,
-                            element.ReferencedAssetType.DBTableName,
-                            at.DBTableName,
-                            element.FieldSql);
+                    joins.Add(joinString);
                 }
-                else if (IsDynamicList(element))
-                {
-                    joinLine =
-                        string.Format(
-                            @" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
-                            at.DBTableName);
-                }
-                else
-                {
-                    throw new NotImplementedException(element.ElementType + " ElementType is not supported in search");
-                }
-
-                if (!joins.Contains(joinLine))
-                    joins.Add(joinLine);
+            }
+            
+            if (elements.Count > 0)
+            {
+                whereSb.Append("(");
             }
 
-            #endregion
+            AppendWhereConditionsForElements(elements, period, at.DBTableName, whereSb, parameters);
 
-            var query = string.Format(@"SELECT ''{3}'', [{0}].DynEntityUid, [{0}].DynEntityConfigUid 
-                                           FROM [{0}] 
-                                           {1} 
-                                           {2}",
+            if (elements.Count > 0)
+            {    
+                whereSb.Append(") AND ");
+            }
+
+            whereSb.AppendFormat("[{0}].[{1}] = {2}",
+                    at.DBTableName,
+                    AttributeNames.ActiveVersion,
+                    (int)period);
+
+            var query = string.Format(@"SELECT ''{0}'', [{1}].DynEntityUid, [{1}].DynEntityConfigUid 
+                                           FROM [{1}] {2} 
+                                           WHERE {3}",
+                searchId,
                 at.DBTableName,
                 string.Join(" ", joins),
-                _getWhereStatement(elements, period, at.DBTableName, out parameters),
-                searchId);
+                whereSb);
+
             return query;
         }
 
-        /// <summary>
-        /// Returns the SQL where statement
-        /// </summary>
-        private static string _getWhereStatement(List<AttributeElement> elements, TimePeriodForSearch period,
-            string tableName, out List<SqlParameter> parameters, bool skipBrackets = false)
+        private static string GetJoinTableForComplexValue(AttributeElement element, TimePeriodForSearch period, string dbTableName)
         {
-            var query = new StringBuilder();
-            parameters = new List<SqlParameter>();
-
-            query.Append(" WHERE ");
-            if (elements.Count > 0)
+            // join related asset table to be able to apply complex WHERE condition
+            if (element.ElementType == Enumerators.DataType.Asset)
             {
-                query.Append("(");
+                var joinFormat = " LEFT JOIN [{0}] ON [{1}].[{2}] = [{0}].[DynEntityId]";
+                if (period == TimePeriodForSearch.CurrentTime)
+                {
+                    joinFormat += " AND [{0}].[" + AttributeNames.ActiveVersion + "] = 1 ";
+                }
 
-                BuildQuery(elements, period, tableName, parameters, skipBrackets, query);
-
-                query.Append(") AND ");
+                return string.Format(
+                        joinFormat,
+                        element.ReferencedAssetType.DBTableName,
+                        dbTableName,
+                        element.FieldSql);
             }
 
-            query.AppendFormat("[{0}].[{1}] = {2}",
-                tableName,
-                AttributeNames.ActiveVersion,
-                (int)period);
+            if (IsDynamicList(element))
+            {
+                return string.Format(
+                        @" LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [{0}].DynEntityConfigUid AND DynListValue.AssetUid = [{0}].DynEntityUid ",
+                        dbTableName);
+            }
 
-            return query.ToString();
+            throw new NotImplementedException(element.ElementType + " ElementType is not supported in search");
         }
 
-        private static void BuildQuery(List<AttributeElement> elements, TimePeriodForSearch period, string tableName, List<SqlParameter> parameters, bool skipBrackets, StringBuilder query)
+        private static void AppendWhereConditionsForElements(List<AttributeElement> elements, TimePeriodForSearch period, string dbTableName, StringBuilder whereSb, List<SqlParameter> parameters)
         {
-            for (var i = 0; i < elements.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 var element = elements[i];
-
                 if (element.UseComplexValue)
                 {
-                    if (!skipBrackets)
-                    {
-                        query.Append(element.StartBrackets);
-                    }
-
-                    var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
-                    if (element.ElementType == Enumerators.DataType.ChildAssets)
-                    {
-                        query.Append("[" + tableName + "].[DynEntityId]");
-                        if (oper is AssetInOperator)
-                        {
-                            query.Append(" IN (");
-                        }
-                        else if (oper is AssetNotInOperator)
-                        {
-                            query.Append(" NOT IN (");
-                        }
-                        else
-                        {
-                            throw new Exception("operator " + oper + " not supported with ChildAssets attribute condition");
-                        }
-
-                        query.AppendFormat("SELECT [{0}] FROM [{1}] WHERE {2}",
-                            element.FieldSql,
-                            element.ReferencedAssetType.DBTableName,
-                            period == TimePeriodForSearch.CurrentTime ? "(" : String.Empty);
-
-                        BuildQuery(element.ComplexValue, period, element.ReferencedAssetType.DBTableName, parameters, skipBrackets, query);
-
-                        query.Append(") ");
-
-                        if (period == TimePeriodForSearch.CurrentTime)
-                        {
-                            if (period == TimePeriodForSearch.CurrentTime)
-                            {
-                                query.AppendFormat(" AND [{0}].[{1}] = 1)",
-                                    element.ReferencedAssetType.DBTableName,
-                                    AttributeNames.ActiveVersion);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (oper is AssetNotInOperator)
-                        {
-                            query.Append(" NOT");
-                        }
-                        query.Append(" (");
-
-                        BuildQuery(element.ComplexValue, period, element.ReferencedAssetType.DBTableName, parameters, skipBrackets, query);
-                        query.Append(") ");
-                    }
-                    if (!skipBrackets)
-                    {
-                        query.Append(element.EndBrackets);
-                    }
-
-                    if (i < elements.Count - 1)
-                    {
-                        query.Append(element.AndOr == 0 ? " AND " : " OR ");
-                    }
-                    continue;
-                }
-
-                var t = GetSearchTerm(element, tableName);
-
-                switch (element.ElementType)
-                {
-                    case Enumerators.DataType.CurrentDate:
-                    case Enumerators.DataType.DateTime:
-                        DateTime time;
-                        t.Parameter.Value = DateTime.TryParse(element.Value, out time) ? time : SqlDateTime.MinValue.Value;
-
-                        break;
-                    case Enumerators.DataType.Int:
-                        int intvalue;
-                        int.TryParse(element.Value, out intvalue);
-                        t.Parameter.Value = intvalue;
-                        break;
-                    case Enumerators.DataType.Long:
-                        long longvalue;
-                        long.TryParse(element.Value, out longvalue);
-                        t.Parameter.Value = longvalue;
-                        break;
-                    case Enumerators.DataType.Float:
-                        float fvalue;
-                        float.TryParse(element.Value, out fvalue);
-                        t.Parameter.Value = fvalue;
-                        break;
-                    case Enumerators.DataType.Bool:
-                        bool bValue;
-                        if (element.Value.ToLower() == "true" || element.Value == "1")
-                        {
-                            bValue = true;
-                        }
-                        else
-                        {
-                            bool.TryParse(element.Value, out bValue);
-                        }
-                        t.Parameter.Value = bValue;
-                        break;
-                    case Enumerators.DataType.Money:
-                    case Enumerators.DataType.Euro:
-                        decimal dvalue;
-                        decimal.TryParse(element.Value, out dvalue);
-                        t.Parameter.Value = dvalue;
-                        break;
-                    case Enumerators.DataType.ChildAssets:
-                        var sb = new StringBuilder();
-                        sb.Append("[" + tableName + "].[DynEntityId]");
-                        var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
-                        if (oper is AssetInOperator)
-                        {
-                            sb.Append(" IN (");
-                        }
-                        else if (oper is AssetNotInOperator)
-                        {
-                            sb.Append(" NOT IN (");
-                        }
-                        else
-                        {
-                            throw new Exception("operator " + oper + " not supported with ChildAssets attribute condition");
-                        }
-
-                        sb.AppendFormat("SELECT [{0}] FROM [{1}] WHERE [{1}].[DynEntityId] = {2}",
-                            element.FieldSql,
-                            element.ReferencedAssetType.DBTableName,
-                            t.Parameter.ParameterName);
-
-                        if (period == TimePeriodForSearch.CurrentTime)
-                        {
-                            sb.AppendFormat(" AND [{0}].[{1}] = 1",
-                                element.ReferencedAssetType.DBTableName,
-                                AttributeNames.ActiveVersion);
-                        }
-
-                        sb.Append(") ");
-
-                        t.CommandText = sb.ToString();
-                        break;
-                }
-
-                if (t.Parameter != null)
-                {
-                    parameters.Add(t.Parameter);
-                }
-
-                if (skipBrackets)
-                {
-                    query.Append(t.CommandText);
+                    AppendWhereForComlexCondition(element, period, dbTableName, whereSb, parameters);
                 }
                 else
                 {
-                    query.Append(element.StartBrackets);
-                    query.Append(t.CommandText);
-                    query.Append(element.EndBrackets);
+                    AppendWhereForSimpleCondition(element, period, dbTableName, whereSb, parameters);
                 }
 
                 if (i < elements.Count - 1)
                 {
-                    query.Append(element.AndOr == 0 ? " AND " : " OR ");
+                    whereSb.Append(element.AndOr == 0 ? " AND " : " OR ");
                 }
             }
+        }
+
+        private static void AppendWhereForComlexCondition(AttributeElement element, TimePeriodForSearch period, string dbTableName, StringBuilder whereSb, List<SqlParameter> parameters)
+        {
+            whereSb.Append(element.StartBrackets);
+
+            var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
+            if (element.ElementType != Enumerators.DataType.ChildAssets)
+            {
+                if (oper is AssetNotInOperator)
+                {
+                    whereSb.Append(" NOT");
+                }
+                whereSb.Append(" (");
+
+                AppendWhereConditionsForElements(element.ComplexValue, period, element.ReferencedAssetType.DBTableName,
+                    whereSb, parameters);
+                whereSb.Append(") ");
+            }
+            else
+            {
+                whereSb.Append("[" + dbTableName + "].[DynEntityId]");
+                if (oper is AssetInOperator)
+                {
+                    whereSb.Append(" IN (");
+                }
+                else if (oper is AssetNotInOperator)
+                {
+                    whereSb.Append(" NOT IN (");
+                }
+                else
+                {
+                    throw new Exception("operator " + oper + " not supported with ChildAssets attribute condition");
+                }
+
+                whereSb.AppendFormat("SELECT [{0}] FROM [{1}] WHERE {2}",
+                    element.FieldSql,
+                    element.ReferencedAssetType.DBTableName,
+                    period == TimePeriodForSearch.CurrentTime ? "(" : String.Empty);
+
+                AppendWhereConditionsForElements(element.ComplexValue, period, element.ReferencedAssetType.DBTableName,
+                    whereSb, parameters);
+
+                whereSb.Append(") ");
+
+                if (period == TimePeriodForSearch.CurrentTime)
+                {
+                     whereSb.AppendFormat(" AND [{0}].[{1}] = 1)",
+                            element.ReferencedAssetType.DBTableName,
+                            AttributeNames.ActiveVersion);
+                }
+            }
+
+            whereSb.Append(element.EndBrackets);
+        }
+
+        private static void AppendWhereForSimpleCondition(AttributeElement element, TimePeriodForSearch period, string dbTableName, StringBuilder whereSb, List<SqlParameter> parameters)
+        {
+            var t = GetSearchTerm(element, dbTableName);
+
+            switch (element.ElementType)
+            {
+                case Enumerators.DataType.CurrentDate:
+                case Enumerators.DataType.DateTime:
+                    DateTime time;
+                    t.Parameter.Value = DateTime.TryParse(element.Value, out time) ? time : SqlDateTime.MinValue.Value;
+
+                    break;
+                case Enumerators.DataType.Int:
+                    int intvalue;
+                    int.TryParse(element.Value, out intvalue);
+                    t.Parameter.Value = intvalue;
+                    break;
+                case Enumerators.DataType.Long:
+                    long longvalue;
+                    long.TryParse(element.Value, out longvalue);
+                    t.Parameter.Value = longvalue;
+                    break;
+                case Enumerators.DataType.Float:
+                    float fvalue;
+                    float.TryParse(element.Value, out fvalue);
+                    t.Parameter.Value = fvalue;
+                    break;
+                case Enumerators.DataType.Bool:
+                    bool bValue;
+                    if (element.Value.ToLower() == "true" || element.Value == "1")
+                    {
+                        bValue = true;
+                    }
+                    else
+                    {
+                        bool.TryParse(element.Value, out bValue);
+                    }
+                    t.Parameter.Value = bValue;
+                    break;
+                case Enumerators.DataType.Money:
+                case Enumerators.DataType.Euro:
+                    decimal dvalue;
+                    decimal.TryParse(element.Value, out dvalue);
+                    t.Parameter.Value = dvalue;
+                    break;
+                case Enumerators.DataType.ChildAssets:
+                    var sb = new StringBuilder();
+                    sb.Append("[" + dbTableName + "].[DynEntityId]");
+                    var oper = BaseOperator.GetOperatorByClassName(element.ServiceMethod);
+                    if (oper is AssetInOperator)
+                    {
+                        sb.Append(" IN (");
+                    }
+                    else if (oper is AssetNotInOperator)
+                    {
+                        sb.Append(" NOT IN (");
+                    }
+                    else
+                    {
+                        throw new Exception("operator " + oper + " not supported with ChildAssets attribute condition");
+                    }
+
+                    sb.AppendFormat("SELECT [{0}] FROM [{1}] WHERE [{1}].[DynEntityId] = {2}",
+                        element.FieldSql,
+                        element.ReferencedAssetType.DBTableName,
+                        t.Parameter.ParameterName);
+
+                    if (period == TimePeriodForSearch.CurrentTime)
+                    {
+                        sb.AppendFormat(" AND [{0}].[{1}] = 1",
+                            element.ReferencedAssetType.DBTableName,
+                            AttributeNames.ActiveVersion);
+                    }
+
+                    sb.Append(") ");
+
+                    t.CommandText = sb.ToString();
+                    break;
+            }
+
+            if (t.Parameter != null)
+            {
+                parameters.Add(t.Parameter);
+            }
+
+            whereSb.Append(element.StartBrackets);
+            whereSb.Append(t.CommandText);
+            whereSb.Append(element.EndBrackets);
         }
 
         /// <summary>

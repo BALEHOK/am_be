@@ -125,7 +125,7 @@ namespace AssetManager.WebApi.Models.Search
                         filter.ReferenceAttrib = new AttributeTypeModel
                         {
                             Id = refAttrib.DynEntityAttribConfigId,
-                            DisplayName = "=> " + refAssetType.NameLocalized(),
+                            DisplayName = refAttrib.NameLocalized() + " => " + refAssetType.NameLocalized(),
                             RelationId = refAssetType.DynEntityConfigId,
                             DataType = Enumerators.DataType.ChildAssets,
                             IsChildAssets = true

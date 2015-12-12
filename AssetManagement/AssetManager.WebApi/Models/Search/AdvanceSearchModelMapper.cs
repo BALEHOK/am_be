@@ -53,12 +53,6 @@ namespace AssetManager.WebApi.Models.Search
             var currentFilter = attributeFilters[0];
             for (var i = 0; i < attributeFilters.Length;)
             {
-                if (currentFilter.IsEmpty)
-                {
-                    MoveForward(attributeFilters, ref currentFilter, ref i);
-                    continue;
-                }
-
                 var currentAttributeElement = new AttributeElement();
 
                 CollectOpenParentheses(attributeFilters, currentAttributeElement, ref currentFilter, ref i);
