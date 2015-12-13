@@ -210,7 +210,8 @@ namespace AppFramework.ConstantsEnumerators
             GoogleMaps,
             Place,
             Richtext,
-            Zipcode
+            Zipcode,
+            ChildAssets
         }
 
         public enum DBTableNames

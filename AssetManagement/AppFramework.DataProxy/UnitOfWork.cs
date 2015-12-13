@@ -33,7 +33,9 @@
             bool isActive = true,
             Enumerations.SearchOrder order = Enumerations.SearchOrder.Date,
             int pageNumber = 1,
-            int pageSize = 20)
+            int pageSize = 20,
+            long? attributeId = null,
+            long? assetId = null)
         {
             return _noCacheContext.f_cust_SearchByKeywords(
                 searchId,
@@ -44,7 +46,9 @@
                 isActive,
                 (byte)order,
                 pageNumber,
-                pageSize);
+                pageSize,
+                attributeId,
+                assetId);
         }
 
         public ObjectResult<f_cust_SearchByTypeContext_Result> SearchByTypeContext(

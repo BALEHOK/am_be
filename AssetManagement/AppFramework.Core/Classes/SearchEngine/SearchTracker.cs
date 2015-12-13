@@ -20,28 +20,16 @@
         }
 
         /// <summary>
-        /// Logs search action
+        /// Logs simple search action
         /// </summary>
-        /// <param name="searchId"></param>
-        /// <param name="type"></param>
-        /// <param name="parameters"></param>
-        /// <param name="resultCount"></param>
-        public void LogSearchRequest(
-            Guid searchId,
-            SearchType type, 
-            string verboseString, 
-            SearchParameters parameters, 
-            long userId)
+        public void LogSearchByKeywordsRequest(Guid searchId, long userId, SearchParameters parameters, string verboseString)
         {
-            var tracking = _unitOfWork.SearchTrackingRepository
-                .SingleOrDefault(t => t.SearchId == searchId);
-            // don't allow multiple trackings with same search id
-            if (tracking != null)
-                _unitOfWork.SearchTrackingRepository.Delete(tracking);
-            _unitOfWork.SearchTrackingRepository.Insert(new Entities.SearchTracking()
+            EnsuretrackingNotExists(searchId);
+
+            _unitOfWork.SearchTrackingRepository.Insert(new SearchTracking
             {
                 SearchId = searchId,
-                SearchType = (short)type,
+                SearchType = (short)SearchType.SearchByKeywords,
                 Parameters = parameters.ToXml(),
                 UpdateUser = userId,
                 UpdateDate = DateTime.Now,
@@ -49,6 +37,26 @@
             });
             _unitOfWork.Commit();
         }
+
+        /// <summary>
+        /// Logs search bby type action
+        /// </summary>
+        public void LogSearchByTypeRequest(Guid searchId, long userId, SearchParameters parameters)
+        {
+            EnsuretrackingNotExists(searchId);
+
+            _unitOfWork.SearchTrackingRepository.Insert(new SearchTracking
+            {
+                SearchId = searchId,
+                SearchType = (short)SearchType.SearchByType,
+                Parameters = parameters.ToXml(),
+                UpdateUser = userId,
+                UpdateDate = DateTime.Now,
+                VerboseString = string.Empty
+            });
+            _unitOfWork.Commit();
+        }
+
 
         /// <summary>
         /// Returns tracked search action by its id
@@ -70,6 +78,15 @@
         {
             return _unitOfWork.SearchTrackingRepository
                 .SingleOrDefault(s => s.SearchId == searchId && s.UpdateUser == userId);
+        }
+
+        private void EnsuretrackingNotExists(Guid searchId)
+        {
+            var tracking = _unitOfWork.SearchTrackingRepository
+                .SingleOrDefault(t => t.SearchId == searchId);
+            // don't allow multiple trackings with same search id
+            if (tracking != null)
+                _unitOfWork.SearchTrackingRepository.Delete(tracking);
         }
     }
 }

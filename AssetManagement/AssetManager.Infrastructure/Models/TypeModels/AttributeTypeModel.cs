@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using AppFramework.ConstantsEnumerators;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AssetManager.Infrastructure.Models.TypeModels
 {
@@ -15,7 +18,12 @@ namespace AssetManager.Infrastructure.Models.TypeModels
         public string ValidationExpression { get; set; }
         public string CalculationFormula { get; set; }
         public string ScreenFormula { get; set; }
-        public string DataType { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Enumerators.DataType DataType { get; set; }
+
+        // true if this attribute represents child assets relationship
+        public bool IsChildAssets { get; set; }
 
         public bool HasDatabaseFormula
         {

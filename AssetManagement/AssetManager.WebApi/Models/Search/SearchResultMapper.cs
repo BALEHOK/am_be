@@ -20,9 +20,9 @@ namespace AssetManager.WebApi.Models.Search
             };
         }
 
-        private static IndexEntity GetIndexEntity(IIndexEntity indexEntity)
+        private static SearchResultItem GetIndexEntity(IIndexEntity indexEntity)
         {
-            return new IndexEntity
+            return new SearchResultItem
             {
                 AllAttribValues = indexEntity.AllAttribValues,
                 AllAttrib2IndexValues = indexEntity.AllAttrib2IndexValues,

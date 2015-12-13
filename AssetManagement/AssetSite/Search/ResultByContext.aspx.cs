@@ -1,4 +1,5 @@
-﻿using System.Web.UI.WebControls;
+﻿using System;
+using System.Web.UI.WebControls;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.ContextSearchElements;
@@ -38,19 +39,7 @@ namespace AssetSite.Search
                     AssetTypeRepository,
                     AssetsService);
 
-                var result = typeSearch.FindByTypeContext(
-                    SearchId,
-                    (long)AuthenticationService.CurrentUser.ProviderUserKey,
-                    null,
-                    (Session[Request.QueryString["Params"]] as List<AttributeElement>),
-                    ConfigsIds,
-                    TaxonomyItemsIds,
-                    Period,
-                    OrderBy,
-                    PageNumber,
-                    PageSize);
-
-                SearchMasterPage.ResultSet[SearchId] = result;
+                throw new NotImplementedException("Search by context is no longer supported");
             }
             else if (string.IsNullOrEmpty(Params))
             {

@@ -689,6 +689,7 @@
           <Property Name="Value" Type="nvarchar(max)" />
           <Property Name="ReferencedAttributeId" Type="bigint" Nullable="false" />
           <Property Name="Index" Type="int" Nullable="false" />
+          <Property Name="ChildAssets" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchTracking">
           <Key>
@@ -1495,6 +1496,8 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="orderby" Type="tinyint" Mode="In" />
           <Parameter Name="PageNumber" Type="int" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="attributeId" Type="bigint" Mode="In" />
+          <Parameter Name="assetId" Type="bigint" Mode="In" />
         </Function>
         <Function Name="f_cust_SearchByTypeContext" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_SearchByTypeContext">
           <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
@@ -1977,6 +1980,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <Parameter Name="orderby" Mode="In" Type="Byte" />
             <Parameter Name="PageNumber" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="attributeId" Mode="In" Type="Int64" />
+            <Parameter Name="assetId" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="BatchActions" EntityType="DataModel.BatchAction" />
           <EntitySet Name="DynEntityTransactions" EntityType="DataModel.DynEntityTransaction" />
@@ -3629,6 +3634,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="Parent" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" FromRole="SearchQueryAttribute1" ToRole="SearchQueryAttribute" />
           <Property Name="Index" Type="Int32" Nullable="false" />
           <Property Name="LogicalOperator" Type="Byte" Nullable="false" />
+          <Property Name="ChildAssets" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_SearchQueryAttributes_SearchQueries">
           <End Type="DataModel.SearchQuery" Role="SearchQuery" Multiplicity="0..1" />
@@ -4689,6 +4695,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <EntitySetMapping Name="SearchQueryAttributes">
             <EntityTypeMapping TypeName="DataModel.SearchQueryAttribute">
               <MappingFragment StoreEntitySet="SearchQueryAttributes">
+                <ScalarProperty Name="ChildAssets" ColumnName="ChildAssets" />
                 <ScalarProperty Name="LogicalOperator" ColumnName="LogicalOperator" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="ReferencedAttributeId" ColumnName="ReferencedAttributeId" />

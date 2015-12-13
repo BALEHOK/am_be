@@ -21,20 +21,22 @@ namespace AssetManager.WebApi.Controllers.Api
         }
 
         [Route("")]
-        public IEnumerable<FaqModel> Get()
+        public FaqContainer Get()
         {
-            var items = _faqService.GetFaqItems();
-            return items.Select(i => new FaqModel
-            {
-                Question = i["Question"].Value,
-                Answer = i["Answer"].Value
-            });
-        }
+            var faqAssetTypeId = _faqService.GetFaqAssetTypeId();
+            var items = _faqService
+                .GetFaqItems()
+                .Select(i => new FaqModel
+                {
+                    Question = i["Question"].Value,
+                    Answer = i["Answer"].Value
+                });
 
-        [Route("assettype")]
-        public long GetFaqAssetTypeId()
-        {
-            return _faqService.GetFaqAssetTypeId();
+            return new FaqContainer
+            {
+                FaqAssetTypeId = faqAssetTypeId,
+                Items = items
+            };
         }
     }
 }

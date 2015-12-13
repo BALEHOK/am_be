@@ -23,7 +23,7 @@ namespace AppFramework.Core.UnitTests.Fixtures.AssetTypes
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.DynEntityUid, DataType = new LongDataType(), ID = 3 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.Revision, DataType = new LongDataType(), ID = 4 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.ActiveVersion, DataType = new BoolDataType(), ID = 5 });
-            Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.UpdateUserId, DataType = new LongDataType(), ID = 6 });
+            Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.UpdateUserId, DataType = new AssetDataType(), ID = 6 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.UpdateDate, DataType = new DateTimeDataType(), ID = 7 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.Name, DataType = new StringDataType(), ID = 8 });
             AllAttributes = Attributes.ToList();
