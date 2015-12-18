@@ -133,6 +133,7 @@
     <Compile Include="Models\DynListModel.cs" />
     <Compile Include="Models\FaqContainer.cs" />
     <Compile Include="Models\FaqModel.cs" />
+    <Compile Include="Models\SearchResultItem.cs" />
     <Compile Include="Models\PlaceModel.cs" />
     <Compile Include="Models\ResultBase.cs" />
     <Compile Include="Models\RoleModel.cs" />

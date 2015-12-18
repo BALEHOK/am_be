@@ -18,13 +18,14 @@ namespace AssetManager.WebApi.Controllers.Api
     public class SearchController : ApiController
     {
         private readonly ISearchService _searchService;
+        private readonly ISearchResultMapper _searchResultMapper;
         private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
         private readonly IAdvanceSearchModelSearchQueryMapper _advanceSearchModelSearchQueryMapper;
 
         public SearchController(
             ISearchService searchService,
             IAdvanceSearchModelMapper advanceSearchModelMapper,
-            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper)
+            IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper, ISearchResultMapper searchResultMapper)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
@@ -37,6 +38,9 @@ namespace AssetManager.WebApi.Controllers.Api
             if (advanceSearchModelSearchQueryMapper == null)
                 throw new ArgumentNullException("advanceSearchModelSearchQueryMapper");
             _advanceSearchModelSearchQueryMapper = advanceSearchModelSearchQueryMapper;
+            if (searchResultMapper == null)
+                throw new ArgumentNullException("searchResultMapper");
+            _searchResultMapper = searchResultMapper;
         }
 
         /// <summary>
@@ -71,11 +75,7 @@ namespace AssetManager.WebApi.Controllers.Api
                     assetId: model.AssetId.GetValueOrDefault()
             );
 
-            return new SearchResultModel
-            {
-                SearchId = model.SearchId.Value,
-                Entities = result.ToList()
-            };
+            return _searchResultMapper.GetSearchResultModel(model.SearchId.Value, result);
         }
 
         private static bool ValidateAndUpdateSimpleSearchModel(SimpleSearchModel model)
@@ -112,11 +112,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 order: model.SortBy,
                 pageNumber: model.Page);
 
-            return new SearchResultModel
-            {
-                SearchId = model.SearchId.Value,
-                Entities = result.ToList()
-            };
+			return _searchResultMapper.GetSearchResultModel(model.SearchId.Value, result);
         }
 
         [Route("bytype/model"), HttpPost]

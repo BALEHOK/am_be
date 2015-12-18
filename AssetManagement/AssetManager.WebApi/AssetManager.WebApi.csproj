@@ -387,8 +387,10 @@
     <Compile Include="Models\Search\AdvanceSearchModelMapper.cs" />
     <Compile Include="Models\Search\AdvanceSearchModelSearchQueryMapper.cs" />
     <Compile Include="Models\Search\AttributeFilter.cs" />
+    <Compile Include="Models\Search\SearchResultMapper.cs" />
     <Compile Include="Models\Search\IAdvanceSearchModelMapper.cs" />
     <Compile Include="Models\Search\IAdvanceSearchModelSearchQueryMapper.cs" />
+    <Compile Include="Models\Search\ISearchResultMapper.cs" />
     <Compile Include="Models\Search\IdNamePair.cs" />
     <Compile Include="Models\Search\SearchModelBase.cs" />
     <Compile Include="Models\Search\SimpleSearchModel.cs" />

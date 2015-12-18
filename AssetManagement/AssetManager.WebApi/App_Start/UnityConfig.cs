@@ -9,7 +9,6 @@ using AppFramework.Reports;
 using AssetManager.WebApi.Models.Search;
 using AppFramework.Email;
 using AssetManager.Infrastructure;
-using AssetManager.WebApi.Controllers.Api;
 
 namespace AssetManager.WebApi
 {
@@ -49,6 +48,7 @@ namespace AssetManager.WebApi
                 .RegisterType<ITypeSearch, TypeSearch>()
                 .RegisterType<IAdvanceSearchModelMapper, AdvanceSearchModelMapper>()
                 .RegisterType<IAdvanceSearchModelSearchQueryMapper, AdvanceSearchModelSearchQueryMapper>()
+                .RegisterType<ISearchResultMapper, SearchResultMapper>()
                 .AddNewExtension<InfrastructureConfiguration>()
                 .AddNewExtension<EmailConfiguration>()
                 .AddNewExtension<CommonConfiguration>()
