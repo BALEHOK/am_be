@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AssetManager.Infrastructure.Models
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class SearchCountersModel
     {

@@ -6,9 +6,9 @@ using AppFramework.Core;
 using System.Web;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Reports;
-using AssetManager.WebApi.Models.Search;
 using AppFramework.Email;
 using AssetManager.Infrastructure;
+using AssetManager.Infrastructure.Models.Search;
 
 namespace AssetManager.WebApi
 {

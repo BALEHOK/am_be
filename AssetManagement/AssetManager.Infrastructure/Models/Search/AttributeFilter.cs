@@ -1,8 +1,8 @@
+using AssetManager.Infrastructure.JsonConverters;
 using AssetManager.Infrastructure.Models.TypeModels;
-using AssetManager.WebApi.JsonConverters;
 using Newtonsoft.Json;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class AttributeFilter
     {

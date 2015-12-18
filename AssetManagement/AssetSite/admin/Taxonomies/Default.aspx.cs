@@ -2,17 +2,14 @@
 using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.Practices.Unity;
 
 namespace AssetSite.admin.Taxonomies
 {
     public partial class Default : BasePage
     {
-        private readonly ITaxonomyService _taxonomyService;
-
-        public Default()
-        {
-            _taxonomyService = new TaxonomyService(UnitOfWork);
-        }
+        [Dependency]
+        public ITaxonomyService TaxonomyService { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,7 +26,7 @@ namespace AssetSite.admin.Taxonomies
                     long uid = 0;
                     if (long.TryParse(PostBackerArg, out uid) && uid > 0)
                     {
-                        _taxonomyService.SetCategoryByUid(uid);
+                        TaxonomyService.SetCategoryByUid(uid);
                         Response.Redirect(Request.Url.OriginalString);
                     }
                 }
@@ -38,7 +35,7 @@ namespace AssetSite.admin.Taxonomies
 
         protected void AddTaxonomy(object sender, EventArgs e)
         {
-            _taxonomyService.Save(new AppFramework.Entities.Taxonomy
+            TaxonomyService.Save(new AppFramework.Entities.Taxonomy
             {
                 Name = TaxText.Text,
                 Description = TaxDescr.Text,
@@ -71,7 +68,7 @@ namespace AssetSite.admin.Taxonomies
         protected void Taxonomy_Deleting(object sender, EntityDataSourceChangingEventArgs args)
         {
             var entity = args.Entity as AppFramework.Entities.Taxonomy;
-            _taxonomyService.Delete(entity);
+            TaxonomyService.Delete(entity);
             args.Cancel = true;
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.UI.WebControls;
+using Microsoft.Practices.Unity;
 
 namespace AssetSite.admin.Taxonomies
 {
@@ -9,12 +10,9 @@ namespace AssetSite.admin.Taxonomies
     {
         private long _uid;
         private TaxonomyItem _taxonomyItem;
-        private readonly ITaxonomyItemService _taxonomyItemService;
 
-        public ManageTypes()
-        {
-            _taxonomyItemService = new TaxonomyItemService(AuthenticationService, AssetTypeRepository, UnitOfWork);
-        }
+        [Dependency]
+        public ITaxonomyItemService TaxonomyItemService { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,13 +21,15 @@ namespace AssetSite.admin.Taxonomies
                 Response.Redirect("~/admin/Taxonomies/");
             }
 
-            _taxonomyItem = _taxonomyItemService.GetByUid(_uid);
+            _taxonomyItem = TaxonomyItemService.GetByUid(_uid);
+
+            AssetsTypes.DataSource = TaxonomyItemService.GetAssignedAssetTypes(_taxonomyItem.Base);
+            AssetsTypes.DataBind();
+
+            BindFiltergridIfNeeded();
 
             if (!IsPostBack)
             {
-                AssetsTypes.DataSource = _taxonomyItemService.GetAssignedAssetTypes(_taxonomyItem.Base);
-                AssetsTypes.DataBind();
-
                 AllAssetTypes.DataSource = AssetTypeRepository.GetAllPublished();
                 AllAssetTypes.DataBind();
             }
@@ -44,8 +44,6 @@ namespace AssetSite.admin.Taxonomies
 
         protected void UpdateFilteredList(object sender, EventArgs e)
         {
-            AssetFilteredList.DataSource = AssetType.FindByName(AssetName.Text).Take(5);
-            AssetFilteredList.DataBind();
         }
 
         /// <summary>
@@ -55,22 +53,20 @@ namespace AssetSite.admin.Taxonomies
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         protected void OnAddFilteredClick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
             foreach (GridViewRow row in AssetFilteredList.Rows)
             {
                 HiddenField uidField = row.Cells[0].FindControl("UID") as HiddenField;
                 CheckBox Checked = row.Cells[0].FindControl("TypeSelected") as CheckBox;
                 if (Checked != null && Checked.Checked)
                 {
-                    long uid = 0;
-                    if (long.TryParse(uidField.Value, out uid) && uid != 0)
+                    long assetTypeUid;
+                    if (long.TryParse(uidField.Value, out assetTypeUid) && assetTypeUid != 0)
                     {
-                        //_taxonomyItem.AssignedAssetTypes.Add(AssetType.GetByUID(uid));
+                        TaxonomyItemService.AddAssignedAssetType(_taxonomyItem.Id, assetTypeUid);
                     }
                 }
             }
 
-            //_taxonomyItem.Save();
             Response.Redirect(Request.Url.OriginalString);
         }
 
@@ -81,14 +77,12 @@ namespace AssetSite.admin.Taxonomies
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         protected void OnAddTypeClick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            long id = 0;
-            //if (long.TryParse(AllAssetTypes.SelectedValue, out id) && id != 0)
-            //{
-            //    _taxonomyItem.AssignedAssetTypes.Add(AssetType.GetByID(id));
-            //    _taxonomyItem.Save();
-            //    Response.Redirect(Request.Url.OriginalString);
-            //}
+            long assetTypeUid;
+            if (long.TryParse(AllAssetTypes.SelectedValue, out assetTypeUid) && assetTypeUid != 0)
+            {
+                TaxonomyItemService.AddAssignedAssetType(_taxonomyItem.Id, assetTypeUid);
+                Response.Redirect(Request.Url.OriginalString);
+            }
         }
 
         /// <summary>
@@ -98,29 +92,34 @@ namespace AssetSite.admin.Taxonomies
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         protected void RemoveSelected(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //bool hadChanged = false;
-            //foreach (GridViewRow row in AssetsTypes.Rows)
-            //{
-            //    var uidField = row.Cells[0].FindControl("UID") as HiddenField;
-            //    var Checked = row.Cells[0].FindControl("AssetToDelete") as CheckBox;
-            //    if (uidField == null || Checked == null || !Checked.Checked) continue;
-            //    long uid = 0;
-            //    if (long.TryParse(uidField.Value, out uid) && uid != 0)
-            //    {
-            //        var type = _taxonomyItem.AssignedAssetTypes.FirstOrDefault(at => at.UID == uid);
-            //        if (type != null)
-            //        {
-            //            _taxonomyItem.AssignedAssetTypes.Remove(type);
-            //            hadChanged = true;
-            //        }
-            //    }
-            //}
+            foreach (GridViewRow row in AssetsTypes.Rows)
+            {
+                var uidField = row.Cells[0].FindControl("UID") as HiddenField;
+                var Checked = row.Cells[0].FindControl("AssetToDelete") as CheckBox;
+                if (uidField == null || Checked == null || !Checked.Checked)
+                {
+                    continue;
+                }
 
-            //if (hadChanged)
-            //    _taxonomyItem.Save();
+                long assetTypeUid;
+                if (long.TryParse(uidField.Value, out assetTypeUid) && assetTypeUid != 0)
+                {
+                    TaxonomyItemService.RemoveAssignedAssetType(_taxonomyItem.Id, assetTypeUid);
+                }
+            }
 
             Response.Redirect(Request.Url.OriginalString);
+        }
+
+        private void BindFiltergridIfNeeded()
+        {
+            if (string.IsNullOrWhiteSpace(AssetName.Text))
+            {
+                return;
+            }
+
+            AssetFilteredList.DataSource = AssetType.FindByName(AssetName.Text).Take(5);
+            AssetFilteredList.DataBind();
         }
     }
 }

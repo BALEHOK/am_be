@@ -1,6 +1,6 @@
 using System;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class SearchModelBase
     {

@@ -30,5 +30,8 @@ namespace AppFramework.Core.Classes
         /// </summary>
         /// <returns>List of AssetType</returns>
         List<AssetType> GetAssignedAssetTypes(Entities.TaxonomyItem taxonomyItem);
+
+        void AddAssignedAssetType(long taxonomyItemId, long assetTypeUid);
+        void RemoveAssignedAssetType(long taxonomyItemId, long assetTypeUid);
     }
 }

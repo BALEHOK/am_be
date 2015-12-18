@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.DataProxy;
+using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes
 {
@@ -37,10 +37,10 @@ namespace AppFramework.Core.Classes
         public TaxonomyItem GetActiveItemById(long id)
         {
             var entity = (from it in _unitOfWork.TaxonomyItemRepository.Get(include: ti => ti.Taxonomy)
-                          where it.TaxonomyItemId == id && it.ActiveVersion
-                          select it).FirstOrDefault();
-            return entity != null 
-                ? new TaxonomyItem(entity) 
+                where it.TaxonomyItemId == id && it.ActiveVersion
+                select it).FirstOrDefault();
+            return entity != null
+                ? new TaxonomyItem(entity)
                 : null;
         }
 
@@ -54,8 +54,8 @@ namespace AppFramework.Core.Classes
         {
             return new TaxonomyItem(
                 _unitOfWork
-                .TaxonomyItemRepository
-                .Single(ti => ti.TaxonomyItemUid == uid, include: t => t.Taxonomy));
+                    .TaxonomyItemRepository
+                    .Single(ti => ti.TaxonomyItemUid == uid, t => t.Taxonomy));
         }
 
 
@@ -126,12 +126,12 @@ namespace AppFramework.Core.Classes
             var dectSource = _unitOfWork.DynEntityConfigTaxonomyRepository.AsQueryable();
             var decSource = _unitOfWork.DynEntityConfigRepository.AsQueryable();
             var items = (from dect in dectSource
-                         from dec in decSource
-                         where dec.DynEntityConfigId == dect.DynEntityConfigId
-                             && dect.TaxonomyItemId == taxonomyItem.TaxonomyItemId
-                             && dec.ActiveVersion
-                             && dec.Active
-                         select dect).ToList();
+                from dec in decSource
+                where dec.DynEntityConfigId == dect.DynEntityConfigId
+                      && dect.TaxonomyItemId == taxonomyItem.TaxonomyItemId
+                      && dec.ActiveVersion
+                      && dec.Active
+                select dect).ToList();
             var types = new List<AssetType>(items.Count);
             foreach (var item in items)
             {
@@ -141,5 +141,43 @@ namespace AppFramework.Core.Classes
             }
             return types;
         }
-   }
+
+        public void AddAssignedAssetType(long taxonomyItemId, long assetTypeUid)
+        {
+            var type = _assetTypeRepository.GetByUid(assetTypeUid);
+            if (!_authenticationService.IsWritingAllowed(type))
+            {
+                return;
+            }
+
+            var entityConfigTaxonomy =
+                _unitOfWork.DynEntityConfigTaxonomyRepository.SingleOrDefault(
+                    ct => ct.TaxonomyItemId == taxonomyItemId && ct.DynEntityConfigId == type.ID);
+            if (entityConfigTaxonomy == null)
+            {
+                _unitOfWork.DynEntityConfigTaxonomyRepository.Insert(new DynEntityConfigTaxonomy
+                {
+                    TaxonomyItemId = taxonomyItemId,
+                    DynEntityConfigId = type.ID
+                });
+            }
+        }
+
+        public void RemoveAssignedAssetType(long taxonomyItemId, long assetTypeUid)
+        {
+            var type = _assetTypeRepository.GetByUid(assetTypeUid);
+            if (!_authenticationService.IsWritingAllowed(type))
+            {
+                return;
+            }
+
+            var entityConfigTaxonomy =
+                _unitOfWork.DynEntityConfigTaxonomyRepository.SingleOrDefault(
+                    ct => ct.TaxonomyItemId == taxonomyItemId && ct.DynEntityConfigId == type.ID);
+            if (entityConfigTaxonomy != null)
+            {
+                _unitOfWork.DynEntityConfigTaxonomyRepository.Delete(entityConfigTaxonomy);
+            }
+        }
+    }
 }

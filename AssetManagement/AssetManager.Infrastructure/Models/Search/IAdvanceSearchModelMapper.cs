@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public interface IAdvanceSearchModelMapper
     {

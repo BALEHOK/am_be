@@ -7,7 +7,7 @@ using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class AdvanceSearchModelMapper : IAdvanceSearchModelMapper
     {

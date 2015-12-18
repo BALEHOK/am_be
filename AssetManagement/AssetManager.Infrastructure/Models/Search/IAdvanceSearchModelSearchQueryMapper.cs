@@ -1,6 +1,6 @@
 using AppFramework.Entities;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public interface IAdvanceSearchModelSearchQueryMapper
     {

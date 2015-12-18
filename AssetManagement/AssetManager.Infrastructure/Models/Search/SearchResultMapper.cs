@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AppFramework.Entities;
-using AssetManager.Infrastructure.Models;
 using Newtonsoft.Json;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class SearchResultMapper : ISearchResultMapper
     {
@@ -24,14 +23,16 @@ namespace AssetManager.WebApi.Models.Search
         {
             return new SearchResultItem
             {
+                Name = indexEntity.Name,
+                Description = indexEntity.Description,
                 AllAttribValues = indexEntity.AllAttribValues,
                 AllAttrib2IndexValues = indexEntity.AllAttrib2IndexValues,
                 CategoryKeywords = indexEntity.CategoryKeywords,
                 DynEntityConfigId = indexEntity.DynEntityConfigId,
                 DynEntityId = indexEntity.DynEntityId,
                 DynEntityUid = indexEntity.DynEntityUid,
-                DisplayValues = JsonConvert.DeserializeObject(indexEntity.DisplayValues),
-                DisplayExtValues = JsonConvert.DeserializeObject(indexEntity.DisplayExtValues)
+                DisplayValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(indexEntity.DisplayValues),
+                DisplayExtValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(indexEntity.DisplayExtValues)
             };
         }
     }

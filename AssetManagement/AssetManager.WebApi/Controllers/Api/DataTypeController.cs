@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AppFramework.ConstantsEnumerators;
+using AssetManager.Infrastructure.Models.Search;
 using AssetManager.Infrastructure.Services;
-using AssetManager.WebApi.Models.Search;
 
 namespace AssetManager.WebApi.Controllers.Api
 {

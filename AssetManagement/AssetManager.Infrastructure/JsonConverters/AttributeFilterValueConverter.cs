@@ -1,8 +1,8 @@
 ﻿using System;
-using AssetManager.WebApi.Models.Search;
+using AssetManager.Infrastructure.Models.Search;
 using Newtonsoft.Json;
 
-namespace AssetManager.WebApi.JsonConverters
+namespace AssetManager.Infrastructure.JsonConverters
 {
     public class AttributeFilterValueConverter : JsonConverter
     {

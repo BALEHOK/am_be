@@ -17,13 +17,8 @@ namespace AssetSite.admin.Taxonomies
         public IBatchJobFactory BatchJobFactory { get; set; }
         [Dependency]
         public IBatchJobManager BatchJobManager { get; set; }
-
-        private readonly ITaxonomyService _taxonomyService;
-
-        public TreeEdit()
-        {
-            _taxonomyService = new TaxonomyService(UnitOfWork);
-        }
+        [Dependency]
+        public ITaxonomyService TaxonomyService { get; set; }
 
         private long _taxonomyUid
         {
@@ -68,12 +63,12 @@ namespace AssetSite.admin.Taxonomies
             }
             else
             {
-                var taxonomy = _taxonomyService.GetByUid(uid);
+                var taxonomy = TaxonomyService.GetByUid(uid);
 
                 // if edit enabled
                 if (!string.IsNullOrEmpty(Request.QueryString["Edit"]))
                 {
-                    var latest = _taxonomyService.GetLastById(taxonomy.ID);
+                    var latest = TaxonomyService.GetLastById(taxonomy.ID);
                     if (latest != null && latest.IsDraft)
                     {
                         if (latest.UID != taxonomy.UID)
@@ -298,7 +293,7 @@ namespace AssetSite.admin.Taxonomies
             if (ViewState["edited"] != null && (bool)ViewState["edited"])
             {
                 taxonomy = BuildTaxonomyFromTree();
-                _taxonomyService.Save(taxonomy.Base, AuthenticationService.CurrentUserId);
+                TaxonomyService.Save(taxonomy.Base, AuthenticationService.CurrentUserId);
                 ViewState["edited"] = false;
             }
             return taxonomy;
@@ -310,7 +305,7 @@ namespace AssetSite.admin.Taxonomies
         /// <param name="nodes"></param>
         private Taxonomy BuildTaxonomyFromTree()
         {
-            var taxonomy = _taxonomyService.GetByUid(_taxonomyUid);
+            var taxonomy = TaxonomyService.GetByUid(_taxonomyUid);
             var items = new Dictionary<TreeNode, TaxonomyItem>();
             ProcessNodes(TaxonomiesTree.Nodes, taxonomy, items);
             taxonomy.Items.Clear();

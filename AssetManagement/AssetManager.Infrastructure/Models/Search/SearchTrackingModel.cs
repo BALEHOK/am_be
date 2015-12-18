@@ -1,6 +1,6 @@
 ﻿using AppFramework.Core.Classes.SearchEngine.Enumerations;
 
-namespace AssetManager.Infrastructure.Models
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class SearchTrackingModel
     {

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
-using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes;
-using AppFramework.Core.Classes.Extensions;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class AdvanceSearchModelSearchQueryMapper : IAdvanceSearchModelSearchQueryMapper
     {

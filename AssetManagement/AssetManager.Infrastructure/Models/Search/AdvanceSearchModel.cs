@@ -1,7 +1,7 @@
 ﻿using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Entities;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public class AdvanceSearchModel : SearchModelBase
     {

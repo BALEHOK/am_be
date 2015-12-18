@@ -1,4 +1,4 @@
-﻿namespace AssetManager.WebApi.Models.Search
+﻿namespace AssetManager.Infrastructure.Models.Search
 {
     public class SimpleSearchModel : SearchModelBase
     {

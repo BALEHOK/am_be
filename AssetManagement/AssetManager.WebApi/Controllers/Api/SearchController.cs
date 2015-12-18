@@ -8,8 +8,8 @@ using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
 using AssetManager.Infrastructure.Models;
+using AssetManager.Infrastructure.Models.Search;
 using AssetManager.WebApi.Extensions;
-using AssetManager.WebApi.Models.Search;
 using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api

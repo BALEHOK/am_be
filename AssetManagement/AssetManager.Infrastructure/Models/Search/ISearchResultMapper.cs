@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using AppFramework.Entities;
-using AssetManager.Infrastructure.Models;
 
-namespace AssetManager.WebApi.Models.Search
+namespace AssetManager.Infrastructure.Models.Search
 {
     public interface ISearchResultMapper
     {

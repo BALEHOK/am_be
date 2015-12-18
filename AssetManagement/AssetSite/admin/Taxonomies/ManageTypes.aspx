@@ -23,7 +23,7 @@
                             ID="AllAssetTypes" 
                             runat="server" 
                             DataTextField="Name" 
-                            DataValueField="ID" meta:resourcekey="AllAssetTypesResource1">
+                            DataValueField="UID" meta:resourcekey="AllAssetTypesResource1">
                         </asp:DropDownList>
                     </td>
                     <td colspan="2">
