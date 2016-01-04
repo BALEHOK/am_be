@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AppFramework.Core.Classes.Tasks.Runners;
-using AssetManager.WebApi.Extensions;
 using AppFramework.ConstantsEnumerators;
+using AssetManager.Infrastructure.Extensions;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -31,7 +31,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("")]
         public IEnumerable<TaskModel> GetTasks()
         {
-            var tasks = _tasksService.GetActive();
+            var tasks = _tasksService.GetActive(User.GetId());
             return tasks.Select(t => new TaskModel
             {
                 Id = t.TaskId,
@@ -45,7 +45,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("assettype/{assetTypeId}")]
         public IEnumerable<TaskModel> GetTasksByAssetType(long assetTypeId)
         {
-            var tasks = _tasksService.GetByAssetTypeId(assetTypeId)
+            var tasks = _tasksService.GetByAssetTypeId(assetTypeId, User.GetId())
                 .Where(t => t.DisplayInSidebar);
             return tasks.Select(t => new TaskModel
             {
@@ -57,8 +57,8 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("{taskId}/execute"), HttpPost]
         public TaskResultModel ExecuteTask(long taskId)
         {
-            var task = _tasksService.GetTaskById(taskId);
             var userId = User.GetId();
+            var task = _tasksService.GetTaskById(taskId, userId);
             var runner = _taskRunnerFactory.GetRunner(task, userId);
             var result = runner.Run(task);
 

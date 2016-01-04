@@ -2,7 +2,7 @@
 using System.Security.Principal;
 using AppFramework.Auth;
 
-namespace AssetManager.WebApi.Extensions
+namespace AssetManager.Infrastructure.Extensions
 {
     public static class IPrincipalExtension
     {

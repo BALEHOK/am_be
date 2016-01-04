@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
+using AssetManager.Infrastructure.Extensions;
 
 namespace AssetSite.admin.Tasks
 {
@@ -45,7 +46,7 @@ namespace AssetSite.admin.Tasks
                 !String.IsNullOrEmpty(Request.QueryString["Edit"]) &&
                 !String.IsNullOrEmpty(Request.QueryString["TaskId"]))
             {
-                var task = TasksService.GetTaskById(long.Parse(Request.QueryString["TaskId"]));
+                var task = TasksService.GetTaskById(long.Parse(Request.QueryString["TaskId"]), User.GetId());
 
                 txtName.Text = task.Name;
                 txtDescription.Text = task.Description;
@@ -205,8 +206,8 @@ namespace AssetSite.admin.Tasks
             long assetTypeId = Convert.ToInt64(Request.QueryString["AssetTypeId"]);
             TaskFunctionType selectedType = (TaskFunctionType)Convert.ToInt32(ddlFunctionType.SelectedValue);
 
-            var currentTask = !string.IsNullOrEmpty(Request.QueryString["TaskId"]) 
-                ? TasksService.GetTaskById(Convert.ToInt64(Request.QueryString["TaskId"])) 
+            var currentTask = !string.IsNullOrEmpty(Request.QueryString["TaskId"])
+                ? TasksService.GetTaskById(Convert.ToInt64(Request.QueryString["TaskId"]), User.GetId()) 
                 : new AppFramework.Entities.Task();
 
             currentTask.DynEntityConfigId = assetTypeId;

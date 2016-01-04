@@ -3,6 +3,7 @@ using AppFramework.Core.Classes;
 using Microsoft.Practices.Unity;
 using AssetManager.Infrastructure.Services;
 using AppFramework.Core.Classes.Tasks.Runners;
+using AssetManager.Infrastructure.Extensions;
 
 namespace AssetSite
 {
@@ -24,7 +25,7 @@ namespace AssetSite
             {
                 lbltaskListEmpty.Visible = false;
                 repTasks.Visible = true;
-                repTasks.DataSource = TasksService.GetByAssetTypeId(assetType.ID);
+                repTasks.DataSource = TasksService.GetByAssetTypeId(assetType.ID, User.GetId());
                 repTasks.DataBind();
             }
             else

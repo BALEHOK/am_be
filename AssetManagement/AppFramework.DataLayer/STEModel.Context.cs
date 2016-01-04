@@ -1382,12 +1382,24 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<ActiveTask> f_cust_GetTasks()     
+        public ObjectResult<ActiveTask> f_cust_GetTasks(Nullable<long> userId)     
      
         { 
      
      
-            return base.ExecuteFunction<ActiveTask>("f_cust_GetTasks"); 
+            ObjectParameter userIdParameter; 
+     
+            if (userId.HasValue) 
+            { 
+                userIdParameter = new ObjectParameter("UserId", userId); 
+            } 
+            else 
+            { 
+                userIdParameter = new ObjectParameter("UserId", typeof(long)); 
+            } 
+     
+     
+            return base.ExecuteFunction<ActiveTask>("f_cust_GetTasks", userIdParameter); 
      
      
         } 

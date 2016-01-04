@@ -50,22 +50,20 @@ namespace AssetSite.admin.Users
                 }
             }
 
+            atGrid.DataSource = AssetTypeRepository.GetAllPublished().OrderBy(a => a.Name);
+            atGrid.DataBind();
+
+            var assetType = AssetTypeRepository.GetPredefinedAssetType(PredefinedEntity.Department);
+            deptGrid.DataSource
+                = AssetsService.GetAssetsByAssetTypeAndUser(assetType, AuthenticationService.CurrentUserId);
+            deptGrid.DataBind();
+
             if (!IsPostBack)
             {
                 #region Setting the Taxonomy tree data
                 taxonomyTree.Taxonomy = taxonomiesDropDown.DefaultTaxonomy;
                 taxonomyTree.BuildTree();
                 #endregion
-
-                #region Setting the AssetTypes grid data
-                atGrid.DataSource = AssetTypeRepository.GetAllPublished().OrderBy(a => a.Name);
-                atGrid.DataBind();
-                #endregion
-
-                var assetType = AssetTypeRepository.GetPredefinedAssetType(PredefinedEntity.Department);
-                deptGrid.DataSource
-                    = AssetsService.GetAssetsByAssetTypeAndUser(assetType, AuthenticationService.CurrentUserId);
-                deptGrid.DataBind();
 
                 if (_istask)
                 {

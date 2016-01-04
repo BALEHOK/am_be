@@ -37,14 +37,20 @@ namespace AssetManager.Infrastructure.Services
             _unitOfWork.Commit();
         }
 
-        public Task GetTaskById(long id)
+        public Task GetTaskById(long id, long userId)
         {
+            if (!IsTaskPermitted(id, userId))
+            {
+                throw new EntityNotFoundException();
+            }
+
             var task = _unitOfWork.TaskRepository.SingleOrDefault(t => t.TaskId == id);
             if (task == null)
                 throw new EntityNotFoundException();
             return task;
         }
 
+        [Obsolete("Method doesn't check access rights. Update it or do not use.")]
         public int GetCountByAssetTypeId(long atId)
         {
             return _unitOfWork.TaskRepository
@@ -52,15 +58,29 @@ namespace AssetManager.Infrastructure.Services
                 .Count(t => t.DynEntityConfigId == atId);
         }
 
-        public IEnumerable<Task> GetByAssetTypeId(long atId)
+        public IEnumerable<Task> GetByAssetTypeId(long atId, long userId)
         {
-            return _unitOfWork.TaskRepository
-                .Where(t => t.DynEntityConfigId == atId && t.IsActive);
+            return FilterParmitted(_unitOfWork.TaskRepository
+                .Where(t => t.DynEntityConfigId == atId && t.IsActive), userId);
         }
 
-        public IEnumerable<ActiveTask> GetActive()
+        public IEnumerable<ActiveTask> GetActive(long userId)
         {
-            return _unitOfWork.GetTasks();
+            // user access checked in SP
+            return _unitOfWork.GetTasks(userId);
         }
+
+        private bool IsTaskPermitted(long taskId, long userId)
+        {
+            var permittedTasks = _unitOfWork.GetPermittedTasks(userId).ToList();
+
+            return permittedTasks.Any(tId => tId == taskId);
+        }
+
+        private IEnumerable<Task> FilterParmitted(IEnumerable<Task> tasks, long userId)
+        {
+            var permittedTasks = _unitOfWork.GetPermittedTasks(userId).ToList();
+            return tasks.Where(t => permittedTasks.Any(id => id == t.TaskId));
+        } 
     }
 }

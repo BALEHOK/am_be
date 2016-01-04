@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Web.Http;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Services;
 using AssetManager.Infrastructure.Models;
-using AssetManager.WebApi.Extensions;
 
 namespace AssetManager.WebApi.Controllers.Api
 {

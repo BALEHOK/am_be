@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Web.Http;
-using AssetManager.WebApi.Extensions;
 using AppFramework.Core.Classes;
 using AssetManager.Infrastructure.Models;
 using AppFramework.Email.Services;
+using AssetManager.Infrastructure.Extensions;
 
 namespace AssetManager.WebApi.Controllers.Api
 {

@@ -1,4 +1,6 @@
-﻿namespace AppFramework.DataProxy
+﻿using System.Data;
+
+namespace AppFramework.DataProxy
 {
     using AppFramework.DataLayer;
     using AppFramework.DataProxy.Providers;
@@ -134,9 +136,14 @@
             return _noCacheContext.f_cust_GetReports();
         } 
 
-        public IEnumerable<ActiveTask> GetTasks()
+        public IEnumerable<ActiveTask> GetTasks(long userId)
         {
-            return _noCacheContext.f_cust_GetTasks();
+            return _noCacheContext.f_cust_GetTasks(userId);
+        }
+
+        public IEnumerable<long> GetPermittedTasks(long userId)
+        {
+            return _noCacheContext.ExecuteStoreQuery<long>("SELECT * FROM [dbo].[f_GetGrantedTaskIds](@UserId)", new SqlParameter("@UserId", SqlDbType.BigInt) {Value = userId});
         } 
 
         #region IDataRepository: Repositories

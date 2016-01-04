@@ -7,9 +7,8 @@ using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Exceptions;
 using AppFramework.Entities;
-using AssetManager.Infrastructure.Models;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Models.Search;
-using AssetManager.WebApi.Extensions;
 using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api

@@ -26,6 +26,7 @@ using Place = AppFramework.Core.Classes.Place;
 using ZipCode = AppFramework.Core.Classes.ZipCode;
 using AssetManager.Infrastructure.Services;
 using AppFramework.Core.Classes.Tasks.Runners;
+using AssetManager.Infrastructure.Extensions;
 
 namespace AssetSite
 {
@@ -580,7 +581,7 @@ namespace AssetSite
         [WebMethod]
         public object[] GetTasksByAssetTypeId(long atId)
         {
-            var tasks = TasksService.GetByAssetTypeId(atId);
+            var tasks = TasksService.GetByAssetTypeId(atId, User.GetId());
             return (from task in tasks
                     select new
                     {
@@ -592,7 +593,7 @@ namespace AssetSite
         [WebMethod(EnableSession = true)]
         public TaskExecutionDataHolder ExecuteTask(int taskId, long? assetUid = null)
         {
-            var task = TasksService.GetTaskById(taskId);
+            var task = TasksService.GetTaskById(taskId, User.GetId());
             var runner = TaskRunnerFactory.GetRunner(task, AuthenticationService.CurrentUserId, assetUid);
             var result = runner.Run(task);
             return new TaskExecutionDataHolder()

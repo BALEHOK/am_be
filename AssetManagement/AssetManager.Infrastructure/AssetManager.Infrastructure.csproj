@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnvironmentSettings.cs" />
+    <Compile Include="Extensions\IPrincipalExtension.cs" />
     <Compile Include="Helpers\AssetModelExtensions.cs" />
     <Compile Include="Helpers\CustomReportsModelExtensions.cs" />
     <Compile Include="Helpers\DynListModelExtensions.cs" />
@@ -194,6 +195,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AppFramework.Auth\AppFramework.Auth.csproj">
+      <Project>{0acbd967-18bf-49f9-b342-ff5f69fb7f87}</Project>
+      <Name>AppFramework.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AppFramework.Core\AppFramework.Core.csproj">
       <Project>{890bdd21-2741-4028-9d20-9102d51ad64d}</Project>
       <Name>AppFramework.Core</Name>

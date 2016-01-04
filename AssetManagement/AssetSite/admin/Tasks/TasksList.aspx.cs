@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
 
@@ -85,8 +86,8 @@ namespace AssetSite.admin.Tasks
 
         protected void lbtnMakeInactive_Click(object sender, EventArgs e)
         {
-            long taskId = long.Parse(((LinkButton)sender).CommandArgument.ToString());
-            var toDisable = TasksService.GetTaskById(taskId);
+            long taskId = long.Parse(((LinkButton)sender).CommandArgument);
+            var toDisable = TasksService.GetTaskById(taskId, User.GetId());
             toDisable.IsActive = !toDisable.IsActive;
             TasksService.SaveTask(toDisable, AuthenticationService.CurrentUserId);
             gvTasks.DataBind();

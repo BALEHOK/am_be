@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Web.Http;
 using AppFramework.Core.Exceptions;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Helpers;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Services;
-using AssetManager.WebApi.Extensions;
 using AssetManager.WebApi.Validators;
 using WebApi.OutputCache.V2;
 using Common.Logging;
@@ -110,8 +110,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [ValidateModelState, CheckModelForNull]
         public IHttpActionResult Calculate(AssetModel model, long screenId, bool forceRecalc = false)
         {
-            var identity = User.Identity as ClaimsIdentity;
-            var userId = long.Parse(identity.FindFirst(ClaimTypes.Sid).Value);
+            var userId = User.GetId();
 
             if (ModelState.IsValid)
             {

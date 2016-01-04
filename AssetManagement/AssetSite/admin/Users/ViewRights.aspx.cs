@@ -46,13 +46,13 @@ namespace AssetSite.admin.Users
                         usersList.SelectedIndex = selIndex;
                     }
                 }
-                BindData();
             }
+
+            BindData();
         }
 
         protected void usersList_SelectedIndexChanged(Object sender, EventArgs e)
         {
-            BindData();
             Session.Add("ViewRights:selectedUser", usersList.SelectedIndex);
         }
 

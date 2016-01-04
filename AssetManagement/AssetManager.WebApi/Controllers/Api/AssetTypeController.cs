@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
-using AssetManager.WebApi.Extensions;
 using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api

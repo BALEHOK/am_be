@@ -1465,7 +1465,9 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="assetid" Type="bigint" Mode="In" />
           <Parameter Name="configid" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="f_cust_GetTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetTasks" />
+        <Function Name="f_cust_GetTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetTasks">
+          <Parameter Name="UserId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="f_cust_GetUsersTree" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetUsersTree">
           <Parameter Name="UserId" Type="bigint" Mode="In" />
         </Function>
@@ -2099,7 +2101,9 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
           </AssociationSet>
           <FunctionImport Name="f_cust_GetReports" ReturnType="Collection(DataModel.f_cust_GetReports_Result)" />
-          <FunctionImport Name="f_cust_GetTasks" ReturnType="Collection(DataModel.ActiveTask)" />
+          <FunctionImport Name="f_cust_GetTasks" ReturnType="Collection(DataModel.ActiveTask)" >
+          <Parameter Name="UserId" Mode="In" Type="Int64" />
+          </FunctionImport>
           <EntitySet Name="SearchQueries" EntityType="DataModel.SearchQuery" />
           <EntitySet Name="SearchQueryAttributes" EntityType="DataModel.SearchQueryAttribute" />
           <AssociationSet Name="FK_SearchQueryAttributes_SearchQueries" Association="DataModel.FK_SearchQueryAttributes_SearchQueries">

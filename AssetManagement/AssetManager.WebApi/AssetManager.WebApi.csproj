@@ -374,7 +374,6 @@
     <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CustomReportsController.cs" />
-    <Compile Include="Extensions\IPrincipalExtension.cs" />
     <Compile Include="FileHandler.ashx.cs">
       <DependentUpon>FileHandler.ashx</DependentUpon>
       <SubType>Code</SubType>
