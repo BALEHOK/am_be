@@ -13,7 +13,7 @@ namespace AppFramework.DataProxy.Repositories
             
         }
 
-        public IEnumerable<Entities.TaxonomyItem> GetTaxonomyItemsByAssetTypeId(long assetTypeId)
+        public List<TaxonomyItem> GetTaxonomyItemsByAssetTypeId(long assetTypeId)
         {
             var manyToMany = _context.CreateObjectSet<DynEntityConfigTaxonomy>();
             var taxonomyItems = AsQueryable();

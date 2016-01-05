@@ -449,6 +449,18 @@ namespace AppFramework.DataLayer
             get { return _searchQueryAttributes  ?? (_searchQueryAttributes = CreateObjectSet<SearchQueryAttribute>("SearchQueryAttributes")); }
         }
         private ObjectSet<SearchQueryAttribute> _searchQueryAttributes;
+    
+        public ObjectSet<DynEntityTaxonomyItem> DynEntityTaxonomyItems
+        {
+            get { return _dynEntityTaxonomyItems  ?? (_dynEntityTaxonomyItems = CreateObjectSet<DynEntityTaxonomyItem>("DynEntityTaxonomyItems")); }
+        }
+        private ObjectSet<DynEntityTaxonomyItem> _dynEntityTaxonomyItems;
+    
+        public ObjectSet<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistories
+        {
+            get { return _dynEntityTaxonomyItemHistories  ?? (_dynEntityTaxonomyItemHistories = CreateObjectSet<DynEntityTaxonomyItemHistory>("DynEntityTaxonomyItemHistories")); }
+        }
+        private ObjectSet<DynEntityTaxonomyItemHistory> _dynEntityTaxonomyItemHistories;
 
         #endregion
 

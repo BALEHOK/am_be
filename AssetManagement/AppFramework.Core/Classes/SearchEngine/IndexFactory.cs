@@ -149,7 +149,7 @@ namespace AppFramework.Core.Classes.SearchEngine
 
             var entity = (IIndexEntity) Activator.CreateInstance<T>();
             entity.DynEntityUid = asset.UID;
-            entity.DynEntityConfigUid = assetType.UID;
+            entity.DynEntityConfigUid = asset.DynEntityConfigUid;
             entity.BarCode = asset[AttributeNames.Barcode] != null ? asset[AttributeNames.Barcode].Value : string.Empty;
             entity.Name = asset.Name;
             entity.Description = desc;

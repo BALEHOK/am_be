@@ -252,6 +252,32 @@ namespace AppFramework.DataProxy
         }
         private IDataRepository<DynEntityConfigTaxonomy> _repositoryDynEntityConfigTaxonomy;
 
+        public IDataRepository<DynEntityTaxonomyItem> DynEntityTaxonomyItemRepository
+        {
+            get
+            {
+                if (_repositoryDynEntityTaxonomyItem == null)
+                {
+                    _repositoryDynEntityTaxonomyItem = new DataRepository<DynEntityTaxonomyItem>(_context);
+                }
+                return _repositoryDynEntityTaxonomyItem;
+            }
+        }
+        private IDataRepository<DynEntityTaxonomyItem> _repositoryDynEntityTaxonomyItem;
+
+        public IDataRepository<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistoryRepository
+        {
+            get
+            {
+                if (_repositoryDynEntityTaxonomyItemHistory == null)
+                {
+                    _repositoryDynEntityTaxonomyItemHistory = new DataRepository<DynEntityTaxonomyItemHistory>(_context);
+                }
+                return _repositoryDynEntityTaxonomyItemHistory;
+            }
+        }
+        private IDataRepository<DynEntityTaxonomyItemHistory> _repositoryDynEntityTaxonomyItemHistory;
+
         public IDataRepository<Rights> RightsRepository
         {
             get

@@ -74,7 +74,7 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <param name="assetTypeId"></param>
         /// <returns></returns>
         [Route("{assetTypeId}/taxonomy")]
-        public TaxonomyModel GetTaxonomy(long assetTypeId)
+        public IEnumerable<TaxonomyModel> GetTaxonomy(long assetTypeId)
         {
             return _taxonomyService.GetTaxonomyByAssetTypeId(assetTypeId);
         }

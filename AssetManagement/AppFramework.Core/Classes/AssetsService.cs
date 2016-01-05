@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Web;
 using System.Web.Security;
@@ -211,7 +212,7 @@ namespace AppFramework.Core.Classes
             if (asset == null)
                 throw new ArgumentNullException("Asset");
 
-            if ((string.IsNullOrEmpty(asset.Name)) &&
+            if (string.IsNullOrEmpty(asset.Name) &&
                 asset.GetConfiguration().AutoGenerateNameType == Enumerators.TypeAutoGenerateName.InsertOnly ||
                 asset.GetConfiguration().AutoGenerateNameType == Enumerators.TypeAutoGenerateName.InsertUpdate)
                 asset.Name = asset.GenerateName();
@@ -221,6 +222,8 @@ namespace AppFramework.Core.Classes
                 IsolationLevel = IsolationLevel.ReadCommitted,
                 Timeout = TransactionManager.MaximumTimeout
             };
+
+            var assetType = _assetTypeRepository.GetById(asset.GetConfiguration().ID);
             using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
                 long assetInitialUid = 0;
@@ -258,7 +261,6 @@ namespace AppFramework.Core.Classes
                 else
                 {
                     // Disable active revisions
-                    var assetType = _assetTypeRepository.GetById(asset.GetConfiguration().ID);
                     try
                     {
                         var oldAsset = GetAssetById(asset.ID, assetType);
@@ -286,6 +288,43 @@ namespace AppFramework.Core.Classes
 
                 // save dynlist values
                 SaveDynamicLists(asset, _unitOfWork);
+
+                // move entity - taxonomy item relation to history
+                if (assetInitialUid != 0)
+                {
+                    var currentETI =
+                        _unitOfWork.DynEntityTaxonomyItemRepository.Where(eti => eti.DynEntityUid == assetInitialUid);
+                    foreach (var eti in currentETI)
+                    {
+                        _unitOfWork.DynEntityTaxonomyItemHistoryRepository.Insert(new DynEntityTaxonomyItemHistory
+                        {
+                            DynEntityUid = eti.DynEntityUid,
+                            DynEntityConfigUid = eti.DynEntityConfigUid,
+                            TaxonomyItemUid = eti.TaxonomyItemUid
+                        });
+
+                        _unitOfWork.DynEntityTaxonomyItemRepository.Delete(eti);
+                    }
+                }
+
+                // create new entity - taxonomy item relation
+                var entityConfigTaxonomyQueryable = _unitOfWork.DynEntityConfigTaxonomyRepository.AsQueryable();
+                var taxonomyItemsQueryable = _unitOfWork.TaxonomyItemRepository.AsQueryable();
+                var taxonomyItems = from taxonomyItemRef in entityConfigTaxonomyQueryable
+                                     .Where(ct => ct.DynEntityConfigId == assetType.ID)
+                                    select taxonomyItemsQueryable
+                                     .FirstOrDefault(ti => ti.TaxonomyItemId == taxonomyItemRef.TaxonomyItemId && ti.ActiveVersion);
+
+                foreach (var item in taxonomyItems.Where(i => i != null))
+                {
+                    _unitOfWork.DynEntityTaxonomyItemRepository.Insert(
+                        new DynEntityTaxonomyItem
+                        {
+                            DynEntityUid = asset.UID,
+                            DynEntityConfigUid = assetType.UID,
+                            TaxonomyItemUid = item.TaxonomyItemUid
+                        });
+                }
 
                 // add to index
                 _indexationService.UpdateIndex(asset);

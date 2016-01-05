@@ -1,10 +1,10 @@
-﻿using AssetManager.Infrastructure.Models;
-using System;
+﻿using System.Collections.Generic;
+using AssetManager.Infrastructure.Models;
 
 namespace AssetManager.Infrastructure.Services
 {
     public interface ITaxonomyService
     {
-        TaxonomyModel GetTaxonomyByAssetTypeId(long assetTypeId);
+        IEnumerable<TaxonomyModel> GetTaxonomyByAssetTypeId(long assetTypeId);
     }
 }

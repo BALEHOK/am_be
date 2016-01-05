@@ -20,6 +20,8 @@ namespace AppFramework.Entities
     [DataContract(IsReference = true)]
     [KnownType(typeof(Taxonomy))]
     [KnownType(typeof(TaxonomyItem))]
+    [KnownType(typeof(DynEntityTaxonomyItem))]
+    [KnownType(typeof(DynEntityTaxonomyItemHistory))]
     public partial class TaxonomyItem: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
     {
         #region Primitive Properties
@@ -343,6 +345,104 @@ namespace AppFramework.Entities
             }
         }
         private TaxonomyItem _parentItem;
+    
+        [DataMember]
+        public TrackableCollection<DynEntityTaxonomyItem> DynEntityTaxonomyItems
+        {
+            get
+            {
+                if (_dynEntityTaxonomyItems == null)
+                {
+                    _dynEntityTaxonomyItems = new TrackableCollection<DynEntityTaxonomyItem>();
+                    _dynEntityTaxonomyItems.CollectionChanged += FixupDynEntityTaxonomyItems;
+    				_dynEntityTaxonomyItems.IsLoaded = false;
+                }
+                return _dynEntityTaxonomyItems;
+            }
+            set
+            {
+                if (!ReferenceEquals(_dynEntityTaxonomyItems, value))
+                {
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+                    if (_dynEntityTaxonomyItems != null)
+                    {
+                        _dynEntityTaxonomyItems.CollectionChanged -= FixupDynEntityTaxonomyItems;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Remove the cascade delete event handler for any entities in the current collection.
+                        foreach (DynEntityTaxonomyItem item in _dynEntityTaxonomyItems)
+                        {
+                            ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                        }
+                    }
+                    _dynEntityTaxonomyItems = value;
+    				_dynEntityTaxonomyItems.IsLoaded = true;
+                    if (_dynEntityTaxonomyItems != null)
+                    {
+                        _dynEntityTaxonomyItems.CollectionChanged += FixupDynEntityTaxonomyItems;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Add the cascade delete event handler for any entities that are already in the new collection.
+                        foreach (DynEntityTaxonomyItem item in _dynEntityTaxonomyItems)
+                        {
+                            ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                        }
+                    }
+                    OnNavigationPropertyChanged("DynEntityTaxonomyItems");
+                }
+            }
+        }
+        private TrackableCollection<DynEntityTaxonomyItem> _dynEntityTaxonomyItems;
+    
+        [DataMember]
+        public TrackableCollection<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistories
+        {
+            get
+            {
+                if (_dynEntityTaxonomyItemHistories == null)
+                {
+                    _dynEntityTaxonomyItemHistories = new TrackableCollection<DynEntityTaxonomyItemHistory>();
+                    _dynEntityTaxonomyItemHistories.CollectionChanged += FixupDynEntityTaxonomyItemHistories;
+    				_dynEntityTaxonomyItemHistories.IsLoaded = false;
+                }
+                return _dynEntityTaxonomyItemHistories;
+            }
+            set
+            {
+                if (!ReferenceEquals(_dynEntityTaxonomyItemHistories, value))
+                {
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+                    if (_dynEntityTaxonomyItemHistories != null)
+                    {
+                        _dynEntityTaxonomyItemHistories.CollectionChanged -= FixupDynEntityTaxonomyItemHistories;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Remove the cascade delete event handler for any entities in the current collection.
+                        foreach (DynEntityTaxonomyItemHistory item in _dynEntityTaxonomyItemHistories)
+                        {
+                            ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                        }
+                    }
+                    _dynEntityTaxonomyItemHistories = value;
+    				_dynEntityTaxonomyItemHistories.IsLoaded = true;
+                    if (_dynEntityTaxonomyItemHistories != null)
+                    {
+                        _dynEntityTaxonomyItemHistories.CollectionChanged += FixupDynEntityTaxonomyItemHistories;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Add the cascade delete event handler for any entities that are already in the new collection.
+                        foreach (DynEntityTaxonomyItemHistory item in _dynEntityTaxonomyItemHistories)
+                        {
+                            ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                        }
+                    }
+                    OnNavigationPropertyChanged("DynEntityTaxonomyItemHistories");
+                }
+            }
+        }
+        private TrackableCollection<DynEntityTaxonomyItemHistory> _dynEntityTaxonomyItemHistories;
 
         #endregion
 
@@ -426,6 +526,8 @@ namespace AppFramework.Entities
             Taxonomy = null;
             ChildItems.Clear();
             ParentItem = null;
+            DynEntityTaxonomyItems.Clear();
+            DynEntityTaxonomyItemHistories.Clear();
         }
 
         #endregion
@@ -550,6 +652,108 @@ namespace AppFramework.Entities
                     {
                         ChangeTracker.RecordRemovalFromCollectionProperties("ChildItems", item);
                     }
+                }
+            }
+        }
+    
+        private void FixupDynEntityTaxonomyItems(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+    
+            if (e.NewItems != null)
+            {
+                foreach (DynEntityTaxonomyItem item in e.NewItems)
+                {
+                    item.TaxonomyItem = this;
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.ChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        ChangeTracker.RecordAdditionToCollectionProperties("DynEntityTaxonomyItems", item);
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Update the event listener to refer to the new dependent.
+                    ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                }
+            }
+    
+            if (e.OldItems != null)
+            {
+                foreach (DynEntityTaxonomyItem item in e.OldItems)
+                {
+                    if (ReferenceEquals(item.TaxonomyItem, this))
+                    {
+                        item.TaxonomyItem = null;
+                    }
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        ChangeTracker.RecordRemovalFromCollectionProperties("DynEntityTaxonomyItems", item);
+                        // Delete the dependent end of this identifying association. If the current state is Added,
+                        // allow the relationship to be changed without causing the dependent to be deleted.
+                        if (item.ChangeTracker.State != ObjectState.Added)
+                        {
+                            item.MarkAsDeleted();
+                        }
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Remove the previous dependent from the event listener.
+                    ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                }
+            }
+        }
+    
+        private void FixupDynEntityTaxonomyItemHistories(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+    
+            if (e.NewItems != null)
+            {
+                foreach (DynEntityTaxonomyItemHistory item in e.NewItems)
+                {
+                    item.TaxonomyItem = this;
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.ChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        ChangeTracker.RecordAdditionToCollectionProperties("DynEntityTaxonomyItemHistories", item);
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Update the event listener to refer to the new dependent.
+                    ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                }
+            }
+    
+            if (e.OldItems != null)
+            {
+                foreach (DynEntityTaxonomyItemHistory item in e.OldItems)
+                {
+                    if (ReferenceEquals(item.TaxonomyItem, this))
+                    {
+                        item.TaxonomyItem = null;
+                    }
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        ChangeTracker.RecordRemovalFromCollectionProperties("DynEntityTaxonomyItemHistories", item);
+                        // Delete the dependent end of this identifying association. If the current state is Added,
+                        // allow the relationship to be changed without causing the dependent to be deleted.
+                        if (item.ChangeTracker.State != ObjectState.Added)
+                        {
+                            item.MarkAsDeleted();
+                        }
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Remove the previous dependent from the event listener.
+                    ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
                 }
             }
         }

@@ -135,6 +135,12 @@
     <Compile Include="DynEntityIndex.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DynEntityTaxonomyItem.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DynEntityTaxonomyItemHistory.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DynEntityTransaction.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>

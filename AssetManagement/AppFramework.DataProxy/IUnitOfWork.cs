@@ -119,6 +119,8 @@ namespace AppFramework.DataProxy
         IDataProvider SqlProvider { get; set; }
 
         IDataRepository<SearchQuery> SearchQueryRepository { get; }
+        IDataRepository<DynEntityTaxonomyItem> DynEntityTaxonomyItemRepository { get; }
+        IDataRepository<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistoryRepository { get; }
 
         void Dispose();
         void Commit();

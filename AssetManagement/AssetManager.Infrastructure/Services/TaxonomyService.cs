@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AssetManager.Infrastructure.Models.TypeModels;
+using TaxonomyItem = AppFramework.Entities.TaxonomyItem;
 
 namespace AssetManager.Infrastructure.Services
 {
@@ -27,13 +28,14 @@ namespace AssetManager.Infrastructure.Services
             _assetTypeRepository = assetTypeRepository;
         }
 
-        public TaxonomyModel GetTaxonomyByAssetTypeId(long assetTypeId)
+        public IEnumerable<TaxonomyModel> GetTaxonomyByAssetTypeId(long assetTypeId)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
 
-            var item = _unitOfWork.TaxonomyItemRepository
+            var items = _unitOfWork.TaxonomyItemRepository
                 .GetTaxonomyItemsByAssetTypeId(assetTypeId)
-                .SingleOrDefault(ti => ti.Taxonomy.IsCategory); // show only category path
+                .Where(ti => ti.Taxonomy.IsCategory) // show only category path
+                .ToList();
 
             var assetTypeModel = new AssetTypeModel
                 {
@@ -41,16 +43,19 @@ namespace AssetManager.Infrastructure.Services
                     Id = assetType.ID
                 };
 
-            return item != null
-                ? GetTaxonomyPath(item, null, assetTypeModel)
-                : new TaxonomyModel
+            return items.Count > 0
+                ? items.Select(i => GetTaxonomyPath(i, null, assetTypeModel))
+                : new List<TaxonomyModel>(1)
                     {
-                        AssetType = assetTypeModel
+                        new TaxonomyModel
+                        {
+                            AssetType = assetTypeModel
+                        }
                     };
         }
 
         private TaxonomyModel GetTaxonomyPath(
-            AppFramework.Entities.TaxonomyItem item,
+            TaxonomyItem item,
             TaxonomyModel childModel = null,
             AssetTypeModel assetTypeModel = null)
         {
