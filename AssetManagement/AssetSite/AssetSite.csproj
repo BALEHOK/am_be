@@ -301,8 +301,6 @@
     <Content Include="admin\Default.aspx" />
     <Content Include="admin\FAQItems.aspx" />
     <Content Include="admin\LocationMove.aspx" />
-    <Content Include="admin\Reports\AddOnView\Default.aspx" />
-    <Content Include="admin\Reports\Designer.aspx" />
     <Content Include="admin\Search\Default.aspx" />
     <Content Include="admin\Search\Log.aspx" />
     <Content Include="admin\Synk\Default.aspx" />
@@ -795,8 +793,6 @@
     <Content Include="RecoverCredentials.aspx" />
     <Content Include="Mobile\Default.aspx" />
     <Content Include="javascript\Silverlight.js" />
-    <Content Include="Reports\List.aspx" />
-    <Content Include="Reports\Render.aspx" />
     <Content Include="javascript\moment-with-langs.js" />
     <Content Include="javascript\moment-with-langs.min.js" />
     <Content Include="javascript\moment.js" />
@@ -971,24 +967,6 @@
     </Compile>
     <Compile Include="admin\LocationMove.aspx.designer.cs">
       <DependentUpon>LocationMove.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\AddOnView\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\AddOnView\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\Add\AssetTypeViewModel.cs" />
-    <Compile Include="admin\Reports\Designer.aspx.cs">
-      <DependentUpon>Designer.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\Designer.aspx.designer.cs">
-      <DependentUpon>Designer.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\ReportPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="admin\Search\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -1675,34 +1653,6 @@
     <Compile Include="RecoverCredentials.aspx.designer.cs">
       <DependentUpon>RecoverCredentials.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Reports\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reports\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\List.aspx.cs">
-      <DependentUpon>List.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reports\List.aspx.designer.cs">
-      <DependentUpon>List.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\Render.aspx.cs">
-      <DependentUpon>Render.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reports\Render.aspx.designer.cs">
-      <DependentUpon>Render.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\RenderReport.aspx.cs">
-      <DependentUpon>RenderReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reports\RenderReport.aspx.designer.cs">
-      <DependentUpon>RenderReport.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Search\ResultByCategory.aspx.cs">
       <DependentUpon>ResultByCategory.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1788,27 +1738,6 @@
     <Compile Include="Controls\SortableListbox.ascx.designer.cs">
       <DependentUpon>SortableListbox.ascx</DependentUpon>
     </Compile>
-    <Compile Include="admin\Reports\Add\AssetInfo.aspx.cs">
-      <DependentUpon>AssetInfo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\Add\AssetInfo.aspx.designer.cs">
-      <DependentUpon>AssetInfo.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\Add\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\Add\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\Add\SelectTemplate.aspx.cs">
-      <DependentUpon>SelectTemplate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\Add\SelectTemplate.aspx.designer.cs">
-      <DependentUpon>SelectTemplate.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Search\SearchByContext.aspx.cs">
       <DependentUpon>SearchByContext.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1822,13 +1751,6 @@
     </Compile>
     <Compile Include="Search\ResultByContext.aspx.designer.cs">
       <DependentUpon>ResultByContext.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Reports\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Reports\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Search\ResultByType.aspx.cs">
       <DependentUpon>ResultByType.aspx</DependentUpon>
@@ -2076,15 +1998,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="images\buttons\error.png" />
-    <Content Include="admin\Reports\Add\AssetInfo.aspx" />
-    <Content Include="admin\Reports\Add\Default.aspx" />
-    <Content Include="admin\Reports\Add\SelectTemplate.aspx" />
     <Content Include="Search\SearchByContext.aspx" />
     <Content Include="Search\ResultByContext.aspx" />
     <Content Include="images\buttons\attention.png" />
     <Content Include="images\buttons\close.png" />
     <Content Include="images\buttons\question.png" />
-    <Content Include="admin\Reports\Default.aspx" />
     <Content Include="images\buttons\question_hover.png" />
     <Content Include="javascript\jquery-delegate.js" />
     <Content Include="Search\ResultByType.aspx" />
@@ -2126,7 +2044,6 @@
     <Content Include="Config.Files\Web.sitemap" />
     <Content Include="admin\Languages\Web.config" />
     <Content Include="admin\Export\Web.config" />
-    <None Include="admin\Reports\Add\FinInfo.ttx" />
     <Content Include="App_Themes\Default\Button.skin" />
     <Content Include="App_Themes\Default\Dropdown.skin" />
     <Content Include="App_Themes\Default\Grid.skin" />
@@ -2143,8 +2060,6 @@
     <Content Include="admin\Batch\Actions.aspx" />
     <Content Include="admin\Batch\Default.aspx" />
     <Content Include="images\buttons\zoom.png" />
-    <Content Include="Reports\Default.aspx" />
-    <Content Include="Reports\RenderReport.aspx" />
     <Content Include="Search\ResultByCategory.aspx" />
     <Content Include="Web.sitemap">
       <SubType>Designer</SubType>
@@ -2247,15 +2162,6 @@
     <Content Include="admin\Import\App_LocalResources\Default.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="admin\Reports\App_LocalResources\Default.aspx.nl.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="admin\Taxonomies\App_LocalResources\ManageTypes.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2322,12 +2228,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="admin\Taxonomies\App_LocalResources\ManageTypes.aspx.nl.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\App_LocalResources\Default.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="admin\App_LocalResources\DataTypesValidation.aspx.nl.resx">
@@ -2403,9 +2303,6 @@
     <Content Include="admin\Import\App_LocalResources\Default.aspx.fr.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.fr.resx" />
-    <Content Include="admin\Reports\Add\App_LocalResources\SelectTemplate.aspx.fr.resx" />
-    <Content Include="admin\Reports\App_LocalResources\Default.aspx.fr.resx" />
     <Content Include="admin\Taxonomies\App_LocalResources\Default.aspx.fr.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2465,7 +2362,6 @@
     <Content Include="admin\Contexts\App_LocalResources\Default.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="admin\Reports\Add\App_LocalResources\Default.aspx.nl.resx" />
     <Content Include="admin\Synk\App_LocalResources\Default.aspx.fr.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2478,15 +2374,6 @@
     <Content Include="admin\App_LocalResources\CacheMonitor.aspx.nl.resx" />
     <Content Include="admin\App_LocalResources\DataTypes.aspx.nl.resx" />
     <Content Include="admin\App_LocalResources\UsersMonitor.aspx.nl.resx" />
-    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.fr.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.nl.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Reports\AddOnView\App_LocalResources\Default.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
     <EmbeddedResource Include="admin\Users\App_LocalResources\ViewRights.aspx.fr.resx" />
     <Content Include="Asset\App_LocalResources\AttachDocument.aspx.fr.resx" />
     <Content Include="Asset\App_LocalResources\Edit.aspx.fr.resx" />
@@ -2623,10 +2510,6 @@
     <Content Include="Search\App_LocalResources\ResultByContext.aspx.fr.resx" />
     <Content Include="Search\App_LocalResources\ResultByCategory.aspx.fr.resx" />
     <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.fr.resx" />
-    <Content Include="Reports\App_LocalResources\RenderReport.aspx.fr.resx" />
-    <Content Include="Reports\App_LocalResources\Default.aspx.fr.resx" />
-    <Content Include="Reports\App_LocalResources\RenderReport.aspx.nl.resx" />
-    <Content Include="Reports\App_LocalResources\Default.aspx.nl.resx" />
     <Content Include="Wizard\App_LocalResources\Step8.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2680,8 +2563,6 @@
     <Content Include="Wizard\App_LocalResources\Step2.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Reports\App_LocalResources\RenderReport.aspx.resx" />
-    <Content Include="Reports\App_LocalResources\Default.aspx.resx" />
     <Content Include="Wizard\App_LocalResources\EditValidationRule.aspx.resx" />
     <Content Include="Wizard\App_LocalResources\EditPanel.aspx.resx" />
     <Content Include="Wizard\App_LocalResources\EditAttribute.aspx.resx">
@@ -2709,7 +2590,6 @@
   <ItemGroup>
     <Folder Include="admin\Export\Exported\" />
     <Folder Include="admin\Import\Received\" />
-    <Folder Include="admin\Reports\Templates\" />
     <Folder Include="App_Code\" />
     <Folder Include="App_Data\Download\" />
     <Folder Include="App_Data\Logs\" />

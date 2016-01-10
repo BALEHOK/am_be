@@ -16,20 +16,21 @@ namespace AssetManagerAdmin.Infrastructure
                 new Uri("Views/LoginView.xaml", UriKind.Relative));
             navigationService.Configure(ViewModelLocator.FormulaBuilderKey,
                 new Uri("Views/FormulaBuilderView.xaml", UriKind.Relative));
-            navigationService.Configure(ViewModelLocator.ReportsBuilderKey,
-                new Uri("Views/ReportsBuilderView.xaml", UriKind.Relative));
+            navigationService.Configure(ViewModelLocator.ReportBuilderKey,
+                new Uri("Views/ReportBuilderView.xaml", UriKind.Relative));
             navigationService.Configure(ViewModelLocator.ValidationBuilderKey,
                 new Uri("Views/ValidationBuilderView.xaml", UriKind.Relative));
-
-            Container.RegisterInstance<IFrameNavigationService>(navigationService);
 
             Container.RegisterType<MainViewModel>()
                 .RegisterType<WebAdminViewModel>()
                 .RegisterType<FormulaBuilderViewModel>()
                 .RegisterType<ValidationBuilderViewModel>()
-                .RegisterType<ReportsBuilderViewModel>()
+                .RegisterType<OpenReportDialogViewModel>()
+                .RegisterType<ReportBuilderViewModel>()
                 .RegisterType<LoginViewModel>()
                 .RegisterType<AuthViewModel>();
+
+            Container.RegisterInstance<IFrameNavigationService>(navigationService);
         }
     }
 }

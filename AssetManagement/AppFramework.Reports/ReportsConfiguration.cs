@@ -10,7 +10,7 @@ namespace AppFramework.Reports
         protected override void Initialize()
         {
             Container
-                .RegisterType<ICustomReportService<CustomDevExpressReport>, DevExpressCustomReportsService>()
+                .RegisterType<ICustomReportService, DevExpressCustomReportsService>()
                 .RegisterType<IStandardReportService, DevExpressStandardReportService>()
                 .RegisterType<IReportDataProvider<AssetXtraReport>, AssetReportDataProvider>()
                 .RegisterType<IReportDataProvider<AssetsWithChildsReport>, AssetWithChildsReportDataProvider>()

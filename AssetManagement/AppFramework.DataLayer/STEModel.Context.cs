@@ -204,12 +204,6 @@ namespace AppFramework.DataLayer
         }
         private ObjectSet<PredefinedAttributes> _predefinedAttributes;
     
-        public ObjectSet<ReportField> ReportField
-        {
-            get { return _reportField  ?? (_reportField = CreateObjectSet<ReportField>("ReportField")); }
-        }
-        private ObjectSet<ReportField> _reportField;
-    
         public ObjectSet<Reservation> Reservation
         {
             get { return _reservation  ?? (_reservation = CreateObjectSet<Reservation>("Reservation")); }
@@ -305,12 +299,6 @@ namespace AppFramework.DataLayer
             get { return _task  ?? (_task = CreateObjectSet<Task>("Task")); }
         }
         private ObjectSet<Task> _task;
-    
-        public ObjectSet<Report> Report
-        {
-            get { return _report  ?? (_report = CreateObjectSet<Report>("Report")); }
-        }
-        private ObjectSet<Report> _report;
     
         public ObjectSet<AttributePanel> AttributePanel
         {
@@ -420,12 +408,6 @@ namespace AppFramework.DataLayer
         }
         private ObjectSet<BatchSchedule> _batchSchedules;
     
-        public ObjectSet<ReportLayout> ReportLayouts
-        {
-            get { return _reportLayouts  ?? (_reportLayouts = CreateObjectSet<ReportLayout>("ReportLayouts")); }
-        }
-        private ObjectSet<ReportLayout> _reportLayouts;
-    
         public ObjectSet<SearchTracking> SearchTracking
         {
             get { return _searchTracking  ?? (_searchTracking = CreateObjectSet<SearchTracking>("SearchTracking")); }
@@ -449,6 +431,12 @@ namespace AppFramework.DataLayer
             get { return _searchQueryAttributes  ?? (_searchQueryAttributes = CreateObjectSet<SearchQueryAttribute>("SearchQueryAttributes")); }
         }
         private ObjectSet<SearchQueryAttribute> _searchQueryAttributes;
+    
+        public ObjectSet<Report> Reports
+        {
+            get { return _reports  ?? (_reports = CreateObjectSet<Report>("Reports")); }
+        }
+        private ObjectSet<Report> _reports;
     
         public ObjectSet<DynEntityTaxonomyItem> DynEntityTaxonomyItems
         {

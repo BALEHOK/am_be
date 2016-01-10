@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Models.TypeModels;
@@ -10,15 +9,12 @@ namespace AssetManagerAdmin.WebApi
     {
         [ProgressBar("Loading asset types...")]
         Task<TypesInfoModel> GetTypesInfo();
-
-        [ProgressBar("Loading reports list...")]
-        Task<List<CustomReportModel>> GetReportsList();
-
-        [ProgressBar("Publishing Report...")]
-        Task<string> PublishReport(string name, string fileName, long typeId);
+ 
+        [ProgressBar("Creating a report...")]
+        Task<long> CreateReport(string reportName, long assetTypeId);
 
         [ProgressBar("Deleting Report...")]
-        Task<string> DeleteReport(string name, long typeId);
+        Task DeleteReport(long reportId);
 
         [ProgressBar("Saving Formula...")]
         Task<string> SaveFormula(AssetTypeModel assetType, string attributeName, string formula);

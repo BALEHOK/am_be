@@ -9,7 +9,7 @@ namespace AssetManager.Infrastructure.Models.TypeModels
 
         public string DbName { get; set; }
 
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         public string Description { get; set; }
 

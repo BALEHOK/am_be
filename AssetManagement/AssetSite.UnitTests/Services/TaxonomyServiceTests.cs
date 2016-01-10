@@ -1,4 +1,6 @@
-﻿using AppFramework.DataProxy;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AppFramework.DataProxy;
 using AppFramework.Entities;
 using AppFramework.UnitTests.Common.Fixtures;
 using AssetManager.Infrastructure.Services;
@@ -34,7 +36,7 @@ namespace AssetSite.UnitTests.Services
                 .Setup(uow => uow
                     .TaxonomyItemRepository
                     .GetTaxonomyItemsByAssetTypeId(assetTypeId))
-                .Returns(new[] {
+                .Returns(new List<TaxonomyItem> {
                     new TaxonomyItem
                     {
                         Name = "second",
@@ -49,10 +51,14 @@ namespace AssetSite.UnitTests.Services
                     }});
             //Act
             var result = sut.GetTaxonomyByAssetTypeId(assetTypeId);
+            
             //Assert
-            Assert.Equal("first", result.Name);
-            Assert.Equal("second", result.Child.Name);
-            Assert.Equal(assetType.NameInvariant, result.Child.AssetType.DisplayName);
+            Assert.Equal(1, result.Count());
+
+            var item = result.First();
+            Assert.Equal("first", item.Name);
+            Assert.Equal("second", item.Child.Name);
+            Assert.Equal(assetType.NameInvariant, item.Child.AssetType.DisplayName);
         }
     }
 }

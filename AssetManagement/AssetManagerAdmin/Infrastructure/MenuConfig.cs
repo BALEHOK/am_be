@@ -62,9 +62,9 @@ namespace AssetManagerAdmin.Infrastructure
                 new MenuItemViewModel
                 {
                     Id = 3,
-                    Name = "Reports",
+                    Name = "Report Builder",
                     OnClick = navigateTo(
-                        ViewModelLocator.ReportsBuilderKey,
+                        ViewModelLocator.ReportBuilderKey,
                         null)
                 },
                 new MenuItemViewModel

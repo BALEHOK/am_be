@@ -145,12 +145,24 @@ namespace AppFramework.Entities
                     if (_searchQueryAttributes != null)
                     {
                         _searchQueryAttributes.CollectionChanged -= FixupSearchQueryAttributes;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Remove the cascade delete event handler for any entities in the current collection.
+                        foreach (SearchQueryAttribute item in _searchQueryAttributes)
+                        {
+                            ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                        }
                     }
                     _searchQueryAttributes = value;
     				_searchQueryAttributes.IsLoaded = true;
                     if (_searchQueryAttributes != null)
                     {
                         _searchQueryAttributes.CollectionChanged += FixupSearchQueryAttributes;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Add the cascade delete event handler for any entities that are already in the new collection.
+                        foreach (SearchQueryAttribute item in _searchQueryAttributes)
+                        {
+                            ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                        }
                     }
                     OnNavigationPropertyChanged("SearchQueryAttributes");
                 }
@@ -264,6 +276,9 @@ namespace AppFramework.Entities
                         }
                         ChangeTracker.RecordAdditionToCollectionProperties("SearchQueryAttributes", item);
                     }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Update the event listener to refer to the new dependent.
+                    ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
                 }
             }
     
@@ -279,6 +294,9 @@ namespace AppFramework.Entities
                     {
                         ChangeTracker.RecordRemovalFromCollectionProperties("SearchQueryAttributes", item);
                     }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Remove the previous dependent from the event listener.
+                    ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
                 }
             }
         }

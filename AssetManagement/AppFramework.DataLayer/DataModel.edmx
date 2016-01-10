@@ -306,26 +306,6 @@
           <Property Name="OwnerId" Type="bigint" />
           <Property Name="Name" Type="nvarchar(max)" />
         </EntityType>
-        <EntityType Name="DynEntityTaxonomyItem">
-          <Key>
-            <PropertyRef Name="DynEntityConfigUid" />
-            <PropertyRef Name="DynEntityUid" />
-            <PropertyRef Name="TaxonomyItemUid" />
-          </Key>
-          <Property Name="DynEntityConfigUid" Type="bigint" Nullable="false" />
-          <Property Name="DynEntityUid" Type="bigint" Nullable="false" />
-          <Property Name="TaxonomyItemUid" Type="bigint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DynEntityTaxonomyItemHistory">
-          <Key>
-            <PropertyRef Name="DynEntityConfigUid" />
-            <PropertyRef Name="DynEntityUid" />
-            <PropertyRef Name="TaxonomyItemUid" />
-          </Key>
-          <Property Name="DynEntityConfigUid" Type="bigint" Nullable="false" />
-          <Property Name="DynEntityUid" Type="bigint" Nullable="false" />
-          <Property Name="TaxonomyItemUid" Type="bigint" Nullable="false" />
-        </EntityType>
         <EntityType Name="DynEntityTransaction">
           <Key>
             <PropertyRef Name="DynEntityTransactionUid" />
@@ -607,31 +587,11 @@
             <PropertyRef Name="ReportUid" />
           </Key>
           <Property Name="ReportUid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="IsFinancial" Type="bit" Nullable="false" />
-          <Property Name="ReportFile" Type="nvarchar" MaxLength="255" />
-          <Property Name="DynConfigId" Type="bigint" />
-          <Property Name="SyncWithOpenItem" Type="bit" Nullable="false" />
-          <Property Name="Type" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ReportField">
-          <Key>
-            <PropertyRef Name="ReportFieldUid" />
-          </Key>
-          <Property Name="ReportFieldUid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ReportUid" Type="bigint" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
-          <Property Name="IsVisible" Type="bit" Nullable="false" />
-          <Property Name="IsFilter" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ReportLayout">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="FilePath" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="ReportTypeName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsFinancial" Type="bit" Nullable="false" />
+          <Property Name="DynEntityConfigId" Type="bigint" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="LayoutData" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -1117,30 +1077,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DDynEntityTaxonomyItem_DynEntityConfig">
-          <End Role="DynEntityConfig" Type="Self.DynEntityConfig" Multiplicity="1" />
-          <End Role="DynEntityTaxonomyItem" Type="Self.DynEntityTaxonomyItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityConfig">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItem">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DDynEntityTaxonomyItem_TaxonomyItem">
-          <End Role="TaxonomyItem" Type="Self.TaxonomyItem" Multiplicity="1" />
-          <End Role="DynEntityTaxonomyItem" Type="Self.DynEntityTaxonomyItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DynEntityAttribScreens_DynEntityAttribUid">
           <End Role="DynEntityAttribConfig" Type="Self.DynEntityAttribConfig" Multiplicity="1" />
           <End Role="DynEntityAttribScreens" Type="Self.DynEntityAttribScreens" Multiplicity="*" />
@@ -1203,18 +1139,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DynEntityTaxonomyItemHistory_DynEntityConfig">
-          <End Role="DynEntityConfig" Type="Self.DynEntityConfig" Multiplicity="1" />
-          <End Role="DynEntityTaxonomyItemHistory" Type="Self.DynEntityTaxonomyItemHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityConfig">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItemHistory">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DynListValue_DynEntityAttribConfig">
           <End Role="DynEntityAttribConfig" Type="Self.DynEntityAttribConfig" Multiplicity="1" />
           <End Role="DynListValue" Type="Self.DynListValue" Multiplicity="*" />
@@ -1262,20 +1186,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Principal>
             <Dependent Role="Place2Zip">
               <PropertyRef Name="ZipId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ReportField_Report">
-          <End Role="Report" Type="Self.Report" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ReportField" Type="Self.ReportField" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Report">
-              <PropertyRef Name="ReportUid" />
-            </Principal>
-            <Dependent Role="ReportField">
-              <PropertyRef Name="ReportUid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1443,20 +1353,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="TaxonomyItem_DynEntityTaxonomyItemHistory_FK1">
-          <End Role="TaxonomyItem" Type="Self.TaxonomyItem" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="DynEntityTaxonomyItemHistory" Type="Self.DynEntityTaxonomyItemHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItemHistory">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="TransactionType_DynEntityTransaction_FK1">
           <End Role="TransactionType" Type="Self.TransactionType" Multiplicity="1" />
           <End Role="DynEntityTransaction" Type="Self.DynEntityTransaction" Multiplicity="*" />
@@ -1520,7 +1416,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="userId" Type="bigint" Mode="In" />
           <Parameter Name="TaxonomyItemId" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="f_cust_GetReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetReports" />
         <Function Name="f_cust_GetSqlServerAgentJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSqlServerAgentJobs" />
         <Function Name="f_cust_GetSrchCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSrchCount">
           <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
@@ -1607,8 +1502,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="DynEntityConfigTaxonomy" EntityType="Self.DynEntityConfigTaxonomy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityContextAttributesValues" EntityType="Self.DynEntityContextAttributesValues" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityIndex" EntityType="Self.DynEntityIndex" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DynEntityTaxonomyItem" EntityType="Self.DynEntityTaxonomyItem" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DynEntityTaxonomyItemHistory" EntityType="Self.DynEntityTaxonomyItemHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityTransaction" EntityType="Self.DynEntityTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityType" EntityType="Self.DynEntityType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynList" EntityType="Self.DynList" Schema="dbo" store:Type="Tables" />
@@ -1630,8 +1523,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="PredefinedAsset" EntityType="Self.PredefinedAsset" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PredefinedAttributes" EntityType="Self.PredefinedAttributes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ReportField" EntityType="Self.ReportField" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ReportLayout" EntityType="Self.ReportLayout" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservation" EntityType="Self.Reservation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rights" EntityType="Self.Rights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScreenLayout" EntityType="Self.ScreenLayout" Schema="dbo" store:Type="Tables" />
@@ -1738,14 +1629,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="BatchSchedule" EntitySet="BatchSchedule" />
             <End Role="BatchJob" EntitySet="BatchJob" />
           </AssociationSet>
-          <AssociationSet Name="FK_DDynEntityTaxonomyItem_DynEntityConfig" Association="Self.FK_DDynEntityTaxonomyItem_DynEntityConfig">
-            <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
-            <End Role="DynEntityTaxonomyItem" EntitySet="DynEntityTaxonomyItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DDynEntityTaxonomyItem_TaxonomyItem" Association="Self.FK_DDynEntityTaxonomyItem_TaxonomyItem">
-            <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
-            <End Role="DynEntityTaxonomyItem" EntitySet="DynEntityTaxonomyItem" />
-          </AssociationSet>
           <AssociationSet Name="FK_DynEntityAttribScreens_DynEntityAttribUid" Association="Self.FK_DynEntityAttribScreens_DynEntityAttribUid">
             <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfig" />
             <End Role="DynEntityAttribScreens" EntitySet="DynEntityAttribScreens" />
@@ -1766,10 +1649,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="DynListItem" EntitySet="DynListItem" />
             <End Role="DynEntityContextAttributesValues" EntitySet="DynEntityContextAttributesValues" />
           </AssociationSet>
-          <AssociationSet Name="FK_DynEntityTaxonomyItemHistory_DynEntityConfig" Association="Self.FK_DynEntityTaxonomyItemHistory_DynEntityConfig">
-            <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
-            <End Role="DynEntityTaxonomyItemHistory" EntitySet="DynEntityTaxonomyItemHistory" />
-          </AssociationSet>
           <AssociationSet Name="FK_DynListValue_DynEntityAttribConfig" Association="Self.FK_DynListValue_DynEntityAttribConfig">
             <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfig" />
             <End Role="DynListValue" EntitySet="DynListValue" />
@@ -1785,10 +1664,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="FK_Place2Zip_ZipCode" Association="Self.FK_Place2Zip_ZipCode">
             <End Role="ZipCode" EntitySet="ZipCode" />
             <End Role="Place2Zip" EntitySet="Place2Zip" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReportField_Report" Association="Self.FK_ReportField_Report">
-            <End Role="Report" EntitySet="Report" />
-            <End Role="ReportField" EntitySet="ReportField" />
           </AssociationSet>
           <AssociationSet Name="FK_SearchQueryAttributes_SearchQueries" Association="Self.FK_SearchQueryAttributes_SearchQueries">
             <End Role="SearchQueries" EntitySet="SearchQueries" />
@@ -1841,10 +1716,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="SearchOperators_DataTypeSearchOperators_FK1" Association="Self.SearchOperators_DataTypeSearchOperators_FK1">
             <End Role="SearchOperators" EntitySet="SearchOperators" />
             <End Role="DataTypeSearchOperators" EntitySet="DataTypeSearchOperators" />
-          </AssociationSet>
-          <AssociationSet Name="TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" Association="Self.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1">
-            <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
-            <End Role="DynEntityTaxonomyItemHistory" EntitySet="DynEntityTaxonomyItemHistory" />
           </AssociationSet>
           <AssociationSet Name="TransactionType_DynEntityTransaction_FK1" Association="Self.TransactionType_DynEntityTransaction_FK1">
             <End Role="TransactionType" EntitySet="TransactionType" />
@@ -1908,7 +1779,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <EntitySet Name="Place2Zip" EntityType="DataModel.Place2Zip" />
           <EntitySet Name="PredefinedAsset" EntityType="DataModel.PredefinedAsset" />
           <EntitySet Name="PredefinedAttributes" EntityType="DataModel.PredefinedAttributes" />
-          <EntitySet Name="ReportField" EntityType="DataModel.ReportField" />
           <EntitySet Name="Reservation" EntityType="DataModel.Reservation" />
           <EntitySet Name="Rights" EntityType="DataModel.Rights" />
           <EntitySet Name="SearchOperators" EntityType="DataModel.SearchOperators" />
@@ -1989,11 +1859,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="ValidationOperandValue" EntitySet="ValidationOperandValue" />
           </AssociationSet>
           <EntitySet Name="Task" EntityType="DataModel.Task" />
-          <EntitySet Name="Report" EntityType="DataModel.Report" />
-          <AssociationSet Name="FK_ReportField_Report" Association="DataModel.FK_ReportField_Report">
-            <End Role="Report" EntitySet="Report" />
-            <End Role="ReportField" EntitySet="ReportField" />
-          </AssociationSet>
           <EntitySet Name="AttributePanel" EntityType="DataModel.AttributePanel" />
           <AssociationSet Name="DynEntityConfig_AttributePanel_FK1" Association="DataModel.DynEntityConfig_AttributePanel_FK1">
             <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
@@ -2180,7 +2045,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="BatchSchedule" EntitySet="BatchSchedules" />
             <End Role="BatchJob" EntitySet="BatchJobs" />
           </AssociationSet>
-          <EntitySet Name="ReportLayouts" EntityType="DataModel.ReportLayout" />
           <FunctionImport Name="GetSqlServerAgentJobs" ReturnType="Collection(DataModel.f_cust_GetSqlServerAgentJobs_Result)" />
           <EntitySet Name="SearchTracking" EntityType="DataModel.SearchTracking" />
           <EntitySet Name="ScreenLayout" EntityType="DataModel.ScreenLayout" />
@@ -2190,7 +2054,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           </AssociationSet>
           <FunctionImport Name="f_cust_GetReports" ReturnType="Collection(DataModel.f_cust_GetReports_Result)" />
           <FunctionImport Name="f_cust_GetTasks" ReturnType="Collection(DataModel.ActiveTask)" >
-            <Parameter Name="UserId" Mode="In" Type="Int64" />
+          <Parameter Name="UserId" Mode="In" Type="Int64" />
           </FunctionImport>
           <EntitySet Name="SearchQueries" EntityType="DataModel.SearchQuery" />
           <EntitySet Name="SearchQueryAttributes" EntityType="DataModel.SearchQueryAttribute" />
@@ -2202,24 +2066,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="SearchQueryAttribute" EntitySet="SearchQueryAttributes" />
             <End Role="SearchQueryAttribute1" EntitySet="SearchQueryAttributes" />
           </AssociationSet>
-          <EntitySet Name="DynEntityTaxonomyItems" EntityType="DataModel.DynEntityTaxonomyItem" />
-          <EntitySet Name="DynEntityTaxonomyItemHistories" EntityType="DataModel.DynEntityTaxonomyItemHistory" />
-          <AssociationSet Name="FK_DDynEntityTaxonomyItem_DynEntityConfig" Association="DataModel.FK_DDynEntityTaxonomyItem_DynEntityConfig">
-            <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
-            <End Role="DynEntityTaxonomyItem" EntitySet="DynEntityTaxonomyItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DynEntityTaxonomyItemHistory_DynEntityConfig" Association="DataModel.FK_DynEntityTaxonomyItemHistory_DynEntityConfig">
-            <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
-            <End Role="DynEntityTaxonomyItemHistory" EntitySet="DynEntityTaxonomyItemHistories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DDynEntityTaxonomyItem_TaxonomyItem" Association="DataModel.FK_DDynEntityTaxonomyItem_TaxonomyItem">
-            <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
-            <End Role="DynEntityTaxonomyItem" EntitySet="DynEntityTaxonomyItems" />
-          </AssociationSet>
-          <AssociationSet Name="TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" Association="DataModel.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1">
-            <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
-            <End Role="DynEntityTaxonomyItemHistory" EntitySet="DynEntityTaxonomyItemHistories" />
-          </AssociationSet>
+          <EntitySet Name="Reports" EntityType="DataModel.Report" />
           </EntityContainer>
         <EntityType Name="AppSettings">
           <Key>
@@ -2474,17 +2321,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="String" Name="Name" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="Int64" Name="DynEntityConfigID" Nullable="false" />
           <Property Type="Int64" Name="DynEntityAttribConfigID" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ReportField">
-          <Key>
-            <PropertyRef Name="ReportFieldUid" />
-          </Key>
-          <Property Type="Int64" Name="ReportFieldUid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int64" Name="ReportUid" Nullable="false" />
-          <Property Type="String" Name="Name" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="IsVisible" Nullable="false" />
-          <Property Type="Boolean" Name="IsFilter" Nullable="false" />
-          <NavigationProperty Name="Report" Relationship="DataModel.FK_ReportField_Report" FromRole="ReportField" ToRole="Report" />
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -2749,8 +2585,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="DynEntityContextAttributesValues" Relationship="DataModel.FK_DynEntityContextAttributesValues_DynEntityConfig" FromRole="DynEntityConfig" ToRole="DynEntityContextAttributesValues" />
           <Property Type="Boolean" Name="ParentChildRelations" Nullable="false" />
           <NavigationProperty Name="DynEntityAttribConfigs" Relationship="DataModel.DynEntityConfig_DynEntityAttribConfig_FK1" FromRole="DynEntityConfig" ToRole="DynEntityAttribConfig" />
-          <NavigationProperty Name="DynEntityTaxonomyItems" Relationship="DataModel.FK_DDynEntityTaxonomyItem_DynEntityConfig" FromRole="DynEntityConfig" ToRole="DynEntityTaxonomyItem" />
-          <NavigationProperty Name="DynEntityTaxonomyItemHistories" Relationship="DataModel.FK_DynEntityTaxonomyItemHistory_DynEntityConfig" FromRole="DynEntityConfig" ToRole="DynEntityTaxonomyItemHistory" />
         </EntityType>
         <Association Name="FK_DynEntityConfig_Context">
           <End Type="DataModel.Context" Role="Context" Multiplicity="0..1" />
@@ -2831,8 +2665,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="Taxonomy" Relationship="DataModel.FK_TaxonomyItem_Taxonomy" FromRole="TaxonomyItem" ToRole="Taxonomy" />
           <NavigationProperty Name="ChildItems" Relationship="DataModel.FK_TaxonomyItem_TaxonomyItem_Parentness" FromRole="TaxonomyItem" ToRole="TaxonomyItem1" />
           <NavigationProperty Name="ParentItem" Relationship="DataModel.FK_TaxonomyItem_TaxonomyItem_Parentness" FromRole="TaxonomyItem1" ToRole="TaxonomyItem" />
-          <NavigationProperty Name="DynEntityTaxonomyItems" Relationship="DataModel.FK_DDynEntityTaxonomyItem_TaxonomyItem" FromRole="TaxonomyItem" ToRole="DynEntityTaxonomyItem" />
-          <NavigationProperty Name="DynEntityTaxonomyItemHistories" Relationship="DataModel.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" FromRole="TaxonomyItem" ToRole="DynEntityTaxonomyItemHistory" />
         </EntityType>
         <Association Name="FK_TaxonomyItem_Taxonomy">
           <End Type="DataModel.Taxonomy" Role="Taxonomy" Multiplicity="1" />
@@ -2914,33 +2746,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
           <Property Name="DisplayInSidebar" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="Report">
-          <Key>
-            <PropertyRef Name="ReportUid" />
-          </Key>
-          <Property Type="Int64" Name="ReportUid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="IsFinancial" Nullable="false" />
-          <Property Type="String" Name="ReportFile" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int64" Name="DynConfigId" />
-          <NavigationProperty Name="ReportField" Relationship="DataModel.FK_ReportField_Report" FromRole="Report" ToRole="ReportField" />
-          <Property Type="Boolean" Name="SyncWithOpenItem" Nullable="false" />
-          <Property Type="Int32" Name="Type" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_ReportField_Report">
-          <End Type="DataModel.Report" Role="Report" Multiplicity="1" >
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="DataModel.ReportField" Role="ReportField" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Report">
-              <PropertyRef Name="ReportUid" />
-            </Principal>
-            <Dependent Role="ReportField">
-              <PropertyRef Name="ReportUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="AttributePanel">
           <Key>
             <PropertyRef Name="AttributePanelUid" />
@@ -3658,15 +3463,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ReportLayout">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ReportTypeName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
         <ComplexType Name="f_cust_GetSqlServerAgentJobs_Result">
           <Property Type="Guid" Name="job_id" Nullable="false" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="128" />
@@ -3739,19 +3535,21 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Name="SearchQueryId" Type="Int64" />
           <Property Name="ParentId" Type="Int64" />
           <Property Name="Parenthesis" Type="Byte" />
+          <Property Name="LogicalOperator" Type="Byte" Nullable="false" />
           <Property Name="OperatorId" Type="Int32" />
           <Property Name="ValueLabel" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ReferencedAttributeId" Type="Int64" Nullable="false" />
+          <Property Name="Index" Type="Int32" Nullable="false" />
           <NavigationProperty Name="SearchQuery" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueries" FromRole="SearchQueryAttribute" ToRole="SearchQuery" />
           <NavigationProperty Name="ComplexValue" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" FromRole="SearchQueryAttribute" ToRole="SearchQueryAttribute1" />
           <NavigationProperty Name="Parent" Relationship="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" FromRole="SearchQueryAttribute1" ToRole="SearchQueryAttribute" />
-          <Property Name="Index" Type="Int32" Nullable="false" />
-          <Property Name="LogicalOperator" Type="Byte" Nullable="false" />
           <Property Name="ChildAssets" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_SearchQueryAttributes_SearchQueries">
-          <End Type="DataModel.SearchQuery" Role="SearchQuery" Multiplicity="0..1" />
+          <End Type="DataModel.SearchQuery" Role="SearchQuery" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="DataModel.SearchQueryAttribute" Role="SearchQueryAttribute" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="SearchQuery">
@@ -3774,80 +3572,17 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DynEntityTaxonomyItem">
+        <EntityType Name="Report">
           <Key>
-            <PropertyRef Name="DynEntityConfigUid" />
-            <PropertyRef Name="DynEntityUid" />
-            <PropertyRef Name="TaxonomyItemUid" />
+            <PropertyRef Name="ReportUid" />
           </Key>
-          <Property Name="DynEntityConfigUid" Type="Int64" Nullable="false" />
-          <Property Name="DynEntityUid" Type="Int64" Nullable="false" />
-          <Property Name="TaxonomyItemUid" Type="Int64" Nullable="false" />
-          <NavigationProperty Name="DynEntityConfig" Relationship="DataModel.FK_DDynEntityTaxonomyItem_DynEntityConfig" FromRole="DynEntityTaxonomyItem" ToRole="DynEntityConfig" />
-          <NavigationProperty Name="TaxonomyItem" Relationship="DataModel.FK_DDynEntityTaxonomyItem_TaxonomyItem" FromRole="DynEntityTaxonomyItem" ToRole="TaxonomyItem" />
+          <Property Name="ReportUid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsFinancial" Type="Boolean" Nullable="false" />
+          <Property Name="DynEntityConfigId" Type="Int64" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="LayoutData" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <EntityType Name="DynEntityTaxonomyItemHistory">
-          <Key>
-            <PropertyRef Name="DynEntityConfigUid" />
-            <PropertyRef Name="DynEntityUid" />
-            <PropertyRef Name="TaxonomyItemUid" />
-          </Key>
-          <Property Name="DynEntityConfigUid" Type="Int64" Nullable="false" />
-          <Property Name="DynEntityUid" Type="Int64" Nullable="false" />
-          <Property Name="TaxonomyItemUid" Type="Int64" Nullable="false" />
-          <NavigationProperty Name="DynEntityConfig" Relationship="DataModel.FK_DynEntityTaxonomyItemHistory_DynEntityConfig" FromRole="DynEntityTaxonomyItemHistory" ToRole="DynEntityConfig" />
-          <NavigationProperty Name="TaxonomyItem" Relationship="DataModel.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" FromRole="DynEntityTaxonomyItemHistory" ToRole="TaxonomyItem" />
-        </EntityType>
-        <Association Name="FK_DDynEntityTaxonomyItem_DynEntityConfig">
-          <End Type="DataModel.DynEntityConfig" Role="DynEntityConfig" Multiplicity="1" />
-          <End Type="DataModel.DynEntityTaxonomyItem" Role="DynEntityTaxonomyItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityConfig">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItem">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DynEntityTaxonomyItemHistory_DynEntityConfig">
-          <End Type="DataModel.DynEntityConfig" Role="DynEntityConfig" Multiplicity="1" />
-          <End Type="DataModel.DynEntityTaxonomyItemHistory" Role="DynEntityTaxonomyItemHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityConfig">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItemHistory">
-              <PropertyRef Name="DynEntityConfigUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DDynEntityTaxonomyItem_TaxonomyItem">
-          <End Type="DataModel.TaxonomyItem" Role="TaxonomyItem" Multiplicity="1" />
-          <End Type="DataModel.DynEntityTaxonomyItem" Role="DynEntityTaxonomyItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="TaxonomyItem_DynEntityTaxonomyItemHistory_FK1">
-          <End Type="DataModel.TaxonomyItem" Role="TaxonomyItem" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="DataModel.DynEntityTaxonomyItemHistory" Role="DynEntityTaxonomyItemHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TaxonomyItem">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Principal>
-            <Dependent Role="DynEntityTaxonomyItemHistory">
-              <PropertyRef Name="TaxonomyItemUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4102,17 +3837,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ReportField">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.ReportField)">
-        <MappingFragment StoreEntitySet="ReportField">
-          <ScalarProperty Name="ReportFieldUid" ColumnName="ReportFieldUid" />
-          <ScalarProperty Name="ReportUid" ColumnName="ReportUid" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="IsVisible" ColumnName="IsVisible" />
-          <ScalarProperty Name="IsFilter" ColumnName="IsFilter" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Reservation">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.Reservation)">
         <MappingFragment StoreEntitySet="Reservation">
@@ -4339,19 +4063,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ScalarProperty Name="ExecutableType" ColumnName="ExecutableType" />
           <ScalarProperty Name="ExecutablePath" ColumnName="ExecutablePath" />
           <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Report">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Report)">
-        <MappingFragment StoreEntitySet="Report">
-          <ScalarProperty Name="ReportUid" ColumnName="ReportUid" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="IsFinancial" ColumnName="IsFinancial" />
-          <ScalarProperty Name="ReportFile" ColumnName="ReportFile" />
-          <ScalarProperty Name="DynConfigId" ColumnName="DynConfigId" />
-          <ScalarProperty Name="SyncWithOpenItem" ColumnName="SyncWithOpenItem" />
-          <ScalarProperty Name="Type" ColumnName="Type" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4805,16 +4516,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ReportLayouts">
-            <EntityTypeMapping TypeName="DataModel.ReportLayout">
-              <MappingFragment StoreEntitySet="ReportLayout">
-                <ScalarProperty Name="ReportTypeName" ColumnName="ReportTypeName" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SearchTracking">
             <EntityTypeMapping TypeName="DataModel.SearchTracking">
               <MappingFragment StoreEntitySet="SearchTracking">
@@ -4845,29 +4546,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="f_cust_GetReports" FunctionName="DataModel.Store.f_cust_GetReports">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DataModel.f_cust_GetReports_Result">
-                <ScalarProperty Name="ReportUid" ColumnName="ReportUid" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="IsFinancial" ColumnName="IsFinancial" />
-                <ScalarProperty Name="ReportFile" ColumnName="ReportFile" />
-                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
-                <ScalarProperty Name="DynEntityConfigName" ColumnName="DynEntityConfigName" />
-                </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="f_cust_GetTasks" FunctionName="DataModel.Store.f_cust_GetTasks">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DataModel.ActiveTask">
-                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
-                <ScalarProperty Name="DynEntityConfigName" ColumnName="DynEntityConfigName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="SearchQueries">
             <EntityTypeMapping TypeName="DataModel.SearchQuery">
               <MappingFragment StoreEntitySet="SearchQueries">
@@ -4884,12 +4562,12 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <EntityTypeMapping TypeName="DataModel.SearchQueryAttribute">
               <MappingFragment StoreEntitySet="SearchQueryAttributes">
                 <ScalarProperty Name="ChildAssets" ColumnName="ChildAssets" />
-                <ScalarProperty Name="LogicalOperator" ColumnName="LogicalOperator" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="ReferencedAttributeId" ColumnName="ReferencedAttributeId" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="ValueLabel" ColumnName="ValueLabel" />
                 <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
+                <ScalarProperty Name="LogicalOperator" ColumnName="LogicalOperator" />
                 <ScalarProperty Name="Parenthesis" ColumnName="Parenthesis" />
                 <ScalarProperty Name="ParentId" ColumnName="ParentId" />
                 <ScalarProperty Name="SearchQueryId" ColumnName="SearchQueryId" />
@@ -4897,21 +4575,15 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DynEntityTaxonomyItems">
-            <EntityTypeMapping TypeName="DataModel.DynEntityTaxonomyItem">
-              <MappingFragment StoreEntitySet="DynEntityTaxonomyItem">
-                <ScalarProperty Name="TaxonomyItemUid" ColumnName="TaxonomyItemUid" />
-                <ScalarProperty Name="DynEntityUid" ColumnName="DynEntityUid" />
-                <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DynEntityTaxonomyItemHistories">
-            <EntityTypeMapping TypeName="DataModel.DynEntityTaxonomyItemHistory">
-              <MappingFragment StoreEntitySet="DynEntityTaxonomyItemHistory">
-                <ScalarProperty Name="TaxonomyItemUid" ColumnName="TaxonomyItemUid" />
-                <ScalarProperty Name="DynEntityUid" ColumnName="DynEntityUid" />
-                <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
+          <EntitySetMapping Name="Reports">
+            <EntityTypeMapping TypeName="DataModel.Report">
+              <MappingFragment StoreEntitySet="Report">
+                <ScalarProperty Name="LayoutData" ColumnName="LayoutData" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="IsFinancial" ColumnName="IsFinancial" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ReportUid" ColumnName="ReportUid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4937,37 +4609,36 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="SnBModel" ZoomLevel="80">
-        <EntityTypeShape EntityType="DataModel.AppSettings" Width="1.5" PointX="2.75" PointY="8.75" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="DataModel.CheckedOut" Width="1.5" PointX="0.75" PointY="11.75" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.Context" Width="1.5" PointX="3.625" PointY="21.5" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.DataType" Width="2.125" PointX="0.75" PointY="24.5" Height="4.2879036458333353" />
-        <EntityTypeShape EntityType="DataModel.DynEntityConfigTaxonomy" Width="1.5" PointX="12.75" PointY="0.75" Height="1.4033821614583246" />
-        <EntityTypeShape EntityType="DataModel.DynEntityIndex" Width="1.5" PointX="13.75" PointY="11.75" Height="2.5571907552083246" />
-        <EntityTypeShape EntityType="DataModel.DynEntityType" Width="1.5" PointX="3.625" PointY="31.75" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="DataModel.DynListValue" Width="1.5" PointX="11.125" PointY="21.625" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.ImportExport" Width="1.5" PointX="14.75" PointY="0.75" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.InventoryScan" Width="1.5" PointX="8.75" PointY="12" Height="3.7109993489583246" />
-        <EntityTypeShape EntityType="DataModel.InventoryScanItem" Width="1.5" PointX="11" PointY="12.625" Height="2.5571907552083388" />
-        <EntityTypeShape EntityType="DataModel.Languages" Width="1.5" PointX="0.75" PointY="15.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.LibraryTransactions" Width="1.5" PointX="13" PointY="8" Height="2.557190755208353" />
-        <EntityTypeShape EntityType="DataModel.LibraryTransactionType" Width="1.5" PointX="10.75" PointY="8.125" Height="2.1725878906249818" />
-        <EntityTypeShape EntityType="DataModel.MeasureUnit" Width="1.5" PointX="15.75" PointY="4.75" Height="1.980286458333353" />
-        <EntityTypeShape EntityType="DataModel.MultipleAssetsActive" Width="1.5" PointX="15.75" PointY="7.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.MultipleAssetsHistory" Width="1.5" PointX="15.75" PointY="10.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.Place" Width="1.5" PointX="0.75" PointY="6.125" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.Place2Zip" Width="1.5" PointX="3" PointY="5.875" Height="1.980286458333353" />
-        <EntityTypeShape EntityType="DataModel.PredefinedAsset" Width="1.5" PointX="15.75" PointY="13.75" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="DataModel.PredefinedAttributes" Width="1.5" PointX="16.75" PointY="0.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.ReportField" Width="1.5" PointX="10" PointY="1" Height="2.1725878906249818" />
-        <EntityTypeShape EntityType="DataModel.Reservation" Width="1.5" PointX="10.75" PointY="16.75" Height="3.7109993489583335" />
-        <EntityTypeShape EntityType="DataModel.Rights" Width="1.5" PointX="12.75" PointY="16.75" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="DataModel.SearchOperators" Width="1.5" PointX="3.625" PointY="25.375" Height="2.3648893229166674" />
-        <EntityTypeShape EntityType="DataModel.StringResources" Width="1.5" PointX="16.75" PointY="16.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.Taxonomy" Width="1.5" PointX="3.625" PointY="12.375" Height="3.5186979166666106" />
-        <EntityTypeShape EntityType="DataModel.TransactionType" Width="1.5" PointX="5.75" PointY="6.125" Height="2.1725878906249818" />
-        <EntityTypeShape EntityType="DataModel.UserInRole" Width="1.5" PointX="13" PointY="5" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.ValidationList" Width="2.25" PointX="6.625" PointY="27.875" Height="3.7109993489583388" />
-        <EntityTypeShape EntityType="DataModel.ValidationOperator" Width="1.875" PointX="4" PointY="40.375" Height="2.557190755208353" />
+        <EntityTypeShape EntityType="DataModel.AppSettings" Width="1.5" PointX="12.75" PointY="14.75" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="DataModel.CheckedOut" Width="1.5" PointX="14.75" PointY="14.75" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="DataModel.Context" Width="1.5" PointX="3.625" PointY="19" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="DataModel.DataType" Width="2.125" PointX="0.75" PointY="21.75" Height="4.2879036458333353" />
+        <EntityTypeShape EntityType="DataModel.DynEntityConfigTaxonomy" Width="1.5" PointX="0.75" PointY="15.75" Height="1.4033821614583246" />
+        <EntityTypeShape EntityType="DataModel.DynEntityIndex" Width="1.5" PointX="16.75" PointY="14.75" Height="2.5571907552083246" />
+        <EntityTypeShape EntityType="DataModel.DynEntityType" Width="1.5" PointX="3.625" PointY="15.625" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="DataModel.DynListValue" Width="1.5" PointX="14.5" PointY="19" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="DataModel.ImportExport" Width="1.5" PointX="17.75" PointY="5.75" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="DataModel.InventoryScan" Width="1.5" PointX="14.75" PointY="1" Height="3.7109993489583246" />
+        <EntityTypeShape EntityType="DataModel.InventoryScanItem" Width="1.5" PointX="17" PointY="1.625" Height="2.5571907552083388" />
+        <EntityTypeShape EntityType="DataModel.Languages" Width="1.5" PointX="17.75" PointY="9.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.LibraryTransactions" Width="1.5" PointX="3" PointY="12" Height="2.557190755208353" />
+        <EntityTypeShape EntityType="DataModel.LibraryTransactionType" Width="1.5" PointX="0.75" PointY="12.125" Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="DataModel.MeasureUnit" Width="1.5" PointX="0.75" PointY="18.75" Height="1.980286458333353" />
+        <EntityTypeShape EntityType="DataModel.MultipleAssetsActive" Width="1.5" PointX="18.75" PointY="12.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.MultipleAssetsHistory" Width="1.5" PointX="18.75" PointY="15.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.Place" Width="1.5" PointX="10.75" PointY="6.125" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.Place2Zip" Width="1.5" PointX="13" PointY="5.875" Height="1.980286458333353" />
+        <EntityTypeShape EntityType="DataModel.PredefinedAsset" Width="1.5" PointX="16.75" PointY="18.75" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="DataModel.PredefinedAttributes" Width="1.5" PointX="19.75" PointY="0.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.Reservation" Width="1.5" PointX="19.75" PointY="3.75" Height="3.7109993489583335" />
+        <EntityTypeShape EntityType="DataModel.Rights" Width="1.5" PointX="19.75" PointY="8.75" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="DataModel.SearchOperators" Width="1.5" PointX="3.625" PointY="22.875" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="DataModel.StringResources" Width="1.5" PointX="20.75" PointY="12.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.Taxonomy" Width="1.5" PointX="0.75" PointY="6.5" Height="3.5186979166666106" />
+        <EntityTypeShape EntityType="DataModel.TransactionType" Width="1.5" PointX="12.75" PointY="10.125" Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="DataModel.UserInRole" Width="1.5" PointX="20.75" PointY="15.75" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.ValidationList" Width="2.25" PointX="6.625" PointY="25.25" Height="3.7109993489583388" />
+        <EntityTypeShape EntityType="DataModel.ValidationOperator" Width="1.875" PointX="4" PointY="37.875" Height="2.557190755208353" />
         <AssociationConnector Association="DataModel.DataType_Context_FK1" >
           <ConnectorPoint PointX="2.59375" PointY="24.5" />
           <ConnectorPoint PointX="2.59375" PointY="23.223297026041664" />
@@ -5014,13 +4685,13 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="6.395833333333333" PointY="28.28125" />
           <ConnectorPoint PointX="6.625" PointY="28.28125" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.ZipCode" Width="1.5" PointX="0.75" PointY="9.125" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="DataModel.ZipCode" Width="1.5" PointX="10.75" PointY="9.125" Height="1.5956835937499818" />
         <AssociationConnector Association="DataModel.FK_Place2Zip_ZipCode" >
           <ConnectorPoint PointX="7.625" PointY="4.28125" />
           <ConnectorPoint PointX="9.78125" PointY="4.28125" />
           <ConnectorPoint PointX="9.78125" PointY="2.855286458333353" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DynEntityConfig" Width="3.875" PointX="5.875" PointY="19.125" Height="7.9416308593750031" />
+        <EntityTypeShape EntityType="DataModel.DynEntityConfig" Width="3.875" PointX="5.875" PointY="16.875" Height="7.9416308593750031" />
         <AssociationConnector Association="DataModel.FK_DynEntityConfig_Context" >
           <ConnectorPoint PointX="5.125" PointY="23.067047526041669" />
           <ConnectorPoint PointX="5.875" PointY="23.067047526041669" />
@@ -5051,7 +4722,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="9.4583333333333339" PointY="29.672841796875" />
           <ConnectorPoint PointX="9.625" PointY="29.672841796875" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.TaxonomyItem" Width="1.5" PointX="5.875" PointY="11.625" Height="4.8648079427083317" />
+        <EntityTypeShape EntityType="DataModel.TaxonomyItem" Width="1.5" PointX="3" PointY="6" Height="4.8648079427083317" />
         <AssociationConnector Association="DataModel.FK_TaxonomyItem_Taxonomy" >
           <ConnectorPoint PointX="4.875" PointY="9.0093489583333053" />
           <ConnectorPoint PointX="5.625" PointY="9.0093489583333053" />
@@ -5062,8 +4733,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="6.6034615384615378" PointY="11.614807942708332" />
           <ConnectorPoint PointX="6.6034615384615378" PointY="11.364807942708332" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DynListItem" Width="3.25" PointX="5.875" PointY="35.5" Height="3.3263964843750031" />
-        <EntityTypeShape EntityType="DataModel.ValidationOperandValue" Width="2.625" PointX="15.625" PointY="23.75" Height="1.787985026041671" />
+        <EntityTypeShape EntityType="DataModel.DynListItem" Width="3.25" PointX="5.875" PointY="32.875" Height="3.3263964843750031" />
+        <EntityTypeShape EntityType="DataModel.ValidationOperandValue" Width="2.625" PointX="9.625" PointY="26.25" Height="1.787985026041671" />
         <AssociationConnector Association="DataModel.FK_ValidationOperandValue_ValidationList" >
           <ConnectorPoint PointX="8.875" PointY="30.660672572916663" />
           <ConnectorPoint PointX="9.0104166666666661" PointY="30.660672572916663" />
@@ -5081,13 +4752,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="16.9375" PointY="25.875" />
           <ConnectorPoint PointX="16.9375" PointY="25.537985026041671" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.Task" Width="1.5" PointX="17.75" PointY="3.75" Height="3.1340950520833246" />
-        <EntityTypeShape EntityType="DataModel.Report" Width="1.5" PointX="7.75" PointY="1" Height="2.1725878906249818" />
-        <AssociationConnector Association="DataModel.FK_ReportField_Report" >
-          <ConnectorPoint PointX="2.625" PointY="2.2112939453124909" />
-          <ConnectorPoint PointX="3.375" PointY="2.2112939453124909" />
-        </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.AttributePanel" Width="2.75" PointX="13.375" PointY="21.125" Height="3.9033007812499818" />
+        <EntityTypeShape EntityType="DataModel.Task" Width="1.5" PointX="21.75" PointY="0.75" Height="3.1340950520833246" />
+        <EntityTypeShape EntityType="DataModel.AttributePanel" Width="2.75" PointX="10.5" PointY="18.5" Height="3.9033007812499818" />
         <AssociationConnector Association="DataModel.DynEntityConfig_AttributePanel_FK1" >
           <ConnectorPoint PointX="9.75" PointY="21.34375" />
           <ConnectorPoint PointX="9.9166666666666661" PointY="21.34375" />
@@ -5096,8 +4762,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="10.583333333333334" PointY="21.34375" />
           <ConnectorPoint PointX="13.375" PointY="21.34375" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.AssetTypeScreen" Width="1.5" PointX="8.125" PointY="21" Height="4.0956022135416674" />
-        <EntityTypeShape EntityType="DataModel.DynEntityAttribScreens" Width="1.875" PointX="15.875" PointY="27.375" Height="1.9802864583333246" />
+        <EntityTypeShape EntityType="DataModel.AssetTypeScreen" Width="1.5" PointX="10.5" PointY="13.375" Height="4.0956022135416674" />
+        <EntityTypeShape EntityType="DataModel.DynEntityAttribScreens" Width="1.875" PointX="17.5" PointY="21.5" Height="1.9802864583333246" />
         <AssociationConnector Association="DataModel.FK_AssetTypeScreen_DynEntityConfigUid" >
           <ConnectorPoint PointX="9.75" PointY="23.328250225360577" />
           <ConnectorPoint PointX="10" PointY="23.328250225360577" />
@@ -5134,7 +4800,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="16.4062505" PointY="25.662985026041667" />
           <ConnectorPoint PointX="16.4062505" PointY="27.375" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.ValidationOperand" Width="1.5" PointX="3.625" PointY="28.75" Height="1.9802864583333353" />
+        <EntityTypeShape EntityType="DataModel.ValidationOperand" Width="1.5" PointX="3.625" PointY="26.125" Height="1.9802864583333353" />
         <AssociationConnector Association="DataModel.FK_ValidationOperand_DataType" >
           <ConnectorPoint PointX="2.875" PointY="28.961253255208334" />
           <ConnectorPoint PointX="3.625" PointY="28.961253255208334" />
@@ -5171,22 +4837,22 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="17.625002000000002" PointY="25.859375" />
           <ConnectorPoint PointX="17.625002000000002" PointY="25.537985026041671" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.AttributePanelAttribute" Width="3.5" PointX="19.625" PointY="23.625" Height="2.5571907552083246" />
+        <EntityTypeShape EntityType="DataModel.AttributePanelAttribute" Width="3.5" PointX="20.5" PointY="20.625" Height="2.5571907552083246" />
         <AssociationConnector Association="DataModel.AttributePanel_AttributePanelAttribute_FK1" >
           <ConnectorPoint PointX="14.875" PointY="24.997145935096135" />
           <ConnectorPoint PointX="15.40625" PointY="25.528395935096135" />
           <ConnectorPoint PointX="15.40625" PointY="31.792631499511721" />
           <ConnectorPoint PointX="15.875" PointY="31.792631499511721" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DeletedEntity" Width="1.5" PointX="17.75" PointY="7.75" Height="1.7879850260416665" />
-        <EntityTypeShape EntityType="DataModel.DefaultValue" Width="1.5" PointX="17.75" PointY="10.75" Height="1.7879850260416674" />
-        <EntityTypeShape EntityType="DataModel.AssetsTaxonomies" Width="1.5" PointX="0.75" PointY="18.75" Height="3.1340950520833246" />
-        <EntityTypeShape EntityType="DataModel.TaskRights" Width="1.5" PointX="17.75" PointY="13.75" Height="2.1725878906249818" />
-        <EntityTypeShape EntityType="DataModel.DynEntityContextAttributesValues" Width="3.5" PointX="8.125" PointY="32.375" Height="2.1725878906249818" />
-        <EntityTypeShape EntityType="DataModel.IndexActiveDynEntities" Width="1.5" PointX="18.75" PointY="16.75" />
-        <EntityTypeShape EntityType="DataModel.IndexHistoryDynEntities" Width="1.5" PointX="19.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DataModel.BatchAction" Width="1.5" PointX="5.25" PointY="1.375" />
-        <EntityTypeShape EntityType="DataModel.DynEntityTransaction" Width="1.5" PointX="8" PointY="5" />
+        <EntityTypeShape EntityType="DataModel.DeletedEntity" Width="1.5" PointX="21.75" PointY="5.75" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="DataModel.DefaultValue" Width="1.5" PointX="21.75" PointY="8.75" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="DataModel.AssetsTaxonomies" Width="1.5" PointX="22.75" PointY="11.75" Height="3.1340950520833246" />
+        <EntityTypeShape EntityType="DataModel.TaskRights" Width="1.5" PointX="22.75" PointY="15.75" Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="DataModel.DynEntityContextAttributesValues" Width="3.5" PointX="16.5" PointY="24.875" Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="DataModel.IndexActiveDynEntities" Width="1.5" PointX="23.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DataModel.IndexHistoryDynEntities" Width="1.5" PointX="24.75" PointY="8.75" />
+        <EntityTypeShape EntityType="DataModel.BatchAction" Width="1.5" PointX="12.25" PointY="1.125" />
+        <EntityTypeShape EntityType="DataModel.DynEntityTransaction" Width="1.5" PointX="15" PointY="9" />
         <AssociationConnector Association="DataModel.TransactionType_DynEntityTransaction_FK1" />
         <AssociationConnector Association="DataModel.FK_DynEntityContextAttributesValues_Context" >
           <ConnectorPoint PointX="5.1249999999999964" PointY="24.634095052083335" />
@@ -5205,7 +4871,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="10.375000499999999" PointY="37.263896984375009" />
           <ConnectorPoint PointX="10.375000499999999" PointY="35.701396484375" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DynEntityAttribConfig" Width="2.25" PointX="13.125" PointY="26.125" Height="9.8646451822916674" />
+        <EntityTypeShape EntityType="DataModel.DynEntityAttribConfig" Width="2.25" PointX="13.5" PointY="23.625" Height="9.8646451822916674" />
         <AssociationConnector Association="DataModel.DynEntityAttribConfig_AttributePanelAttribute_FK1" >
           <ConnectorPoint PointX="14.625" PointY="30.835771811523436" />
           <ConnectorPoint PointX="15.322916666666666" PointY="30.835771811523436" />
@@ -5268,7 +4934,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="12.46875" PointY="30.115247337239648" />
           <ConnectorPoint PointX="12.46875" PointY="24.566793619791667" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DynList" Width="1.5" PointX="3.625" PointY="35" Height="3.710999348958353" />
+        <EntityTypeShape EntityType="DataModel.DynList" Width="1.5" PointX="3.625" PointY="32.75" Height="3.710999348958353" />
         <AssociationConnector Association="DataModel.DataType_DynList_FK1" >
           <ConnectorPoint PointX="2.3750025" PointY="29.172506510416667" />
           <ConnectorPoint PointX="2.3750025" PointY="36.855499674479177" />
@@ -5305,27 +4971,21 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="5.770833333333333" PointY="36.440937296549485" />
           <ConnectorPoint PointX="5.875" PointY="36.440937296549485" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.BatchJob" Width="1.5" PointX="3" PointY="1.125" Height="3.1340950520833246" />
+        <EntityTypeShape EntityType="DataModel.BatchJob" Width="1.5" PointX="10" PointY="1" Height="3.1340950520833246" />
         <AssociationConnector Association="DataModel.FK_BatchAction_BatchJob" >
           <ConnectorPoint PointX="4.5" PointY="2.6535953776041667" />
           <ConnectorPoint PointX="5.25" PointY="2.6535953776041667" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.BatchSchedule" Width="1.5" PointX="0.5" PointY="2.5" />
+        <EntityTypeShape EntityType="DataModel.BatchSchedule" Width="1.5" PointX="7.75" PointY="1.5" />
         <AssociationConnector Association="DataModel.FK_BatchJob_BatchSchedule" />
-        <EntityTypeShape EntityType="DataModel.ReportLayout" Width="1.5" PointX="20.375" PointY="8.75" />
-        <EntityTypeShape EntityType="DataModel.SearchTracking" Width="1.5" PointX="20.375" PointY="11.75" />
-        <EntityTypeShape EntityType="DataModel.ScreenLayout" Width="1.5" PointX="21.375" PointY="15.875" />
+        <EntityTypeShape EntityType="DataModel.SearchTracking" Width="1.5" PointX="24.75" PointY="16.75" />
+        <EntityTypeShape EntityType="DataModel.ScreenLayout" Width="1.5" PointX="8.25" PointY="13.625" />
         <AssociationConnector Association="DataModel.FK_AssetTypeScreen_ScreenLayout" />
-        <EntityTypeShape EntityType="DataModel.SearchQuery" Width="1.5" PointX="21.375" PointY="19.375" />
-        <EntityTypeShape EntityType="DataModel.SearchQueryAttribute" Width="1.5" PointX="23.625" PointY="19" />
+        <EntityTypeShape EntityType="DataModel.SearchQuery" Width="1.5" PointX="0.75" PointY="1.625" />
+        <EntityTypeShape EntityType="DataModel.SearchQueryAttribute" Width="4" PointX="3" PointY="1" />
         <AssociationConnector Association="DataModel.FK_SearchQueryAttributes_SearchQueries" />
         <AssociationConnector Association="DataModel.FK_SearchQueryAttributes_SearchQueryAttributes" />
-        <EntityTypeShape EntityType="DataModel.DynEntityTaxonomyItem" Width="1.5" PointX="18.5" PointY="28.25" />
-        <EntityTypeShape EntityType="DataModel.DynEntityTaxonomyItemHistory" Width="1.5" PointX="21.5" PointY="28.25" />
-        <AssociationConnector Association="DataModel.FK_DDynEntityTaxonomyItem_DynEntityConfig" />
-        <AssociationConnector Association="DataModel.FK_DynEntityTaxonomyItemHistory_DynEntityConfig" />
-        <AssociationConnector Association="DataModel.FK_DDynEntityTaxonomyItem_TaxonomyItem" />
-        <AssociationConnector Association="DataModel.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" />
+        <EntityTypeShape EntityType="DataModel.Report" Width="1.5" PointX="5.75" PointY="6" />
         </Diagram>
     </Diagrams>
   </Designer>

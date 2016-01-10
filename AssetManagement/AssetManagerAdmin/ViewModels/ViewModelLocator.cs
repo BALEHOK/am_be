@@ -28,7 +28,7 @@ namespace AssetManagerAdmin.ViewModels
 
         public const string FormulaBuilderKey = "FormulaBuilder";
 
-        public const string ReportsBuilderKey = "ReportsBuilder";
+        public const string ReportBuilderKey = "ReportBuilder";
 
         public const string ValidationBuilderKey = "ValidationBuilder";
 
@@ -60,11 +60,6 @@ namespace AssetManagerAdmin.ViewModels
             get { return ServiceLocator.Current.GetInstance<ValidationBuilderViewModel>(); }
         }
 
-        public ReportsBuilderViewModel ReportsBuilder
-        {
-            get { return ServiceLocator.Current.GetInstance<ReportsBuilderViewModel>(); }
-        }
-
         public LoginViewModel Login
         {
             get { return ServiceLocator.Current.GetInstance<LoginViewModel>(); }
@@ -75,9 +70,19 @@ namespace AssetManagerAdmin.ViewModels
             get { return ServiceLocator.Current.GetInstance<AuthViewModel>(); }
         }
 
-        public RenderReportViewModel RenderReport
+        public ReportBuilderViewModel ReportBuilder
         {
-            get { return ServiceLocator.Current.GetInstance<RenderReportViewModel>(); }
+            get { return ServiceLocator.Current.GetInstance<ReportBuilderViewModel>(); }
+        }
+
+        public OpenReportDialogViewModel OpenReportDialog
+        {
+            get { return ServiceLocator.Current.GetInstance<OpenReportDialogViewModel>(); }
+        }
+
+        public SaveReportDialogViewModel SaveReportDialog
+        {
+            get { return ServiceLocator.Current.GetInstance<SaveReportDialogViewModel>(); }
         }
 
         /// <summary>

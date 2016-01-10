@@ -1,0 +1,74 @@
+﻿<Window x:Class="AssetManagerAdmin.View.OpenReportDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d"         
+             DataContext="{Binding OpenReportDialog, Source={StaticResource Locator}}" 
+             Width="700" Height="400" >
+
+    <Window.Resources>
+        <Style x:Key="HyperlinkLikeButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <ControlTemplate.Resources>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextDecorations" Value="Underline" />
+                                    </Style>
+                                </ControlTemplate.Resources>
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        
+        <ItemsControl ItemsSource="{Binding ReportsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource HyperlinkLikeButton}" Grid.Column="1" Margin="10" VerticalAlignment="Center"
+                                Command="{Binding 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                    Path=DataContext.ViewReportCommand}"
+                                CommandParameter="{Binding }">
+                            <TextBlock Text="{Binding Name}" FontSize="16" />
+                        </Button>
+
+                        <Button Grid.Column="2" Height="20" Width="60" Visibility="Hidden"
+                                Command="{Binding 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}},
+                                    Path=DataContext.DeleteReportCommand}"
+                                CommandParameter="{Binding }">
+                            <fa:ImageAwesome Icon="Trash" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Grid>
+</Window>

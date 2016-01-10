@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using AppFramework.Reports.CustomReports;
 using AppFramework.Reports.Services;
 using AssetManager.Infrastructure.Models;
 using WebApi.OutputCache.V2;
 using AssetManager.Infrastructure.Helpers;
+using Common.Logging;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -16,16 +16,19 @@ namespace AssetManager.WebApi.Controllers.Api
     [RoutePrefix("api/reports/custom")]
     public class CustomReportsController : ApiController
     {
-        private readonly ICustomReportService<CustomDevExpressReport> _customReportService;
+        private readonly ICustomReportService _customReportService;
+        private readonly ILog _logger;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="customReportService"></param>
         public CustomReportsController(
-            ICustomReportService<CustomDevExpressReport> customReportService)
+            ICustomReportService customReportService,
+            ILog logger)
         {
             _customReportService = customReportService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -50,7 +53,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public List<CustomReportModel> GetReportsByAssetTypeId(long assetTypeId)
         {
             return _customReportService
-                .GetReportsByTypeId(assetTypeId)
+                .GetReportsByAssetTypeId(assetTypeId)
                 .Select(r => r.ToModel())
                 .ToList();
         }
@@ -61,32 +64,22 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <param name="name">Report name</param>
         /// <param name="fileName">Report template file name</param>
         /// <param name="typeId">Asset type Id</param>
-        [Route("publish"), HttpGet]
-        public string PublishReport(string name, string fileName, long typeId)
+        [Route("create"), HttpPut]
+        public long CreateReport(long assetTypeId, string reportName)
         {
-            _customReportService.PublishReport(typeId, name, fileName);
-            return string.Format("report [{0}] published", name);
+            var report = _customReportService.CreateReport(assetTypeId, reportName);
+            return report.ReportUid;
         }
 
         /// <summary>
         /// Delete custom report 
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="typeId"></param>
+        /// <param name="reportId"></param>
         /// <returns></returns>
-        [Route("delete"), HttpGet]
-        public string DeleteReport(string name, long typeId)
+        [Route("delete"), HttpDelete]
+        public void DeleteReport(long reportId)
         {
-            var result = string.Format("report [{0}] deleted", name);
-            try
-            {
-                _customReportService.DeleteReport(typeId, name);
-            }
-            catch (Exception ex)
-            {
-                result = ex.ToString();
-            }
-            return result;
+            _customReportService.DeleteReport(reportId);
         }
     }
 }

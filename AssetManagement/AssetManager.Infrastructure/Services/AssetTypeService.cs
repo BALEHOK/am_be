@@ -117,7 +117,7 @@ namespace AssetManager.Infrastructure.Services
         {
             typesInfo.ForEach(type =>
             {
-                var assetType = _assetTypeRepository.GetById(type.Id);
+                var assetType = _assetTypeRepository.GetById(type.Id.Value);
                 var screens = _screensService.GetScreensByAssetTypeUid(assetType.UID);
 
                 var screensModel = screens.Select(screen =>

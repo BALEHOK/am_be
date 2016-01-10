@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
+using RestSharp;
 
 namespace AssetManagerAdmin.WebApi
 {
@@ -91,36 +92,34 @@ namespace AssetManagerAdmin.WebApi
             }
         }
 
-        public async Task<string> PublishReport(string name, string fileName, long typeId)
+        public async Task<long> CreateReport(string reportName, long assetTypeId)
         {
-            using (var client = new HttpClient())
-            {
-                Authorize(client);
+            var client = new RestClient();
+            client.BaseUrl = new Uri(_baseAddress);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", _user.AccessToken));
 
-                var bytes = File.ReadAllBytes(fileName);
-                var uniqueFileName = Guid.NewGuid() + ".repx";
-                await UploadFile(bytes, uniqueFileName);
-
-                var apiRequest = string.Format("/api/reports/custom/publish?name={0}&fileName={1}&typeId={2}",
-                    HttpUtility.UrlEncode(name), HttpUtility.UrlEncode(uniqueFileName), typeId);
-
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                return response;
-            }
+            var request = new RestRequest();
+            request.Resource = "api/reports/custom/create";
+            request.Method = Method.PUT;
+            request.AddParameter("reportName", reportName, ParameterType.QueryString);
+            request.AddParameter("assetTypeId", assetTypeId, ParameterType.QueryString);
+        
+            var response = await client.ExecuteTaskAsync<long>(request);
+            return response.Data;
         }
 
-        public async Task<string> DeleteReport(string name, long typeId)
+        public async Task DeleteReport(long reportId)
         {
-            using (var client = new HttpClient())
-            {
-                Authorize(client);
+            var client = new RestClient();
+            client.BaseUrl = new Uri(_baseAddress);
+            client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", _user.AccessToken));
 
-                var apiRequest = string.Format("/api/reports/custom/delete?name={0}&typeId={1}",
-                    HttpUtility.UrlEncode(name), typeId);
+            var request = new RestRequest();
+            request.Resource = "api/reports/custom/delete";
+            request.Method = Method.DELETE;
+            request.AddParameter("reportId", reportId, ParameterType.QueryString);
 
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                return response;
-            }
+            await client.ExecuteTaskAsync<long>(request);
         }
 
         public async Task<string> SaveFormula(AssetTypeModel assetType, string attributeName, string formula)

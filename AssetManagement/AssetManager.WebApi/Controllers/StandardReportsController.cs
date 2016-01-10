@@ -45,9 +45,9 @@ namespace AssetManager.WebApi.Controllers
             var searchTracking = _searchService.GetTrackingBySearchId(searchId, userId);
             var searchResults = _searchService.GetSearchResultsBySearchId(searchId, userId);
 
-            var layout = ReportLayout.Default;
+            var layout = LayoutType.Default;
             if (reportLayout.HasValue)
-                layout = (ReportLayout)reportLayout;
+                layout = (LayoutType)reportLayout;
             var report = _reportService.GetStandardReport(ReportType.SearchResultReport, layout);
             report.DataSource = searchResults.ToModel(string.Format(
                 "Search conditions: {0}", searchTracking.VerboseString));
@@ -60,7 +60,7 @@ namespace AssetManager.WebApi.Controllers
             long userId = 1;
 
             var report = _reportService.GetStandardReport(
-                ReportType.AssetReport, ReportLayout.Default);
+                ReportType.AssetReport, LayoutType.Default);
             var provider = _reportDataProviderFactory.GetDataProvider<AssetXtraReport>();
             report.DataSource = provider.GetData(assetTypeId, assetId, userId);
             return View("~/Views/Shared/Report.cshtml", report);
@@ -72,7 +72,7 @@ namespace AssetManager.WebApi.Controllers
             long userId = 1;
 
             var report = _reportService.GetStandardReport(
-                ReportType.AssetsWithChildsReport, ReportLayout.Default);
+                ReportType.AssetsWithChildsReport, LayoutType.Default);
             var provider = _reportDataProviderFactory.GetDataProvider<AssetsWithChildsReport>();
             report.DataSource = provider.GetData(assetTypeId, assetId, userId);
             return View("~/Views/Shared/Report.cshtml", report);

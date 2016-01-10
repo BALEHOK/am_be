@@ -18,9 +18,9 @@ namespace AppFramework.Reports
             get { return ReportType.AssetsWithChildsReport; }
         }
 
-        public ReportLayout ReportLayout
+        public LayoutType ReportLayout
         {
-            get { return ReportLayout.Default; }
+            get { return LayoutType.Default; }
         }
     }
 }

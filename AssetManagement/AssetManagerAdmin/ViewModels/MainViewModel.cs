@@ -212,7 +212,7 @@ namespace AssetManagerAdmin.ViewModels
                 MainMenuItems = menuItems;
                 SelectedMenuItem = MainMenuItems.First();
                 IsMenuVisible = true;
-                NavigationService.NavigateTo(ViewModelLocator.FormulaBuilderKey);
+                NavigationService.NavigateTo(ViewModelLocator.ReportBuilderKey);
             });
 
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, (server) =>

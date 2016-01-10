@@ -50,14 +50,83 @@
       <HintPath>..\packages\Common.Logging.Log4Net.2.0.1\lib\net20\Common.Logging.Log4Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Mvvm.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Core.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Docking.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Printing.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.ReportDesigner.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Ribbon.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Diagram.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Images.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Mvvm.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Office.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Controls.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Core.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.DataAccess.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Diagram.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Docking.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Grid.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Grid.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Printing.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.PropertyGrid.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.ReportDesigner.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Ribbon.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v15.2.Core, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v15.2, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v15.2.Service, Version=15.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\DevExpress 15.2\Components\Bin\Framework\DevExpress.XtraReports.v15.2.Service.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FontAwesome.WPF, Version=4.3.0.35981, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.WPF.4.4.0.5\lib\FontAwesome.WPF.dll</HintPath>
       <Private>True</Private>
@@ -117,7 +186,12 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
@@ -127,6 +201,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -204,9 +279,14 @@
     <Compile Include="Infrastructure\IAppContext.cs" />
     <Compile Include="Infrastructure\IDialogService.cs" />
     <Compile Include="Infrastructure\MenuConfig.cs" />
+    <Compile Include="Infrastructure\Messages\SaveReportDialogCallbackMessage.cs" />
+    <Compile Include="Infrastructure\Messages\SaveReportMessage.cs" />
+    <Compile Include="Infrastructure\Messages\OpenReportMessage.cs" />
     <Compile Include="Infrastructure\ProgressBarAttribute.cs" />
     <Compile Include="Infrastructure\Registrations\NavigationRegistration.cs" />
     <Compile Include="Infrastructure\Registrations\Configuration.cs" />
+    <Compile Include="Infrastructure\Registrations\ReportsRegistration.cs" />
+    <Compile Include="Infrastructure\Messages\OpenReportDialogCallbackMessage.cs" />
     <Compile Include="Model\LoginDoneModel.cs" />
     <Compile Include="Model\StatusMessage.cs" />
     <Compile Include="Model\ValidationButton.cs" />
@@ -227,14 +307,16 @@
     <Compile Include="FormulaBuilder\Expressions\ExpressionTypes\ValueEntry.cs" />
     <Compile Include="Infrastructure\ServerConfig.cs" />
     <Compile Include="Infrastructure\UnityServiceLocator.cs" />
+    <Compile Include="Services\DbReportStorage.cs" />
     <Compile Include="Services\FrameNavigationService.cs" />
     <Compile Include="Services\IFrameNavigationService.cs" />
     <Compile Include="ViewModels\FormulaBuilderViewModel.cs" />
     <Compile Include="FormulaBuilder\Expressions\ExpressionParser.cs" />
     <Compile Include="ViewModels\AuthViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\RenderReportViewModel.cs" />
-    <Compile Include="ViewModels\ReportsBuilderViewModel.cs" />
+    <Compile Include="ViewModels\SaveReportDialogViewModel.cs" />
+    <Compile Include="ViewModels\ReportBuilderViewModel.cs" />
+    <Compile Include="ViewModels\OpenReportDialogViewModel.cs" />
     <Compile Include="ViewModels\ToolkitViewModelBase.cs" />
     <Compile Include="ViewModels\ValidationBuilderViewModel.cs" />
     <Compile Include="ViewModels\WebAdminViewModel.cs" />
@@ -262,11 +344,14 @@
     <Compile Include="FormulaBuilder\Controls\OperationButtonsControl.xaml.cs">
       <DependentUpon>OperationButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RenderReportView.xaml.cs">
-      <DependentUpon>RenderReportView.xaml</DependentUpon>
+    <Compile Include="Views\SaveReportDialog.xaml.cs">
+      <DependentUpon>SaveReportDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReportsBuilderView.xaml.cs">
-      <DependentUpon>ReportsBuilderView.xaml</DependentUpon>
+    <Compile Include="Views\ReportBuilderView.xaml.cs">
+      <DependentUpon>ReportBuilderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OpenReportDialog.xaml.cs">
+      <DependentUpon>OpenReportDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ValidationBuilderView.xaml.cs">
       <DependentUpon>ValidationBuilderView.xaml</DependentUpon>
@@ -356,11 +441,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RenderReportView.xaml">
+    <Page Include="Views\SaveReportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ReportBuilderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ReportsBuilderView.xaml">
+    <Page Include="Views\OpenReportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -415,9 +504,17 @@
       <Project>{890BDD21-2741-4028-9D20-9102D51AD64D}</Project>
       <Name>AppFramework.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AppFramework.DataProxy\AppFramework.DataProxy.csproj">
+      <Project>{3b3dfa46-d697-40d8-81de-90eca111a546}</Project>
+      <Name>AppFramework.DataProxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AppFramework.Entities\AppFramework.Entities.csproj">
       <Project>{658431C7-7442-46F1-81C8-7CC6744F7E46}</Project>
       <Name>AppFramework.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Reports\AppFramework.Reports.csproj">
+      <Project>{41e0c02c-e115-4781-b686-b779a2b4eb6e}</Project>
+      <Name>AppFramework.Reports</Name>
     </ProjectReference>
     <ProjectReference Include="..\AssetManager.Infrastructure\AssetManager.Infrastructure.csproj">
       <Project>{87d76790-81cc-45bb-9f7e-b3cdea2564c0}</Project>
@@ -427,12 +524,6 @@
       <Project>{2c3a8bff-55d4-4afa-8273-b95a9344459c}</Project>
       <Name>AssetSite</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resharper.Templates\ViewModelProperty.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resharper.Templates\ViewModelCommand.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\flexmis_icon.ico" />

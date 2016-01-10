@@ -2,6 +2,7 @@
 using AssetManagerAdmin.Model;
 using AssetManagerAdmin.Services;
 using AssetManagerAdmin.WebApi;
+using Common.Logging;
 using GalaSoft.MvvmLight;
 using Microsoft.Practices.Unity;
 using System;
@@ -11,6 +12,9 @@ namespace AssetManagerAdmin.ViewModels
     public abstract class ToolkitViewModelBase : ViewModelBase
     {
         public event Action<object> OnNavigated;
+
+        [Dependency]
+        public ILog Logger { get; set; }
 
         [Dependency]
         public IFrameNavigationService NavigationService { get; set; }

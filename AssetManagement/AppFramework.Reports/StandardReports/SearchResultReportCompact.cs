@@ -15,9 +15,9 @@ namespace AppFramework.Reports
             get { return ReportType.SearchResultReport; }
         }
 
-        public ReportLayout ReportLayout
+        public LayoutType ReportLayout
         {
-            get { return ReportLayout.Compact; }
+            get { return LayoutType.Compact; }
         }
     }
 }

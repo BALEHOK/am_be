@@ -1,6 +1,5 @@
 ﻿using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
-using AppFramework.Core.Classes.Reports;
 using AppFramework.Core.Classes.Tasks;
 using AppFramework.Core.Classes.Tasks.Runners;
 using AssetManager.Infrastructure.Services;
@@ -113,9 +112,6 @@ namespace AssetSite.admin.Tasks
             {
                 switch (int.Parse(ddlFunctionType.SelectedValue))
                 {
-                    case (int)TaskFunctionType.PrintReport:
-                        BindReportsList(assetTypeId, task.FunctionData);
-                        break;
                     default:
                         break;
                 }
@@ -154,10 +150,6 @@ namespace AssetSite.admin.Tasks
                 case TaskFunctionType.CreateAsset:
                     SetScreensDataSource();
                     break;
-                case TaskFunctionType.PrintReport:
-                    long assetTypeId = Convert.ToInt64(Request.QueryString["AssetTypeId"]);
-                    BindReportsList(assetTypeId);
-                    break;
                 case TaskFunctionType.ExecuteSqlServerAgentJob:
                     BindAgentJobsList();
                     break;
@@ -171,13 +163,6 @@ namespace AssetSite.admin.Tasks
             dlAgentJobs.DataTextField = "name";
             dlAgentJobs.DataValueField = "job_id";
             dlAgentJobs.DataBind();
-        }
-
-        private void BindReportsList(long assetTypeId, string reportId = null)
-        {
-            var reports = Report.GetAll().Where(r => r.AssetTypeId == assetTypeId);
-            ReportsList.DataSource = reports;
-            ReportsList.DataBind();
         }
 
         private void SetCurrentReport(long assetTypeId, string reportId = null)

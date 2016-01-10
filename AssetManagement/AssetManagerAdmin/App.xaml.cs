@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
+using Common.Logging;
 
 namespace AssetManagerAdmin
 {
@@ -18,6 +19,12 @@ namespace AssetManagerAdmin
         static App()
         {
             DispatcherHelper.Initialize();
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            LogManager.GetLogger<App>().Error(e.ExceptionObject);
         }
 
         protected override void OnStartup(StartupEventArgs e)

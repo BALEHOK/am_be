@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
-using AppFramework.Reports.CustomReports;
+using AppFramework.Reports.Exceptions;
+using DevExpress.XtraReports.UI;
+using System.IO;
+using DevExpress.DataAccess.Sql;
+using System;
+using AppFramework.Reports.Properties;
 
 namespace AppFramework.Reports.Services
 {
-    public class DevExpressCustomReportsService : ICustomReportService<CustomDevExpressReport>
+    public class DevExpressCustomReportsService : ICustomReportService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly string _connectionString;
@@ -20,77 +22,104 @@ namespace AppFramework.Reports.Services
             _connectionString = _unitOfWork.SqlProvider.ConnectionString;
         }
 
-        public List<CustomDevExpressReport> GetAllReports()
+        public List<Report> GetAllReports()
         {
-            var reports = _unitOfWork.GetReports().ToList();
-            var result =
-                reports.Select(
-                    r =>
-                        // ReSharper disable once PossibleInvalidOperationException
-                        new CustomDevExpressReport(r.ReportUid, (long)r.DynEntityConfigId, r.DynEntityConfigName, r.Name,
-                            GetReportFilePath(r.ReportFile), r.IsFinancial, _connectionString));
-
-            return result.ToList();
+            var reports = _unitOfWork.ReportRepository.Get();
+            return reports.ToList();
         }
 
-        public List<CustomDevExpressReport> GetReportsByTypeId(long assetTypeId)
+        public List<Report> GetReportsByAssetTypeId(long assetTypeId)
         {
-            var reports = _unitOfWork.ReportRepository.Where(r => r.Type == 10 && r.DynConfigId == assetTypeId).ToList();
-
-            var result =
-                reports.Select(
-                    r => new CustomDevExpressReport(r.ReportUid, assetTypeId, r.Name, GetReportFilePath(r.ReportFile), _connectionString));
-
-            return result.ToList();
+            return _unitOfWork.ReportRepository.Where(r => 
+                    r.Type == (int)ReportType.CustomReport && 
+                    r.DynEntityConfigId == assetTypeId)
+                .ToList();
         }
 
-        public CustomDevExpressReport GetReportById(long reportId)
+        public Report GetReportByURI(string reportURI)
         {
-            var report =
-                _unitOfWork.ReportRepository.Where(r => r.ReportUid == reportId && r.DynConfigId != null)
-                    .Select(
-                        r =>
-                            // ReSharper disable once PossibleInvalidOperationException
-                            new CustomDevExpressReport(r.ReportUid, (long)r.DynConfigId, r.Name,
-                                GetReportFilePath(r.ReportFile), _connectionString))
-                    .SingleOrDefault();
+            var args = reportURI.Split(
+                new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            return report;
+            if (!args.Any())
+                throw new InvalidReportParameters(
+                    Resources.InvalidParametersGeneral);
+
+            if (args.First() != Constants.ReportTypeCustomReport)
+                throw new NotSupportedException(Resources.InvalidParametersForCustomReport);
+
+            var reportParams = ReportParamsParser.GetCustomReportParams(args);
+            return GetReportById(reportParams.ReportId);
         }
 
-        public void PublishReport(long assetTypeId, string reportName, string fileName)
+        public Report GetReportById(long reportId)
+        {
+            var reportEntity = _unitOfWork.ReportRepository
+                .SingleOrDefault(r => r.ReportUid == reportId);
+
+            if (reportEntity == null)
+                throw new ReportNotFound();
+            return reportEntity;
+        }
+                
+        public void DeleteReport(long reportId)
+        {
+            var report = _unitOfWork.ReportRepository.Single(
+                r => r.ReportUid == reportId);
+            _unitOfWork.ReportRepository.Delete(report);
+        }
+
+        public Report CreateReport(long assetTypeId, string reportName)
         {
             var report = new Report
             {
-                DynConfigId = assetTypeId,
-                Name = reportName,
-                Type = 10,
-                ReportFile = fileName
+                DynEntityConfigId = assetTypeId,
+                Type = (int)ReportType.CustomReport,
+                Name = reportName
             };
 
             _unitOfWork.ReportRepository.Insert(report);
             _unitOfWork.Commit();
+
+            return report;
         }
 
-        public void DeleteReport(long assetTypeId, string reportName)
+        public void UpdateReport(Report reportData, XtraReport report)
         {
-            var report = _unitOfWork.ReportRepository.Single(
-                r => r.Type == 10 && r.DynConfigId == assetTypeId && r.Name.Equals(reportName));
-            var path = GetReportFilePath(report.ReportFile);
-
-            _unitOfWork.ReportRepository.Delete(report);
-            File.Delete(path);
+            if (report != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    report.SaveLayout(stream);
+                    reportData.LayoutData = stream.ToArray();
+                }
+            }
+            _unitOfWork.ReportRepository.Update(reportData);
+            _unitOfWork.Commit();
         }
-        
-        private static string GetReportFilePath(string fileName)
+
+        public XtraReport CreateReportView(Report reportEntity)
         {
-            //todo: path should be the same after old UI will be completely removed
-            var uploadDir = ConfigurationManager.AppSettings["ReportTemplatesUploadDir"];
-            if (uploadDir.StartsWith("~"))
-                uploadDir = HostingEnvironment.MapPath(uploadDir);
+            var report = new XtraReport();
+            
+            if (reportEntity.LayoutData != null)
+            {
+                using (var stream = new MemoryStream(reportEntity.LayoutData))
+                {
+                    report = XtraReport.FromStream(stream, true);
+                }
+            }
 
-            var reportFilePath = Path.Combine(uploadDir, fileName);            
-            return reportFilePath;
+            if (!string.IsNullOrEmpty(_connectionString) && report.DataSource != null)
+            {
+                var dataSource = ((SqlDataSource)report.DataSource);
+                dataSource.Connection.ConnectionString = _connectionString;
+            }
+
+            report.DisplayName = reportEntity.Name;
+
+            return report;
         }
+
     }
 }

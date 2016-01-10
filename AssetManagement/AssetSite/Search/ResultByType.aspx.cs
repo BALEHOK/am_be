@@ -26,7 +26,7 @@ namespace AssetSite.Search
         /// 
         /// </summary>
         [Dependency]
-        public ICustomReportService<CustomDevExpressReport> ReportService { get; set; }
+        public ICustomReportService ReportService { get; set; }
 
 
         private string _strparams = string.Empty;
@@ -116,7 +116,7 @@ namespace AssetSite.Search
 
                 SearchMasterPage.ResultSet[SearchId] = result;
 
-                var customReports = ReportService.GetReportsByTypeId(assetType.ID);
+                var customReports = ReportService.GetReportsByAssetTypeId(assetType.ID);
 
                 if (customReports.Count > 0)
                     ReportsPanel.Visible = true;
@@ -126,13 +126,13 @@ namespace AssetSite.Search
                     ReportsPanel.Reports.Add(report.Name,
                         new Dictionary<string, object>
                         {
-                            {"ReportId", report.Id},
+                            {"ReportId", report.ReportUid},
                             {"SearchId", SearchId},
                             {"Params", _strparams},
                             {"TypeId", assetType.ID},
 
                             {"ReportType", (int)ReportType.SearchResultReport},
-                            {"ReportLayout", (int)ReportLayout.Default}
+                            {"ReportLayout", (int)LayoutType.Default}
                         });
                 });
 

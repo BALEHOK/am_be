@@ -32,6 +32,8 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
                     new InterceptionBehavior<ProgressBarInterceptionBehavior>())
                 .RegisterType<IDialogService, DialogService>()
                 .RegisterType<IAssetsDataProvider, AssetsDataProvider>();
+
+            container.AddNewExtension<ReportsRegistration>();
         }
     }
 }

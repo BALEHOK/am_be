@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AppFramework.Reports
+﻿namespace AppFramework.Reports
 {
     public enum ReportType
     {
@@ -11,5 +6,6 @@ namespace AppFramework.Reports
         AssetsListReport = 1,
         SearchResultReport = 2,
         AssetsWithChildsReport = 3,
+        CustomReport = 10
     }
 }

@@ -88,18 +88,6 @@
     <Reference Include="Common.Logging.Log4Net">
       <HintPath>..\packages\Common.Logging.Log4Net.2.0.1\lib\net20\Common.Logging.Log4Net.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="CsvHelper">
       <HintPath>..\packages\CsvHelper.2.2.2\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
@@ -404,14 +392,6 @@
     <Compile Include="Classes\Tasks\Runners\ExportRunner.cs" />
     <Compile Include="Classes\Tasks\Runners\PrintReportRunner.cs" />
     <Compile Include="Classes\Tasks\Runners\ProcessRunner.cs" />
-    <Compile Include="Classes\Reports\DropDownFilterControl.cs" />
-    <Compile Include="Classes\Reports\DynListFilterControl.cs" />
-    <Compile Include="Classes\Reports\FilterControl.cs" />
-    <Compile Include="Classes\Reports\Report.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Classes\Reports\ReportField.cs" />
-    <Compile Include="Classes\Reports\TextFilterControl.cs" />
     <Compile Include="Classes\RightsEntry.cs" />
     <Compile Include="Classes\Batch\ServiceActions\RebuildSearchIndexActive.cs" />
     <Compile Include="Classes\SearchEngine\CategorieItem.cs" />

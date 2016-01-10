@@ -1,5 +1,3 @@
-USE [facilitymanager_facilityflexware_com]
-
 INSERT INTO [AssetTypeScreen]      
 	SELECT DISTINCT DynEntityConfigUId, 	
 	'default_auto' AS [Name],

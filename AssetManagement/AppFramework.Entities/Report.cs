@@ -18,7 +18,6 @@ using System.Runtime.Serialization;
 namespace AppFramework.Entities
 {
     [DataContract(IsReference = true)]
-    [KnownType(typeof(ReportField))]
     public partial class Report: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
     {
         #region Primitive Properties
@@ -73,49 +72,19 @@ namespace AppFramework.Entities
         private bool _isFinancial;
     
         [DataMember]
-        public string ReportFile
+        public Nullable<long> DynEntityConfigId
         {
-            get { return _reportFile; }
+            get { return _dynEntityConfigId; }
             set
             {
-                if (_reportFile != value)
+                if (_dynEntityConfigId != value)
                 {
-                    _reportFile = value;
-                    OnPropertyChanged("ReportFile");
+                    _dynEntityConfigId = value;
+                    OnPropertyChanged("DynEntityConfigId");
                 }
             }
         }
-        private string _reportFile;
-    
-        [DataMember]
-        public Nullable<long> DynConfigId
-        {
-            get { return _dynConfigId; }
-            set
-            {
-                if (_dynConfigId != value)
-                {
-                    _dynConfigId = value;
-                    OnPropertyChanged("DynConfigId");
-                }
-            }
-        }
-        private Nullable<long> _dynConfigId;
-    
-        [DataMember]
-        public bool SyncWithOpenItem
-        {
-            get { return _syncWithOpenItem; }
-            set
-            {
-                if (_syncWithOpenItem != value)
-                {
-                    _syncWithOpenItem = value;
-                    OnPropertyChanged("SyncWithOpenItem");
-                }
-            }
-        }
-        private bool _syncWithOpenItem;
+        private Nullable<long> _dynEntityConfigId;
     
         [DataMember]
         public int Type
@@ -131,59 +100,21 @@ namespace AppFramework.Entities
             }
         }
         private int _type;
-
-        #endregion
-
-        #region Navigation Properties
     
         [DataMember]
-        public TrackableCollection<ReportField> ReportField
+        public byte[] LayoutData
         {
-            get
-            {
-                if (_reportField == null)
-                {
-                    _reportField = new TrackableCollection<ReportField>();
-                    _reportField.CollectionChanged += FixupReportField;
-    				_reportField.IsLoaded = false;
-                }
-                return _reportField;
-            }
+            get { return _layoutData; }
             set
             {
-                if (!ReferenceEquals(_reportField, value))
+                if (_layoutData != value)
                 {
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
-                    }
-                    if (_reportField != null)
-                    {
-                        _reportField.CollectionChanged -= FixupReportField;
-                        // This is the principal end in an association that performs cascade deletes.
-                        // Remove the cascade delete event handler for any entities in the current collection.
-                        foreach (ReportField item in _reportField)
-                        {
-                            ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
-                        }
-                    }
-                    _reportField = value;
-    				_reportField.IsLoaded = true;
-                    if (_reportField != null)
-                    {
-                        _reportField.CollectionChanged += FixupReportField;
-                        // This is the principal end in an association that performs cascade deletes.
-                        // Add the cascade delete event handler for any entities that are already in the new collection.
-                        foreach (ReportField item in _reportField)
-                        {
-                            ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
-                        }
-                    }
-                    OnNavigationPropertyChanged("ReportField");
+                    _layoutData = value;
+                    OnPropertyChanged("LayoutData");
                 }
             }
         }
-        private TrackableCollection<ReportField> _reportField;
+        private byte[] _layoutData;
 
         #endregion
 
@@ -264,56 +195,6 @@ namespace AppFramework.Entities
     
         protected virtual void ClearNavigationProperties()
         {
-            ReportField.Clear();
-        }
-
-        #endregion
-
-        #region Association Fixup
-    
-        private void FixupReportField(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (IsDeserializing)
-            {
-                return;
-            }
-    
-            if (e.NewItems != null)
-            {
-                foreach (ReportField item in e.NewItems)
-                {
-                    item.Report = this;
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        if (!item.ChangeTracker.ChangeTrackingEnabled)
-                        {
-                            item.StartTracking();
-                        }
-                        ChangeTracker.RecordAdditionToCollectionProperties("ReportField", item);
-                    }
-                    // This is the principal end in an association that performs cascade deletes.
-                    // Update the event listener to refer to the new dependent.
-                    ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
-                }
-            }
-    
-            if (e.OldItems != null)
-            {
-                foreach (ReportField item in e.OldItems)
-                {
-                    if (ReferenceEquals(item.Report, this))
-                    {
-                        item.Report = null;
-                    }
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        ChangeTracker.RecordRemovalFromCollectionProperties("ReportField", item);
-                    }
-                    // This is the principal end in an association that performs cascade deletes.
-                    // Remove the previous dependent from the event listener.
-                    ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
-                }
-            }
         }
 
         #endregion

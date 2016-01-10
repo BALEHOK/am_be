@@ -841,19 +841,6 @@ namespace AppFramework.DataProxy
             }
         }
 
-        private IDataRepository<ReportLayout> _reportLayoutRepository;
-        public IDataRepository<ReportLayout> ReportLayoutRepository
-        {
-            get
-            {
-                if (_reportLayoutRepository == null)
-                {
-                    _reportLayoutRepository = new DataRepository<ReportLayout>(_context);
-                }
-                return _reportLayoutRepository;
-            }
-        }
-
         private IDataRepository<SearchQuery> _searchQueryRepository;
         public IDataRepository<SearchQuery> SearchQueryRepository
         {

@@ -17,7 +17,6 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
             var context = entry.RightOperandsList.SingleOrDefault(e => e is T);
             if (context == null && entry.Parent != null)
                 context = FindContext<T>(entry.Parent);
-
             return context;
         }
 
@@ -27,38 +26,44 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
 
             if (typeof(T) == typeof(RelatedFieldValueEntry))
             {
-                if (CurrentAssetType != null)
-                {
-                    items = CurrentAssetType.Attributes.OrderBy(a => a.DisplayOrder)
-                        .Where(a => a.RelationType != null)
-                        .Select(a =>
-                        {
-                            var item = new RelatedFieldValueEntry
-                            {
-                                DisplayName = a.DisplayName,
-                                Name = a.DbName,
-                                SubItems =
-                                    a.RelationType.Attributes.OrderBy(attr => attr.DisplayOrder).Select(attr =>
-                                    {
-                                        var subitem = new AssetFieldNameEntry
-                                        {
-                                            DisplayName = attr.DisplayName,
-                                            Name = attr.DbName,
-                                            Type = new AssetFieldNameEntry()
-                                        };
+                if (CurrentAssetType == null)
+                    return items;
 
-                                        return subitem;
-                                    }).Cast<ExpressionEntry>().ToList()
-                            };
-                            return item;
-                        }).Cast<ExpressionEntry>().ToList();
-                }
+                items = CurrentAssetType.Attributes.OrderBy(a => a.DisplayOrder)
+                    .Where(a => a.RelationType != null)
+                    .Select(a =>
+                    {
+                        var item = new RelatedFieldValueEntry
+                        {
+                            DisplayName = a.DisplayName,
+                            Name = a.DbName,
+                            SubItems =
+                                a.RelationType.Attributes.OrderBy(attr => attr.DisplayOrder).Select(attr =>
+                                {
+                                    var subitem = new AssetFieldNameEntry
+                                    {
+                                        DisplayName = attr.DisplayName,
+                                        Name = attr.DbName,
+                                        Type = new AssetFieldNameEntry()
+                                    };
+
+                                    return subitem;
+                                }).Cast<ExpressionEntry>().ToList()
+                        };
+                        return item;
+                    })
+                    .Cast<ExpressionEntry>()
+                    .ToList();
             }
             else if (typeof(T) == typeof(AssetFieldValueEntry))
             {
-                if (CurrentAssetType != null)
-                {
-                    items = CurrentAssetType.Attributes.OrderBy(a => a.DisplayOrder).Select(a =>
+                if (CurrentAssetType == null)
+                    return items;
+
+                items = CurrentAssetType
+                    .Attributes
+                    .OrderBy(a => a.DisplayOrder)
+                    .Select(a =>
                     {
                         var item = new AssetFieldValueEntry
                         {
@@ -67,8 +72,9 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
                         };
 
                         return item;
-                    }).Cast<ExpressionEntry>().ToList();
-                }
+                    })
+                    .Cast<ExpressionEntry>()
+                    .ToList();
             }
             else if (typeof(T) == typeof(AssetTypeNameEntry))
             {
@@ -108,7 +114,7 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
                 };
                 items = variables.Cast<ExpressionEntry>().ToList();
             }
-            else if (typeof (T) == typeof (ValidationFieldValueEntry))
+            else if (typeof(T) == typeof(ValidationFieldValueEntry))
             {
                 if (CurrentAssetType != null && CurrentAttributeType != null)
                 {
@@ -122,20 +128,11 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
 
                         return item;
                     }).Cast<ExpressionEntry>().ToList();
-                    
+
                     entry.Items = items;
                     entry.Value = CurrentAttributeType.DbName;
                 }
             }
-//            else if (typeof (T) == typeof (ValueEntry))
-//            {
-//                // no items for ValueEntry
-//            }
-//            else
-//            {
-//                throw new ArgumentException(@"Unknown entry type", "entry");
-//            }
-
             return items;
         }
     }

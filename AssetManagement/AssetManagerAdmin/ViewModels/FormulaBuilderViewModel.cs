@@ -10,7 +10,6 @@ using AssetManager.Infrastructure.Models.TypeModels;
 using GalaSoft.MvvmLight.Command;
 using Common.Logging;
 using AssetManagerAdmin.Infrastructure;
-using AssetManagerAdmin.Services;
 
 namespace AssetManagerAdmin.ViewModels
 {
@@ -21,6 +20,13 @@ namespace AssetManagerAdmin.ViewModels
         private ExpressionParser _expressionParser;
         private readonly IDataService _dataService;
         private readonly IAssetsDataProvider _dataProvider;
+        private RelayCommand _refreshAssetTypeListCommand;
+        private readonly ILog _logger;
+
+        public IAssetsDataProvider DataProvider
+        {
+            get { return _dataProvider; }
+        }
 
         public const string ExpressionParserPropertyName = "ExpressionParser";
         public ExpressionParser ExpressionParser
@@ -218,11 +224,7 @@ namespace AssetManagerAdmin.ViewModels
                        (_saveFormulaCommand = new RelayCommand(ExecuteSaveFormulaCommand, () => AttributeType != null));
             }
         }
-
-        private RelayCommand _refreshAssetTypeListCommand;
-        private readonly ILog _logger;
-        private readonly IFrameNavigationService _navigationService;
-
+        
         public RelayCommand RefreshAssetTypeListCommand
         {
             get

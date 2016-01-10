@@ -105,6 +105,21 @@ namespace AppFramework.Entities
         private Nullable<byte> _parenthesis;
     
         [DataMember]
+        public byte LogicalOperator
+        {
+            get { return _logicalOperator; }
+            set
+            {
+                if (_logicalOperator != value)
+                {
+                    _logicalOperator = value;
+                    OnPropertyChanged("LogicalOperator");
+                }
+            }
+        }
+        private byte _logicalOperator;
+    
+        [DataMember]
         public Nullable<int> OperatorId
         {
             get { return _operatorId; }
@@ -178,21 +193,6 @@ namespace AppFramework.Entities
             }
         }
         private int _index;
-    
-        [DataMember]
-        public byte LogicalOperator
-        {
-            get { return _logicalOperator; }
-            set
-            {
-                if (_logicalOperator != value)
-                {
-                    _logicalOperator = value;
-                    OnPropertyChanged("LogicalOperator");
-                }
-            }
-        }
-        private byte _logicalOperator;
     
         [DataMember]
         public bool ChildAssets
@@ -343,6 +343,16 @@ namespace AppFramework.Entities
             if (e.NewState == ObjectState.Deleted)
             {
                 ClearNavigationProperties();
+            }
+        }
+    
+        // This entity type is the dependent end in at least one association that performs cascade deletes.
+        // This event handler will process notifications that occur when the principal end is deleted.
+        internal void HandleCascadeDelete(object sender, ObjectStateChangingEventArgs e)
+        {
+            if (e.NewState == ObjectState.Deleted)
+            {
+                this.MarkAsDeleted();
             }
         }
     

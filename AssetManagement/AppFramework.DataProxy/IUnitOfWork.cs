@@ -99,7 +99,6 @@ namespace AppFramework.DataProxy
         IDataRepository<DynListItem> DynListItemRepository { get; }
         IDataRepository<DynListValue> DynListValueRepository { get; }
         IDataRepository<Report> ReportRepository { get; }
-        IDataRepository<ReportLayout> ReportLayoutRepository { get; }
         IDataRepository<DataType> DataTypeRepository { get; }
         IDataRepository<SearchTracking> SearchTrackingRepository { get; }
         IDataRepository<Task> TaskRepository { get; }

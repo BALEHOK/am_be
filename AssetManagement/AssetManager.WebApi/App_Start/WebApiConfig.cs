@@ -26,7 +26,7 @@ namespace AssetManager.WebApi
             jsonSerializerSettings.ReferenceLoopHandling =
                 ReferenceLoopHandling.Serialize;
             jsonSerializerSettings.PreserveReferencesHandling =
-                PreserveReferencesHandling.None;
+                PreserveReferencesHandling.Objects;
             jsonSerializerSettings.MetadataPropertyHandling =
                 MetadataPropertyHandling.Ignore;
 

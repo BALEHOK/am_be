@@ -8,6 +8,6 @@ namespace AppFramework.Reports
     public interface IReport
     {
         ReportType ReportType { get; }
-        ReportLayout ReportLayout { get; }
+        LayoutType ReportLayout { get; }
     }
 }

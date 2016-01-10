@@ -234,12 +234,6 @@
     <Compile Include="Report.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ReportField.cs">
-      <DependentUpon>STEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ReportLayout.cs">
-      <DependentUpon>STEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Reservation.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>

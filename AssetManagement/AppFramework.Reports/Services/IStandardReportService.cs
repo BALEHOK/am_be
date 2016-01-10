@@ -5,6 +5,6 @@ namespace AppFramework.Reports.Services
 {
     public interface IStandardReportService
     {
-        XtraReport GetStandardReport(ReportType reportType, ReportLayout layout = ReportLayout.Default);
+        XtraReport GetStandardReport(ReportType reportType, LayoutType layout = LayoutType.Default);
     }
 }
