@@ -5,7 +5,6 @@ using AssetManager.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using AssetManager.Infrastructure.Models.TypeModels;
 using TaxonomyItem = AppFramework.Entities.TaxonomyItem;
 
@@ -28,7 +27,7 @@ namespace AssetManager.Infrastructure.Services
             _assetTypeRepository = assetTypeRepository;
         }
 
-        public IEnumerable<TaxonomyModel> GetTaxonomyByAssetTypeId(long assetTypeId)
+        public TaxonomyModel GetTaxonomyByAssetTypeId(long assetTypeId)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
 
@@ -37,33 +36,30 @@ namespace AssetManager.Infrastructure.Services
                 .Where(ti => ti.Taxonomy.IsCategory) // show only category path
                 .ToList();
 
-            var assetTypeModel = new AssetTypeModel
+            var taxonomyModel = new TaxonomyModel
+            {
+                AssetType = new AssetTypeModel
                 {
                     DisplayName = assetType.NameInvariant,
                     Id = assetType.ID
-                };
+                },
+                TaxonomyPath = items.Count > 0
+                    ? items.Select(i => GetTaxonomyPath(i))
+                    : new List<TaxonomyPathModel>(0)
+            };
 
-            return items.Count > 0
-                ? items.Select(i => GetTaxonomyPath(i, null, assetTypeModel))
-                : new List<TaxonomyModel>(1)
-                    {
-                        new TaxonomyModel
-                        {
-                            AssetType = assetTypeModel
-                        }
-                    };
+
+            return taxonomyModel;
         }
 
-        private TaxonomyModel GetTaxonomyPath(
+        private TaxonomyPathModel GetTaxonomyPath(
             TaxonomyItem item,
-            TaxonomyModel childModel = null,
-            AssetTypeModel assetTypeModel = null)
+            TaxonomyPathModel childModel = null)
         {
-            var model = new TaxonomyModel
+            var model = new TaxonomyPathModel
             {
                 Name = item.Name,
-                Child = childModel,
-                AssetType = assetTypeModel
+                Child = childModel
             };
 
             if (item.ParentItem == null)

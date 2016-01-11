@@ -53,12 +53,12 @@ namespace AssetSite.UnitTests.Services
             var result = sut.GetTaxonomyByAssetTypeId(assetTypeId);
             
             //Assert
-            Assert.Equal(1, result.Count());
+            Assert.Equal(1, result.TaxonomyPath.Count());
 
-            var item = result.First();
+            var item = result.TaxonomyPath.First();
             Assert.Equal("first", item.Name);
             Assert.Equal("second", item.Child.Name);
-            Assert.Equal(assetType.NameInvariant, item.Child.AssetType.DisplayName);
+            Assert.Equal(assetType.NameInvariant, result.AssetType.DisplayName);
         }
     }
 }

@@ -1403,6 +1403,65 @@ namespace AppFramework.DataLayer
      
      
         } 
+     
+     
+        public void f_cust_ReIndex_Asset(Nullable<long> dynEntityUidNew, Nullable<long> dynEntityId, Nullable<long> dynEntityConfigUidNew, Nullable<long> dynEntityConfigId)     
+     
+        { 
+     
+     
+            ObjectParameter dynEntityUidNewParameter; 
+     
+            if (dynEntityUidNew.HasValue) 
+            { 
+                dynEntityUidNewParameter = new ObjectParameter("DynEntityUidNew", dynEntityUidNew); 
+            } 
+            else 
+            { 
+                dynEntityUidNewParameter = new ObjectParameter("DynEntityUidNew", typeof(long)); 
+            } 
+     
+     
+            ObjectParameter dynEntityIdParameter; 
+     
+            if (dynEntityId.HasValue) 
+            { 
+                dynEntityIdParameter = new ObjectParameter("DynEntityId", dynEntityId); 
+            } 
+            else 
+            { 
+                dynEntityIdParameter = new ObjectParameter("DynEntityId", typeof(long)); 
+            } 
+     
+     
+            ObjectParameter dynEntityConfigUidNewParameter; 
+     
+            if (dynEntityConfigUidNew.HasValue) 
+            { 
+                dynEntityConfigUidNewParameter = new ObjectParameter("DynEntityConfigUidNew", dynEntityConfigUidNew); 
+            } 
+            else 
+            { 
+                dynEntityConfigUidNewParameter = new ObjectParameter("DynEntityConfigUidNew", typeof(long)); 
+            } 
+     
+     
+            ObjectParameter dynEntityConfigIdParameter; 
+     
+            if (dynEntityConfigId.HasValue) 
+            { 
+                dynEntityConfigIdParameter = new ObjectParameter("DynEntityConfigId", dynEntityConfigId); 
+            } 
+            else 
+            { 
+                dynEntityConfigIdParameter = new ObjectParameter("DynEntityConfigId", typeof(long)); 
+            } 
+     
+     
+            base.ExecuteFunction("f_cust_ReIndex_Asset", dynEntityUidNewParameter, dynEntityIdParameter, dynEntityConfigUidNewParameter, dynEntityConfigIdParameter); 
+     
+     
+        } 
 
         #endregion
 

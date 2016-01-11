@@ -126,5 +126,6 @@ namespace AppFramework.DataProxy
         IEnumerable<f_cust_GetReports_Result> GetReports();
         IEnumerable<ActiveTask> GetTasks(long userId);
         IEnumerable<long> GetPermittedTasks(long userId);
+        void ReIndexAsset(long assetUidNew, long assetId, long assetConfigUidNew, long assetConfigId);
     }
 }

@@ -162,6 +162,7 @@
     <Compile Include="Models\TaskModel.cs" />
     <Compile Include="Models\TaskResultModel.cs" />
     <Compile Include="Models\TaxonomyModel.cs" />
+    <Compile Include="Models\TaxonomyPathModel.cs" />
     <Compile Include="Models\TypeModels\AssetTypeModel.cs" />
     <Compile Include="Models\TypeModels\AssetTypeScreenModel.cs" />
     <Compile Include="Models\TypeModels\AssetTypeScreenPanelModel.cs" />

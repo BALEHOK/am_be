@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Security;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.AC.Providers;

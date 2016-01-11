@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Web.Http;
 using AppFramework.Core.Exceptions;
 using AssetManager.Infrastructure.Extensions;
@@ -8,8 +7,8 @@ using AssetManager.Infrastructure.Helpers;
 using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Services;
 using AssetManager.WebApi.Validators;
-using WebApi.OutputCache.V2;
 using Common.Logging;
+using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -44,7 +43,7 @@ namespace AssetManager.WebApi.Controllers.Api
             var userId = User.GetId();
             return _assetService.CreateAsset(assetTypeId, userId);
         }
-     
+
         [Route(""), HttpPost]
         [Route("~/api/assettype/{assetTypeId}/asset"), HttpPut]
         [ValidateModelState, CheckModelForNull]
@@ -57,7 +56,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 try
                 {
                     var result = _assetService.SaveAsset(model, userId, screenId);
-                    return Ok(new { Id = result.Item1, Name = result.Item2 });
+                    return Ok(new {Id = result.Item1, Name = result.Item2});
                 }
                 catch (AssetValidationException ex)
                 {

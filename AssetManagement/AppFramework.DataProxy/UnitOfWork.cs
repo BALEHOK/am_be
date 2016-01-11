@@ -124,6 +124,11 @@ namespace AppFramework.DataProxy
             return _noCacheContext.f_cust_GetChildAssets(assetTypeId);
         }
 
+        public void ReIndexAsset(long assetUidNew, long assetId, long assetConfigUidNew, long assetConfigId)
+        {
+            _noCacheContext.f_cust_ReIndex_Asset(assetUidNew, assetId, assetConfigUidNew, assetConfigId);
+        }
+
         public bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId)
         {
             var outputParameter = new ObjectParameter("result", typeof(bool));

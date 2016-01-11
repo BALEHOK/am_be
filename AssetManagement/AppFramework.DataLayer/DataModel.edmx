@@ -1523,6 +1523,12 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
         <Function Name="f_cust_RebuildTriggers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_RebuildTriggers">
           <Parameter Name="dynEntityConfigUid" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="f_cust_ReIndex_Asset" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_ReIndex_Asset">
+          <Parameter Name="DynEntityUidNew" Type="bigint" Mode="In" />
+          <Parameter Name="DynEntityId" Type="bigint" Mode="In" />
+          <Parameter Name="DynEntityConfigUidNew" Type="bigint" Mode="In" />
+          <Parameter Name="DynEntityConfigId" Type="bigint" Mode="In" />
+        </Function>
         <Function Name="f_cust_SearchByKeywords" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_SearchByKeywords">
           <Parameter Name="SearchId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="UserId" Type="bigint" Mode="In" />
@@ -2173,6 +2179,12 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
             <End Role="DynEntityTaxonomyItemHistory" EntitySet="DynEntityTaxonomyItemHistories" />
           </AssociationSet>
+          <FunctionImport Name="f_cust_ReIndex_Asset">
+            <Parameter Name="DynEntityUidNew" Mode="In" Type="Int64" />
+            <Parameter Name="DynEntityId" Mode="In" Type="Int64" />
+            <Parameter Name="DynEntityConfigUidNew" Mode="In" Type="Int64" />
+            <Parameter Name="DynEntityConfigId" Mode="In" Type="Int64" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="AppSettings">
           <Key>
@@ -4789,6 +4801,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="f_cust_ReIndex_Asset" FunctionName="DataModel.Store.f_cust_ReIndex_Asset" />
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
