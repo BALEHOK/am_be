@@ -179,6 +179,9 @@ namespace AppFramework.Core.Classes.Batch
         /// <returns>Created BatchJob if success or null if not</returns>
         public BatchJob CreateImportAssetsJob(long currentUserId, string filePath, long assetTypeId, BindingInfo bindings, List<string> sheets, bool deleteSourceOnSuccess)
         {
+            if (!bindings.Bindings.Any())
+                throw new ArgumentException("Bindings must be defined");
+
             var dbEntity = new Entities.ImportExport
             {
                 GUID = Guid.NewGuid(),

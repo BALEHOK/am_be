@@ -1,6 +1,4 @@
-﻿using AppFramework.Core.Calculation;
-using AppFramework.Core.Classes.Barcode;
-using AppFramework.DataProxy;
+﻿using AppFramework.DataProxy;
 using Common.Logging;
 
 namespace AppFramework.Core.Classes.IE
@@ -204,48 +202,6 @@ namespace AppFramework.Core.Classes.IE
                                         assetTypeName + "_" +
                                         assetTypeId + "_" +
                                         filename + ".xml");
-        }
-
-        /// <summary>
-        /// Returns the list of XML fields
-        /// </summary>
-        /// <param name="filePath">path to DataSource file</param>
-        /// <returns></returns>
-        public static TransferResult<string> GetXMLDataSourceFields(string filePath, AssetType at)
-        {
-            SchemaGenerator sg = new SchemaGenerator(at);
-
-            ProviderParameters parameters = new ProviderParameters();
-            parameters.Add(ProviderParameter.ReadPath, filePath);
-            parameters.Add(ProviderParameter.Schema, sg.GetSchema());
-            XMLProvider provider = new XMLProvider(parameters);
-
-            List<string> fields = provider.GetFields();
-            return new TransferResult<string>(provider.Status, fields);
-        }
-
-        /// <summary>
-        /// Returns the list of excel sheets
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static TransferResult<string> GetExcelDataSourceSheets(string filePath)
-        {
-            var provider = new ExcelProvider();
-            var fields = provider.GetExcelSheetNames(filePath);
-            return new TransferResult<string>(provider.Status, fields);
-        }
-
-        /// <summary>
-        /// Returns the list of excel fields
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static TransferResult<KeyValuePair<string, string>> GetExcelDataSourceFields(string filePath, List<string> sheetNames)
-        {
-            var provider = new ExcelProvider();
-            List<KeyValuePair<string, string>> fields = provider.GetFields(filePath, sheetNames).ToList();
-            return new TransferResult<KeyValuePair<string, string>>(provider.Status, fields);
         }
 
         /// <summary>

@@ -16,7 +16,8 @@ namespace AssetSite.DynList
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            DynListAll.DataBind();
+            dvDynList.DataBind();
         }
 
         protected void DynList_Inserting(object sender, EntityDataSourceChangingEventArgs args)

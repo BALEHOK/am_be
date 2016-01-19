@@ -16,8 +16,9 @@ using System.Web.UI.WebControls;
 using Microsoft.Practices.Unity;
 using BatchCore = AppFramework.Core.Classes.Batch;
 using IE = AppFramework.Core.Classes.IE;
-using AppFramework.Core.Classes.DynLists;
 using AppFramework.DataProxy;
+using AppFramework.Core.Classes.IE.Providers;
+using System.Xml;
 
 namespace AssetSite.admin.Import
 {
@@ -33,6 +34,8 @@ namespace AssetSite.admin.Import
         public IDynListItemService DynListItemService { get; set; }
         [Dependency]
         public IDynamicListsService  DynamicListsService  { get; set; }
+        [Dependency]
+        public IExcelProvider ExcelProvider { get; set; }
 
         private AssetType _assetType;
 
@@ -249,21 +252,6 @@ namespace AssetSite.admin.Import
                 Response.Redirect("~/admin/Import");
             }
 
-            //if (ImportingWizard.ActiveStep == WizardStep1)
-            //{
-            //    // AD DataSource available only on users import
-            //    ListItem item = dataSourceTypesList.Items[dataSourceTypesList.Items.Count - 1];
-            //    if (IsUsersImport)
-            //    {
-            //        item.Enabled = true;
-            //    }
-            //    else
-            //    {
-            //        item.Enabled = false;
-            //        item.Selected = false;
-            //    }
-            //}
-
             if (ImportingWizard.ActiveStep == WizardStep2 && IsPostBack)
             {
                 // save choosed by user DataSource 
@@ -275,20 +263,14 @@ namespace AssetSite.admin.Import
 
             if (ScriptManager.GetCurrent(this).IsInAsyncPostBack && ImportingWizard.ActiveStep == WizardStep4)
             {
-                if (DataSource == DataSourceType.AD && IsUsersImport)
+
+                if (DataSource == DataSourceType.XLS || DataSource == DataSourceType.XLSX)
                 {
-                    ReadADUsersFields();
+                    ReadExcelFields();
                 }
                 else
                 {
-                    if (DataSource == DataSourceType.XLS || DataSource == DataSourceType.XLSX)
-                    {
-                        ReadExcelFields();
-                    }
-                    else if (DataSource == DataSourceType.XML)
-                    {
-                        throw new NotSupportedException("XML Data Source is not supported");
-                    }
+                    throw new NotSupportedException("XML Data Source is not supported");
                 }
             }
         }
@@ -336,34 +318,22 @@ namespace AssetSite.admin.Import
             }
             else if (ImportingWizard.ActiveStep == WizardStep2)
             {
-                if (DataSource != DataSourceType.AD)
+                if (UploadFile())
                 {
-                    if (UploadFile())
+                    if (DataSource == DataSourceType.XLS ||
+                        DataSource == DataSourceType.XLSX)
                     {
-                        if (DataSource == DataSourceType.XML)
-                        {
-                            throw new NotSupportedException("XML Data Source is not supported");
-                        }
-                        else if (DataSource == DataSourceType.XLS ||
-                                 DataSource == DataSourceType.XLSX)
-                        {
-                            ReadExcelSheets();
-                        }
-                        else
-                        {
-                            HoldStep();
-                            messagePanel.Messages.Add(new MessageDefinition()
-                            {
-                                Status = MessageStatus.Error,
-                                Message = "File format is not supported."
-                            });
-                        }
+                        ReadExcelSheets();
                     }
-                }
-                else if (DataSource == DataSourceType.AD && IsUsersImport)
-                {
-                    TestLDAPConnection();
-                    ReadADUsersFields();
+                    else
+                    {
+                        HoldStep();
+                        messagePanel.Messages.Add(new MessageDefinition()
+                        {
+                            Status = MessageStatus.Error,
+                            Message = "File format is not supported."
+                        });
+                    }
                 }
             }
             else if (ImportingWizard.ActiveStep == WizardStep3)
@@ -402,14 +372,14 @@ namespace AssetSite.admin.Import
 
         private void ReadExcelSheets()
         {
-            var result = IE.ImportExportManager.GetExcelDataSourceSheets(FilePath);
+            var result = ExcelProvider.GetExcelSheetNames(FilePath);
 
-            if (result.Status.IsSuccess)
+            if (ExcelProvider.Status.IsSuccess)
             {
-                sheetsCheckboxes.DataSource = result.DataSet.ToList();
+                sheetsCheckboxes.DataSource = result.ToList();
                 sheetsCheckboxes.DataBind();
 
-                if (result.DataSet.Count() == 1)
+                if (result.Count() == 1)
                 {
                     sheetsCheckboxes.Items[0].Selected = true;
                     ReadExcelFields();
@@ -422,26 +392,23 @@ namespace AssetSite.admin.Import
             }
             else
             {
-                HandleErrorStatus(result.Status);
+                HandleErrorStatus(ExcelProvider.Status);
             }
         }
 
         private void ReadExcelFields()
         {
             Sheets = GetCheckedSheets().ToList();
+            Fields = ExcelProvider.GetFields(FilePath, Sheets);
 
-            var result = IE.ImportExportManager.GetExcelDataSourceFields(FilePath, Sheets);
-
-            if (result.Status.IsSuccess)
+            if (ExcelProvider.Status.IsSuccess)
             {
-                Fields = (from field in result.DataSet
-                          select field.Value).ToList();
                 BindData();
                 ImportingWizard.MoveTo(WizardStep4);
             }
             else
             {
-                HandleErrorStatus(result.Status);
+                HandleErrorStatus(ExcelProvider.Status);
             }
         }
 
@@ -460,24 +427,7 @@ namespace AssetSite.admin.Import
             fieldsGrid.DataSource = AssetTypeAttributes;
             fieldsGrid.DataBind();
         }
-
-        private void ReadADUsersFields()
-        {
-            Credentials = GetCredentials();
-            IE.ActionResult<List<string>> result = IE.ImportExportManager.GetActiveDirectoryUserFields();
-
-            if (result.Status.IsSuccess)
-            {
-                Fields = result.Data;
-                BindData();
-                ImportingWizard.MoveTo(WizardStep4);
-            }
-            else
-            {
-                HandleErrorStatus(result.Status);
-            }
-        }
-
+              
         private IE.ActionResult<IE.BindingInfo> GetBindings()
         {
             var result = new IE.ActionResult<IE.BindingInfo>();
@@ -570,23 +520,18 @@ namespace AssetSite.admin.Import
 
                 // right side
                 var list = e.Row.FindControl("datasourceField") as DropDownList;
-                list.DataSource = Fields;
+                list.DataSource = from field in Fields
+                                  select new { Name = XmlConvert.DecodeName(field), Value = field };
+                list.DataValueField = "Value";
+                list.DataTextField = "Name";
                 list.DataBind();
                 list.Items.Insert(0, new ListItem());
 
-                string cValue = fieldsGrid.DataKeys[e.Row.RowIndex].Value.ToString().ToLower();
-
-                //exact match
-                IEnumerable<string> matches = from attr in Fields
-                    where attr.ToLower() == cValue
-                    select attr;
-                if (matches.Any())
-                {
-                    //rough match
-                    matches = from attr in Fields
-                        where attr.ToLower().Contains(cValue)
-                        select attr;
-                }
+                var attributeName = fieldsGrid.DataKeys[e.Row.RowIndex].Value.ToString().ToLower();
+                var matches = from field in Fields
+                              let decoded = XmlConvert.DecodeName(field)
+                              where decoded.ToLower().Contains(attributeName)
+                              select field;
 
                 var binding = Bindings.Bindings.SingleOrDefault(b => b.DestinationAttributeId == attribute.ID);
                 list.SelectedValue = binding != null
@@ -647,6 +592,8 @@ namespace AssetSite.admin.Import
 
         protected void ImportingWizard_Finish(object sender, EventArgs e)
         {
+            BindData();
+
             var path = FilePath;
             var status = new IE.StatusInfo();
             var bindingsResult = GetBindings();
@@ -654,14 +601,6 @@ namespace AssetSite.admin.Import
 
             if (status.IsSuccess)
             {
-                if (DataSource == DataSourceType.AD || DataSource == DataSourceType.XML)
-                {
-                    throw new NotSupportedException("Data Source is not supported");
-                    path = Path.Combine(ApplicationSettings.UploadOnImportPath, Guid.NewGuid() + ".xml");
-                    bindingsResult.Data = IE.ImportExportManager.ConvertLDAPBindings(bindingsResult.Data);
-                    status.Add(IE.ImportExportManager.SaveLDAPUsersToXML(Credentials, bindingsResult.Data, AssetType, path));
-                }
-           
                 var job = BatchJobFactory.CreateImportAssetsJob(
                     AuthenticationService.CurrentUserId,
                     path, AssetTypeId, bindingsResult.Data, Sheets, true);
@@ -671,7 +610,6 @@ namespace AssetSite.admin.Import
             else
             {
                 HandleErrorStatus(status);
-                BindData();
             }
         }
 

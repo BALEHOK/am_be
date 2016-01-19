@@ -1,6 +1,7 @@
-﻿using AppFramework.DataProxy;
-using AppFramework.Reports.CustomReports;
+﻿using AppFramework.Core.Classes.ScreensServices;
+using AppFramework.DataProxy;
 using AppFramework.Reports.Services;
+using AssetManager.Infrastructure.Services;
 using AssetManagerAdmin.Services;
 using DevExpress.Xpf.Reports.UserDesigner;
 using DevExpress.XtraReports.Service.Extensions;
@@ -12,10 +13,16 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
     {
         protected override void Initialize()
         {
+            // these interfaces should be referenced only within Reports module
+            // which is allowed to directly connect to database
             Container
                 .RegisterType<IUnitOfWork, UnitOfWork>(
                     new TransientLifetimeManager(),
                     new InjectionFactory(c => new UnitOfWork()))
+                .RegisterType<IAssetTypeService, AssetTypeService>()
+                .RegisterType<IScreensService, ScreensService>(); // required for AssetTypeService
+
+            Container
                 .RegisterType<IStandardReportService, DevExpressStandardReportService>()
                 .RegisterType<ICustomReportService, DevExpressCustomReportsService>()
                 .RegisterType<IReportStorage, DbReportStorage>()

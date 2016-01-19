@@ -5,9 +5,7 @@ using System.Linq;
 using AppFramework.Core.AC.Providers;
 using AppFramework.Core.Classes;
 using AppFramework.Core.ConstantsEnumerators;
-using AppFramework.Core.DAL;
 using AppFramework.DataProxy;
-using AppFramework.Entities;
 
 namespace AppFramework.Core.AC.Authentication
 {
@@ -77,7 +75,6 @@ namespace AppFramework.Core.AC.Authentication
         /// <summary>
         /// Saves user's authentication data
         /// </summary>
-        /// <param name="storage">AuthenticationStorage object</param>
         public void SaveStorage()
         {
             _provider.SaveStorage(new AuthenticationStorage());
@@ -86,7 +83,6 @@ namespace AppFramework.Core.AC.Authentication
         /// <summary>
         /// Setting up all permissions for provided user
         /// </summary>
-        /// <param name="user">Currently logged user</param>
         public void InitializePermissions()
         {
             // get the reference to the storage object

@@ -4802,6 +4802,17 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="f_cust_ReIndex_Asset" FunctionName="DataModel.Store.f_cust_ReIndex_Asset" />
+          <FunctionImportMapping FunctionImportName="f_cust_GetTasks" FunctionName="DataModel.Store.f_cust_GetTasks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.ActiveTask">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="DynEntityConfigName" ColumnName="DynEntityConfigName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

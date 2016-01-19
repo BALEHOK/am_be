@@ -315,9 +315,12 @@ namespace AssetManagerAdmin.ViewModels
             {
                 ExpressionParser.Parse(formulaText.Trim());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(string.Format("This attribute has invalid formula\r\n{0}", formulaText.Trim()));
+                var message = string.Format("This attribute has invalid formula\r\n{0}",
+                    formulaText.Trim());
+                _logger.Error(message, ex);
+                MessageBox.Show(message);
             }
         }
 

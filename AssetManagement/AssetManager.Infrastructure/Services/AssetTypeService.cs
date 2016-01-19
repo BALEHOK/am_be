@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
@@ -21,9 +20,8 @@ namespace AssetManager.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScreensService _screensService;
-        private readonly IAssetTypeRepository _assetTypeRepository;
 
-        public AssetTypeService(IUnitOfWork unitOfWork, IScreensService screensService, IAssetTypeRepository assetTypeRepository)
+        public AssetTypeService(IUnitOfWork unitOfWork, IScreensService screensService)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
@@ -31,14 +29,12 @@ namespace AssetManager.Infrastructure.Services
             if (screensService == null)
                 throw new ArgumentNullException("screensService");
             _screensService = screensService;
-            if (assetTypeRepository == null)
-                throw new ArgumentNullException("assetTypeRepository");
-            _assetTypeRepository = assetTypeRepository;
         }
 
         public AssetTypeModel GetAssetType(long id, bool loadAttributes = false)
         {
             Expression<Func<DynEntityConfig, object>> include;
+
             if (loadAttributes)
             {
                 include = c => c.DynEntityAttribConfigs.Select(a => a.DataType);
@@ -47,6 +43,7 @@ namespace AssetManager.Infrastructure.Services
             {
                 include = null;
             }
+
             var typeConfig = _unitOfWork.DynEntityConfigRepository
                 .SingleOrDefault(c => c.DynEntityConfigId == id && c.ActiveVersion, include);
 
@@ -79,6 +76,7 @@ namespace AssetManager.Infrastructure.Services
             return new AssetTypeModel
             {
                 Id = typeConfig.DynEntityConfigId,
+                Uid = typeConfig.DynEntityConfigUid,
                 DisplayName = typeConfig.Name,
                 DbName = typeConfig.DBTableName,
                 Description = typeConfig.Comment,
@@ -114,11 +112,10 @@ namespace AssetManager.Infrastructure.Services
         }
 
         private void LoadScreens(List<AssetTypeModel> typesInfo)
-        {
+        {   
             typesInfo.ForEach(type =>
             {
-                var assetType = _assetTypeRepository.GetById(type.Id.Value);
-                var screens = _screensService.GetScreensByAssetTypeUid(assetType.UID);
+                var screens = _screensService.GetScreensByAssetTypeUid(type.Uid);
 
                 var screensModel = screens.Select(screen =>
                 {

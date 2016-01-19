@@ -87,14 +87,14 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
                 entry.Type = _grammar.Get<T>().Single();
             }
 
+            Debug.Assert(entry.Type != null, "Type is null!");
+
             if (items != null)
             {
                 items.ForEach(i => i.Type = entry.Type);
+                entry.Items = items;
             }
 
-            Debug.Assert(entry.Type != null, "Type is null!");
-
-            entry.Items = items;
             if (entry.Value == null)
                 entry.Value = name;
 

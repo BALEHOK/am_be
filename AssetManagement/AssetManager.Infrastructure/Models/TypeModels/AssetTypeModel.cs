@@ -38,6 +38,8 @@ namespace AssetManager.Infrastructure.Models.TypeModels
 
         public bool IsHighlighted { get; set; }
 
+        public long Uid { get; internal set; }
+
         public AssetTypeModel()
         {
             Screens = new List<AssetTypeScreenModel>();

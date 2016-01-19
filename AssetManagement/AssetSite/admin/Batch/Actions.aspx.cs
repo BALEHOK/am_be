@@ -1,6 +1,5 @@
 ﻿using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes.Batch;
-using AppFramework.DataProxy;
 using System;
 using System.Web.UI.WebControls;
 using Microsoft.Practices.Unity;
@@ -35,20 +34,20 @@ namespace AssetSite.admin.Batch
                     JobStatus.Text = BatchJob.CurrentStatus.ToString();
                 }
 
-                // if job finished, hide Execute now button
                 if (BatchJob.CurrentStatus != BatchStatus.Finished &&
                     BatchJob.CurrentStatus != BatchStatus.Running &&
                     BatchJob.CurrentStatus != BatchStatus.InStack)
                 {
-                    btnExecute.Visible = true;
                     btnSchedule.Visible = BatchJob.BatchSchedule == null;
                     linkRefresh.Visible = false;
                 }
-                else if (BatchJob.CurrentStatus == BatchStatus.Running || BatchJob.CurrentStatus == BatchStatus.Created ||
-                    BatchJob.CurrentStatus == BatchStatus.InStack)
+                else if (BatchJob.CurrentStatus == BatchStatus.Running || 
+                        BatchJob.CurrentStatus == BatchStatus.Created ||
+                        BatchJob.CurrentStatus == BatchStatus.InStack)
                 {
                     linkRefresh.NavigateUrl = Request.Url.OriginalString;
                     linkRefresh.Visible = true;
+                    btnExecute.Visible = false;
                 }
                 string postbackEvent = Page.ClientScript.GetPostBackEventReference(btnUnSchedule, "");
                 btnUnSchedule.OnClientClick = "return ShowConfirmationDialog(function(){ " + postbackEvent + " });";

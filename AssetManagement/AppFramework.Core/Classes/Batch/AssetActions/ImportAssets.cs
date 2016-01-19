@@ -4,7 +4,6 @@ using AppFramework.Core.Classes.IE;
 using AppFramework.Core.Classes.IE.Adapters;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.DataProxy;
-using AppFramework.Entities;
 using Common.Logging;
 using System;
 using System.IO;
@@ -14,6 +13,8 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
 {
     internal class ImportAssets : BatchAction
     {
+        public int ImportedAssetsCount { get; private set; }
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAssetsService _assetsService;
         private readonly IAssetTypeRepository _assetTypeRepository;
@@ -83,21 +84,15 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
                     asset[AttributeNames.Name].Value = asset.GenerateName();
                 _assetsService.InsertAsset(asset);
             }
-
-            // update import/export task entry   
-            //dbEntity.Status = result.IsSuccess 
-            //    ? (int)ImportExportStatus.Completed 
-            //    : (int)ImportExportStatus.Error;
-            //if (result.Errors.Count > 0)
-            //    dbEntity.Message += "\r\nErrors:\r\n" + string.Join("\r\n", result.Errors.ToArray());
-            //if (result.Warnings.Count > 0)
-            //    dbEntity.Message += "\r\nWarnings:\r\n" + string.Join("\r\n", result.Warnings.ToArray());
+            
             _unitOfWork.ImportExportRepository.Update(dbEntity);
             _unitOfWork.Commit();
 
             // cleanup
             if (deleteSource)
                 File.Delete(dbEntity.FilePath);
+
+            ImportedAssetsCount = assets.Count();
         }
     }
 }

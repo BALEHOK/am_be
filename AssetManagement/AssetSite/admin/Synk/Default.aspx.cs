@@ -5,7 +5,6 @@ using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.PL;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +14,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Microsoft.Practices.Unity;
 using IE = AppFramework.Core.Classes.IE;
+using AppFramework.Core.Classes.IE.Providers;
 
 namespace AssetSite.admin.Synk
 {
@@ -24,6 +24,8 @@ namespace AssetSite.admin.Synk
         public IBarcodeProvider BarcodeProvider { get; set; }
         [Dependency]
         public IE.IImportExportManager ImportExportManager { get; set; }
+        [Dependency]
+        public IExcelProvider ExcelProvider { get; set; }
 
         /// <summary>
         /// Gets if choosed asset type is type of user.
@@ -289,29 +291,22 @@ namespace AssetSite.admin.Synk
             }
             else if (SynkWizard.ActiveStep == WizardStep2)
             {
-                if (DataSource != DataSourceType.AD)
+                if (UploadFile())
                 {
-                    if (UploadFile())
+                    if (DataSource == DataSourceType.XLS ||
+                        DataSource == DataSourceType.XLSX)
                     {
-                        if (DataSource == DataSourceType.XLS ||
-                            DataSource == DataSourceType.XLSX)
-                        {
-                            ReadExcelSheets();
-                        }
-                        else
-                        {
-                            HoldStep();
-                            messagePanel.Messages.Add(new MessageDefinition()
-                            {
-                                Status = MessageStatus.Error,
-                                Message = "File format is not supported."
-                            });
-                        }
+                        ReadExcelSheets();
                     }
-                }
-                else if (DataSource == DataSourceType.AD && IsUsersImport)
-                {
-                    throw new NotSupportedException("Only Excel files supported for synchronization");
+                    else
+                    {
+                        HoldStep();
+                        messagePanel.Messages.Add(new MessageDefinition()
+                        {
+                            Status = MessageStatus.Error,
+                            Message = "File format is not supported."
+                        });
+                    }
                 }
             }
             else if (SynkWizard.ActiveStep == WizardStep3)
@@ -344,15 +339,14 @@ namespace AssetSite.admin.Synk
 
         private void ReadExcelSheets()
         {
-            var result
-                = IE.ImportExportManager.GetExcelDataSourceSheets(FilePath);
+            var result = ExcelProvider.GetExcelSheetNames(FilePath);
 
-            if (result.Status.IsSuccess)
+            if (ExcelProvider.Status.IsSuccess)
             {
-                sheetsCheckboxes.DataSource = result.DataSet.ToList();
+                sheetsCheckboxes.DataSource = result.ToList();
                 sheetsCheckboxes.DataBind();
 
-                if (result.DataSet.Count() == 1)
+                if (result.Count() == 1)
                 {
                     sheetsCheckboxes.Items[0].Selected = true;
                     ReadExcelFields();
@@ -365,27 +359,23 @@ namespace AssetSite.admin.Synk
             }
             else
             {
-                HandleErrorStatus(result.Status);
+                HandleErrorStatus(ExcelProvider.Status);
             }
         }
         
         private void ReadExcelFields()
         {
             Sheets = GetCheckedSheets().ToList();
+            Fields = ExcelProvider.GetFields(FilePath, Sheets);
 
-            var result
-                = IE.ImportExportManager.GetExcelDataSourceFields(FilePath, Sheets);
-
-            if (result.Status.IsSuccess)
+            if (ExcelProvider.Status.IsSuccess)
             {
-                Fields = (from field in result.DataSet
-                          select field.Value).ToList();
                 BindData();
                 SynkWizard.MoveTo(WizardStep4);
             }
             else
             {
-                HandleErrorStatus(result.Status);
+                HandleErrorStatus(ExcelProvider.Status);
             }
         }
 
@@ -582,31 +572,6 @@ namespace AssetSite.admin.Synk
             IE.StatusInfo status = new IE.StatusInfo();
             IE.ActionResult<IE.BindingInfo> bindingsResult = GetBindings();
             status.Add(bindingsResult.Status);
-
-            if (status.IsSuccess)
-            {
-                if (DataSource == DataSourceType.XLS ||
-                    DataSource == DataSourceType.XLSX)
-                {
-                    //path = Path.Combine(ApplicationSettings.UploadOnImportPath, Guid.NewGuid() + ".xml");
-                    //status.Add(IE.ImportExportManager.ExportExcelToXml(FilePath, AssetType, bindingsResult.Data, Sheets, path));
-                    //if (status.IsSuccess)
-                    //{
-                    //    File.Delete(FilePath);
-                    //    FilePath = path;  // refresh state in session
-                    //}
-                }
-                else if (DataSource == DataSourceType.AD)
-                {
-                    path = Path.Combine(ApplicationSettings.UploadOnImportPath, Guid.NewGuid() + ".xml");
-                    bindingsResult.Data = IE.ImportExportManager.ConvertLDAPBindings(bindingsResult.Data);
-                    status.Add(IE.ImportExportManager.SaveLDAPUsersToXML(Credentials, bindingsResult.Data, AssetType, path));
-                }
-                else if (DataSource == DataSourceType.XML)
-                {
-                    path = FilePath;
-                }
-            }
 
             if (status.IsSuccess)
             {

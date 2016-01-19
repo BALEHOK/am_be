@@ -1,8 +1,5 @@
-﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.AC.Authentication;
-using AppFramework.Core.Classes.DynLists;
-using AppFramework.Core.Classes.IE.Providers;
-using AppFramework.Core.Exceptions;
+﻿using AppFramework.Core.Classes.IE.Providers;
+using Common.Logging;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -14,6 +11,7 @@ namespace AppFramework.Core.Classes.IE.Adapters
     public class ExcelToXmlConverter : XmlConverterBase, IExcelToXmlConverter
     {
         private readonly ExcelProvider _excelProvider;
+        private static ILog _logger = LogManager.GetCurrentClassLogger();
 
         public ExcelToXmlConverter()
         {
@@ -28,8 +26,10 @@ namespace AppFramework.Core.Classes.IE.Adapters
         {
             // get DataSet from excel file
             var dataSet = _excelProvider.GetDataSet(filePath, sheets).Data;
-            var document = new XDocument(new XDeclaration("1.0", "utf-16", "yes"));
-            document.Add(new XElement(XName.Get("Assets", _namespace.NamespaceName), GetAssets(dataSet, at, bindings)));
+            var document = new XDocument(
+                new XDeclaration("1.0", "utf-16", "yes"),
+                new XElement(XName.Get("Assets", _namespace.NamespaceName),
+                    GetAssets(dataSet, at, bindings)));
             return document;
         }
 
@@ -48,7 +48,9 @@ namespace AppFramework.Core.Classes.IE.Adapters
                     var tmpSet = new DataSet("Assets") { Namespace = _namespace.NamespaceName };
                     tmpSet.Tables.Add(table.Copy());
                     tmpSet.Tables[0].TableName = "Asset";
-                    xassets.AddRange(TransformDataSetToItemsCollection(tmpSet, at, bindings));
+                    // convert DataSet to XDocument
+                    var sourceDocument = XDocument.Parse(tmpSet.GetXml());
+                    xassets.AddRange(_transformDataSetToItemsCollection(sourceDocument, at, bindings));
                 }
             }
             return xassets;
@@ -59,17 +61,17 @@ namespace AppFramework.Core.Classes.IE.Adapters
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private IEnumerable<XElement> TransformDataSetToItemsCollection(DataSet data, AssetType at, BindingInfo bindings)
+        private List<XElement> _transformDataSetToItemsCollection(
+            XDocument data, AssetType at, BindingInfo bindings)
         {
-            // convert DataSet to XDocument
-            XDocument sourceDocument = XDocument.Parse(data.GetXml());
-
             // complete XML according to schema
-            IEnumerable<XElement> xassets = from xnode in sourceDocument.Descendants()
-                                            where xnode.Name == _namespace + "Asset"
-                                            && xnode.Descendants().Any()
-                                            select xnode;
+            var xassets = 
+                from xnode in data.Descendants()
+                where xnode.Name == _namespace + "Asset"
+                && xnode.Descendants().Any()
+                select xnode;
 
+            var elements = new List<XElement>();
             foreach (XElement xasset in xassets)
             {
                 string id = string.Empty;
@@ -80,8 +82,18 @@ namespace AppFramework.Core.Classes.IE.Adapters
 
                 if (idNode != null)
                     id = idNode.Value;
-                yield return GetAsset(xasset, id, at, bindings);
+                try
+                {
+                    elements.Add(GetAsset(xasset, id, at, bindings));
+                }
+                catch (System.Exception ex)
+                {
+                    _logger.Debug(xasset);
+                    _logger.Error(ex);
+                    throw;
+                }
             }
+            return elements;
         }
 
         /// <summary>
@@ -110,25 +122,27 @@ namespace AppFramework.Core.Classes.IE.Adapters
             foreach (var attribute in at.Attributes)
             {
                 var nodeValue = string.Empty;
-                var binding = bindings.Bindings.SingleOrDefault(b => b.DestinationAttributeId == attribute.ID && attribute.ID > 0);
+                var binding = bindings.Bindings
+                    .SingleOrDefault(b => b.DestinationAttributeId == attribute.ID && attribute.ID > 0);
+
                 if (binding != null)
                 {
                     var xattribute = (from node in dataSource.Descendants()
-                        where XmlConvert.DecodeName(node.Name.LocalName) == binding.DataSourceFieldName
+                        where node.Name.LocalName == binding.DataSourceFieldName
                         select node).SingleOrDefault();
                     nodeValue = xattribute != null
                         ? xattribute.Value
                         : string.Empty;
                 }
-                yield return GetAttributeNode(
-                    attribute, 
-                    nodeValue, 
-                    binding != null 
-                        ? binding.DefaultValue 
-                        : string.Empty,
-                    binding != null && binding.DestinationRelatedAttributeId.HasValue 
-                        ? binding.DestinationRelatedAttributeId.ToString()
-                        : string.Empty);
+
+                var defaultValue = binding != null
+                    ? binding.DefaultValue
+                    : string.Empty;
+                var relatedId = binding != null && binding.DestinationRelatedAttributeId.HasValue
+                    ? binding.DestinationRelatedAttributeId.ToString()
+                    : string.Empty;
+
+                yield return GetAttributeNode(attribute, nodeValue, defaultValue, relatedId);
             }
         }
 

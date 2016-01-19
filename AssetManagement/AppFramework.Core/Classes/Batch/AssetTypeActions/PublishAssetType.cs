@@ -52,7 +52,7 @@ namespace AppFramework.Core.Classes.Batch.AssetTypeActions
             UpdateConnectedPanelsRelations(fromEntity, toEntity);
 
             unitOfWork.RebuildTriggers(toAssetTypeUid);
-            //unitOfWork.Commit();
+            unitOfWork.Commit();
         }
 
         private void ChangeSchema(Entities.DynEntityConfig fromEntity, Entities.DynEntityConfig toEntity)

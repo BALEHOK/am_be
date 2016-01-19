@@ -235,6 +235,7 @@
     <Compile Include="Classes\IAttributeRepository.cs" />
     <Compile Include="Classes\IAttributeValueFormatter.cs" />
     <Compile Include="Classes\IE\IImportExportManager.cs" />
+    <Compile Include="Classes\IE\Providers\IExcelProvider.cs" />
     <Compile Include="Classes\Layout.cs" />
     <Compile Include="Classes\LayoutType.cs" />
     <Compile Include="Classes\SearchEngine\ISearchTracker.cs" />
@@ -381,7 +382,6 @@
     <Compile Include="Classes\IE\Providers\XMLProvider.cs" />
     <Compile Include="Classes\IE\SchemaGenerator.cs" />
     <Compile Include="Classes\IE\StatusInfo.cs" />
-    <Compile Include="Classes\IE\TransferResult.cs" />
     <Compile Include="Classes\Installer\IntegrityCheck.cs" />
     <Compile Include="Classes\MeasureUnit.cs" />
     <Compile Include="Classes\Panel.cs" />

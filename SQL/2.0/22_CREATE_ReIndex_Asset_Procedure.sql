@@ -23,34 +23,37 @@ BEGIN
 	DECLARE @DynEntityUidOld bigint, @DynEntityConfigUidOld bigint
 	SELECT @DynEntityUidOld = [DynEntityUid], @DynEntityConfigUidOld = [DynEntityConfigUid]
 	FROM  [IndexActiveDynEntities]
-	WHERE [DynEntityId] = @DynEntityId AND [DynEntityConfigUid] = @DynEntityConfigUidNew
-
-	DECLARE	@oldEntities DynEntityIdsTableType
-	INSERT INTO @oldEntities
-	([DynEntityUid], [DynEntityId], [DynEntityConfigUid])
-	VALUES
-	(@DynEntityUidOld, @DynEntityId, @DynEntityConfigUidOld)
-
-	DECLARE	@newEntities DynEntityIdsTableType
-	INSERT INTO @newEntities
-	([DynEntityUid], [DynEntityId], [DynEntityConfigUid])
-	VALUES
-	(@DynEntityUidNew, @DynEntityId, @DynEntityConfigUidNew)
+	WHERE [DynEntityId] = @DynEntityId AND [DynEntityConfigId] = @DynEntityConfigId
 	
 	BEGIN TRAN
 
-	DELETE [IndexActiveDynEntities]
-	WHERE [DynEntityId] = @DynEntityId AND [DynEntityConfigUid] = @DynEntityConfigUidOld
+		IF (@DynEntityUidOld IS NOT NULL AND @DynEntityConfigUidOld IS NOT NULL)
+		BEGIN
+			DECLARE	@oldEntities DynEntityIdsTableType
+			INSERT INTO @oldEntities
+			([DynEntityUid], [DynEntityId], [DynEntityConfigUid])
+			VALUES
+			(@DynEntityUidOld, @DynEntityId, @DynEntityConfigUidOld)
 
-	EXEC [dbo].[_cust_ReIndex]
-		@active = 0,
-		@buildDynEntityIndex = 0,
-		@entities = @oldEntities
+			EXEC [dbo].[_cust_ReIndex]
+				@active = 0,
+				@buildDynEntityIndex = 0,
+				@entities = @oldEntities
+		END
 
-	EXEC [dbo].[_cust_ReIndex]
-		@active = 1,
-		@buildDynEntityIndex = 1,
-		@entities = @newEntities
+		DELETE [IndexActiveDynEntities]
+		WHERE [DynEntityId] = @DynEntityId AND [DynEntityConfigId] = @DynEntityConfigId
+
+		DECLARE	@newEntities DynEntityIdsTableType
+		INSERT INTO @newEntities
+		([DynEntityUid], [DynEntityId], [DynEntityConfigUid])
+		VALUES
+		(@DynEntityUidNew, @DynEntityId, @DynEntityConfigUidNew)
+
+		EXEC [dbo].[_cust_ReIndex]
+			@active = 1,
+			@buildDynEntityIndex = 1,
+			@entities = @newEntities
 
 	COMMIT TRAN
 END

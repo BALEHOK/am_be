@@ -5,6 +5,7 @@ using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.Classes.Batch;
 using AppFramework.Core.Classes.IE;
 using AppFramework.Core.Classes.IE.Adapters;
+using AppFramework.Core.Classes.IE.Providers;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.Tasks.Runners;
@@ -66,6 +67,7 @@ namespace AppFramework.Core
                 .RegisterType<IAttributeValueFormatter, AttributeValueFormatter>()
                 .RegisterType<IImportExportManager, ImportExportManager>()
                 .RegisterType<IRightsService, RightsService>()
+                .RegisterType<IExcelProvider, ExcelProvider>()
                 .RegisterType<IRoleService, RoleService>();
         }
     }

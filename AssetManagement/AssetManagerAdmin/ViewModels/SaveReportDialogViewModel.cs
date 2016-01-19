@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AssetManager.Infrastructure.Models.TypeModels;
-using AssetManagerAdmin.Model;
 using GalaSoft.MvvmLight.Command;
 using AssetManagerAdmin.Infrastructure;
-using AppFramework.Reports.Services;
 using System;
+using AssetManager.Infrastructure.Services;
 
 namespace AssetManagerAdmin.ViewModels
 {
@@ -91,28 +90,21 @@ namespace AssetManagerAdmin.ViewModels
                 CreateReportCommand.RaiseCanExecuteChanged();
         }
 
-        private readonly IDataService _dataService;
-
         public SaveReportDialogViewModel(
-            IDataService dataService, 
-            ICustomReportService reportsService,             
+            IAssetTypeService assetTypeService, 
             IAppContext context)
             : base(context)
         {
-            _dataService = dataService;
+            var assetTypes = assetTypeService.GetAssetTypes();
 
-            _dataService.GetTypesInfo(Context.CurrentUser, Context.CurrentServer.ApiUrl)
-                .ContinueWith(result =>
-                {
-                    // do not modify original collection
-                    AssetTypesList = result.Result.ActiveTypes.ToList();
-                    AssetTypesList.Insert(0, new AssetTypeModel
-                    {
-                        Id = null,
-                        DisplayName = "[All]"
-                    });
-                    ReportAssetType = AssetTypesList[0];
-                });
+            // do not modify original collection
+            AssetTypesList = new List<AssetTypeModel>(assetTypes.ActiveTypes);
+            AssetTypesList.Insert(0, new AssetTypeModel
+            {
+                Id = null,
+                DisplayName = "[All]"
+            });
+            ReportAssetType = AssetTypesList[0];
         }
     }
 }

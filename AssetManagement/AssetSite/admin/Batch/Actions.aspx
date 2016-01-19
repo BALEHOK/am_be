@@ -19,7 +19,7 @@
                 </div>
                 <div>
                     <asp:Button ID="btnExecute" runat="server" OnClick="ExecuteNow" Text="ExecuteNow" 
-                        Visible="False" meta:resourcekey="Button1Resource1" />
+                        meta:resourcekey="Button1Resource1" />
                     <asp:Button 
                         runat="server" 
                         Text="Schedule For Execution" 
@@ -30,7 +30,8 @@
                 <div>
                     <asp:HyperLink runat="server" ID="Back" Text="Back to jobs" 
                         NavigateUrl="~/admin/Batch" meta:resourcekey="BackResource1" />
-                    &nbsp;<asp:HyperLink ID="linkRefresh" runat="server" Text="Refresh" meta:resourcekey="JobStatusRefresh" Visible="false" />
+                    &nbsp;
+                    <asp:HyperLink ID="linkRefresh" runat="server" Text="Refresh" meta:resourcekey="JobStatusRefresh" Visible="false" />
                 </div>
             </div>
         </div>

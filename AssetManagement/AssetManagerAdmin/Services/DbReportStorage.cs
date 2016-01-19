@@ -35,26 +35,7 @@ namespace AssetManagerAdmin.Services
 
         public XtraReport CreateNew()
         {
-            SaveReportDialogCallbackMessage dialogResult = null;
-            var msg = new SaveReportMessage(this, (r) =>
-            {
-                dialogResult = r;
-                dialogEvent.Set();
-            });
-
-            dialogEvent.Reset();
-
-            Messenger.Default.Send(msg);
-
-            dialogEvent.WaitOne();
-
-            if (dialogResult == null || dialogResult.Result != true)
-                return null;
-
-            var reportEntity = _reportService.CreateReport(
-                dialogResult.AssetTypeId, dialogResult.ReportName);
-
-            return _reportService.CreateReportView(reportEntity);
+            return new XtraReport();
         }
 
         public XtraReport CreateNewSubreport()
@@ -94,8 +75,8 @@ namespace AssetManagerAdmin.Services
                     AppFramework.Reports.Constants.ReportTypeCustomReport,
                     dialogResult.Report.DynEntityConfigId,
                     dialogResult.Report.ReportUid);
-            else
-                return string.Empty;
+
+            return null;
         }
 
         public string Save(string reportID, IReportProvider reportProvider, bool saveAs, string reportTitle, IReportDesignerUI designer)
@@ -121,7 +102,7 @@ namespace AssetManagerAdmin.Services
                 dialogEvent.WaitOne();
 
                 if (dialogResult == null || dialogResult.Result != true)
-                    return string.Empty;
+                    return null;
 
                 reportEntity = _reportService.CreateReport(
                     dialogResult.AssetTypeId, dialogResult.ReportName);

@@ -119,10 +119,9 @@ namespace AppFramework.ConstantsEnumerators
     public enum DataSourceType
     {
         UNKNOWN,
-        XML,
         XLS,
         XLSX,
-        AD
+        XML,
     }
 
     public enum TaskExecutableType

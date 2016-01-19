@@ -45,10 +45,7 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions.ExpressionTypes
             set
             {
                 _value = value;
-
-                if (Items != null)
-                    Selected = Items.SingleOrDefault(i => i.Name == _value);
-
+                Selected = Items.SingleOrDefault(i => i.Name == _value);
                 OnPropertyChanged();
                 NotifyValueChanged();
             }
@@ -66,7 +63,17 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions.ExpressionTypes
 
         public ExpressionBuilder Builder { get; set; }
 
-        public List<ExpressionEntry> Items { get; set; }
+        public List<ExpressionEntry> Items
+        {
+            get { return _items; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Items cannot be null");
+                _items = value;
+            }
+        }
+        private List<ExpressionEntry> _items = new List<ExpressionEntry>();
 
         public ReadOnlyCollection<ExpressionEntry> RightOperandsList
         {

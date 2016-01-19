@@ -1,5 +1,4 @@
-﻿using AppFramework.ConstantsEnumerators;
-using Common.Logging;
+﻿using Common.Logging;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -8,12 +7,14 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace AppFramework.Core.Classes.IE.Providers
 {
-    public class ExcelProvider
+    public class ExcelProvider : IExcelProvider
     {
         public StatusInfo Status { get; set; }
+
         private readonly ILog _logger = LogManager.GetCurrentClassLogger();
 
         public ExcelProvider()
@@ -26,28 +27,27 @@ namespace AppFramework.Core.Classes.IE.Providers
             if (string.IsNullOrWhiteSpace(filepath))
                 throw new ArgumentNullException("FileName");
 
-            string cnnProvider;
-            string version;
-
-            if (filepath.EndsWith("xlsx"))
+            var sb = new StringBuilder();
+            var isNewExcel = filepath.EndsWith("xlsx");
+            if (isNewExcel)
             {
-                cnnProvider = @"Provider=Microsoft.ACE.OLEDB.12.0;";
-                version = "12.0";
+                sb.Append("Provider=Microsoft.ACE.OLEDB.12.0;");
             }
             else if (filepath.EndsWith("xls"))
             {
-                cnnProvider = @"Provider=Microsoft.Jet.OLEDB.4.0;";
-                version = "8.0";
+                sb.Append("Provider=Microsoft.Jet.OLEDB.4.0;");
             }
             else
             {
                 throw new ArgumentException("Unknown file format");
             }
+            
+            sb.AppendFormat("Data Source={0};", filepath);
+            sb.Append("OLE DB Services=-4;");
 
-            var sb = new StringBuilder();
-            sb.Append(cnnProvider);
-            sb.AppendFormat("Data Source={0};Mode=ReadWrite;", filepath);
-            sb.AppendFormat("Extended Properties=\"Excel {0}; MaxScanRows=0; IMEX=0\"", version);
+            sb.AppendFormat("Extended Properties=\"Excel {0}; ", isNewExcel ? "12.0" : "8.0");
+            sb.Append("Mode=ReadWrite; MaxScanRows=0; IMEX=0\"");
+
             return new OleDbConnection(sb.ToString());
         }
 
@@ -58,16 +58,19 @@ namespace AppFramework.Core.Classes.IE.Providers
         /// </summary>
         /// <param name="sheets"></param>
         /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, string>> GetFields(string filepath, List<string> sheets)
+        public List<string> GetFields(string filepath, List<string> sheets)
         {
-            foreach (var sheet in sheets)
-            {
-                var table = GetDataTable(filepath, sheet);
-                foreach (DataColumn column in table.Columns)
-                {
-                    yield return new KeyValuePair<string, string>(sheet, column.ColumnName);
-                }
-            }
+            var dataSet = GetDataSet(filepath, sheets);
+            var schema = dataSet.Data.GetXmlSchema();
+
+            XNamespace xs = "http://www.w3.org/2001/XMLSchema";
+            var document = XDocument.Parse(schema);
+            return document
+                .Descendants(xs + "element") // DataSet
+                .Descendants(xs + "element") // Sheet
+                .Descendants(xs + "element") // Columns
+                .Select(e => e.Attribute(XName.Get("name")).Value)
+                .ToList();
         }
 
         /// <summary>
@@ -77,9 +80,12 @@ namespace AppFramework.Core.Classes.IE.Providers
         public ActionResult<DataSet> GetDataSet(string filepath, IEnumerable<string> sheets)
         {
             var ds = new DataSet();
-            foreach (string sheet in sheets)
+            using (var connection = GetConnection(filepath))
             {
-                ds.Tables.Add(GetDataTable(filepath, sheet));
+                foreach (string sheet in sheets)
+                {
+                    ds.Tables.Add(_getDataTable(connection, sheet));
+                }
             }
             return new ActionResult<DataSet>(Status, ds);
         }
@@ -90,29 +96,21 @@ namespace AppFramework.Core.Classes.IE.Providers
         /// <param name="filepath"></param>
         /// <param name="strSheetName"></param>
         /// <returns></returns>
-        private DataTable GetDataTable(string filepath, string strSheetName)
+        private DataTable _getDataTable(OleDbConnection connection, string strSheetName)
         {
             DataTable dt = null;
-            using (var connection = GetConnection(filepath))
+            try
             {
-                try
-                {
-                    var strComand = "select * from [" + strSheetName + "$]";
-                    var daAdapter = new OleDbDataAdapter(strComand, connection);
-                    dt = new DataTable(strSheetName);
-                    daAdapter.FillSchema(dt, SchemaType.Source);
-                    daAdapter.Fill(dt);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex);
-                    Status.IsSuccess = false;
-                    Status.Errors.Add(ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                var strComand = "select * from [" + strSheetName + "$]";
+                var daAdapter = new OleDbDataAdapter(strComand, connection);
+                dt = new DataTable(strSheetName);
+                daAdapter.FillSchema(dt, SchemaType.Source);
+                daAdapter.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                throw;
             }
             return dt;
         }
