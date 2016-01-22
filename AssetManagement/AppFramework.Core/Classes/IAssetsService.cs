@@ -27,10 +27,8 @@ namespace AppFramework.Core.Classes
         IEnumerable<Asset> GetHistoryAssets(long assetTypeId, long assetId);        
         IEnumerable<Asset> GetAssetsByAssetType(AssetType assetType, int? rowStart = null,
             int? rowsNumber = null);
-        IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeUid, long currentUserId, int? rowStart = null,
-            int? rowsNumber = null);
-        IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId, int? rowStart = null, 
-            int? rowsNumber = null);
+        IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeUid, long currentUserId);
+        IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId);
         IEnumerable<Asset> GetAssetsByAssetTypeIdAndLocation(long assetTypeId, long locationId);
         IEnumerable<Asset> GetAssetsByParameters(AssetType assetType, Dictionary<string, string> parameters);
         IEnumerable<KeyValuePair<long, string>> GetIdNameListByAssetType(AssetType assetType);

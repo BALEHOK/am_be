@@ -37,7 +37,9 @@ namespace AppFramework.Core.Classes
             var assetType = atRepository.GetById(assetTypeId);
             var userService = new UserService(unitOfWork, atRepository, assetsService);
 		    var currentUserId = userService.GetCurrentUser().Id;
-			return assetsService.GetAssetsByAssetTypeAndUser(assetType, currentUserId, rowStart, rowsNumber).ToList();
+
+		    var result = assetsService.GetAssetsByAssetTypeAndUser(assetType, currentUserId).ToList();
+            return rowStart.HasValue && rowsNumber.HasValue ? result.Skip(rowStart.Value).Take(rowsNumber.Value) : result;
 		}
 
 		/// <summary>
