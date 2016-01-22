@@ -13,7 +13,7 @@ namespace AssetSite.Documents
         {
             var assetType = AssetTypeRepository.GetPredefinedAssetType(PredefinedEntity.Document);
             _assetTypeId = assetType.ID;
-            var asset = AssetsService.GetAssetsByAssetTypeAndUser(assetType, AuthenticationService.CurrentUserId).Skip(1).FirstOrDefault();
+            var asset = AssetsService.GetAssetsByAssetTypeAndUser(assetType, AuthenticationService.CurrentUserId).FirstOrDefault();
             if (asset != null)
             {
                 assetsGrid.CreateColumns(asset);
