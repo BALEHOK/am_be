@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AppFramework.Core.AC.Authentication;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 
@@ -214,8 +212,7 @@ namespace AppFramework.Core.Classes
                     Description = ti.Description,
                     Comment = ti.Comment,
                     UpdateUserId = updateUserId,
-                    UpdateDate = updateDate,
-                    //ParentTaxonomyItemUid = ti.ParentTaxonomyItemUid,
+                    UpdateDate = updateDate
                 };
                 _copyTaxonomyItems(ti.ChildItems, updateUserId, updateDate)
                     .ToList()

@@ -1,13 +1,14 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using AppFramework.Core.Interfaces;
+using AppFramework.Entities;
+
 namespace AppFramework.Core.Classes
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-    using System.Linq;
-    using System.Web.UI.WebControls;
-    using AppFramework.Core.Interfaces;
-    using AppFramework.Entities;
-
     public class TaxonomyItem : IRevision, IModification
     {
         /// <summary>
@@ -61,7 +62,7 @@ namespace AppFramework.Core.Classes
             get { return _base.ParentTaxonomyItemUid; }
             set { _base.ParentTaxonomyItemUid = value; }
         }
-        
+
         public ObservableCollection<TaxonomyItem> ChildItems
         {
             get
@@ -76,6 +77,7 @@ namespace AppFramework.Core.Classes
                 return _childItems;
             }
         }
+
         private ObservableCollection<TaxonomyItem> _childItems;
 
         /// <summary>
@@ -93,21 +95,20 @@ namespace AppFramework.Core.Classes
             set { _base.ActiveVersion = value; }
         }
 
-        public Entities.Taxonomy Taxonomy 
+        public Entities.Taxonomy Taxonomy
         {
             get { return _base.Taxonomy; }
         }
 
-        public Entities.TaxonomyItem Base { get { return _base; } }
+        public Entities.TaxonomyItem Base
+        {
+            get { return _base; }
+        }
 
         private readonly Entities.TaxonomyItem _base;
 
-        /// <summary>
-        /// Private constructor
-        /// </summary>
-        /// <param name="data">AppFramework.DynamicEntity.Entities.TaxonomyItem data</param>
         public TaxonomyItem(Entities.TaxonomyItem data)
-            
+
         {
             if (data == null)
                 throw new ArgumentNullException("TaxonomyItem");
@@ -124,7 +125,7 @@ namespace AppFramework.Core.Classes
         /// <returns></returns>
         public TreeNode ToTreeNode()
         {
-            return this.ToTreeNode(false, false);
+            return ToTreeNode(false, false);
         }
 
         /// <summary>
@@ -133,21 +134,23 @@ namespace AppFramework.Core.Classes
         /// <returns></returns>
         public TreeNode ToTreeNode(bool ShowAddNodeLink, bool ShowManageLink)
         {
-            TreeNode node = new TreeNode()
+            var node = new TreeNode
             {
-                Text = this.Name,
-                Value = this.Id.ToString()
+                Text = Name,
+                Value = Id.ToString()
             };
             if (ShowAddNodeLink)
             {
-                node.Text += string.Format("&nbsp;<a href='#' onclick=\"return AddNode({0},'{1}')\">Add node</a>", this.Uid, this.Name);
+                node.Text += string.Format("&nbsp;<a href='#' onclick=\"return AddNode({0},'{1}')\">Add node</a>", Uid,
+                    Name);
             }
             if (ShowManageLink)
             {
-                node.Text += string.Format(" / <a href='{1}?Uid={0}'>Manage types</a>", this.Uid, (new System.Web.UI.Control()).ResolveUrl("~/admin/Taxonomies/ManageTypes.aspx"));
+                node.Text += string.Format(" / <a href='{1}?Uid={0}'>Manage types</a>", Uid,
+                    (new Control()).ResolveUrl("~/admin/Taxonomies/ManageTypes.aspx"));
             }
 
-            foreach (TaxonomyItem ch in this.ChildItems)
+            foreach (var ch in ChildItems)
             {
                 node.ChildNodes.Add(ch.ToTreeNode(ShowAddNodeLink, ShowManageLink));
             }

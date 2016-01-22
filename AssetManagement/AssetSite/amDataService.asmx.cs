@@ -581,7 +581,7 @@ namespace AssetSite
         [WebMethod]
         public object[] GetTasksByAssetTypeId(long atId)
         {
-            var tasks = TasksService.GetByAssetTypeId(atId, User.GetId());
+            var tasks = TasksService.GetByAssetTypeId(atId, AuthenticationService.CurrentUserId);
             return (from task in tasks
                     select new
                     {
@@ -593,7 +593,7 @@ namespace AssetSite
         [WebMethod(EnableSession = true)]
         public TaskExecutionDataHolder ExecuteTask(int taskId, long? assetUid = null)
         {
-            var task = TasksService.GetTaskById(taskId, User.GetId());
+            var task = TasksService.GetTaskById(taskId, AuthenticationService.CurrentUserId);
             var runner = TaskRunnerFactory.GetRunner(task, AuthenticationService.CurrentUserId, assetUid);
             var result = runner.Run(task);
             return new TaskExecutionDataHolder()

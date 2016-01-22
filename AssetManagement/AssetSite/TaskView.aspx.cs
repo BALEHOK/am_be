@@ -25,7 +25,7 @@ namespace AssetSite
             {
                 lbltaskListEmpty.Visible = false;
                 repTasks.Visible = true;
-                repTasks.DataSource = TasksService.GetByAssetTypeId(assetType.ID, User.GetId());
+                repTasks.DataSource = TasksService.GetByAssetTypeId(assetType.ID, AuthenticationService.CurrentUserId);
                 repTasks.DataBind();
             }
             else

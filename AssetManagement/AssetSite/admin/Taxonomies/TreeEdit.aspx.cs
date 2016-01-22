@@ -7,7 +7,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using AppFramework.DataProxy;
 using Microsoft.Practices.Unity;
+using Taxonomy = AppFramework.Core.Classes.Taxonomy;
+using TaxonomyItem = AppFramework.Core.Classes.TaxonomyItem;
 
 namespace AssetSite.admin.Taxonomies
 {
@@ -305,7 +308,13 @@ namespace AssetSite.admin.Taxonomies
         /// <param name="nodes"></param>
         private Taxonomy BuildTaxonomyFromTree()
         {
-            var taxonomy = TaxonomyService.GetByUid(_taxonomyUid);
+            // taxonomy and taxonomyItems will be mutated here. this prevents normal UoW.Commit in BL
+            // dirty hack - make query by means of another UoW
+            var uow = new UnitOfWork();
+            var service = new TaxonomyService(uow);
+
+            var taxonomy = service.GetByUid(_taxonomyUid);
+
             var items = new Dictionary<TreeNode, TaxonomyItem>();
             ProcessNodes(TaxonomiesTree.Nodes, taxonomy, items);
             taxonomy.Items.Clear();
@@ -313,6 +322,9 @@ namespace AssetSite.admin.Taxonomies
                                  where !pair.Value.ParentUid.HasValue
                                  select pair.Value).ToList();
             taxonomyItems.ForEach(i => taxonomy.Items.Add(i));
+
+            uow.Dispose();
+            
             return taxonomy;
         }
 
@@ -342,7 +354,8 @@ namespace AssetSite.admin.Taxonomies
                         {
                             Name = nodeText,
                             Number = string.Empty,
-                            ActiveVersion = true
+                            ActiveVersion = true,
+                            Taxonomy = taxonomy.Base
                         });
 
                     if (node.Parent != null)
