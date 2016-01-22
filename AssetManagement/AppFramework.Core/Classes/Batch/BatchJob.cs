@@ -156,6 +156,16 @@ namespace AppFramework.Core.Classes.Batch
             }
         }
 
+        public bool IsAwaiting
+        {
+            get
+            {
+                return CurrentStatus == BatchStatus.Running ||
+                       CurrentStatus == BatchStatus.Created ||
+                       CurrentStatus == BatchStatus.InStack;
+            }
+        }
+
         public Entities.BatchSchedule BatchSchedule
         {
             get { return _base.BatchSchedule; }

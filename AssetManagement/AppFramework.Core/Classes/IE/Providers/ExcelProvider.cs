@@ -25,7 +25,10 @@ namespace AppFramework.Core.Classes.IE.Providers
         private OleDbConnection GetConnection(string filepath)
         {
             if (string.IsNullOrWhiteSpace(filepath))
-                throw new ArgumentNullException("FileName");
+                throw new ArgumentNullException("filepath");
+            if (!File.Exists(filepath))
+                throw new FileNotFoundException(
+                    string.Format("Cannot open file {0} for import", filepath));
 
             var sb = new StringBuilder();
             var isNewExcel = filepath.EndsWith("xlsx");
@@ -77,44 +80,36 @@ namespace AppFramework.Core.Classes.IE.Providers
         /// Returns the DataSet based on file source
         /// </summary>
         /// <returns></returns>
-        public ActionResult<DataSet> GetDataSet(string filepath, IEnumerable<string> sheets)
+        public ActionResult<DataSet> GetDataSet(string filepath, List<string> sheets)
         {
+            _logger.DebugFormat("File: {0}, Sheets: {1}", 
+                filepath,
+                string.Join(", ", GetExcelSheetNames(filepath)));
+
             var ds = new DataSet();
             using (var connection = GetConnection(filepath))
             {
                 foreach (string sheet in sheets)
                 {
-                    ds.Tables.Add(_getDataTable(connection, sheet));
+                    try
+                    {
+                        var strComand = "select * from [" + sheet + "$]";
+                        var daAdapter = new OleDbDataAdapter(strComand, connection);
+                        var dt = new DataTable(sheet);
+                        daAdapter.FillSchema(dt, SchemaType.Source);
+                        daAdapter.Fill(dt);
+                        ds.Tables.Add(dt);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
+                        throw;
+                    }
                 }
             }
             return new ActionResult<DataSet>(Status, ds);
         }
-
-        /// <summary>
-        /// Returns the datatable based on sheet with given name
-        /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="strSheetName"></param>
-        /// <returns></returns>
-        private DataTable _getDataTable(OleDbConnection connection, string strSheetName)
-        {
-            DataTable dt = null;
-            try
-            {
-                var strComand = "select * from [" + strSheetName + "$]";
-                var daAdapter = new OleDbDataAdapter(strComand, connection);
-                dt = new DataTable(strSheetName);
-                daAdapter.FillSchema(dt, SchemaType.Source);
-                daAdapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-                throw;
-            }
-            return dt;
-        }
-
+        
         /// <summary>
         /// dINSERTS a table to a Xls
         /// </summary>

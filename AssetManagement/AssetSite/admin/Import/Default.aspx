@@ -109,15 +109,6 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <asp:UpdatePanel runat="server" UpdateMode="Conditional">
-                                                <ContentTemplate>
-                                                    <asp:Button ID="testCnnButton" runat="server" ValidationGroup="adCnnValidation" OnClick="testCnnButton_Click"
-                                                        Text="Test connection" meta:resourcekey="testCnnButtonResource1" />
-                                                </ContentTemplate>
-                                                <Triggers>
-                                                    <asp:AsyncPostBackTrigger ControlID="testCnnButton" />
-                                                </Triggers>
-                                            </asp:UpdatePanel>
                                         </div>
                                     </td>
                                 </tr>

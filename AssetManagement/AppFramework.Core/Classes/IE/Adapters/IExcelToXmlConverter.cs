@@ -9,6 +9,6 @@ namespace AppFramework.Core.Classes.IE.Adapters
         /// Returns the XML document, which contains information about AD users
         /// </summary>
         /// <returns></returns>
-        XDocument ConvertToXml(string filePath, BindingInfo bindings, AssetType at, IEnumerable<string> sheets);
+        XDocument ConvertToXml(string filePath, BindingInfo bindings, AssetType at, List<string> sheets);
     }
 }

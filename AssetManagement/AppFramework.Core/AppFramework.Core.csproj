@@ -248,6 +248,7 @@
     <Compile Include="ConstantsEnumerators\SecuredModules.cs" />
     <Compile Include="DTO\PlainAssetDTO.cs" />
     <Compile Include="Exceptions\AssetValidationException.cs" />
+    <Compile Include="Exceptions\AttributeConvertionException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidFormulaException.cs" />
     <Compile Include="Helpers\TypesHelper.cs" />

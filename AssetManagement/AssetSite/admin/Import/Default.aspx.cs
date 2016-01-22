@@ -1,11 +1,9 @@
 ﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.PL;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -634,44 +632,10 @@ namespace AssetSite.admin.Import
             Response.Redirect("~/admin/");
         }
 
-        protected void testCnnButton_Click(object sender, EventArgs e)
-        {
-            TestLDAPConnection();
-        }
-
-        private void TestLDAPConnection()
-        {
-            Credentials = GetCredentials();
-            IE.ActionResult<bool> result = IE.ImportExportManager.CheckADConnection(Credentials);
-            if (result.Status.IsSuccess)
-            {
-                messagePanel.Messages.Add(new MessageDefinition()
-                {
-                    Message = "Success",
-                    Status = MessageStatus.Normal
-                });
-            }
-            else
-            {
-                HandleErrorStatus(result.Status);
-            }
-        }
-
         private void HandleErrorStatus(IE.StatusInfo status)
         {
             messagePanel.Messages.Add(status);
             HoldStep();
-        }
-
-        private IE.LDAPCredentials GetCredentials()
-        {
-            var credentials = new IE.LDAPCredentials
-            {
-                Domain = domainNameTextbox.Text,
-                UserName = userNameTextbox.Text,
-                Password = passwordTextbox.Text
-            };
-            return credentials;
         }
 
         protected void fileUploadControl_Validate(object sender, ServerValidateEventArgs e)

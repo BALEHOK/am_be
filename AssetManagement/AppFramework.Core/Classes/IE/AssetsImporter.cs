@@ -52,7 +52,7 @@ namespace AppFramework.Core.Classes.IE
             _logger.DebugFormat("Intermediate xml result:\r\n{0}", 
                 xmlExport.ToString());
 
-            var result = _xmlToAssetsAdapter.GetEntities(xmlExport, assetType).ToList();
+            var result = _xmlToAssetsAdapter.GetEntities(xmlExport, assetType);
 
             foreach (var asset in result)
             {

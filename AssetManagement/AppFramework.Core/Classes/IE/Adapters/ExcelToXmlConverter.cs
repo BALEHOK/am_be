@@ -22,7 +22,7 @@ namespace AppFramework.Core.Classes.IE.Adapters
         /// Returns the XML document, which contains information about AD users
         /// </summary>
         /// <returns></returns>
-        public XDocument ConvertToXml(string filePath, BindingInfo bindings, AssetType at, IEnumerable<string> sheets)
+        public XDocument ConvertToXml(string filePath, BindingInfo bindings, AssetType at, List<string> sheets)
         {
             // get DataSet from excel file
             var dataSet = _excelProvider.GetDataSet(filePath, sheets).Data;

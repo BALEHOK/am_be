@@ -41,14 +41,13 @@ namespace AssetSite.admin.Batch
                     btnSchedule.Visible = BatchJob.BatchSchedule == null;
                     linkRefresh.Visible = false;
                 }
-                else if (BatchJob.CurrentStatus == BatchStatus.Running || 
-                        BatchJob.CurrentStatus == BatchStatus.Created ||
-                        BatchJob.CurrentStatus == BatchStatus.InStack)
+                else if (BatchJob.IsAwaiting)
                 {
                     linkRefresh.NavigateUrl = Request.Url.OriginalString;
                     linkRefresh.Visible = true;
                     btnExecute.Visible = false;
                 }
+
                 string postbackEvent = Page.ClientScript.GetPostBackEventReference(btnUnSchedule, "");
                 btnUnSchedule.OnClientClick = "return ShowConfirmationDialog(function(){ " + postbackEvent + " });";
             }

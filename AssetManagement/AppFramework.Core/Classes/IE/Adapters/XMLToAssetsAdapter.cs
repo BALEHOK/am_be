@@ -21,7 +21,7 @@ namespace AppFramework.Core.Classes.IE.Adapters
         /// Returns the Result of assets retrieving
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Asset> GetEntities(string xmlpath, AssetType at);
+        List<Asset> GetEntities(string xmlpath, AssetType at);
 
         /// <summary>
         /// Retrieves real assets from XML
@@ -76,16 +76,14 @@ namespace AppFramework.Core.Classes.IE.Adapters
         /// Returns the Result of assets retrieving
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Asset> GetEntities(string xmlpath, AssetType at)
+        public List<Asset> GetEntities(string xmlpath, AssetType at)
         {
-            List<Asset> result;
             using (var provider = new XMLProvider(
                 new ProviderParameters {{ProviderParameter.ReadPath, xmlpath}}))
             {
                 var reader = provider.Read();
-                result = GetEntities(reader.Data, at).ToList();
+                return GetEntities(reader.Data, at).ToList();
             }
-            return result;
         }
 
         /// <summary>

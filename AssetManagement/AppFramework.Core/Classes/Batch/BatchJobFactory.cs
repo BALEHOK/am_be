@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Common.Logging;
 
 namespace AppFramework.Core.Classes.Batch
 {
@@ -33,13 +34,15 @@ namespace AppFramework.Core.Classes.Batch
         private readonly IBatchActionFactory _batchActionFactory;
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ILog _logger;
 
         public BatchJobFactory(
             IUnitOfWork unitOfWork,
             IAssetTypeRepository assetTypeRepository,
             IBatchJobManager batchJobManager,
             IBatchActionFactory batchActionFactory,
-            ITaxonomyService taxonomyService)
+            ITaxonomyService taxonomyService,
+            ILog logger)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("IUnitOfWork");
@@ -51,11 +54,15 @@ namespace AppFramework.Core.Classes.Batch
                 throw new ArgumentNullException("assetTypeRepository");
             if (taxonomyService == null)
                 throw new ArgumentNullException("taxonomyService");
+            if (logger == null)
+                throw new ArgumentNullException("logger");
+
             _assetTypeRepository = assetTypeRepository;
             _batchActionFactory = batchActionFactory;
             _unitOfWork = unitOfWork;
             _batchJobManager = batchJobManager;
             _taxonomyService = taxonomyService;
+            _logger = logger;
         }
 
         public BatchJob CreateRebuildIndexJob(long currentUserId, bool rebuildHistoryIndex = false)
@@ -217,6 +224,10 @@ namespace AppFramework.Core.Classes.Batch
                     {ImportExportParameter.UserID.ToString(), currentUserId.ToString()}
                 });
             _batchJobManager.SaveJob(job);
+
+            _logger.DebugFormat("Import job #{0} created ({1}). File to import: {2}.",
+                job.UID, job.Title, filePath);
+
             return job;
         }
 

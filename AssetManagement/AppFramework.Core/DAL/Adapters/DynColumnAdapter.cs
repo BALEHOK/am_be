@@ -5,6 +5,8 @@ namespace AppFramework.Core.DAL.Adapters
     using AppFramework.ConstantsEnumerators;
     using AppFramework.Core.Classes;
     using AppFramework.Core.ConstantsEnumerators;
+    using Exceptions;
+    using Common.Logging;
     using System;
     using System.Globalization;
 
@@ -28,6 +30,8 @@ namespace AppFramework.Core.DAL.Adapters
     public class DynColumnAdapter : IDynColumnAdapter
     {
         private readonly IDataTypeService _dataTypeService;
+        private readonly ILog _logger = LogManager.GetCurrentClassLogger();
+
         public DynColumnAdapter(IDataTypeService dataTypeService)
         {
             if (dataTypeService == null)
@@ -78,7 +82,21 @@ namespace AppFramework.Core.DAL.Adapters
 
                 case Enumerators.DataType.Float:
                     if (!string.IsNullOrEmpty(attribute.Value))
-                        column.Value = float.Parse(attribute.Value, NumberStyles.Float, ApplicationSettings.DisplayCultureInfo);
+                    {
+                        float result;
+                        if (float.TryParse(attribute.Value, NumberStyles.Float, ApplicationSettings.DisplayCultureInfo, out result) ||
+                            float.TryParse(attribute.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+                        {
+                            column.Value = result;
+                        }
+                        else
+                        {
+                            var message = string.Format("Cannot parse as float value \"{0}\" of attribute \"{1}\"",
+                                attribute.Value, attribute.Configuration.Name);
+                            _logger.Error(message);
+                            throw new AttributeConvertionException(message);
+                        }
+                    }
                     break;
 
                 case Enumerators.DataType.Role:
@@ -89,7 +107,20 @@ namespace AppFramework.Core.DAL.Adapters
                 case Enumerators.DataType.USD:
                 case Enumerators.DataType.Euro:
                     if (!string.IsNullOrEmpty(attribute.Value))
-                        column.Value = float.Parse(attribute.Value, NumberStyles.Currency, ApplicationSettings.DisplayCultureInfo);
+                    {
+                        float result;
+                        if (float.TryParse(attribute.Value, NumberStyles.Currency, ApplicationSettings.DisplayCultureInfo, out result))
+                        {
+                            column.Value = result;
+                        }
+                        else
+                        {
+                            var message = string.Format("Cannot parse as float value \"{0}\" of attribute \"{1}\"",
+                                attribute.Value, attribute.Configuration.Name);
+                            _logger.Error(message);
+                            throw new AttributeConvertionException(message);
+                        }
+                    }
                     break;
 
                 default:

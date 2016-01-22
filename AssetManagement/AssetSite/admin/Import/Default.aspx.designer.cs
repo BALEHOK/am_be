@@ -184,15 +184,6 @@ namespace AssetSite.admin.Import {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator pwValidator;
         
         /// <summary>
-        /// testCnnButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button testCnnButton;
-        
-        /// <summary>
         /// WizardStep3 control.
         /// </summary>
         /// <remarks>

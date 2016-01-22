@@ -40,7 +40,7 @@ namespace AppFramework.Core.UnitTests
                 @"D:\projects\sobenbub\AssetManagement\AppFramework.Core.UnitTests\Resources\Import_Werklosheid.xlsx";
             var sut = new ExcelToXmlConverter();
             // Act
-            var result = sut.ConvertToXml(excelFilePath, bindings, anonymousAssetType, new[]{"Sheet1"});
+            var result = sut.ConvertToXml(excelFilePath, bindings, anonymousAssetType, new List<string>(new[]{"Sheet1"}));
             // Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result.Descendants());

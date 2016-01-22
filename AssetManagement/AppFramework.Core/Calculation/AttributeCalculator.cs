@@ -114,7 +114,7 @@ namespace AppFramework.Core.Calculation
             }
             catch (Exception e)
             {
-                SetError(e.ToString());
+                SetError(e);
                 throw new InvalidFormulaException(expressionString, e);
             }
 
@@ -142,7 +142,6 @@ namespace AppFramework.Core.Calculation
 
             if (expression.HasErrors())
             {
-                SetError(string.Format("Invalid formula '{0}'. Error: {1}", expressionText, expression.Error));
                 throw new InvalidFormulaException(expressionText, Error);
             }
 
@@ -169,10 +168,10 @@ namespace AppFramework.Core.Calculation
             });
         }
 
-        private void SetError(string message)
+        private void SetError(Exception e)
         {
-            _logger.ErrorFormat("Formula error: {0}", message);
-            Error = message;
+            _logger.ErrorFormat("Formula error", e);
+            Error = e.Message;
         }
 
         public object GetParameterValue(Asset asset, string parameterName, long callingAsset = -1)

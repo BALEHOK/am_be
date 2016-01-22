@@ -107,11 +107,12 @@ namespace AppFramework.Core.Classes.Batch
         /// </summary>
         public void Execute(IUnitOfWork unitOfWork)
         {
+            ErrorMessage = string.Empty;
+            Status = BatchStatus.Running;
+            UpdateStatus(unitOfWork);
+
             try
             {
-                ErrorMessage = string.Empty;
-                Status = BatchStatus.Running;
-                UpdateStatus(unitOfWork);
                 Run();
                 Status = BatchStatus.Finished;
             }
@@ -146,14 +147,18 @@ namespace AppFramework.Core.Classes.Batch
                         e.StackTrace);
                 }
 
-                this.ErrorMessage = messageBuilder
-                                    + Environment.NewLine
-                                    + "Please refer to the logfile for action parameters.";
-                this.Status = BatchStatus.Error;
+                ErrorMessage = string.Format("{0}{1}{2}",
+                    messageBuilder, 
+                    Environment.NewLine, 
+                    "Please refer to the logfile for action parameters.");
+                Status = BatchStatus.Error;
 
+                messageBuilder.AppendLine();
                 messageBuilder.AppendLine("Action Parameters:");
                 messageBuilder.AppendLine(Parameters.ToXml());
-                _logger.Warn(messageBuilder.ToString());
+
+                _logger.Debug(messageBuilder.ToString());
+                _logger.Error(e);
             }
         }
 

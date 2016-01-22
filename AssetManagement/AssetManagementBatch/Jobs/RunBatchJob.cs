@@ -113,13 +113,13 @@ namespace AssetManagementBatch.Jobs
         public void ExecuteJob(AppFramework.Entities.BatchJob job)
         {
             // update status
-            job.Status = (short) BatchStatus.Running;
+            job.Status = (short)BatchStatus.Running;
             job.StartDate = DateTime.Now;
             _unitOfWork.BatchJobRepository.Update(job);
             _unitOfWork.Commit();
 
             var actions = (from a in job.BatchActions.OrderBy(a => a.OrderId)
-                select _batchActionFactory.GetAction(a)).ToList();
+                           select _batchActionFactory.GetAction(a)).ToList();
 
             var transactionOptions = new TransactionOptions
             {
@@ -152,19 +152,16 @@ namespace AssetManagementBatch.Jobs
                     scope.Complete();
             }
 
-            if (!allActionsOk)
-                actions.ForEach(a => a.UpdateStatus(_unitOfWork, BatchStatus.Skipped));
-
             // update status
             job.EndDate = DateTime.Now;
 
-            if (actions.All(a => a.Status == BatchStatus.Finished))
-                job.Status = (int) BatchStatus.Finished;
+            if (allActionsOk)
+                job.Status = (int)BatchStatus.Finished;
             else if (actions.Any(a => a.Status == BatchStatus.Error) &&
                      actions.Any(a => a.Status == BatchStatus.Finished) && job.SkipErrors)
-                job.Status = (int) BatchStatus.FinishedWithErrors;
+                job.Status = (int)BatchStatus.FinishedWithErrors;
             else
-                job.Status = (int) BatchStatus.Error;
+                job.Status = (int)BatchStatus.Error;
 
             if (job.BatchScheduleId != null && job.BatchSchedule.IsEnabled)
             {

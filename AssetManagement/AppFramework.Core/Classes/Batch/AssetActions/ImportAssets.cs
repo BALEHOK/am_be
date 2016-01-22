@@ -64,15 +64,25 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
             var dbEntity = _unitOfWork.ImportExportRepository.Single(ie => ie.GUID == taskId);
             var bindings = BindingInfo.GetFromXml(dbEntity.Bindings);
             var importParams = ImportExportParameters.GetFromXml(dbEntity.Parameters);
+
             long assetTypeId;
             if (!long.TryParse(importParams[ImportExportParameter.AssetTypeId], out assetTypeId))
                 throw new ArgumentException("AssetTypeId was not provided");
+
             var sheets = importParams[ImportExportParameter.Sheets].Split(new[] {','}).ToList();
             var deleteSource = importParams.ContainsKey(ImportExportParameter.DeleteOnSuccess)
-                                && importParams[ImportExportParameter.DeleteOnSuccess].ToLower() == "true";
-            
+                && importParams[ImportExportParameter.DeleteOnSuccess].ToLower() == "true";
+
+            _logger.DebugFormat("Import Assets action started. File to import: {0}",
+                dbEntity.FilePath);
+
             // perform import
-            var assets = importer.Import(assetTypeId, userId, dbEntity.FilePath, sheets, bindings);
+            var assets = importer.Import(assetTypeId, userId, dbEntity.FilePath, sheets, bindings)
+                .ToList();
+
+            _logger.DebugFormat("Number of entities to import: {0}",
+                assets.Count);
+
             foreach (var asset in assets)
             {
                 var at = asset.GetConfiguration();
@@ -83,6 +93,9 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
                     == Enumerators.TypeAutoGenerateName.InsertUpdate)
                     asset[AttributeNames.Name].Value = asset.GenerateName();
                 _assetsService.InsertAsset(asset);
+
+                _logger.DebugFormat("Asset {0} (uid #{1}) imported and saved",
+                    asset.Name, asset.UID);
             }
             
             _unitOfWork.ImportExportRepository.Update(dbEntity);
@@ -90,7 +103,11 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
 
             // cleanup
             if (deleteSource)
+            {
+                _logger.DebugFormat("Import action completed. Deleting file: {0}",
+                    dbEntity.FilePath);
                 File.Delete(dbEntity.FilePath);
+            }
 
             ImportedAssetsCount = assets.Count();
         }
