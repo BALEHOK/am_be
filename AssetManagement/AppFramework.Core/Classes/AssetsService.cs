@@ -744,10 +744,10 @@ namespace AppFramework.Core.Classes
             }
 
             var assetIndexes = _unitOfWork.GetPermittedAssets(assetType.ID, currentUserId, null, null);
-            var assets = assetIndexes.Select(i => GetAssetById(i.DynEntityId, assetType));
-            cacheManager.Add(cacheKey, assets.ToList(), CacheItemPriority.High, null, new AbsoluteTime(TimeSpan.FromSeconds(30)));
+            var assets = assetIndexes.Select(i => GetAssetById(i.DynEntityId, assetType)).ToList();
+            cacheManager.Add(cacheKey, assets, CacheItemPriority.High, null, new AbsoluteTime(TimeSpan.FromSeconds(30)));
 
-            return cacheManager.GetData(cacheKey) as List<Asset>;
+            return assets;
         }
 
         /// <summary>

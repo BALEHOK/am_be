@@ -349,7 +349,12 @@ namespace AssetManager.Infrastructure.Services
                     Id = asset.ID
                 };
 
-            return rowStart.HasValue && rowsNumber.HasValue ? result.Skip(rowStart.Value).Take(rowsNumber.Value) : result;
+            if (rowStart.HasValue)
+            {
+                result = result.Skip(rowStart.Value);
+            }
+
+            return rowsNumber.HasValue ? result.Take(rowsNumber.Value) : result;
         }
 
         public AssetModel CreateAsset(long assetTypeId, long userId)
