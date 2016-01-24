@@ -340,7 +340,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                         searchId,
                         userId,
                         long.Parse(parameters.ConfigsIds),
-                        new List<AttributeElement>(),
+                        parameters.Elements,
                         parameters.TaxonomyItemsIds,
                         parameters.Time,
                         parameters.Order, 1, int.MaxValue, false);
@@ -358,7 +358,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 }
             }
 
-            return null;
+            return new List<IIndexEntity>();
         }
     }
 }
