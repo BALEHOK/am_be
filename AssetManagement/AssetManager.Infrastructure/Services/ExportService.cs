@@ -1,26 +1,43 @@
 ﻿using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Entities;
-using AssetManager.Infrastructure;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Xml.Linq;
+using AppFramework.Core.Classes;
+using AppFramework.Core.Exceptions;
+using Common.Logging;
 
 namespace AssetManager.Infrastructure.Services
 {
     public class ExportService : IExportService
     {
         private readonly IEnvironmentSettings _env;
+        private readonly IUserService _userService;
+        private readonly IAssetsService _assetsService;
+        private readonly IAssetTypeRepository _assetTypeRepository;
+        private readonly ILog _logger;
 
-        public ExportService(IEnvironmentSettings envSettings)
+        public ExportService(IEnvironmentSettings envSettings, IAssetTypeRepository assetTypeRepository = null, IAssetsService assetsService = null, ILog logger = null, IUserService userService = null)
         {
             if (envSettings == null)
                 throw new ArgumentNullException("envSettings");
             _env = envSettings;
+            if (assetTypeRepository == null)
+                throw new ArgumentNullException("assetTypeRepository");
+            _assetTypeRepository = assetTypeRepository;
+            if (assetsService == null)
+                throw new ArgumentNullException("assetsService");
+            _assetsService = assetsService;
+            if (logger == null)
+                throw new ArgumentNullException("logger");
+            _logger = logger;
+            if (userService == null)
+                throw new ArgumentNullException("userService");
+            _userService = userService;
         }
 
         public string ExportSearchResultToTxt(IEnumerable<IIndexEntity> searchResults)
@@ -68,18 +85,66 @@ namespace AssetManager.Infrastructure.Services
         public byte[] ExportSearchResultToExcel(IEnumerable<IIndexEntity> searchResults)
         {
             var dataTable = new DataTable();
+            dataTable.Columns.Add("DynEntityUid", typeof(string));
+            dataTable.Columns.Add("DynEntityId", typeof(string));
+            dataTable.Columns.Add("ActiveVersion", typeof(string));
+            dataTable.Columns.Add("DynEntityConfigUid", typeof(string));
             dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("CommonInfo", typeof(string));
-            dataTable.Columns.Add("Details", typeof(string));
-            dataTable.Columns.Add("DirectUrl", typeof(string));
+            dataTable.Columns.Add("Revision", typeof(string));
+            dataTable.Columns.Add("Barcode", typeof(string));
+            dataTable.Columns.Add("Update Date", typeof(string));
+            dataTable.Columns.Add("Stock Count", typeof(string));
+            dataTable.Columns.Add("Stock Price", typeof(string));
+            dataTable.Columns.Add("Document", typeof(string));
+            dataTable.Columns.Add("CellenServiceSupport", typeof(string));
+            dataTable.Columns.Add("Location", typeof(string));
+            dataTable.Columns.Add("Base Location", typeof(string));
+            dataTable.Columns.Add("Next Location", typeof(string));
+            dataTable.Columns.Add("Department", typeof(string));
+            dataTable.Columns.Add("User", typeof(string));
+            dataTable.Columns.Add("Owner", typeof(string));
+            dataTable.Columns.Add("Update User", typeof(string));
+
 
             foreach (var item in searchResults)
             {
+                AssetUser owner = null;
+
+                var assetType = _assetTypeRepository.GetById(item.DynEntityConfigId);
+                var asset = _assetsService.GetAssetById(item.DynEntityId, assetType);
+
+                try
+                {
+                    if (item.OwnerId > 0)
+                    {
+                        owner = _userService.GetById(item.OwnerId);
+                    }
+                }
+                catch (AssetNotFoundException ex)
+                {
+                    _logger.Error("Export", ex);
+                }
+
                 dataTable.Rows.Add(
+                    item.DynEntityUid,
+                    item.DynEntityId,
+                    "Active version",
+                    item.DynEntityConfigUid,
+                    "Revision",
                     item.Name,
-                    item.Subtitle,
-                    item.DisplayExtValues,
-                    _env.GetPathToAssetPage(item.DynEntityConfigId, item.DynEntityId));
+                    item.BarCode,
+                    item.UpdateDate,
+                    "Stock Count",
+                    "Stock Price",
+                    "Document",
+                    "CellenServiceSupport",
+                    item.Location,
+                    "Base Location",
+                    "Next Location",
+                    item.Department,
+                    item.User,
+                    owner != null ? owner.UserName : string.Empty,
+                    "Update User");
             }
 
             using (ExcelPackage pck = new ExcelPackage())
