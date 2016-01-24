@@ -108,43 +108,41 @@ namespace AssetManager.Infrastructure.Services
 
             foreach (var item in searchResults)
             {
-                AssetUser owner = null;
-
                 var assetType = _assetTypeRepository.GetById(item.DynEntityConfigId);
                 var asset = _assetsService.GetAssetById(item.DynEntityId, assetType);
 
-                try
-                {
-                    if (item.OwnerId > 0)
-                    {
-                        owner = _userService.GetById(item.OwnerId);
-                    }
-                }
-                catch (AssetNotFoundException ex)
-                {
-                    _logger.Error("Export", ex);
-                }
-
+                var activeVersion = asset.Attributes.Find(attr => attr.Configuration.Name == "ActiveVersion");
+                var revision = asset.Attributes.Find(attr => attr.Configuration.Name == "Revision");
+                var stockCount = asset.Attributes.Find(attr => attr.Configuration.Name == "Stock Count");
+                var stockPrice = asset.Attributes.Find(attr => attr.Configuration.Name == "Stock Price");
+                var document = asset.Attributes.Find(attr => attr.Configuration.Name == "Document");
+                var cellenServiceSupport = asset.Attributes.Find(attr => attr.Configuration.Name == "CellenServiceSupport");
+                var baseLocation = asset.Attributes.Find(attr => attr.Configuration.Name == "Base Location");
+                var nextLocation = asset.Attributes.Find(attr => attr.Configuration.Name == "Next Location");
+                var user = asset.Attributes.Find(attr => attr.Configuration.Name == "User");
+                var owner = asset.Attributes.Find(attr => attr.Configuration.Name == "Owner");
+                var updateUser = asset.Attributes.Find(attr => attr.Configuration.Name == "Update User");
+                
                 dataTable.Rows.Add(
                     item.DynEntityUid,
                     item.DynEntityId,
-                    "Active version",
+                    activeVersion != null ? activeVersion.Value: string.Empty,
                     item.DynEntityConfigUid,
-                    "Revision",
+                    revision != null ? revision.Value : string.Empty,
                     item.Name,
                     item.BarCode,
                     item.UpdateDate,
-                    "Stock Count",
-                    "Stock Price",
-                    "Document",
+                    stockCount != null ? stockCount.Value : string.Empty,
+                    stockPrice != null ? stockPrice.Value : string.Empty,
+                    document != null ? document.Value : string.Empty,
                     "CellenServiceSupport",
                     item.Location,
-                    "Base Location",
-                    "Next Location",
+                    baseLocation != null ? baseLocation.Value : string.Empty,
+                    nextLocation != null ? nextLocation.Value : string.Empty,
                     item.Department,
-                    item.User,
-                    owner != null ? owner.UserName : string.Empty,
-                    "Update User");
+                    user != null ? user.Value : string.Empty,
+                    owner != null ? owner.Value : string.Empty,
+                    updateUser != null ? updateUser.Value : string.Empty);
             }
 
             using (ExcelPackage pck = new ExcelPackage())
