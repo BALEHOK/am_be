@@ -715,8 +715,6 @@ namespace AppFramework.Core.Classes
         /// </summary>
         /// <param name="assetTypeId">Asset type identifier</param>
         /// <param name="currentUserId">Current User's Id</param>
-        /// <param name="rowStart">Start row</param>
-        /// <param name="rowsNumber">Rows amount</param>
         /// <returns>Assets collection</returns>  
         public IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeId, long currentUserId)
         {
@@ -729,8 +727,6 @@ namespace AppFramework.Core.Classes
         /// </summary>
         /// <param name="assetType">Asset type</param>
         /// <param name="currentUserId">Current User's Id</param>
-        /// <param name="rowStart">Start row</param>
-        /// <param name="rowsNumber">Rows amount</param>
         /// <returns>Assets collection</returns>        
         public IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId)
         {
