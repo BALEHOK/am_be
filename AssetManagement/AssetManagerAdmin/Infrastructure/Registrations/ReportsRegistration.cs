@@ -1,5 +1,6 @@
 ﻿using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.DataProxy;
+using AppFramework.Reports.Permissions;
 using AppFramework.Reports.Services;
 using AssetManager.Infrastructure.Services;
 using AssetManagerAdmin.Services;
@@ -20,13 +21,13 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
                     new TransientLifetimeManager(),
                     new InjectionFactory(c => new UnitOfWork()))
                 .RegisterType<IAssetTypeService, AssetTypeService>()
-                .RegisterType<IScreensService, ScreensService>(); // required for AssetTypeService
+                .RegisterType<IScreensService, ScreensService>() // required for AssetTypeService
 
-            Container
                 .RegisterType<IStandardReportService, DevExpressStandardReportService>()
                 .RegisterType<ICustomReportService, DevExpressCustomReportsService>()
                 .RegisterType<IReportStorage, DbReportStorage>()
-                .RegisterType<IReportResolver, ReportResolver>();
+                .RegisterType<IReportResolver, ReportResolver>()
+                .RegisterType<IReportPermissionChecker, ReportPermissionChecker>();
         }
     }
 }

@@ -6,20 +6,20 @@ namespace AppFramework.Reports.Services
 {
     public interface ICustomReportService
     {
-        List<Report> GetAllReports();
+        List<Report> GetAllReports(long userId);
 
-        List<Report> GetReportsByAssetTypeId(long assetTypeId);
+        List<Report> GetReportsByAssetTypeId(long assetTypeId, long userId);
 
-        Report GetReportById(long reportId);
+        Report GetReportById(long reportId, long userId);
 
-        Report GetReportByURI(string reportURI);
+        Report GetReportByURI(string reportUri, long userId);
 
-        void DeleteReport(long reportId);
+        void DeleteReport(long reportId, long userId);
 
-        Report CreateReport(long assetTypeId, string reportName);
+        Report CreateReport(long assetTypeId, string reportName, long userId);
 
-        void UpdateReport(Report reportData, XtraReport report);
+        void UpdateReport(Report reportData, XtraReport report, long userId);
 
-        XtraReport CreateReportView(Report reportEntity);
+        XtraReport CreateReportView(Report reportEntity, long userId);
     }
 }

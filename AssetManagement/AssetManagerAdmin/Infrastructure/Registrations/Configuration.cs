@@ -1,4 +1,8 @@
-﻿using AssetManagerAdmin.Model;
+﻿using AppFramework.Core;
+using AppFramework.Core.AC.Authentication;
+using AppFramework.Core.AC.Providers;
+using AppFramework.Core.Classes;
+using AssetManagerAdmin.Model;
 using AssetManagerAdmin.WebApi;
 using Microsoft.Practices.ServiceLocation;
 using Common.Logging;
@@ -6,6 +10,7 @@ using Microsoft.Practices.Unity;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Practices.Unity.InterceptionExtension;
 using AssetManagerAdmin.FormulaBuilder.Expressions;
+using AssetManagerAdmin.Services;
 
 namespace AssetManagerAdmin.Infrastructure.Registrations
 {
@@ -18,8 +23,6 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
                 () => new UnityServiceLocator(container));
 
             container
-                .AddNewExtension<Interception>()
-                .AddNewExtension<NavigationRegistration>()
                 .RegisterInstance<IAppContext>(new AppContext())
                 .RegisterType<ILog>(new InjectionFactory((x, t, s) => LogManager.GetLogger(t)))
                 .RegisterType<IMessenger>(new InjectionFactory((x, t, s) => Messenger.Default))
@@ -31,9 +34,13 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
                     new Interceptor<InterfaceInterceptor>(),
                     new InterceptionBehavior<ProgressBarInterceptionBehavior>())
                 .RegisterType<IDialogService, DialogService>()
-                .RegisterType<IAssetsDataProvider, AssetsDataProvider>();
+                .RegisterType<IAssetsDataProvider, AssetsDataProvider>()
+                .RegisterType<IAuthenticationStorageProvider, InMemoryAuthenticationStorageProvider>()
 
-            container.AddNewExtension<ReportsRegistration>();
+                .AddNewExtension<CommonConfiguration>()
+                .AddNewExtension<ReportsRegistration>()
+                .AddNewExtension<Interception>()
+                .AddNewExtension<NavigationRegistration>();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using AppFramework.Reports.Services;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Models;
 using WebApi.OutputCache.V2;
 using AssetManager.Infrastructure.Helpers;
@@ -39,7 +40,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public List<CustomReportModel> ReportsList()
         {
             return _customReportService
-                .GetAllReports()
+                .GetAllReports(User.GetId())
                 .Select(r => r.ToModel())
                 .ToList();
         }
@@ -53,7 +54,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public List<CustomReportModel> GetReportsByAssetTypeId(long assetTypeId)
         {
             return _customReportService
-                .GetReportsByAssetTypeId(assetTypeId)
+                .GetReportsByAssetTypeId(assetTypeId, User.GetId())
                 .Select(r => r.ToModel())
                 .ToList();
         }
@@ -61,13 +62,12 @@ namespace AssetManager.WebApi.Controllers.Api
         /// <summary>
         /// Publish custom report
         /// </summary>
-        /// <param name="name">Report name</param>
-        /// <param name="fileName">Report template file name</param>
-        /// <param name="typeId">Asset type Id</param>
+        /// <param name="reportName">Report name</param>
+        /// <param name="assetTypeId">Asset type Id</param>
         [Route("create"), HttpPut]
         public long CreateReport(long assetTypeId, string reportName)
         {
-            var report = _customReportService.CreateReport(assetTypeId, reportName);
+            var report = _customReportService.CreateReport(assetTypeId, reportName, User.GetId());
             return report.ReportUid;
         }
 
@@ -79,7 +79,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("delete"), HttpDelete]
         public void DeleteReport(long reportId)
         {
-            _customReportService.DeleteReport(reportId);
+            _customReportService.DeleteReport(reportId, User.GetId());
         }
     }
 }

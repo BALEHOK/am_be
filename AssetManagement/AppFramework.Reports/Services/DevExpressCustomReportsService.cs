@@ -7,6 +7,7 @@ using DevExpress.XtraReports.UI;
 using System.IO;
 using DevExpress.DataAccess.Sql;
 using System;
+using AppFramework.Reports.Permissions;
 using AppFramework.Reports.Properties;
 
 namespace AppFramework.Reports.Services
@@ -14,31 +15,34 @@ namespace AppFramework.Reports.Services
     public class DevExpressCustomReportsService : ICustomReportService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IReportPermissionChecker _reportPermissionChecker;
         private readonly string _connectionString;
 
-        public DevExpressCustomReportsService(IUnitOfWork unitOfWork)
+        public DevExpressCustomReportsService(IUnitOfWork unitOfWork, IReportPermissionChecker reportPermissionChecker)
         {
             _unitOfWork = unitOfWork;
+            _reportPermissionChecker = reportPermissionChecker;
             _connectionString = _unitOfWork.SqlProvider.ConnectionString;
         }
 
-        public List<Report> GetAllReports()
+        public List<Report> GetAllReports(long userId)
         {
-            var reports = _unitOfWork.ReportRepository.Get();
-            return reports.ToList();
+            return _reportPermissionChecker.FilterReadPermitted(_unitOfWork.ReportRepository.Get(), userId).ToList();
         }
 
-        public List<Report> GetReportsByAssetTypeId(long assetTypeId)
+        public List<Report> GetReportsByAssetTypeId(long assetTypeId, long userId)
         {
-            return _unitOfWork.ReportRepository.Where(r => 
-                    r.Type == (int)ReportType.CustomReport && 
-                    r.DynEntityConfigId == assetTypeId)
+            return _reportPermissionChecker.FilterReadPermitted(
+                    _unitOfWork.ReportRepository.Where(r => 
+                        r.Type == (int)ReportType.CustomReport && 
+                        r.DynEntityConfigId == assetTypeId),
+                    userId)
                 .ToList();
         }
 
-        public Report GetReportByURI(string reportURI)
+        public Report GetReportByURI(string reportUri, long userId)
         {
-            var args = reportURI.Split(
+            var args = reportUri.Split(
                 new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (!args.Any())
@@ -49,27 +53,39 @@ namespace AppFramework.Reports.Services
                 throw new NotSupportedException(Resources.InvalidParametersForCustomReport);
 
             var reportParams = ReportParamsParser.GetCustomReportParams(args);
-            return GetReportById(reportParams.ReportId);
+            return GetReportById(reportParams.ReportId, userId);
         }
 
-        public Report GetReportById(long reportId)
+        public Report GetReportById(long reportId, long userId)
         {
-            var reportEntity = _unitOfWork.ReportRepository
+            var report = _unitOfWork.ReportRepository
                 .SingleOrDefault(r => r.ReportUid == reportId);
 
-            if (reportEntity == null)
+            if (report == null)
                 throw new ReportNotFound();
-            return reportEntity;
+
+            if (!_reportPermissionChecker.HasReadPermission(report, userId))
+            {
+                throw new AccessViolationException(string.Format("User {0} has no read permission on the report {1}", userId, reportId));
+            }
+
+            return report;
         }
                 
-        public void DeleteReport(long reportId)
+        public void DeleteReport(long reportId, long userId)
         {
             var report = _unitOfWork.ReportRepository.Single(
                 r => r.ReportUid == reportId);
+
+            if (!_reportPermissionChecker.HasDeletePermission(report, userId))
+            {
+                throw new AccessViolationException(string.Format("User {0} has no delete permission on the report {1}", userId, reportId));
+            }
+
             _unitOfWork.ReportRepository.Delete(report);
         }
 
-        public Report CreateReport(long assetTypeId, string reportName)
+        public Report CreateReport(long assetTypeId, string reportName, long userId)
         {
             var report = new Report
             {
@@ -78,14 +94,18 @@ namespace AppFramework.Reports.Services
                 Name = reportName
             };
 
+            EnsureEditPermission(report, userId);
+
             _unitOfWork.ReportRepository.Insert(report);
             _unitOfWork.Commit();
 
             return report;
         }
 
-        public void UpdateReport(Report reportData, XtraReport report)
+        public void UpdateReport(Report reportData, XtraReport report, long userId)
         {
+            EnsureEditPermission(reportData, userId);
+
             if (report != null)
             {
                 using (var stream = new MemoryStream())
@@ -98,8 +118,10 @@ namespace AppFramework.Reports.Services
             _unitOfWork.Commit();
         }
 
-        public XtraReport CreateReportView(Report reportEntity)
+        public XtraReport CreateReportView(Report reportEntity, long userId)
         {
+            EnsureEditPermission(reportEntity, userId);
+
             var report = new XtraReport();
             
             if (reportEntity.LayoutData != null)
@@ -121,5 +143,12 @@ namespace AppFramework.Reports.Services
             return report;
         }
 
+        private void EnsureEditPermission(Report report, long userId)
+        {
+            if (!_reportPermissionChecker.HasEditPermission(report, userId))
+            {
+                throw new AccessViolationException(string.Format("User {0} has no edit permission on the report {1}", userId, report.ReportUid));
+            }
+        }
     }
 }

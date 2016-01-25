@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using AssetManagerAdmin.Model;
-using GalaSoft.MvvmLight.Command;
-using AssetManagerAdmin.Infrastructure;
-using AppFramework.Reports.Services;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using AppFramework.Entities;
+using AppFramework.Reports.Services;
+using AssetManagerAdmin.Infrastructure;
+using GalaSoft.MvvmLight.Command;
 
 namespace AssetManagerAdmin.ViewModels
 {
@@ -69,16 +68,13 @@ namespace AssetManagerAdmin.ViewModels
             });
         }
 
-        private readonly IDataService _dataService;
-
         public OpenReportDialogViewModel(
-            IDataService dataService, 
-            ICustomReportService reportsService,             
+            ICustomReportService reportsService,
             IAppContext context)
             : base(context)
         {
-            _dataService = dataService;
-            ReportsList = reportsService.GetAllReports();
+            // ToDo get real user id
+            ReportsList = reportsService.GetAllReports(1);
         }
     }
 }

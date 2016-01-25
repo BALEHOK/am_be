@@ -27,8 +27,10 @@ namespace AssetManager.WebApi.Controllers
 
         public ActionResult Index(long id, long? assetId = null, Guid? searchId = null)
         {            
-            var reportData = _reportService.GetReportById(id);
-            var report = _reportService.CreateReportView(reportData);
+            // ToDo get real user id
+            var userId = 1;
+            var reportData = _reportService.GetReportById(id, userId);
+            var report = _reportService.CreateReportView(reportData, userId);
             if (assetId.HasValue)
                 report.FilterString = string.Format("[id] = {0}", assetId);
             if (searchId.HasValue)

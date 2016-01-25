@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="AssetSite.admin.Import.Default"
-    MasterPageFile="~/MasterPages/MasterPageDefault.master" Trace="false" Theme="Default"
+    MasterPageFile="~/MasterPages/MasterPageDefault.master" Trace="false" Theme="Default" EnableViewState="true"
     meta:resourcekey="PageResource1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="PlaceHolderMiddleColumn" runat="server">
@@ -58,58 +58,7 @@
                             <table style="width: 100%;">
                                 <tr>
                                     <td>
-                                        <asp:RadioButtonList ID="dataSourceTypesList" CssClass="datasource" runat="server"
-                                            meta:resourcekey="dataSourceTypesListResource1">
-                                            <%--<asp:ListItem Value="XML" Selected="True" meta:resourcekey="ListItemResource1">XML document</asp:ListItem>--%>
-                                            <asp:ListItem Value="XLS" Selected="True" meta:resourcekey="ListItemResource2">Excel document</asp:ListItem>
-                                            <%--<asp:ListItem Value="AD" meta:resourcekey="ListItemResource3">Active Directory</asp:ListItem>--%>
-                                        </asp:RadioButtonList>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div id="wFile" class="wrapper" style="display: none;">
-                                            <asp:FileUpload ID="fileUploadControl" CssClass="cFile" runat="server" meta:resourcekey="fileUploadControlResource1" />
-                                            <br />
-                                        </div>
-                                        <div id="wAD" class="wrapper" style="display: none;">
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Label ID="Label1" runat="server" SkinID="control" Text="Domain:" meta:resourcekey="Label1Resource1"></asp:Label>
-                                                    </td>
-                                                    <td>
-                                                        <asp:TextBox runat="server" ID="domainNameTextbox" meta:resourcekey="domainNameTextboxResource1"></asp:TextBox>
-                                                        <asp:RequiredFieldValidator ID="dnValidator" runat="server" ValidationGroup="adCnnValidation"
-                                                            ControlToValidate="domainNameTextbox" ErrorMessage="Domain cannot be empty" meta:resourcekey="dnValidatorResource1">
-                                                        </asp:RequiredFieldValidator>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Label ID="Label2" runat="server" SkinID="control" Text="Logon name:" meta:resourcekey="Label2Resource1"></asp:Label>
-                                                    </td>
-                                                    <td>
-                                                        <asp:TextBox runat="server" ID="userNameTextbox" meta:resourcekey="userNameTextboxResource1"></asp:TextBox>
-                                                        <asp:RequiredFieldValidator ID="lnValidator" runat="server" ValidationGroup="adCnnValidation"
-                                                            ControlToValidate="userNameTextbox" ErrorMessage="Logon name cannot be empty"
-                                                            meta:resourcekey="lnValidatorResource1">
-                                                        </asp:RequiredFieldValidator>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Label ID="Label3" runat="server" SkinID="control" Text="Password:" meta:resourcekey="Label3Resource1"></asp:Label>
-                                                    </td>
-                                                    <td>
-                                                        <asp:TextBox runat="server" ID="passwordTextbox" meta:resourcekey="passwordTextboxResource1"></asp:TextBox>
-                                                        <asp:RequiredFieldValidator ID="pwValidator" runat="server" ValidationGroup="adCnnValidation"
-                                                            ControlToValidate="passwordTextbox" ErrorMessage="Password cannot be empty" meta:resourcekey="pwValidatorResource1">
-                                                        </asp:RequiredFieldValidator>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
+                                         <asp:FileUpload ID="fileUploadControl" CssClass="cFile" runat="server" meta:resourcekey="fileUploadControlResource1" />
                                     </td>
                                 </tr>
                             </table>
@@ -125,8 +74,15 @@
                         </asp:WizardStep>
                         <asp:WizardStep ID="WizardStep4" runat="server" Title="Finish &mdash; Fields binding"
                             meta:resourcekey="WizardStep4Resource1">
-                            <asp:GridView ID="fieldsGrid" runat="server" CellSpacing="4" DataKeyNames="Name"
-                                OnRowDataBound="fieldsGrid_RowDataBound" AutoGenerateColumns="false" meta:resourcekey="fieldsGridResource1">
+                            <asp:GridView ID="fieldsGrid" 
+                                runat="server" 
+                                CellSpacing="4" 
+                                DataKeyNames="Name" 
+                                EnableViewState="true"
+                                OnRowDataBound="fieldsGrid_RowDataBound" 
+                                AutoGenerateColumns="false" 
+                                DataSource='<%# AssetTypeAttributes %>'
+                                meta:resourcekey="fieldsGridResource1">
                                 <Columns>
                                     <asp:TemplateField HeaderText="#" meta:resourcekey="TemplateFieldResource1" HeaderStyle-HorizontalAlign="Left">
                                         <ItemTemplate>
@@ -184,50 +140,10 @@
             });
 
             $('.expandable').hide();
-
-            //jQuery.fn.toggleOption = function (show) {
-            //    jQuery(this).toggle(show);
-            //    if (show) {
-            //        if (jQuery(this).parent('span.toggleOption').length)
-            //            jQuery(this).unwrap();
-            //    } else {
-            //        jQuery(this).wrap('<span class="toggleOption" style="display: none;" />');
-            //    }
-            //};
-
-            //var $selects = $('select');
-
-            //$($selects).each(
-            //    function () {
-            //        if (this.value != 0) //to keep default option available
-            //        {
-            //            $selects.not(this).children('option[value=' + this.value + ']').toggleOption(false);
-            //        }
-            //    }
-            //);
-
-            //$('select').change(function () {
-            //    $('option:hidden', $selects).each(function () {
-            //        var self = this,
-            //            toShow = true;
-            //        $selects.not($(this).parent()).each(function () {
-            //            if (self.value == this.value) toShow = false;
-            //        })
-            //        if (toShow) $(this).toggleOption(true);
-            //    });
-            //    if (this.value != 0) //to keep default option available
-            //        $selects.not(this).children('option[value=' + this.value + ']').toggleOption(false);
-            //});
         });
 
         function toggleDefault(id) {
-
-            //if ($('.useboth :checkbox').attr('checked') == false) {
-            //    $('.bindable_' + id + ' :input').attr('disabled', 'disabled');
-            //}
-
             $('#' + id + ' .expandable').show();
-
             var cmd_link = $('#' + id + ' .cmd');
             cmd_link.removeAttr('onclick');
             cmd_link.unbind('click');

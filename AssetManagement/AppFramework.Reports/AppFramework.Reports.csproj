@@ -90,6 +90,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Exceptions\InvalidReportParameters.cs" />
     <Compile Include="Exceptions\ReportNotFound.cs" />
+    <Compile Include="Permissions\IReportPermissionChecker.cs" />
+    <Compile Include="Permissions\ReportPermissionChecker.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

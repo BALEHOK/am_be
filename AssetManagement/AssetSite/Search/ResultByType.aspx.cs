@@ -116,7 +116,7 @@ namespace AssetSite.Search
 
                 SearchMasterPage.ResultSet[SearchId] = result;
 
-                var customReports = ReportService.GetReportsByAssetTypeId(assetType.ID);
+                var customReports = ReportService.GetReportsByAssetTypeId(assetType.ID, AuthenticationService.CurrentUserId);
 
                 if (customReports.Count > 0)
                     ReportsPanel.Visible = true;
