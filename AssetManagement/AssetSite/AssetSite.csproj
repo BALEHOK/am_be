@@ -944,9 +944,6 @@
     <Compile Include="admin\Import\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="admin\Import\ImportController.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="admin\InstallationCheck.aspx.cs">
       <DependentUpon>InstallationCheck.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
