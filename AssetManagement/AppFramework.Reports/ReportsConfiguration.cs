@@ -1,7 +1,7 @@
-﻿using AppFramework.Reports.CustomReports;
+﻿using AppFramework.Reports.Permissions;
 using AppFramework.Reports.Services;
-using Microsoft.Practices.Unity;
 using AppFramework.Reports.StandardReports.DataProviders;
+using Microsoft.Practices.Unity;
 
 namespace AppFramework.Reports
 {
@@ -16,7 +16,8 @@ namespace AppFramework.Reports
                 .RegisterType<IReportDataProvider<AssetsWithChildsReport>, AssetWithChildsReportDataProvider>()
                 .RegisterType<IReportDataProvider<AssetsListXtraReport>, AssetsListReportDataProvider>()
                 .RegisterType<IReportDataProvider<SearchResultXtraReport>, SearchResultReportDataProvider>()
-                .RegisterType<IDataProviderFactory, DataProviderFactory>();
+                .RegisterType<IDataProviderFactory, DataProviderFactory>()
+                .RegisterType<IReportPermissionChecker, ReportPermissionChecker>();
         }
     }
 }

@@ -60,7 +60,7 @@ namespace AssetManager.Infrastructure.Services
 
         public IEnumerable<Task> GetByAssetTypeId(long atId, long userId)
         {
-            return FilterParmitted(_unitOfWork.TaskRepository
+            return FilterPermitted(_unitOfWork.TaskRepository
                 .Where(t => t.DynEntityConfigId == atId && t.IsActive), userId);
         }
 
@@ -77,7 +77,7 @@ namespace AssetManager.Infrastructure.Services
             return permittedTasks.Any(tId => tId == taskId);
         }
 
-        private IEnumerable<Task> FilterParmitted(IEnumerable<Task> tasks, long userId)
+        private IEnumerable<Task> FilterPermitted(IEnumerable<Task> tasks, long userId)
         {
             var permittedTasks = _unitOfWork.GetPermittedTasks(userId).ToList();
             return tasks.Where(t => permittedTasks.Any(id => id == t.TaskId));

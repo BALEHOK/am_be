@@ -1,22 +1,18 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.EntityClient;
+using System.Data.Objects;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using AppFramework.DataLayer;
+using AppFramework.DataProxy.Providers;
+using AppFramework.DataProxy.Repositories;
+using AppFramework.Entities;
 
 namespace AppFramework.DataProxy
 {
-    using AppFramework.DataLayer;
-    using AppFramework.DataProxy.Providers;
-    using AppFramework.DataProxy.Repositories;
-    using AppFramework.Entities;
-    using Common.Logging;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.EntityClient;
-    using System.Data.Objects;
-    using System.Data.SqlClient;
-    using System.Linq;
-    using System.Transactions;
-    using System.Web;
-    using Enumerations = AppFramework.Entities.Enumerations;
-
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
         #region FunctionImports
@@ -46,7 +42,7 @@ namespace AppFramework.DataProxy
                 configIds,
                 taxonomyItemsIds,
                 isActive,
-                (byte)order,
+                (byte) order,
                 pageNumber,
                 pageSize,
                 attributeId,
@@ -69,7 +65,7 @@ namespace AppFramework.DataProxy
                 configIds,
                 taxonomyItemsIds,
                 isActive,
-                (byte)order,
+                (byte) order,
                 pageNumber,
                 pageSize);
         }
@@ -83,7 +79,8 @@ namespace AppFramework.DataProxy
             bool isActive = true,
             bool isTypeContextSearch = false)
         {
-            return _noCacheContext.f_cust_GetSrchCount(searchId, userId, keywords, configIds, taxonomyItemsIds, isActive, isTypeContextSearch);
+            return _noCacheContext.f_cust_GetSrchCount(searchId, userId, keywords, configIds, taxonomyItemsIds, isActive,
+                isTypeContextSearch);
         }
 
         #endregion
@@ -114,7 +111,7 @@ namespace AppFramework.DataProxy
             return _noCacheContext.GetPermittedAssetsCount(assetTypeId, userId);
         }
 
-        public ObjectResult<AppFramework.Entities.StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId)
+        public ObjectResult<StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId)
         {
             return _noCacheContext.GetStocksByLocation(assetId, assetTypeId);
         }
@@ -129,27 +126,38 @@ namespace AppFramework.DataProxy
             _noCacheContext.f_cust_ReIndex_Asset(assetUidNew, assetId, assetConfigUidNew, assetConfigId);
         }
 
-        public bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId)
+        public bool IsValueUnique(string dynEntityTableName, string columnName, string value, long? excludeDynEntityId)
         {
-            var outputParameter = new ObjectParameter("result", typeof(bool));
+            var outputParameter = new ObjectParameter("result", typeof (bool));
             _noCacheContext.IsValueUnique(dynEntityTableName, columnName, value, excludeDynEntityId, outputParameter);
-            return (bool)outputParameter.Value;
+            return (bool) outputParameter.Value;
         }
-        
+
         public IEnumerable<f_cust_GetReports_Result> GetReports()
         {
             return _noCacheContext.f_cust_GetReports();
-        } 
+        }
 
         public IEnumerable<ActiveTask> GetTasks(long userId)
         {
             return _noCacheContext.f_cust_GetTasks(userId);
         }
 
+        // ToDo import the following functions (now TVF import is not supported, need to rebuild data model)
         public IEnumerable<long> GetPermittedTasks(long userId)
         {
-            return _noCacheContext.ExecuteStoreQuery<long>("SELECT * FROM [dbo].[f_GetGrantedTaskIds](@UserId)", new SqlParameter("@UserId", SqlDbType.BigInt) {Value = userId});
-        } 
+            return _noCacheContext.ExecuteStoreQuery<long>("SELECT * FROM [dbo].[f_GetGrantedTaskIds](@UserId)",
+                new SqlParameter("@UserId", SqlDbType.BigInt) {Value = userId});
+        }
+
+        public IEnumerable<long> GetPermittedAssetTypes(long userId, byte requiredPermission)
+        {
+            return
+                _noCacheContext.ExecuteStoreQuery<long>(
+                    "SELECT * FROM [dbo].[f_GetGrantedConfigIds](@UserId, @AccesLevel)",
+                    new SqlParameter("@UserId", SqlDbType.BigInt) {Value = userId},
+                    new SqlParameter("@AccesLevel", SqlDbType.TinyInt) {Value = requiredPermission});
+        }
 
         #region IDataRepository: Repositories
 
@@ -164,6 +172,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDeletedEntities;
             }
         }
+
         private DataRepository<DeletedEntity> _repositoryDeletedEntities;
 
         public IDataRepository<DynEntityAttribScreens> DynEntityAttribScreensRepository
@@ -177,6 +186,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityAttribScreens;
             }
         }
+
         private IDataRepository<DynEntityAttribScreens> _repositoryDynEntityAttribScreens;
 
         public IDataRepository<Languages> LanguagesRepository
@@ -190,6 +200,7 @@ namespace AppFramework.DataProxy
                 return _repositoryLanguages;
             }
         }
+
         private IDataRepository<Languages> _repositoryLanguages;
 
         public IDataRepository<StringResources> StringResourcesRepository
@@ -203,6 +214,7 @@ namespace AppFramework.DataProxy
                 return _repositoryStringResources;
             }
         }
+
         private IDataRepository<StringResources> _repositoryStringResources;
 
         public IDataRepository<AssetsTaxonomies> AssetsTaxonomiesRepository
@@ -216,6 +228,7 @@ namespace AppFramework.DataProxy
                 return _repositoryAssetsTaxonomies;
             }
         }
+
         private IDataRepository<AssetsTaxonomies> _repositoryAssetsTaxonomies;
 
         public ITaxonomyItemRepository TaxonomyItemRepository
@@ -229,6 +242,7 @@ namespace AppFramework.DataProxy
                 return _repositoryTaxonomyItem;
             }
         }
+
         private ITaxonomyItemRepository _repositoryTaxonomyItem;
 
         public TaxonomyRepository TaxonomyRepository
@@ -242,6 +256,7 @@ namespace AppFramework.DataProxy
                 return _repositoryTaxonomy;
             }
         }
+
         private TaxonomyRepository _repositoryTaxonomy;
 
         public IDataRepository<DynEntityConfigTaxonomy> DynEntityConfigTaxonomyRepository
@@ -255,6 +270,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityConfigTaxonomy;
             }
         }
+
         private IDataRepository<DynEntityConfigTaxonomy> _repositoryDynEntityConfigTaxonomy;
 
         public IDataRepository<DynEntityTaxonomyItem> DynEntityTaxonomyItemRepository
@@ -268,6 +284,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityTaxonomyItem;
             }
         }
+
         private IDataRepository<DynEntityTaxonomyItem> _repositoryDynEntityTaxonomyItem;
 
         public IDataRepository<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistoryRepository
@@ -281,6 +298,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityTaxonomyItemHistory;
             }
         }
+
         private IDataRepository<DynEntityTaxonomyItemHistory> _repositoryDynEntityTaxonomyItemHistory;
 
         public IDataRepository<Rights> RightsRepository
@@ -294,6 +312,7 @@ namespace AppFramework.DataProxy
                 return _repositoryRights;
             }
         }
+
         private IDataRepository<Rights> _repositoryRights;
 
         public IDataRepository<Reservation> ReservationRepository
@@ -307,6 +326,7 @@ namespace AppFramework.DataProxy
                 return _repositoryReservation;
             }
         }
+
         private IDataRepository<Reservation> _repositoryReservation;
 
         public IDataRepository<PredefinedAttributes> PredefinedAttributesRepository
@@ -320,6 +340,7 @@ namespace AppFramework.DataProxy
                 return _repositoryPredefinedAttributes;
             }
         }
+
         private IDataRepository<PredefinedAttributes> _repositoryPredefinedAttributes;
 
         public IDataRepository<PredefinedAsset> PredefinedAssetRepository
@@ -333,6 +354,7 @@ namespace AppFramework.DataProxy
                 return _repositoryPredefinedAsset;
             }
         }
+
         private IDataRepository<PredefinedAsset> _repositoryPredefinedAsset;
 
         public IDataRepository<ZipCode> ZipCodeRepository
@@ -346,6 +368,7 @@ namespace AppFramework.DataProxy
                 return _repositoryZipCode;
             }
         }
+
         private IDataRepository<ZipCode> _repositoryZipCode;
 
         public IDataRepository<Place> PlaceRepository
@@ -359,6 +382,7 @@ namespace AppFramework.DataProxy
                 return _repositoryPlace;
             }
         }
+
         private IDataRepository<Place> _repositoryPlace;
 
         public IDataRepository<AttributePanel> AttributePanelRepository
@@ -372,6 +396,7 @@ namespace AppFramework.DataProxy
                 return _repositoryAttributePanel;
             }
         }
+
         private IDataRepository<AttributePanel> _repositoryAttributePanel;
 
         public IDataRepository<AttributePanelAttribute> AttributePanelAttributeRepository
@@ -385,6 +410,7 @@ namespace AppFramework.DataProxy
                 return _repositoryAttributePanelAttribute;
             }
         }
+
         private IDataRepository<AttributePanelAttribute> _repositoryAttributePanelAttribute;
 
 
@@ -399,6 +425,7 @@ namespace AppFramework.DataProxy
                 return _repositoryMeasureUnit;
             }
         }
+
         private IDataRepository<MeasureUnit> _repositoryMeasureUnit;
 
         public IDataRepository<ScreenLayout> ScreenLayoutRepository
@@ -412,6 +439,7 @@ namespace AppFramework.DataProxy
                 return _repositoryScreenLayout;
             }
         }
+
         private IDataRepository<ScreenLayout> _repositoryScreenLayout;
 
         public IDataRepository<DynEntityType> DynEntityTypeRepository
@@ -425,6 +453,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityType;
             }
         }
+
         private IDataRepository<DynEntityType> _repositoryDynEntityType;
 
         public IDataRepository<SearchOperators> SearchOperatorsRepository
@@ -438,6 +467,7 @@ namespace AppFramework.DataProxy
                 return _repositorySearchOperators;
             }
         }
+
         private IDataRepository<SearchOperators> _repositorySearchOperators;
 
         public IDataRepository<Context> ContextRepository
@@ -451,6 +481,7 @@ namespace AppFramework.DataProxy
                 return _repositoryContext;
             }
         }
+
         private IDataRepository<Context> _repositoryContext;
 
         public IDataRepository<MultipleAssetsHistory> MultipleAssetsHistoryRepository
@@ -464,6 +495,7 @@ namespace AppFramework.DataProxy
                 return _repositoryMultipleAssetsHistory;
             }
         }
+
         private IDataRepository<MultipleAssetsHistory> _repositoryMultipleAssetsHistory;
 
         public IDataRepository<MultipleAssetsActive> MultipleAssetsActiveRepository
@@ -477,6 +509,7 @@ namespace AppFramework.DataProxy
                 return _repositoryMultipleAssetsActive;
             }
         }
+
         private IDataRepository<MultipleAssetsActive> _repositoryMultipleAssetsActive;
 
         public IDataRepository<AppSettings> AppSettingsRepository
@@ -490,6 +523,7 @@ namespace AppFramework.DataProxy
                 return _repositoryAppSettings;
             }
         }
+
         private IDataRepository<AppSettings> _repositoryAppSettings;
 
         public IDataRepository<ValidationList> ValidationListRepository
@@ -503,6 +537,7 @@ namespace AppFramework.DataProxy
                 return _repositoryValidationList;
             }
         }
+
         private IDataRepository<ValidationList> _repositoryValidationList;
 
         public IDataRepository<DynEntityAttribValidation> DynEntityAttribValidationRepository
@@ -516,6 +551,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityAttribValidation;
             }
         }
+
         private IDataRepository<DynEntityAttribValidation> _repositoryDynEntityAttribValidation;
 
         public IDataRepository<ValidationOperand> ValidationOperandRepository
@@ -529,6 +565,7 @@ namespace AppFramework.DataProxy
                 return _repositoryValidationOperand;
             }
         }
+
         private IDataRepository<ValidationOperand> _repositoryValidationOperand;
 
         public IDataRepository<ValidationOperator> ValidationOperatorRepository
@@ -542,6 +579,7 @@ namespace AppFramework.DataProxy
                 return _repositoryValidationOperator;
             }
         }
+
         private IDataRepository<ValidationOperator> _repositoryValidationOperator;
 
         public IDataRepository<ValidationOperandValue> ValidationOperandValueRepository
@@ -555,6 +593,7 @@ namespace AppFramework.DataProxy
                 return _repositoryValidationOperandValue;
             }
         }
+
         private IDataRepository<ValidationOperandValue> _repositoryValidationOperandValue;
 
 
@@ -569,6 +608,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityTransaction;
             }
         }
+
         private IDataRepository<DynEntityTransaction> _repositoryDynEntityTransaction;
 
         public IDataRepository<DynEntityConfig> DynEntityConfigRepository
@@ -582,6 +622,7 @@ namespace AppFramework.DataProxy
                 return _dynEntityConfigRepository;
             }
         }
+
         private IDataRepository<DynEntityConfig> _dynEntityConfigRepository;
 
         public IDataRepository<DynEntityAttribConfig> DynEntityAttribConfigRepository
@@ -595,6 +636,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityAttribConfig;
             }
         }
+
         private IDataRepository<DynEntityAttribConfig> _repositoryDynEntityAttribConfig;
 
         public IDataRepository<UserInRole> UserInRoleRepository
@@ -608,6 +650,7 @@ namespace AppFramework.DataProxy
                 return _repositoryUserInRole;
             }
         }
+
         private IDataRepository<UserInRole> _repositoryUserInRole;
 
         public IDataRepository<ImportExport> ImportExportRepository
@@ -621,6 +664,7 @@ namespace AppFramework.DataProxy
                 return _repositoryImportExport;
             }
         }
+
         private IDataRepository<ImportExport> _repositoryImportExport;
 
         public IDataRepository<IndexActiveDynEntities> IndexActiveDynEntitiesRepository
@@ -634,6 +678,7 @@ namespace AppFramework.DataProxy
                 return _repositoryIndexActiveDynEntities;
             }
         }
+
         private IDataRepository<IndexActiveDynEntities> _repositoryIndexActiveDynEntities;
 
         public IDataRepository<IndexHistoryDynEntities> IndexHistoryDynEntitiesRepository
@@ -647,6 +692,7 @@ namespace AppFramework.DataProxy
                 return _repositoryIndexHistoryDynEntities;
             }
         }
+
         private IDataRepository<IndexHistoryDynEntities> _repositoryIndexHistoryDynEntities;
 
         public IDataRepository<DynEntityIndex> DynEntityIndexRepository
@@ -660,6 +706,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynEntityIndex;
             }
         }
+
         private IDataRepository<DynEntityIndex> _repositoryDynEntityIndex;
 
         public IDataRepository<BatchJob> BatchJobRepository
@@ -673,6 +720,7 @@ namespace AppFramework.DataProxy
                 return _repositoryBatchJob;
             }
         }
+
         private IDataRepository<BatchJob> _repositoryBatchJob;
 
         public IDataRepository<BatchAction> BatchActionRepository
@@ -686,6 +734,7 @@ namespace AppFramework.DataProxy
                 return _repositoryBatchAction;
             }
         }
+
         private IDataRepository<BatchAction> _repositoryBatchAction;
 
 
@@ -700,6 +749,7 @@ namespace AppFramework.DataProxy
                 return _repositoryBatchSchedule;
             }
         }
+
         private IDataRepository<BatchSchedule> _repositoryBatchSchedule;
 
         public IDataRepository<DynList> DynListRepository
@@ -713,6 +763,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynList;
             }
         }
+
         private IDataRepository<DynList> _repositoryDynList;
 
         public IDataRepository<DynListItem> DynListItemRepository
@@ -726,6 +777,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynListItem;
             }
         }
+
         private IDataRepository<DynListItem> _repositoryDynListItem;
 
         public IDataRepository<DynListValue> DynListValueRepository
@@ -739,6 +791,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDynListValue;
             }
         }
+
         private IDataRepository<DynListValue> _repositoryDynListValue;
 
         public IDataRepository<Report> ReportRepository
@@ -752,6 +805,7 @@ namespace AppFramework.DataProxy
                 return _repositoryReport;
             }
         }
+
         private IDataRepository<Report> _repositoryReport;
 
         public IDataRepository<DataType> DataTypeRepository
@@ -765,6 +819,7 @@ namespace AppFramework.DataProxy
                 return _repositoryDataType;
             }
         }
+
         private IDataRepository<DataType> _repositoryDataType;
 
         public IDataRepository<SearchTracking> SearchTrackingRepository
@@ -778,6 +833,7 @@ namespace AppFramework.DataProxy
                 return _repositorySearchTracking;
             }
         }
+
         private IDataRepository<SearchTracking> _repositorySearchTracking;
 
         public IDataRepository<Task> TaskRepository
@@ -791,6 +847,7 @@ namespace AppFramework.DataProxy
                 return _repositoryTask;
             }
         }
+
         private IDataRepository<Task> _repositoryTask;
 
 
@@ -805,9 +862,11 @@ namespace AppFramework.DataProxy
                 return _repositoryTaskRight;
             }
         }
+
         private IDataRepository<TaskRights> _repositoryTaskRight;
 
         private IDataRepository<AssetTypeScreen> _respositoryAssetTypeScreen;
+
         public IDataRepository<AssetTypeScreen> AssetTypeScreenRepository
         {
             get
@@ -821,6 +880,7 @@ namespace AppFramework.DataProxy
         }
 
         private IDataRepository<DynEntityUser> _respositoryUsers;
+
         public IDataRepository<DynEntityUser> DynEntityUserRepository
         {
             get
@@ -834,19 +894,22 @@ namespace AppFramework.DataProxy
         }
 
         private IDataRepository<DynEntityContextAttributesValues> _respositoryDynEntityContextAttributesValues;
+
         public IDataRepository<DynEntityContextAttributesValues> DynEntityContextAttributesValuesRepository
         {
             get
             {
                 if (_respositoryDynEntityContextAttributesValues == null)
                 {
-                    _respositoryDynEntityContextAttributesValues = new DataRepository<DynEntityContextAttributesValues>(_context);
+                    _respositoryDynEntityContextAttributesValues =
+                        new DataRepository<DynEntityContextAttributesValues>(_context);
                 }
                 return _respositoryDynEntityContextAttributesValues;
             }
         }
 
         private IDataRepository<SearchQuery> _searchQueryRepository;
+
         public IDataRepository<SearchQuery> SearchQueryRepository
         {
             get
@@ -862,6 +925,7 @@ namespace AppFramework.DataProxy
         #endregion
 
         #region IDataProvider: Base providers for plain SQL querying
+
         /// <summary>
         /// Gets the Entity Framework data provider (requires EntitySQL syntax)
         /// </summary>
@@ -871,16 +935,17 @@ namespace AppFramework.DataProxy
             {
                 if (_entityProvider == null)
                 {
-                    DataEntities context = _context;
-                    if (_context.GetType() != typeof(DataEntities))
+                    var context = _context;
+                    if (_context.GetType() != typeof (DataEntities))
                     {
                         context = new DataEntities();
                     }
-                    _entityProvider = new Providers.EntityDataProvider(context);
+                    _entityProvider = new EntityDataProvider(context);
                 }
                 return _entityProvider;
             }
         }
+
         private IDataProvider _entityProvider;
 
         /// <summary>
@@ -902,7 +967,7 @@ namespace AppFramework.DataProxy
                         var plaincontext = new DataEntities();
                         cnn = (EntityConnection) plaincontext.Connection;
                     }
-                    _sqlProvider = new Providers.SqlDataProvider((SqlConnection) cnn.StoreConnection);
+                    _sqlProvider = new SqlDataProvider((SqlConnection) cnn.StoreConnection);
                 }
                 return _sqlProvider;
             }
@@ -915,12 +980,14 @@ namespace AppFramework.DataProxy
         }
 
         private IDataProvider _sqlProvider;
+
         #endregion
 
         /// <summary>
         /// Object context with Caching and Logging
         /// </summary>
         private readonly DataEntities _context;
+
         private readonly DataEntities _noCacheContext;
 
         public UnitOfWork()
@@ -931,8 +998,8 @@ namespace AppFramework.DataProxy
         public UnitOfWork(EntityConnection connection)
         {
             _context = HttpContext.Current != null
-               ? new ExtendedDataEntities(connection)
-               : new DataEntities(connection);
+                ? new ExtendedDataEntities(connection)
+                : new DataEntities(connection);
             _noCacheContext = new DataEntities(connection);
 
             //_logger.DebugFormat("instanciate UnitOfWork #{0}", GetHashCode());
@@ -948,7 +1015,7 @@ namespace AppFramework.DataProxy
         }
 
         public void Commit()
-        {            
+        {
             _context.SaveChanges();
         }
     }

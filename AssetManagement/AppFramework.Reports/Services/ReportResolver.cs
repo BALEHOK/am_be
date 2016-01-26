@@ -4,6 +4,7 @@ using DevExpress.XtraReports.UI;
 using Common.Logging;
 using AppFramework.Reports.Exceptions;
 using System;
+using AppFramework.Core.AC.Authentication;
 using AppFramework.Reports.Properties;
 
 namespace AppFramework.Reports.Services
@@ -35,25 +36,28 @@ namespace AppFramework.Reports.Services
 
             if (args.First() == Constants.ReportTypeCustomReport)
             {
-                var reportData = _customReportService.GetReportByURI(reportName);
-                return _customReportService.CreateReportView(reportData);
+                // ToDo get real user id
+                var userId = 1;
+                var reportData = _customReportService.GetReportByURI(reportName, userId);
+                return _customReportService.CreateReportView(reportData, userId);
             }
-            else
-            {
-                if (args.Count() != 3)
-                    throw new InvalidReportParameters(
-                        Resources.InvalidParametersForStandardReport);
-                ReportType reportType;
-                if (!Enum.TryParse(args[1], out reportType))
-                    throw new InvalidReportParameters(
-                        Resources.InvalidStandardReportType);
-                LayoutType reportLayout;
-                if (!Enum.TryParse(args[2], out reportLayout))
-                    throw new InvalidReportParameters(
-                        Resources.InvalidStandardReportLayout);
-                var standardReport = _standardReportService.GetStandardReport(reportType, reportLayout);
-                return standardReport;
-            }
+            
+            if (args.Length != 3)
+                throw new InvalidReportParameters(
+                    Resources.InvalidParametersForStandardReport);
+
+            ReportType reportType;
+            if (!Enum.TryParse(args[1], out reportType))
+                throw new InvalidReportParameters(
+                    Resources.InvalidStandardReportType);
+
+            LayoutType reportLayout;
+            if (!Enum.TryParse(args[2], out reportLayout))
+                throw new InvalidReportParameters(
+                    Resources.InvalidStandardReportLayout);
+
+            var standardReport = _standardReportService.GetStandardReport(reportType, reportLayout);
+            return standardReport;
         }
     }
 }

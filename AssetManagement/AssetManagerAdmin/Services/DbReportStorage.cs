@@ -8,12 +8,13 @@ using DevExpress.XtraReports.UI;
 using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Threading;
+using AppFramework.Core.AC.Authentication;
 
 namespace AssetManagerAdmin.Services
 {
     class DbReportStorage : IReportStorage
     {
-        private static AutoResetEvent dialogEvent = new AutoResetEvent(false);
+        private static readonly AutoResetEvent DialogEvent = new AutoResetEvent(false);
         private readonly IReportResolver _reportResolver;
         private readonly ICustomReportService _reportService;
 
@@ -48,27 +49,27 @@ namespace AssetManagerAdmin.Services
             return ExceptionHelper.GetInnerErrorMessage(exception);
         }
 
-        public XtraReport Load(string reportID, IReportSerializer designerReportSerializer)
+        public XtraReport Load(string reportId, IReportSerializer designerReportSerializer)
         {
-            if (reportID == string.Empty)
+            if (reportId == string.Empty)
                 return new XtraReport();
-            return _reportResolver.Resolve(reportID, false);
+            return _reportResolver.Resolve(reportId, false);
         }
 
         public string Open(IReportDesignerUI designer)
         {
             OpenReportDialogCallbackMessage dialogResult = null;
-            var msg = new OpenReportMessage(this, (r) =>
+            var msg = new OpenReportMessage(this, r =>
             {
                 dialogResult = r;
-                dialogEvent.Set();
+                DialogEvent.Set();
             });
 
-            dialogEvent.Reset();
+            DialogEvent.Reset();
 
             Messenger.Default.Send(msg);
 
-            dialogEvent.WaitOne();
+            DialogEvent.WaitOne();
 
             if (dialogResult != null && dialogResult.Result == true)
                 return string.Format("{0}/{1}/{2}",
@@ -79,37 +80,42 @@ namespace AssetManagerAdmin.Services
             return null;
         }
 
-        public string Save(string reportID, IReportProvider reportProvider, bool saveAs, string reportTitle, IReportDesignerUI designer)
+        public string Save(string reportId, IReportProvider reportProvider, bool saveAs, string reportTitle, IReportDesignerUI designer)
         {
             Report reportEntity = null;
 
-            if (reportID != null)
-                reportEntity = _reportService.GetReportByURI(reportID);
+            // ToDo get real user id
+            var userId = 1;
+
+            if (reportId != null)
+            {
+                reportEntity = _reportService.GetReportByURI(reportId, userId);
+            }
 
             if (saveAs || reportEntity == null)
             {
                 SaveReportDialogCallbackMessage dialogResult = null;
-                var msg = new SaveReportMessage(this, (r) =>
+                var msg = new SaveReportMessage(this, r =>
                 {
                     dialogResult = r;
-                    dialogEvent.Set();
+                    DialogEvent.Set();
                 });
 
-                dialogEvent.Reset();
+                DialogEvent.Reset();
 
                 Messenger.Default.Send(msg);
 
-                dialogEvent.WaitOne();
+                DialogEvent.WaitOne();
 
                 if (dialogResult == null || dialogResult.Result != true)
                     return null;
 
                 reportEntity = _reportService.CreateReport(
-                    dialogResult.AssetTypeId, dialogResult.ReportName);
+                    dialogResult.AssetTypeId, dialogResult.ReportName, userId);
             }
 
             var report = reportProvider.GetReport();
-            _reportService.UpdateReport(reportEntity, report);
+            _reportService.UpdateReport(reportEntity, report, userId);
 
             return string.Format("{0}/{1}/{2}",
                 AppFramework.Reports.Constants.ReportTypeCustomReport,

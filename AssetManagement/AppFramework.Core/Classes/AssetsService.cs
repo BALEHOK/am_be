@@ -715,14 +715,11 @@ namespace AppFramework.Core.Classes
         /// </summary>
         /// <param name="assetTypeId">Asset type identifier</param>
         /// <param name="currentUserId">Current User's Id</param>
-        /// <param name="rowStart">Start row</param>
-        /// <param name="rowsNumber">Rows amount</param>
         /// <returns>Assets collection</returns>  
-        public IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeId, long currentUserId, int? rowStart = null,
-            int? rowsNumber = null)
+        public IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeId, long currentUserId)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            return GetAssetsByAssetTypeAndUser(assetType, currentUserId, rowStart, rowsNumber);
+            return GetAssetsByAssetTypeAndUser(assetType, currentUserId);
         }
 
         /// <summary>
@@ -730,28 +727,23 @@ namespace AppFramework.Core.Classes
         /// </summary>
         /// <param name="assetType">Asset type</param>
         /// <param name="currentUserId">Current User's Id</param>
-        /// <param name="rowStart">Start row</param>
-        /// <param name="rowsNumber">Rows amount</param>
         /// <returns>Assets collection</returns>        
-        public IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId, int? rowStart = null,
-            int? rowsNumber = null)
+        public IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId)
         {
             var cacheKey = string.Format("_PermittedAssets_{0}_{1}", assetType.ID, currentUserId);
-            if (rowStart != null && rowsNumber != null)
-                cacheKey = string.Format("_PermittedAssets_{0}_{1}_{2}_{3}", assetType.ID, currentUserId, rowStart,
-                    rowsNumber);
 
             var cacheManager = CacheFactory.GetCacheManager();
-            if (cacheManager.GetData(cacheKey) as List<Asset> == null)
+            var data = cacheManager.GetData(cacheKey) as List<Asset>;
+            if (data != null)
             {
-                var assetIndexes = _unitOfWork.GetPermittedAssets(assetType.ID, currentUserId, null, null);
-                var assets = assetIndexes.Select(i => GetAssetById(i.DynEntityId, assetType));
-                if (rowStart.HasValue && rowsNumber.HasValue)
-                    assets = assets.Skip(rowStart.Value).Take(rowsNumber.Value);
-                cacheManager.Add(cacheKey, assets.ToList(), CacheItemPriority.High, null,
-                    new ICacheItemExpiration[] { new AbsoluteTime(TimeSpan.FromSeconds(30)) });
+                return data;
             }
-            return cacheManager.GetData(cacheKey) as List<Asset>;
+
+            var assetIndexes = _unitOfWork.GetPermittedAssets(assetType.ID, currentUserId, null, null);
+            var assets = assetIndexes.Select(i => GetAssetById(i.DynEntityId, assetType)).ToList();
+            cacheManager.Add(cacheKey, assets, CacheItemPriority.High, null, new AbsoluteTime(TimeSpan.FromSeconds(30)));
+
+            return assets;
         }
 
         /// <summary>

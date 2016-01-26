@@ -1,11 +1,10 @@
-﻿using System.Web.Security;
-using AppFramework.Core.AC.Authentication;
+﻿using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Classes;
-using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.PL;
 using AppFramework.DataProxy;
 using Common.Logging;
 using Microsoft.Practices.Unity;
+
 namespace AssetSite
 {
     public class BasePage : System.Web.UI.Page

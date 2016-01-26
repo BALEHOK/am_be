@@ -20,36 +20,16 @@ using System.Xml;
 
 namespace AssetSite.admin.Import
 {
-    public partial class Default : ImportController
+    public partial class Default : BasePage
     {
         [Dependency]
         public BatchCore.IBatchJobFactory BatchJobFactory { get; set; }
-        [Dependency]
-        public IAttributeFieldFactory AttributeFieldFactory { get; set; }
         [Dependency]
         public IBarcodeProvider BarcodeProvider { get; set; }
         [Dependency]
         public IDynListItemService DynListItemService { get; set; }
         [Dependency]
-        public IDynamicListsService  DynamicListsService  { get; set; }
-        [Dependency]
         public IExcelProvider ExcelProvider { get; set; }
-
-        private AssetType _assetType;
-
-        /// <summary>
-        /// Gets if choosed asset type is type of user.
-        /// Then Active Directory DataSource can be shown.
-        /// </summary>
-        private bool IsUsersImport
-        {
-            get
-            {
-                return 
-                    AssetType != null && 
-                    AssetType.ID == AssetTypeRepository.GetPredefinedAssetType(PredefinedEntity.User).ID;
-            }
-        }
 
         /// <summary>
         /// Gets the AssetType choosed for importing data
@@ -58,25 +38,38 @@ namespace AssetSite.admin.Import
         {
             get { return _assetType ?? (_assetType = AssetTypeRepository.GetById(AssetTypeId)); }
         }
+        private AssetType _assetType;
 
+        #region Session objects
 
         /// <summary>
         /// Get and set AssetTypeAttributes
         /// </summary>
-        private static AssetTypeAttribute[] AssetTypeAttributes
+        public AssetTypeAttribute[] AssetTypeAttributes
         {
             get
             {
-                return HttpContext.Current.Session["AssetTypeAttributes"] == null ? null :
-                    HttpContext.Current.Session["AssetTypeAttributes"] as AssetTypeAttribute[];
+                if (AssetTypeId > 0 && Session["AssetTypeAttributes"] == null)
+                {
+                    Session["AssetTypeAttributes"] = new[]
+                        {
+                            AssetType.Attributes.Single(a => a.Name == AttributeNames.DynEntityId),
+                            AssetType.Attributes.Single(a => a.Name == AttributeNames.ActiveVersion)
+                        }
+                        .Union(AssetType.Attributes
+                            .Where(a => a.IsShownOnPanel && a.Editable &&
+                                        a.DataTypeEnum != Enumerators.DataType.File &&
+                                        a.DataTypeEnum != Enumerators.DataType.Image)
+                        .OrderBy(a => a.DisplayOrder))
+                        .ToArray();
+                }
+                return Session["AssetTypeAttributes"] as AssetTypeAttribute[];
             }
             set
             {
-                HttpContext.Current.Session["AssetTypeAttributes"] = value;
+                Session["AssetTypeAttributes"] = value;
             }
         }
-
-        #region Session objects
 
         private IE.BindingInfo Bindings
         {
@@ -89,25 +82,6 @@ namespace AssetSite.admin.Import
                 return Session["BindingsImportingWizard"] as IE.BindingInfo;
             }
         }
-
-        private DataSourceType DataSource
-        {
-            get
-            {
-                DataSourceType res = DataSourceType.UNKNOWN;
-                if (Session["DataSourceImportingWizard"] != null)
-                {
-                    string ds = Session["DataSourceImportingWizard"].ToString();
-                    res = Routines.StringToEnum<DataSourceType>(ds);
-                }
-                return res;
-            }
-            set
-            {
-                Session["DataSourceImportingWizard"] = value.ToString();
-            }
-        }
-
 
         private long AssetTypeId
         {
@@ -130,7 +104,9 @@ namespace AssetSite.admin.Import
         {
             get
             {
-                return Session["FieldsImportingWizard"] as List<string>;
+                return Session["FieldsImportingWizard"] != null
+                    ? Session["FieldsImportingWizard"] as List<string>
+                    : new List<string>();
             }
             set
             {
@@ -142,7 +118,9 @@ namespace AssetSite.admin.Import
         {
             get
             {
-                return Session["SheetsImportingWizard"] as List<string>;
+                return Session["SheetsImportingWizard"] != null 
+                    ? Session["SheetsImportingWizard"] as List<string>
+                    : new List<string>();
             }
             set
             {
@@ -167,18 +145,6 @@ namespace AssetSite.admin.Import
             }
         }
 
-        private IE.LDAPCredentials Credentials
-        {
-            get
-            {
-                return Session["CredentialsImportingWizard"] as IE.LDAPCredentials;
-            }
-            set
-            {
-                Session["CredentialsImportingWizard"] = value;
-            }
-        }
-
         #endregion
 
         protected void Page_Load(object sender, EventArgs e)
@@ -188,7 +154,7 @@ namespace AssetSite.admin.Import
             {
                 long assetTypeId = 0;
                 long.TryParse(Request.QueryString["schemaid"].ToString(), out assetTypeId);
-                AssetType at = AssetType.GetByID(assetTypeId);
+                var at = AssetTypeRepository.GetById(assetTypeId);
                 if (at != null)
                 {
                     // generate schema
@@ -209,7 +175,7 @@ namespace AssetSite.admin.Import
             {
                 long assetTypeId = 0;
                 long.TryParse(Request.QueryString["xlsxschemaid"].ToString(), out assetTypeId);
-                AssetType at = AssetType.GetByID(assetTypeId);
+                var at = AssetTypeRepository.GetById(assetTypeId);
                 if (at != null)
                 {
                     string tempFilePath = string.Empty;
@@ -250,27 +216,12 @@ namespace AssetSite.admin.Import
                 Response.Redirect("~/admin/Import");
             }
 
-            if (ImportingWizard.ActiveStep == WizardStep2 && IsPostBack)
-            {
-                // save choosed by user DataSource 
-                if (dataSourceTypesList.SelectedValue != string.Empty)
-                {
-                    this.DataSource = Routines.StringToEnum<DataSourceType>(dataSourceTypesList.SelectedValue);
-                }
-            }
-
             if (ScriptManager.GetCurrent(this).IsInAsyncPostBack && ImportingWizard.ActiveStep == WizardStep4)
             {
-
-                if (DataSource == DataSourceType.XLS || DataSource == DataSourceType.XLSX)
-                {
-                    ReadExcelFields();
-                }
-                else
-                {
-                    throw new NotSupportedException("XML Data Source is not supported");
-                }
+                ReadExcelFields();
             }
+
+            Page.DataBind();
         }
 
         protected void atList_Changed(object sender, EventArgs e)
@@ -318,20 +269,7 @@ namespace AssetSite.admin.Import
             {
                 if (UploadFile())
                 {
-                    if (DataSource == DataSourceType.XLS ||
-                        DataSource == DataSourceType.XLSX)
-                    {
-                        ReadExcelSheets();
-                    }
-                    else
-                    {
-                        HoldStep();
-                        messagePanel.Messages.Add(new MessageDefinition()
-                        {
-                            Status = MessageStatus.Error,
-                            Message = "File format is not supported."
-                        });
-                    }
+                    ReadExcelSheets();
                 }
             }
             else if (ImportingWizard.ActiveStep == WizardStep3)
@@ -352,9 +290,6 @@ namespace AssetSite.admin.Import
 
                 FilePath = Path.Combine(ApplicationSettings.UploadOnImportPath, filename);
                 fileUploadControl.SaveAs(FilePath);
-
-                // detect file type programmatically
-                DataSource = IE.ImportExportManager.GetDataSourceTypeByFileName(fileUploadControl.FileName);
             }
             else
             {
@@ -401,29 +336,13 @@ namespace AssetSite.admin.Import
 
             if (ExcelProvider.Status.IsSuccess)
             {
-                BindData();
+                Page.DataBind();
                 ImportingWizard.MoveTo(WizardStep4);
             }
             else
             {
                 HandleErrorStatus(ExcelProvider.Status);
             }
-        }
-
-        private void BindData()
-        {
-            AssetTypeAttributes = new []
-            {
-                AssetType.Attributes.Single(a => a.Name == AttributeNames.DynEntityId),
-                AssetType.Attributes.Single(a => a.Name == AttributeNames.ActiveVersion)
-            }
-            .Union(AssetType.Attributes.Where(a => a.IsShownOnPanel && a.Editable &&
-                                                    a.DataTypeEnum != Enumerators.DataType.File &&
-                                                    a.DataTypeEnum != Enumerators.DataType.Image)
-            .OrderBy(a => a.DisplayOrder))
-            .ToArray();
-            fieldsGrid.DataSource = AssetTypeAttributes;
-            fieldsGrid.DataBind();
         }
               
         private IE.ActionResult<IE.BindingInfo> GetBindings()
@@ -590,8 +509,6 @@ namespace AssetSite.admin.Import
 
         protected void ImportingWizard_Finish(object sender, EventArgs e)
         {
-            BindData();
-
             var path = FilePath;
             var status = new IE.StatusInfo();
             var bindingsResult = GetBindings();
@@ -644,26 +561,6 @@ namespace AssetSite.admin.Import
         }
 
         /// <summary>
-        /// Adds the binding value 
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [WebMethod]
-        public static bool AssignBinding(int index, string value)
-        {
-            var bindings = HttpContext.Current.Session["BindingsImportingWizard"] as IE.BindingInfo ??
-                           new IE.BindingInfo();
-            bindings.Bindings.Add(new IE.ImportBinding
-            {
-                DestinationAttributeId = index,
-                DataSourceFieldName = value
-            });
-            HttpContext.Current.Session["BindingsImportingWizard"] = bindings;
-            return true;
-        }
-
-        /// <summary>
         /// Adds default value to dictionary
         /// </summary>
         /// <param name="index"></param>
@@ -676,8 +573,9 @@ namespace AssetSite.admin.Import
             var bindings = HttpContext.Current.Session["BindingsImportingWizard"] as IE.BindingInfo ??
                            new IE.BindingInfo();
 
-            var attribute = AssetTypeAttributes.Length > index 
-                ? AssetTypeAttributes[index] 
+            var attributes = (AssetTypeAttribute[])HttpContext.Current.Session["AssetTypeAttributes"];
+            var attribute = attributes.Length > index 
+                ? attributes[index] 
                 : null;
             if (attribute == null)
                 throw new ArgumentException();
@@ -739,8 +637,9 @@ namespace AssetSite.admin.Import
         public static bool RemoveValue(int index)
         {
             var bindings = HttpContext.Current.Session["BindingsImportingWizard"] as IE.BindingInfo;
-            var attribute = AssetTypeAttributes.Length > index
-                ? AssetTypeAttributes[index]
+            var attributes = (AssetTypeAttribute[])HttpContext.Current.Session["AssetTypeAttributes"];
+            var attribute = attributes.Length > index
+                ? attributes[index]
                 : null;
             if (attribute == null)
                 throw new ArgumentException();

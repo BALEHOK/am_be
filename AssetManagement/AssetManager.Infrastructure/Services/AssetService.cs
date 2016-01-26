@@ -338,10 +338,9 @@ namespace AssetManager.Infrastructure.Services
         public IEnumerable<AssetModel> GetAssets(long assetTypeId, long userId, string query, int? rowStart,
             int? rowsNumber)
         {
-            var assets = _assetsService.GetAssetsByAssetTypeIdAndUser(
-                assetTypeId, userId, rowStart, rowsNumber);
+            var assets = _assetsService.GetAssetsByAssetTypeIdAndUser(assetTypeId, userId);
 
-            return from asset in assets
+            var result = from asset in assets
                 where query == null || asset.Name.ToLower().Contains(query.ToLower())
                 select new AssetModel
                 {
@@ -349,6 +348,13 @@ namespace AssetManager.Infrastructure.Services
                     Name = asset.Name,
                     Id = asset.ID
                 };
+
+            if (rowStart.HasValue)
+            {
+                result = result.Skip(rowStart.Value);
+            }
+
+            return rowsNumber.HasValue ? result.Take(rowsNumber.Value) : result;
         }
 
         public AssetModel CreateAsset(long assetTypeId, long userId)

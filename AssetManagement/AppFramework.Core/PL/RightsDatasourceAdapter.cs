@@ -47,11 +47,10 @@ namespace AppFramework.Core.PL
                 {
                     if (entry.TaxonomyItemId != 0)
                     {
-                        var item = _unitOfWork.AssetsTaxonomiesRepository.Get(
-                            at => at.TaxonomyItemId == entry.TaxonomyItemId).FirstOrDefault();
+                        var item = _unitOfWork.TaxonomyItemRepository.GeTaxonomyItembyId(entry.TaxonomyItemId);
                         if (item != null)
                         {
-                            categories.Add(item.TaxonomyItemName + ", ");
+                            categories.Add(item.Name + ", ");
                         }
                     }
                     if (entry.DepartmentID != 0)
