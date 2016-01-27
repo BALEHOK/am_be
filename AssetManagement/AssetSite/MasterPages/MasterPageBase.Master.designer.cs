@@ -67,24 +67,6 @@ namespace AssetSite.MasterPages {
         protected global::System.Web.UI.WebControls.LoginName LoginName1;
         
         /// <summary>
-        /// linkMySettings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink linkMySettings;
-        
-        /// <summary>
-        /// lblBuild control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBuild;
-        
-        /// <summary>
         /// BreadcrumbPlaceholder control.
         /// </summary>
         /// <remarks>
@@ -92,15 +74,6 @@ namespace AssetSite.MasterPages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder BreadcrumbPlaceholder;
-        
-        /// <summary>
-        /// addUrl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor addUrl;
         
         /// <summary>
         /// PlaceHolderSearchBox control.
@@ -128,5 +101,14 @@ namespace AssetSite.MasterPages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCopyright;
+        
+        /// <summary>
+        /// lblBuild control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBuild;
     }
 }

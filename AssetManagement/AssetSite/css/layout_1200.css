@@ -197,20 +197,12 @@ body
 	
 	width: 1200px; /*950px;*/
 }
-#masthead
+
+#mastheadwrapper, #mastheadwrapper img
 {
-	border-bottom: solid 1px #000;	/* three of the four sides of this block
-									   will already have borders courtesy of
-									   the #page-container element so we 
-									   only need to render the bottom. */
-	padding-top: 1px;				/* prevent margin collapse. would need 1px
-									   bottom padding too if we didn't have the
-									   1px bottom border. */
+	height:91px;
 }
-#mastheadwrapper
-{
-	height:120px;
-}
+
 #inner-column-container
 {
 	border: solid 1px #000;
@@ -479,25 +471,6 @@ body
 }
 
 /******************************************************************************/
-
-#headleft
-{
-	width: 226px;
-}
-
-#headleft #companylogo
-{
-	margin: 17px 0 0 17px;
-}
-
-#headright
-{
-	width: 971px;
-	height:91px;
-	border-left: 0px solid;
-	border-bottom:1px solid;
-	background-repeat:no-repeat;
-}
 
 .headmenu
 {

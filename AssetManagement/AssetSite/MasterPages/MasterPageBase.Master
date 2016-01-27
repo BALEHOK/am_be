@@ -24,103 +24,69 @@
     <asp:ContentPlaceHolder ID="ContentPlaceHolderHead" runat="server">
     </asp:ContentPlaceHolder>
     <style type="text/css">
-        #source-order-container
-        {
+        #source-order-container {
             margin: 0;
         }
     </style>
-    <script type="text/javascript" 
-	src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=false"></script>
 </head>
 <body class="<%=this.BodyClass%>" onload="<%=this.BodyOnLoadScript%>">
 
-<script type="text/javascript">
-    var uid = (function () { var id = 0; return function () { if (arguments[0] === 0) id = 0; return id++; } })();
-</script>
+    <script type="text/javascript">
+        var uid = (function () { var id = 0; return function () { if (arguments[0] === 0) id = 0; return id++; } })();
+    </script>
 
-<div id="waitMessage">
+    <div id="waitMessage">
         <span id="progress_image" style="vertical-align: middle;" />
-</div>
+    </div>
 
     <form runat="server" id="appform">
-    <div id="page-container">
-        <div id="masthead">
+        <div id="page-container">
             <div id="mastheadwrapper">
-                <div id="headright" style="float: right;">
-             
-                    <div runat="server" id="logoffblock" ClientIDMode="Static">
-                        <asp:Label runat="server" ID="lblLoggedAs" meta:resourcekey="lblLoggedAsResource1"
-                            Text="Logged as"></asp:Label>:
-                        <asp:LoginName ID="LoginName1" runat="server" Font-Bold="true" />
-                        <br />
-                        (<%= UserRoles %>)<br />
-                        <asp:HyperLink ID="linkMySettings" runat="server" meta:resourcekey="linkMySettings"
-                            Text="My Settings" NavigateUrl="~/MySettings.aspx" />
-                        <asp:HyperLink runat="server" NavigateUrl="/logout" meta:resourcekey="HyperLinkResource1" Text="Afmelden" />
-                    </div>
-          
-                    <div id="clickable-area" onclick="javascript:location.href='/'">
-                    </div>
-                </div>
-                <div id="headleft">
-                    <asp:HyperLink runat="server" ImageUrl="~/images/companylogo.gif" NavigateUrl="/"></asp:HyperLink>
-                </div>
-                <div id="menubar" class="clear toleft" style="width: 100%;">
-                    <div id="menubarleft">
-                        <div class="toleft BuildText">
-                            <asp:Label runat="server" ID="lblBuild" />
-                        </div>
-                        <div id="homemailicons" class="toright">
-                            <a href="/FAQ.aspx" id="faqIcon">
-                                <img src="/images/faq_normal.jpg" alt="faq" />
-                            </a><a href="/Contact.aspx" id="mailIcon">
-                                <img src="/images/mail_normal.jpg" alt="mail" />
-                            </a>
-                            <script type="text/javascript">
-                                $(document).ready(function () {
-                                    $('#faqIcon img').hover(function () { $(this).attr('src', '/images/faq_hover.jpg'); }, function () { $(this).attr('src', '/images/faq_normal.jpg'); });
-                                    $('#mailIcon img').hover(function () { $(this).attr('src', '/images/mail_hover.jpg'); }, function () { $(this).attr('src', '/images/mail_normal.jpg'); });
-                                });
-                            </script>
-                        </div>
-                    </div>
-                    <!-- TopMenu -->
-                    <uc:TopMenu runat="server" />
+                <a href="/"><img src="/images/headerban-flexmis.png" alt="FlexMIS Logo" /></a>
+                <div runat="server" id="logoffblock" clientidmode="Static">
+                    <asp:Label runat="server" ID="lblLoggedAs" meta:resourcekey="lblLoggedAsResource1"
+                        Text="Logged as"></asp:Label>:
+                            <asp:LoginName ID="LoginName1" runat="server" Font-Bold="true" />
+                    <br />
+                    (<%= UserRoles %>)<br />
+
+                    <asp:HyperLink runat="server" NavigateUrl="/logout" meta:resourcekey="HyperLinkResource1" Text="Afmelden" />
+
                 </div>
             </div>
+            <div id="breadcrumb">
+                <asp:ContentPlaceHolder runat="server" ID="BreadcrumbPlaceholder" />
+                <div style="right: 60px; top: 2px; position: absolute;">
+                    <a href="/FAQ.aspx" id="faqIcon">
+                        <img src="/images/faq_normal.jpg" alt="faq" />
+                    </a><a href="<%= "mailto:" + ConfigurationManager.AppSettings["contactFormRecipients"] %>" id="mailIcon">
+                        <img src="/images/mail_normal.jpg" alt="mail" />
+                    </a>
+                </div>
+            </div>
+            <asp:ContentPlaceHolder ID="PlaceHolderSearchBox" runat="server" />
+            <div id="outer-column-container">
+                <asp:ContentPlaceHolder ID="PlaceHolderMainContent" runat="server" />
+            </div>
         </div>
-        <div id="breadcrumb">
-            <asp:ContentPlaceHolder runat="server" ID="BreadcrumbPlaceholder">
-            </asp:ContentPlaceHolder>
-            <div class="newAsset">
-                &nbsp;<a runat="server" id="addUrl" href="/Asset/New/Step1.aspx"><asp:Image 
-                    runat="server" 
-                    ImageUrl="~/images/buttons/document--plus.png" 
-                    meta:resourcekey="btnNewAsset"  /></a></div>
-                      
-        </div>
-        <asp:ContentPlaceHolder ID="PlaceHolderSearchBox" runat="server">
-        </asp:ContentPlaceHolder>
-        <div id="outer-column-container">
-            <asp:ContentPlaceHolder ID="PlaceHolderMainContent" runat="server">
-            </asp:ContentPlaceHolder>
-        </div>
-    </div>
-    <div class="push">
-    </div>
+        <div class="push"></div>
     </form>
     <div id="footer">
         <div class="copyright inside">
-            &copy;&nbsp;<%= DateTime.Now.Year %>&nbsp;<asp:Label runat="server" ID="lblCopyright"
-                Text="ACV-CSC METEA" meta:resourcekey="lblCopyrightResource1"></asp:Label>
-            &nbsp;<asp:HyperLink runat="server" NavigateUrl="~/Contact.aspx" CssClass="ContactLink">Contact</asp:HyperLink>
+            &copy;&nbsp;<%= DateTime.Now.Year %>&nbsp;<asp:Label runat="server" ID="lblCopyright" Text="FlexMIS" />
+            &nbsp;<asp:Label runat="server" ID="lblBuild" />
+            &nbsp;<a href="<%= "mailto:" + ConfigurationManager.AppSettings["contactFormRecipients"] %>">Contact</a>
         </div>
     </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('input[type="text"]').first().attr("autofocus", "focus");
-        $('[autofocus]').focus();
-    });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[type="text"]').first().attr("autofocus", "focus");
+            $('[autofocus]').focus();
+            $('#faqIcon img').hover(function () { $(this).attr('src', '/images/faq_hover.jpg'); }, function () { $(this).attr('src', '/images/faq_normal.jpg'); });
+            $('#mailIcon img').hover(function () { $(this).attr('src', '/images/mail_hover.jpg'); }, function () { $(this).attr('src', '/images/mail_normal.jpg'); });
+        });
+    </script>
 </body>
 </html>

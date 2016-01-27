@@ -154,23 +154,6 @@ body.columns2 #outer-column-container
 	background-repeat:repeat-y;
 }
 
-#headright
-{
-	border-color: #b8b8b8;
-	background-image:url('../images/headerban.jpg');	
-}
-
-#headright #clickable-area
-{
-	height: 100%;
-	cursor: pointer;
-	margin-right: 150px;
-}
-
-#companylogo
-{
-}
-
 #logoffblock
 {
 	color:#666666;

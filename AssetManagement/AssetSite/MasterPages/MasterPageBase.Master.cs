@@ -77,16 +77,6 @@ namespace AssetSite.MasterPages
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (this.Page.GetType().Name == "login_aspx")
-            {
-                addUrl.Visible = false;
-            }
-
-            if (Request["AstType"] != null)
-            {
-                addUrl.HRef = "/Asset/New/Step2.aspx?atid=" + Request["AstType"].ToString();
-            }
-
             if (ApplicationSettings.ApplicationType == ApplicationType.AssetManager)
             {
                 lblBuild.Text = "AssetManager Build v. ";

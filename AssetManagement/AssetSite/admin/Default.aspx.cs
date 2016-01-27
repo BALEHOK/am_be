@@ -19,10 +19,8 @@ namespace AssetSite.admin
                 panelConfigureObjects.Visible = false;
                 panelConfigureTaxonomies.Visible = false;
                 linkTypesAndValidation.Visible = false;
-                linkContexts.Visible = false;
                 linkSynchronization.Visible = false;
                 linkSearch.Visible = false;
-                linkGlobalSettings.Visible = false;
             }
         }
 

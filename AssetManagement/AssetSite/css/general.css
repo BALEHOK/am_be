@@ -402,3 +402,7 @@ p.hiddenp						/* Sometimes used before block with background-color (IE-hack) */
 #tellfriend form textarea {
 	height: 80px;
 }
+
+.obsolete {
+    color: grey;
+}

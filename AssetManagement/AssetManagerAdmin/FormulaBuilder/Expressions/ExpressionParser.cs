@@ -33,7 +33,7 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
             _currentExpression = null;
             _stack.Clear();
 
-            if (!string.IsNullOrEmpty(expressionString))
+            if (expressionString != string.Empty)
             {
                 var expression = Expression.Compile(expressionString, false);
                 var visitor = new ExpressionVisitor();

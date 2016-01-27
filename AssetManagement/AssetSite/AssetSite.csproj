@@ -313,6 +313,7 @@
     <Content Include="amDataService.asmx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="images\buttons\calculate.png" />
+    <Content Include="images\headerban-flexmis.png" />
     <Content Include="Reservations\Overview.aspx" />
     <Content Include="barcodeImage.aspx" />
     <Content Include="ClientBin\ReportDesigner.xap" />
@@ -1352,7 +1353,6 @@
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
       <DependentUpon>ViewTransactions.aspx</DependentUpon>
@@ -1492,7 +1492,6 @@
     </Compile>
     <Compile Include="Asset\History.aspx.cs">
       <DependentUpon>History.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Asset\History.aspx.designer.cs">
       <DependentUpon>History.aspx</DependentUpon>

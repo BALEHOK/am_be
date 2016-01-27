@@ -317,7 +317,7 @@ namespace AssetManagerAdmin.ViewModels
             }
             catch (Exception ex)
             {
-                var message = string.Format("This attribute has invalid formula\r\n{0}",
+                var message = string.Format("This attribute has invalid formula:\r\n{0}",
                     formulaText);
                 _logger.Error(message, ex);
                 MessageBox.Show(message);
@@ -535,6 +535,14 @@ namespace AssetManagerAdmin.ViewModels
 
         private void LoadTypesInfo(FormulaBuilderContextType context)
         {
+            Grammar = GetGrammar(context);
+            Builder = new ExpressionBuilder(_dataProvider, Grammar);
+            Builder.OnExpressionChanged += (sender, args) =>
+            {
+                FormulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
+            };
+            ExpressionParser = new ExpressionParser(_dataProvider, Builder, Grammar);
+
             _dataService.GetTypesInfo(Context.CurrentUser, Context.CurrentServer.ApiUrl)
                 .ContinueWith(result =>
             {
@@ -559,15 +567,6 @@ namespace AssetManagerAdmin.ViewModels
                 IsScreenAttributesSelectorVisible = context == FormulaBuilderContextType.ScreenFormulas;
 
                 AssetTypesList = _dataProvider.AssetTypes;
-
-
-                Grammar = GetGrammar(context);
-                Builder = new ExpressionBuilder(_dataProvider, Grammar);
-                Builder.OnExpressionChanged += (sender, args) =>
-                {
-                    FormulaText = Builder.Expression != null ? Builder.Expression.ToString() : string.Empty;
-                };
-                ExpressionParser = new ExpressionParser(_dataProvider, Builder, Grammar);
             }, 
             TaskContinuationOptions.OnlyOnRanToCompletion);
         }
