@@ -137,6 +137,7 @@ namespace AssetManagerAdmin.ViewModels
                 RaisePropertyChanged(AttributeTypePropertyName);
 
                 LoadAttribute(AttributeType);
+                SaveFormulaCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -221,7 +222,7 @@ namespace AssetManagerAdmin.ViewModels
             get
             {
                 return _saveFormulaCommand ??
-                       (_saveFormulaCommand = new RelayCommand(ExecuteSaveFormulaCommand, () => AttributeType != null));
+                       (_saveFormulaCommand = new RelayCommand(ExecuteSaveFormulaCommand, CanExecuteSaveFormulaCommand));
             }
         }
         
@@ -238,6 +239,11 @@ namespace AssetManagerAdmin.ViewModels
         {
             MessengerInstance.Send((object)null, AppActions.ClearTypesInfoCache);
             LoadTypesInfo(_currentFormulaContext);
+        }
+
+        private bool CanExecuteSaveFormulaCommand()
+        {
+            return AttributeType != null;
         }
 
         private void ExecuteSaveFormulaCommand()
@@ -288,7 +294,7 @@ namespace AssetManagerAdmin.ViewModels
 
             _dataProvider.CurrentAttributeType = attributeInfo;
 
-            string formulaText;
+            var formulaText = string.Empty;
 
             switch (_currentFormulaContext)
             {
@@ -305,20 +311,14 @@ namespace AssetManagerAdmin.ViewModels
                     return;
             }
 
-//            if (Builder != null)
-//                Builder.Reset(true);
-
-            if (formulaText == null)
-                return;
-
             try
             {
-                ExpressionParser.Parse(formulaText.Trim());
+                ExpressionParser.Parse(formulaText);
             }
             catch (Exception ex)
             {
                 var message = string.Format("This attribute has invalid formula\r\n{0}",
-                    formulaText.Trim());
+                    formulaText);
                 _logger.Error(message, ex);
                 MessageBox.Show(message);
             }

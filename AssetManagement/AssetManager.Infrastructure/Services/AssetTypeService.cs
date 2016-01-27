@@ -10,12 +10,6 @@ using AssetManager.Infrastructure.Models.TypeModels;
 
 namespace AssetManager.Infrastructure.Services
 {
-    public interface IAssetTypeService
-    {
-        TypesInfoModel GetAssetTypes(bool loadAttributes = false, bool loadScreens = false);
-        AssetTypeModel GetAssetType(long id, bool loadAttributes = false);
-    }
-
     public class AssetTypeService : IAssetTypeService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -52,6 +46,14 @@ namespace AssetManager.Infrastructure.Services
                 : null;
         }
 
+        public IEnumerable<DynEntityConfig> GetAssetTypesByIds(IEnumerable<long> typesToload)
+        {
+            return _unitOfWork.DynEntityConfigRepository
+                .Get(c =>
+                    c.ActiveVersion
+                    && typesToload.Any(id => c.DynEntityConfigId == id));
+        }
+
         public TypesInfoModel GetAssetTypes(bool loadAttributes = false, bool loadScreens = false)
         {
             var activeConfigs = _unitOfWork.DynEntityConfigRepository
@@ -71,7 +73,8 @@ namespace AssetManager.Infrastructure.Services
             };
         }
 
-        private static AssetTypeModel CreateAssetTypeModel(DynEntityConfig typeConfig, bool loadAttributes, bool showOnPanelOnlyAttributes = false)
+        private static AssetTypeModel CreateAssetTypeModel(DynEntityConfig typeConfig, bool loadAttributes,
+            bool showOnPanelOnlyAttributes = false)
         {
             return new AssetTypeModel
             {
@@ -104,7 +107,7 @@ namespace AssetManager.Infrastructure.Services
                             DisplayOrder = a.DisplayOrder,
                             ValidationExpression = a.ValidationExpr,
                             CalculationFormula = a.CalculationFormula,
-                            DataType = (Enumerators.DataType)Enum.Parse(dataTypeEnum, a.DataType.Name, true)
+                            DataType = (Enumerators.DataType) Enum.Parse(dataTypeEnum, a.DataType.Name, true)
                         };
                         return attributeInfo;
                     }).OrderBy(a => a.DisplayOrder).ToList();
@@ -112,7 +115,7 @@ namespace AssetManager.Infrastructure.Services
         }
 
         private void LoadScreens(List<AssetTypeModel> typesInfo)
-        {   
+        {
             typesInfo.ForEach(type =>
             {
                 var screens = _screensService.GetScreensByAssetTypeUid(type.Uid);

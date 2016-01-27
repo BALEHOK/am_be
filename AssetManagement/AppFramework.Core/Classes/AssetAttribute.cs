@@ -171,7 +171,7 @@ namespace AppFramework.Core.Classes
                     if (_configuration.DataTypeEnum == Enumerators.DataType.DynList
                         || _configuration.DataTypeEnum == Enumerators.DataType.DynLists)
                     {
-                        if (ParentAsset.UID > 0)
+                        if (ParentAsset != null && ParentAsset.UID > 0)
                         {
                             _dynamicListValues = _dynamicListsService
                                 .GetLegacyListValues(Configuration, ParentAsset.UID)

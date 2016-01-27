@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Reports.Services;
 using AssetManager.Infrastructure.Extensions;
-using AssetManager.Infrastructure.Models;
-using WebApi.OutputCache.V2;
 using AssetManager.Infrastructure.Helpers;
+using AssetManager.Infrastructure.Models;
+using AssetManager.Infrastructure.Services;
 using Common.Logging;
+using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -18,17 +19,19 @@ namespace AssetManager.WebApi.Controllers.Api
     public class CustomReportsController : ApiController
     {
         private readonly ICustomReportService _customReportService;
+        private readonly IAssetTypeService _assetTypeService;
         private readonly ILog _logger;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="customReportService"></param>
         public CustomReportsController(
             ICustomReportService customReportService,
+            IAssetTypeService assetTypeService,
             ILog logger)
         {
             _customReportService = customReportService;
+            _assetTypeService = assetTypeService;
             _logger = logger;
         }
 
@@ -39,9 +42,17 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("list"), Route(""), HttpGet]
         public List<CustomReportModel> ReportsList()
         {
-            return _customReportService
-                .GetAllReports(User.GetId())
-                .Select(r => r.ToModel())
+            var reports = _customReportService
+                .GetAllReports(User.GetId());
+
+            var relatedAssetTypes =
+                _assetTypeService.GetAssetTypesByIds(
+                    reports
+                        .Select(r => r.DynEntityConfigId.GetValueOrDefault())
+                        .Distinct())
+                    .ToDictionary(t => t.DynEntityConfigId, t => t.NameLocalized());
+
+            return reports.Select(r => r.ToModel(relatedAssetTypes))
                 .ToList();
         }
 
@@ -53,9 +64,11 @@ namespace AssetManager.WebApi.Controllers.Api
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
         public List<CustomReportModel> GetReportsByAssetTypeId(long assetTypeId)
         {
+            var assetType = _assetTypeService.GetAssetType(assetTypeId);
+
             return _customReportService
                 .GetReportsByAssetTypeId(assetTypeId, User.GetId())
-                .Select(r => r.ToModel())
+                .Select(r => r.ToModel(new Dictionary<long, string> {{assetTypeId, assetType.DisplayName}}))
                 .ToList();
         }
 

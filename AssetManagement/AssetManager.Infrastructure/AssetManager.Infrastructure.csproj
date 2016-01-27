@@ -183,6 +183,7 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\HistoryService.cs" />
     <Compile Include="Services\IAssetService.cs" />
+    <Compile Include="Services\IAssetTypeService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\IDataTypeService.cs" />
     <Compile Include="Services\IExportService.cs" />

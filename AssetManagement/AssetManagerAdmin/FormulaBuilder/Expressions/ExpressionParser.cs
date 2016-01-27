@@ -21,23 +21,27 @@ namespace AssetManagerAdmin.FormulaBuilder.Expressions
             _expressionEntryFactory = new ExpressionEntryFactory(builder, grammar, dataProvider);
         }
 
-        public ExpressionEntry Parse(string expressionString)
+        public ExpressionEntry Parse(string input)
         {
-            if (string.IsNullOrEmpty(expressionString))
-                return null;
-
-            var expression = Expression.Compile(expressionString, false);
+            var expressionString = string.Empty;
+            if (input != null)
+            {
+                expressionString = input.Trim();
+            }
 
             _rootEntry = null;
             _currentExpression = null;
             _stack.Clear();
 
-            var visitor = new ExpressionVisitor();
-            visitor.OnNewEntry += (sender, exp) => ConnectExpression(exp);
-            expression.Accept(visitor);
-
+            if (!string.IsNullOrEmpty(expressionString))
+            {
+                var expression = Expression.Compile(expressionString, false);
+                var visitor = new ExpressionVisitor();
+                visitor.OnNewEntry += (sender, exp) => ConnectExpression(exp);
+                expression.Accept(visitor);
+            }
+            
             _builder.SetRootEntry(_rootEntry);
-
             return _rootEntry;
         }
 
