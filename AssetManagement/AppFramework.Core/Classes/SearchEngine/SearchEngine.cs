@@ -330,14 +330,35 @@ namespace AppFramework.Core.Classes.SearchEngine
                 throw new EntityNotFoundException("Cannot find search request parameters by given SearchId");
 
             var parameters = SearchParameters.GetFromXml(searchTracking.Parameters);
-            return FindByKeywords(
-                parameters.QueryString,
-                searchId,
-                userId,
-                parameters.ConfigsIds,
-                parameters.TaxonomyItemsIds,
-                parameters.Time,
-                parameters.Order, 1, int.MaxValue, false);
+            var searchType = (SearchType) searchTracking.SearchType;
+
+            switch (searchType)
+            {
+                case SearchType.SearchByType:
+                {
+                    return FindByType(
+                        searchId,
+                        userId,
+                        long.Parse(parameters.ConfigsIds),
+                        parameters.Elements,
+                        parameters.TaxonomyItemsIds,
+                        parameters.Time,
+                        parameters.Order, 1, int.MaxValue, false);
+                }
+                case SearchType.SearchByKeywords:
+                {
+                    return FindByKeywords(
+                        parameters.QueryString,
+                        searchId,
+                        userId,
+                        parameters.ConfigsIds,
+                        parameters.TaxonomyItemsIds,
+                        parameters.Time,
+                        parameters.Order, 1, int.MaxValue, false);
+                }
+            }
+
+            return new List<IIndexEntity>();
         }
     }
 }
