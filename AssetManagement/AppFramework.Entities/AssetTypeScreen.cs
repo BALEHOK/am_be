@@ -240,6 +240,21 @@ namespace AppFramework.Entities
             }
         }
         private System.Guid _screenUid;
+    
+        [DataMember]
+        public bool IsMobile
+        {
+            get { return _isMobile; }
+            set
+            {
+                if (_isMobile != value)
+                {
+                    _isMobile = value;
+                    OnPropertyChanged("IsMobile");
+                }
+            }
+        }
+        private bool _isMobile;
 
         #endregion
 

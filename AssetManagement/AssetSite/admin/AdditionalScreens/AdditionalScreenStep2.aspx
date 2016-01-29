@@ -111,6 +111,14 @@
                     </tr>
                     <tr>
                         <td class="labels">
+                            <asp:Label ID="lblMobile" runat="server" Text="Is Mobile"></asp:Label>
+                        </td>
+                        <td class="controls">
+                            <asp:CheckBox ID="chkIsMobile" runat="server"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="labels">
                             <asp:Label ID="lblStatus" runat="server" Text="Status"></asp:Label>
                         </td>
                         <td class="controls">

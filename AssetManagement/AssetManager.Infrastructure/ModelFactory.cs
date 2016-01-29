@@ -314,6 +314,7 @@ namespace AssetManager.Infrastructure
                     Id = s.ScreenId,
                     Name = s.Name,
                     IsDefault = s.IsDefault,
+                    IsMobile = s.IsMobile,
                     LayoutType = s.ScreenLayout.Type,
                     Panels = _panelsAdapter.GetPanelsByScreen(asset, s)
                         .ToPanelModels(GetAttributeModel),

@@ -16,6 +16,7 @@ namespace AssetSite.admin.AdditionalScreens
             if (IsPostBack)
                 return;
             chkIsDeafult.Checked = _currentScreen.IsDefault;
+            chkIsMobile.Checked = _currentScreen.IsMobile;
             txtName.Text = _currentScreen.Name;
             tbTitle.Text = _currentScreen.Title;
             tbSubTitle.Text = _currentScreen.Subtitle;
@@ -100,6 +101,7 @@ namespace AssetSite.admin.AdditionalScreens
                 _currentScreen.Subtitle = tbSubTitle.Text;
                 _currentScreen.Title = tbTitle.Text;
                 _currentScreen.IsDefault = chkIsDeafult.Checked;
+                _currentScreen.IsMobile = chkIsMobile.Checked;
                 _currentScreen.UpdateDate = DateTime.Now;
                 _currentScreen.UpdateUserId = AuthenticationService.CurrentUserId;
                 _currentScreen.DynEntityConfigUid = _currentType.UID;

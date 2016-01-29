@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace AssetManager.Infrastructure.Models
 {
@@ -12,6 +9,8 @@ namespace AssetManager.Infrastructure.Models
         public string Name { get; set; }
 
         public bool IsDefault { get; set; }
+
+        public bool IsMobile { get; set; }
 
         public long Id { get; set; }
 

@@ -29,6 +29,7 @@
           <Property Name="LayoutId" Type="int" Nullable="false" />
           <Property Name="IsDefault" Type="bit" Nullable="false" />
           <Property Name="ScreenUid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsMobile" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AttributePanel">
           <Key>
@@ -748,8 +749,8 @@
           <Property Name="TaxonomyId" Type="int" Nullable="false" />
           <Property Name="Revision" Type="int" Nullable="false" />
           <Property Name="ActiveVersion" Type="bit" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="NameTranslationId" Type="nvarchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="NameTranslationId" Type="nvarchar" MaxLength="255" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsCategory" Type="bit" Nullable="false" />
@@ -2501,8 +2502,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Int32" Name="TaxonomyId" Nullable="false" />
           <Property Type="Int32" Name="Revision" Nullable="false" />
           <Property Type="Boolean" Name="ActiveVersion" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="NameTranslationId" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="NameTranslationId" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Description" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <Property Type="Boolean" Name="IsCategory" Nullable="false" />
@@ -2921,6 +2922,7 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="DynEntityAttribScreens" Relationship="DataModel.FK_DynEntityAttribScreens_ScreenId" FromRole="AssetTypeScreen" ToRole="DynEntityAttribScreens" />
           <Property Type="Guid" Name="ScreenUid" Nullable="false" />
           <NavigationProperty Name="ScreenLayout" Relationship="DataModel.FK_AssetTypeScreen_ScreenLayout" FromRole="AssetTypeScreen" ToRole="ScreenLayout" />
+          <Property Name="IsMobile" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="DynEntityAttribScreens">
           <Key>
@@ -4283,7 +4285,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
     <EntitySetMapping Name="AssetTypeScreen">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.AssetTypeScreen)">
         <MappingFragment StoreEntitySet="AssetTypeScreen">
-          <ScalarProperty Name="ScreenUid" ColumnName="ScreenUid" />
+          <ScalarProperty Name="IsMobile" ColumnName="IsMobile" />
+                <ScalarProperty Name="ScreenUid" ColumnName="ScreenUid" />
                 <ScalarProperty Name="ScreenId" ColumnName="ScreenId" />
           <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
           <ScalarProperty Name="Name" ColumnName="Name" />
