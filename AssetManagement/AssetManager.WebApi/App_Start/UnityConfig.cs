@@ -52,8 +52,7 @@ namespace AssetManager.WebApi
                 .AddNewExtension<InfrastructureConfiguration>()
                 .AddNewExtension<EmailConfiguration>()
                 .AddNewExtension<CommonConfiguration>()
-                .AddNewExtension<ReportsConfiguration>()
-                .RegisterType<IHttpHandler, FileHandler>("/FileHandler.ashx");
+                .AddNewExtension<ReportsConfiguration>();
         }
     }
 }

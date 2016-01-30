@@ -9,6 +9,7 @@ using AssetSite.UnitTests.Fixtures;
 using Moq;
 using Xunit;
 using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit;
 
 namespace AssetSite.UnitTests.Services
 {
@@ -21,11 +22,12 @@ namespace AssetSite.UnitTests.Services
         public void FileService_GetAttributeMediaType_ShouldReturnFileMediaType(
             long assetTypeId,
             long attributeId,
-            Mock<IEnvironmentSettings> envSettingsMock,
-            Mock<IAttributeRepository> attributeRepositoryMock)
+            [Frozen]Mock<IEnvironmentSettings> envSettingsMock,
+            [Frozen]Mock<IAttributeRepository> attributeRepositoryMock,
+            FileService sut)
         {
             // Arrange
-            envSettingsMock.Setup(x => x.GetDocsUploadDirectory(assetTypeId, attributeId))
+            envSettingsMock.Setup(x => x.GetDocsUploadBaseDir())
                 .Returns(DOCS_UPLOADS_DIR);
 
             attributeRepositoryMock
@@ -37,7 +39,6 @@ namespace AssetSite.UnitTests.Services
                     DataType = new DataType {Name = "file"}
                 });
 
-            var sut = new FileService(envSettingsMock.Object, attributeRepositoryMock.Object);
             // Act
             var result = sut.GetAttributeMediaType(assetTypeId, attributeId);
             // Assert
@@ -48,11 +49,12 @@ namespace AssetSite.UnitTests.Services
         public void FileService_GetAttributeMediaType_ShouldReturnImageMediaType(
             long assetTypeId,
             long attributeId,
-            Mock<IEnvironmentSettings> envSettingsMock,
-            Mock<IAttributeRepository> attributeRepositoryMock)
+            [Frozen]Mock<IEnvironmentSettings> envSettingsMock,
+            [Frozen]Mock<IAttributeRepository> attributeRepositoryMock,
+            FileService sut)
         {
             // Arrange
-            envSettingsMock.Setup(x => x.GetDocsUploadDirectory(assetTypeId, attributeId))
+            envSettingsMock.Setup(x => x.GetDocsUploadBaseDir())
                 .Returns(DOCS_UPLOADS_DIR);
             attributeRepositoryMock
                 .Setup(x => x.GetPublishedById(
@@ -62,31 +64,11 @@ namespace AssetSite.UnitTests.Services
                 {
                     DataType = new DataType {Name = "image"}
                 });
-            var sut = new FileService(envSettingsMock.Object, attributeRepositoryMock.Object);
+
             // Act
             var result = sut.GetAttributeMediaType(assetTypeId, attributeId);
             // Assert
             Assert.Equal(Enumerators.MediaType.Image, result);
-        }
-
-        [Theory, AutoDomainData]
-        public void FileService_GetRelativeFilepathByIds_ReturnsFilepath(
-            long assetTypeId,
-            long attributeId,
-            long assetId,
-            Mock<IEnvironmentSettings> envSettingsMock,
-            Mock<IAttributeRepository> attributeRepositoryMock)
-        {
-            // Arrange
-            var anonymousFilename = "picture.jpg";
-            var expected = string.Format("{0}/{1}", IMAGES_UPLOADS_DIR, anonymousFilename);
-            envSettingsMock.Setup(x => x.GetImagesUploadDirectory(assetTypeId, attributeId))
-                .Returns(IMAGES_UPLOADS_DIR);
-            var sut = new FileService(envSettingsMock.Object, attributeRepositoryMock.Object);
-            // Act
-            var result = sut.GetRelativeFilepath(assetTypeId, attributeId, "image", anonymousFilename);
-            // Assert
-            Assert.Equal(expected, result);
         }
     }
 }

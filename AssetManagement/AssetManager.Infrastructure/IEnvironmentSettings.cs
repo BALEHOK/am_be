@@ -14,10 +14,14 @@ namespace AssetManager.Infrastructure
 
         string Escape(string stringToEscape);
 
-        string GetDocsUploadDirectory(long assetTypeId, long attributeId);
+        string GetDocsUploadBaseDir();
 
-        string GetImagesUploadDirectory(long assetTypeId, long attributeId);
+        string GetImagesUploadBaseDir();
 
         string GetCacheDirectory();
+
+        string GetAssetMediaHttpRoot();
+
+        string GetAssetMediaRelativePath(long assetTypeId, long attributeId);
     }
 }

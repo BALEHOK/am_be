@@ -3,7 +3,6 @@ using AssetManager.Infrastructure.Models;
 using AssetManager.Infrastructure.Services;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using System.Web.Hosting;
 using System.Web.Http;
 using AppFramework.ConstantsEnumerators;
 using Common.Logging;
+using AssetManager.Infrastructure;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
@@ -20,15 +20,20 @@ namespace AssetManager.WebApi.Controllers.Api
         private readonly IFileService _fileService;
         private readonly IValidationService _validationService;
         private readonly ILog _logger;
+        private readonly IEnvironmentSettings _envSettings;
 
         public UploadsController(
             IFileService fileService,
+            IEnvironmentSettings envSettings,
             IValidationService validationService,
             ILog logger)
         {
             if (fileService == null)
                 throw new ArgumentNullException("fileService");
             _fileService = fileService;
+            if (envSettings == null)
+                throw new ArgumentNullException("envSettings");
+            _envSettings = envSettings;
             if (validationService == null)
                 throw new ArgumentNullException("validationService");
             _validationService = validationService;
@@ -41,74 +46,58 @@ namespace AssetManager.WebApi.Controllers.Api
         public async Task<HttpResponseMessage> PostFile(
             long assetTypeId, long attributeId, long? assetId = null)
         {
-            HttpRequestMessage request = this.Request;
-            if (!request.Content.IsMimeMultipartContent())
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(
+                    HttpStatusCode.UnsupportedMediaType);
 
             var fileType = _fileService.GetAttributeMediaType(
                 assetTypeId, attributeId);
-            var uploadsDirRelPath = string.Empty;
-            switch (fileType)
-            {
-                case Enumerators.MediaType.File:
-                    uploadsDirRelPath = _fileService.GetDocsUploadDirectory(
-                        assetTypeId, attributeId);
-                    break;
-                case Enumerators.MediaType.Image:
-                    uploadsDirRelPath = _fileService.GetImagesUploadDirectory(
-                        assetTypeId, attributeId);
-                    break;
-                case Enumerators.MediaType.ReportTemplate:
-                    uploadsDirRelPath = _fileService.GetReportTemplatesUploadDirectory();
-                    break;
-            }
 
-            var root = HostingEnvironment.MapPath(uploadsDirRelPath);
-            if (!Directory.Exists(root))
-                Directory.CreateDirectory(root);
-            var provider = new MultipartFormDataStreamProvider(root);
-            await request.Content.ReadAsMultipartAsync(provider);
+            var relativePath = _envSettings.GetAssetMediaRelativePath(
+                assetTypeId, attributeId);
 
-            var fileData = provider.FileData.First();
-            var fileName = fileData.Headers.ContentDisposition.FileName;
-            if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
-                fileName = fileName.Trim('"');
-            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
-                fileName = Path.GetFileName(fileName);
+            var uploadsDir = string.Format("{0}/{1}",
+                fileType == Enumerators.MediaType.File
+                    ? _envSettings.GetDocsUploadBaseDir()
+                    : _envSettings.GetImagesUploadBaseDir(),
+                relativePath);
+                  
+            if (!Path.IsPathRooted(uploadsDir))
+                uploadsDir = HostingEnvironment.MapPath(uploadsDir);
+
+            if (!Directory.Exists(uploadsDir))
+                Directory.CreateDirectory(uploadsDir);
+
+            var provider = new MultipartFormDataStreamProvider(uploadsDir);
+            await Request.Content.ReadAsMultipartAsync(provider);
+
+            var destinationFile = _fileService.UploadFile(provider.FileData, uploadsDir);
 
             var validationResult = _validationService.ValidateFileUpload(
-                fileName, fileType);
+                destinationFile.Name, fileType);
 
             if (!validationResult.IsValid)
             {
-                _logger.InfoFormat("Invalid upload: {0}", 
+                destinationFile.Delete();
+
+                _logger.InfoFormat("Invalid upload: {0}",
                     validationResult.GetErrorMessage());
+
                 return Request.CreateErrorResponse(
                     HttpStatusCode.BadRequest,
                     validationResult.GetErrorMessage());
             }
 
-            var destinationFilename = _fileService.GetDestinationFilename(
-                fileName, uploadsDirRelPath);
-
-            _logger.DebugFormat("Uploading {0} to {1}",
-                fileData.LocalFileName, destinationFilename);
-
-            File.Move(fileData.LocalFileName, destinationFilename);
-
-            var result = new UploadResultModel
-            {
-                Filename = Path.GetFileName(destinationFilename)
-            };
-
-            if (fileType == Enumerators.MediaType.Image)
-                result.ImageUrl = string.Format("/{0}/{1}",
-                    uploadsDirRelPath.TrimStart(new[] { '~', '/' }),
-                    Path.GetFileName(destinationFilename));
-
             return Request.CreateResponse(
                 HttpStatusCode.OK,
-                result);
+                new UploadResultModel
+                {
+                    Filename = destinationFile.Name,
+                    ImageUrl = fileType == Enumerators.MediaType.Image
+                        ? string.Format("{0}/{1}/{2}", 
+                            _envSettings.GetAssetMediaHttpRoot(), relativePath, destinationFile.Name)
+                        : string.Empty
+                });
         }
     }
 }

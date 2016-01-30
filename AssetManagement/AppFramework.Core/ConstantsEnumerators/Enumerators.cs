@@ -261,8 +261,7 @@ namespace AppFramework.ConstantsEnumerators
         public enum MediaType
         {
             Image,
-            File,
-            ReportTemplate
+            File
         }
 
         public enum ScreenState

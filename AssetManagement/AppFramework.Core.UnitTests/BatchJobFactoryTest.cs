@@ -59,13 +59,19 @@ namespace AppFramework.Core.UnitTests
             long currentUserId,
             string filepath,
             long assetTypeId,
-            BindingInfo bindings,
             List<string> sheets,
             IUnitOfWork unitOfWork,
             [Frozen] Mock<IAssetTypeRepository> assetTypeRepositoryMock,
             BatchJobFactory sut)
         {
             // Arrange
+            var bindings = new BindingInfo
+            {
+                Bindings = new List<ImportBinding>
+                {
+                    new ImportBinding()
+                }
+            };
             assetTypeRepositoryMock.Setup(m => m.GetById(It.IsAny<long>(), It.IsAny<bool>()))
                 .Returns(new AssetType(new DynEntityConfig {Name = "Test"}, unitOfWork));
             // Act

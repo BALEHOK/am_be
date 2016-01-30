@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
@@ -6,31 +7,36 @@ using AppFramework.Core.Exceptions;
 using AssetManager.Infrastructure.Models;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
+using System.Net.Http;
+using Common.Logging;
+using System.Collections.Generic;
 
 namespace AssetManager.Infrastructure.Services
 {
     public class FileService : IFileService
     {
-        private readonly IEnvironmentSettings _environmentSettings;
+        private readonly IEnvironmentSettings _envSettings;
         private readonly IAttributeRepository _attributeRepository;
+        private readonly ILog _logger;
 
         public FileService(
             IEnvironmentSettings environmentSettings,
-            IAttributeRepository attributeRepository)
+            IAttributeRepository attributeRepository,
+            ILog logger)
         {
             if (environmentSettings == null)
                 throw new ArgumentNullException("environmentSettings");
-            _environmentSettings = environmentSettings;
+            _envSettings = environmentSettings;
             if (attributeRepository == null)
                 throw new ArgumentNullException("attributeRepository");
-            _attributeRepository = attributeRepository;         
+            _attributeRepository = attributeRepository;
+            if (logger == null)
+                throw new ArgumentNullException("logger");
+            _logger = logger;
         }
 
         public Enumerators.MediaType GetAttributeMediaType(long assetTypeId, long attributeId)
         {
-            if (assetTypeId == 0 && attributeId == 0)
-                return Enumerators.MediaType.ReportTemplate;
-
             var attribute = _attributeRepository.GetPublishedById(attributeId, a => a.DataType);
             if (attribute == null)
                 throw new EntityNotFoundException("attribute");
@@ -47,47 +53,67 @@ namespace AssetManager.Infrastructure.Services
                 : Enumerators.MediaType.File;
         }
 
-        public virtual string GetImagesUploadDirectory(long assetTypeId, long attributeId)
+        public FileInfo UploadFile(IEnumerable<MultipartFileData> fileData, string uploadsDir)
         {
-            return _environmentSettings.GetImagesUploadDirectory(assetTypeId, attributeId);
+            if (fileData == null)
+                throw new ArgumentNullException("multipartFileData");
+            if (!fileData.Any())
+                throw new ArgumentException("No file provided to upload");
+
+            var sourceFile = fileData.First();
+            var fileName = sourceFile.Headers.ContentDisposition.FileName;
+            if (fileName.StartsWith("\"") && fileName.EndsWith("\""))
+                fileName = fileName.Trim('"');
+            if (fileName.Contains(@"/") || fileName.Contains(@"\"))
+                fileName = Path.GetFileName(fileName);
+
+            var destinationFilename = _getDestinationFilename(
+               fileName, uploadsDir);
+
+            _logger.DebugFormat("Uploading {0} to {1}",
+                sourceFile.LocalFileName, destinationFilename);
+
+            File.Move(sourceFile.LocalFileName, destinationFilename);
+
+            return new FileInfo(destinationFilename);
         }
 
-        public string GetReportTemplatesUploadDirectory()
-        {            
-            return Path.Combine("~/App_Data/uploads", "report_templates");
-        }
-        
-        public virtual string GetDocsUploadDirectory(long assetTypeId, long attributeId)
-        {            
-            return _environmentSettings.GetDocsUploadDirectory(assetTypeId, attributeId); 
-        }
-
-        public string GetRelativeFilepath(
+        public FileInfo MoveFileOnAssetCreation(
             long assetTypeId,
             long attributeId,
-            string datatype,
-            string value)
+            long relatedAssetTypeId,
+            long relatedAttributeId,
+            string filename)
         {
-            string uploadsDirRelPath;
-            var fileType = datatype == "image"
-                ? Enumerators.MediaType.Image
-                : Enumerators.MediaType.File;
+            var docsBaseDir = _envSettings.GetDocsUploadBaseDir();
 
-            if (fileType == Enumerators.MediaType.Image)
-                uploadsDirRelPath = GetImagesUploadDirectory(assetTypeId, attributeId);
-            else
-                uploadsDirRelPath = GetDocsUploadDirectory(assetTypeId, attributeId);
+            var sourceRelativePath = _envSettings.GetAssetMediaRelativePath(
+                assetTypeId, attributeId);
 
-            return string.Format("{0}/{1}", uploadsDirRelPath, value);
+            var sourceFilepath = HostingEnvironment.MapPath(
+                Path.Combine(docsBaseDir, sourceRelativePath, filename));
+                
+            if (!File.Exists(sourceFilepath))
+                throw new Exception("Cannot find uploaded file to create Document asset");
+
+            var destRelativePath = _envSettings.GetAssetMediaRelativePath(
+                relatedAssetTypeId, relatedAttributeId);
+            var destAbsolutePath = HostingEnvironment.MapPath(
+                Path.Combine(docsBaseDir, destRelativePath));
+            var destFilepath = _getDestinationFilename(
+                filename, destAbsolutePath);
+
+            Directory.CreateDirectory(destAbsolutePath);
+            File.Move(sourceFilepath, destFilepath);
+            return new FileInfo(destFilepath);
         }
 
-        public string GetDestinationFilename(
+        private string _getDestinationFilename(
             string uploadedFilename,
-            string uploadsDirRelPath)
+            string uploadsDir)
         {
             string fileName = Path.GetFileName(uploadedFilename);
-            string uploadsDirFullpath = HostingEnvironment.MapPath(uploadsDirRelPath);
-            string fullFileName = Path.Combine(uploadsDirFullpath, fileName);
+            string fullFileName = Path.Combine(uploadsDir, fileName);
             int attempt = 1;
             while (File.Exists(fullFileName))
             {
@@ -98,33 +124,9 @@ namespace AssetManager.Infrastructure.Services
                     Path.GetExtension(fullFileName),
                     attempt);
                 attempt++;
-                fullFileName = Path.Combine(uploadsDirFullpath, fileName);
+                fullFileName = Path.Combine(uploadsDir, fileName);
             }
             return fullFileName;
-        }
-
-        public string MoveFileOnAssetCreation(
-            long assetTypeId,
-            long attributeId,
-            long relatedAssetTypeId,
-            long relatedAttributeId,
-            string filename)
-        {
-            var initialDir = GetDocsUploadDirectory(
-                assetTypeId, attributeId);
-            var initialFilepath = Path.Combine(HostingEnvironment.MapPath(initialDir), filename);
-            if (!File.Exists(initialFilepath))
-                throw new Exception("Cannot find uploaded file to create Document asset");
-
-            var destinationDir = GetDocsUploadDirectory(
-                relatedAssetTypeId, relatedAttributeId);
-            var destinationFilepath = GetDestinationFilename(
-                filename, destinationDir);
-
-            Directory.CreateDirectory(HostingEnvironment.MapPath(destinationDir));
-            File.Move(initialFilepath, destinationFilepath);
-
-            return destinationFilepath;
         }
     }
 }

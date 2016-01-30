@@ -21,7 +21,7 @@ namespace AppFramework.Core.UnitTests
     {
         private readonly XNamespace _namespace = "http://tempuri.org/AssetManagementAssets.xsd";
 
-        [Theory, AutoDomainData]
+        [Theory(Skip = "To be refactored"), AutoDomainData]
         public void ExcelToXmlConverterTests_ConvertToXml_ReturnsXDocument(
             IUnitOfWork unitOfWork,
             List<string> sheets)

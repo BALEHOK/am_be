@@ -28,7 +28,5 @@ namespace AssetManager.Infrastructure.Models
         public JToken Value { get; set; }
 
         public bool Required { get; set; }
-
-        public bool HasFormula { get; internal set; }
     }
 }

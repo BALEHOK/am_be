@@ -22,7 +22,7 @@ namespace AssetManager.Infrastructure
         private readonly IAssetsService _assetsService;
         private readonly IAssetPanelsAdapter _panelsAdapter;
         private readonly IScreensService _screensService;
-        private readonly IFileService _fileService;
+        private readonly IEnvironmentSettings _envSettings;
         private readonly IBarcodeProvider _barcodeProvider;
 
         public ModelFactory(
@@ -31,7 +31,7 @@ namespace AssetManager.Infrastructure
             IAssetsService assetsService,
             IScreensService screensService,
             IAssetPanelsAdapter panelsAdapter,
-            IFileService fileService,
+            IEnvironmentSettings envSettings,
             IBarcodeProvider barcodeProvider)
         {
             if (attributeValueFormatter == null)
@@ -49,9 +49,9 @@ namespace AssetManager.Infrastructure
             if (panelsAdapter == null)
                 throw new ArgumentNullException("panelsAdapter");
             _panelsAdapter = panelsAdapter;
-            if (fileService == null)
-                throw new ArgumentNullException("fileService");
-            _fileService = fileService;
+            if (envSettings == null)
+                throw new ArgumentNullException("envSettings");
+            _envSettings = envSettings;
             if (barcodeProvider == null)
                 throw new ArgumentNullException("barcodeProvider");
             _barcodeProvider = barcodeProvider;
@@ -75,11 +75,6 @@ namespace AssetManager.Infrastructure
                 Datatype = attributeConfig.DataTypeEnum.ToString().ToLower(),
                 Editable = attributeConfig.Editable,
                 Required = attributeConfig.IsRequired
-                //HasFormula = attributeConfig
-                //    .Base
-                //    .AttributePanelAttributes
-                //    .Any(apa => apa.AttributePanel.AssetTypeScreen.ScreenId == screenId
-                //        && apa.ScreenFormula != null)
             };
 
             if (attributeConfig.DataTypeEnum == Enumerators.DataType.Asset ||
@@ -140,12 +135,13 @@ namespace AssetManager.Infrastructure
 
                 case Enumerators.DataType.Image:
                     if (!string.IsNullOrEmpty(attributeData.Value.ToString()))
-                        model.Value = _fileService.GetRelativeFilepath(
+                    {
+                        var relPath = _envSettings.GetAssetMediaRelativePath(
                             attribute.ParentAsset.Configuration.ID,
-                            attributeConfig.ID,
-                            model.Datatype,
-                            attributeData.Value.ToString())
-                            .TrimStart('~');
+                            attributeConfig.ID);
+                        model.Value = string.Format("{0}/{1}/{2}",
+                            _envSettings.GetAssetMediaHttpRoot(), relPath, attributeData.Value);
+                    }
                     break;
 
                 case Enumerators.DataType.DateTime:

@@ -60,11 +60,9 @@ namespace AssetManager.Infrastructure
             return s;
         }
 
-        public string GetDocsUploadDirectory(long assetTypeId, long attributeId)
+        public string GetDocsUploadBaseDir()
         {
-            var baseDir = ConfigurationManager.AppSettings["DocsUploadDir"] ?? "~/App_Data/uploads";
-            return string.Format(@"{0}/assets/{1}/{2}", 
-                baseDir, assetTypeId, attributeId);
+            return ConfigurationManager.AppSettings["DocsUploadDir"] ?? "~/App_Data/uploads";
         }
 
         public string GetCacheDirectory()
@@ -72,11 +70,20 @@ namespace AssetManager.Infrastructure
             return ConfigurationManager.AppSettings["CacheDir"] ?? "~/App_Data/cache";
         }
 
-        public string GetImagesUploadDirectory(long assetTypeId, long attributeId)
+        public string GetImagesUploadBaseDir()
         {
-            var baseDir = ConfigurationManager.AppSettings["ImagesUploadDir"] ?? "~/uploads";
-            return string.Format(@"{0}/assets/{1}/{2}", 
-                baseDir, assetTypeId, attributeId);
+            return ConfigurationManager.AppSettings["ImagesUploadDir"] ?? "~/uploads";
+        }
+
+        public string GetAssetMediaRelativePath(long assetTypeId, long attributeId)
+        {
+            return string.Format("/assets/{0}/{1}",
+                assetTypeId, attributeId);
+        }
+
+        public string GetAssetMediaHttpRoot()
+        {
+            return ConfigurationManager.AppSettings["MediaHttpRoot"] ?? "/media/";
         }
     }
 }

@@ -378,14 +378,14 @@ namespace AssetManager.Infrastructure.Services
 
             var filename = value["name"].Value<string>();
 
-            var targetPath = _fileService.MoveFileOnAssetCreation(
+            var targetFile = _fileService.MoveFileOnAssetCreation(
                 assetTypeId,
                 attribute.Configuration.ID,
                 document.Configuration.ID,
                 fileAttr.Configuration.ID,
                 filename);
 
-            fileAttr.Value = Path.GetFileName(targetPath);
+            fileAttr.Value = targetFile.Name;
             return document;
         }
 
