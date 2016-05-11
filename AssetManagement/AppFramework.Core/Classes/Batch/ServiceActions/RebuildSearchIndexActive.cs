@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.SqlClient;
-using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.DataProxy;
+
 namespace AppFramework.Core.Classes.Batch.ServiceActions
 {
     internal class RebuildSearchIndexActive : BatchAction
@@ -10,14 +11,15 @@ namespace AppFramework.Core.Classes.Batch.ServiceActions
 
         public override void Run()
         {
-            var unitOfWork = new DataProxy.UnitOfWork();
-            unitOfWork.SqlProvider.ExecuteNonQuery(StoredProcedures.ReIndexAll,
-                                                   new IDataParameter[]
-                                                       {
-                                                           new SqlParameter("@active", 1),
-                                                           new SqlParameter("@buildDynEntityIndex", 1)
-                                                       },
-                                                   CommandType.StoredProcedure);
+            var unitOfWork = new UnitOfWork();
+            unitOfWork.SqlProvider.ExecuteNonQuery(
+                StoredProcedures.ReIndexAll,
+                new IDataParameter[]
+                    {
+                        new SqlParameter("@active", 1),
+                        new SqlParameter("@buildDynEntityIndex", 1)
+                    },
+                CommandType.StoredProcedure);
         }
     }
 }

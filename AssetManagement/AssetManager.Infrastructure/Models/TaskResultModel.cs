@@ -2,8 +2,12 @@
 
 namespace AssetManager.Infrastructure.Models
 {
-    public class TaskResultModel : ResultBase<Dictionary<string, object>>
+    public class TaskResultModel
     {
+        public List<string> Errors { get; set; }
+
+        public dynamic Result { get; set; }
+
         public string TaskFunctionType { get; set; }
 
         public bool ShouldRedirectOnComplete { get; set; }
@@ -12,6 +16,6 @@ namespace AssetManager.Infrastructure.Models
 
         public string TaskName { get; set; }
 
-        public long TaskId { get; set; }
+        public object TaskId { get; set; }
     }
 }

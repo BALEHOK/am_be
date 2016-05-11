@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AppFramework.Entities;
+using AppFramework.Tasks.Models;
 
 namespace AssetManager.Infrastructure.Services
 {
@@ -14,5 +15,7 @@ namespace AssetManager.Infrastructure.Services
         void SaveTask(Task task, long userId);
 
         IEnumerable<ActiveTask> GetActive(long userId);
+
+        IEnumerable<PredefinedTaskModel> GetPredefinedTasks();
     }
 }

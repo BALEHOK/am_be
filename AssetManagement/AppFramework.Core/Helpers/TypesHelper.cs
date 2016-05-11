@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
 using AppFramework.Core.DataTypes;
@@ -29,12 +30,26 @@ namespace AppFramework.Core.Helpers
             return GetTypedValue(type, value);
         }
 
+        private static Type _dateTimeType = typeof(DateTime);
         public static object GetTypedValue(Type type, object value)
         {
-            if (value == null || (value is string && string.IsNullOrWhiteSpace((string)value)))
+            var valueStr = value as string;
+            if (value == null || (value is string && string.IsNullOrWhiteSpace(valueStr)))
             {
                 return type.IsValueType ? Activator.CreateInstance(type) : null;
             }
+
+            if (type == _dateTimeType)
+            {
+                DateTime d;
+                if (!DateTime.TryParse(valueStr, out d))
+                {
+                    // this format is used in datetime attribute editor in React app
+                    d = DateTime.ParseExact(valueStr, "M/d/yyyy HH:mm:ss", null);
+                }
+                return d;
+            }
+
             return Convert.ChangeType(value, type);
         }
 
@@ -91,6 +106,12 @@ namespace AppFramework.Core.Helpers
         {
             var value = asset[attribute.DBTableFieldName].Value;
             return GetTypedValue(attribute.DataTypeEnum, value);
+        }
+
+        public static object GetTypedValue(ScreenAttrs assetAttributes, string parameterName)
+        {
+            var targetAttrConfig = assetAttributes[parameterName].Configuration;
+            return GetTypedValue(targetAttrConfig.DataType, assetAttributes[targetAttrConfig.DBTableFieldName].Value);
         }
     }
 }

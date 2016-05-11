@@ -57,6 +57,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         {
             var xml = new XElement("parameters",
                 from pr in this
+                where pr.Value != null
                 select new XElement("param",
                     new XAttribute("name", pr.Key),
                     new XAttribute("type", pr.Value.GetType()),

@@ -56,7 +56,7 @@ namespace AppFramework.Core.AC.Authentication
             new Dictionary<byte, Permission>(17);
 
         private static readonly Dictionary<Permission, string> permissionFriendlyNames =
-            new Dictionary<Permission, string>(5);
+            new Dictionary<Permission, string>(6);
 
         static PermissionsProvider()
         {

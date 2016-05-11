@@ -9,6 +9,7 @@ using AppFramework.Reports;
 using AppFramework.Email;
 using AssetManager.Infrastructure;
 using AssetManager.Infrastructure.Models.Search;
+using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi
 {
@@ -49,6 +50,7 @@ namespace AssetManager.WebApi
                 .RegisterType<IAdvanceSearchModelMapper, AdvanceSearchModelMapper>()
                 .RegisterType<IAdvanceSearchModelSearchQueryMapper, AdvanceSearchModelSearchQueryMapper>()
                 .RegisterType<ISearchResultMapper, SearchResultMapper>()
+                .RegisterType<ICacheKeyGenerator, OutputCacheKeyGenerator>(new ContainerControlledLifetimeManager())
                 .AddNewExtension<InfrastructureConfiguration>()
                 .AddNewExtension<EmailConfiguration>()
                 .AddNewExtension<CommonConfiguration>()

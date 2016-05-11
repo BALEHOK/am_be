@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.DataProxy;
 
 namespace AppFramework.Core.Classes.Batch.AssetTypeActions
 {
@@ -55,13 +55,14 @@ namespace AppFramework.Core.Classes.Batch.AssetTypeActions
                 udfTable.AddEntity(asset.UID, asset.ID, asset.GetConfiguration().UID);
             }
 
-            var unitOfWork = new DataProxy.UnitOfWork();
-            unitOfWork.SqlProvider.ExecuteNonQuery(StoredProcedures.UpdateAssetsReferences,
-                                                   new IDataParameter[]
-                                                       {
-                                                           udfTable.SqlParameter
-                                                       },
-                                                   CommandType.StoredProcedure);
+            var unitOfWork = new UnitOfWork();
+            unitOfWork.SqlProvider.ExecuteNonQuery(
+                StoredProcedures.UpdateAssetsReferences,
+                new IDataParameter[]
+                    {
+                        udfTable.SqlParameter
+                    },
+                CommandType.StoredProcedure);
         }
     }
 }

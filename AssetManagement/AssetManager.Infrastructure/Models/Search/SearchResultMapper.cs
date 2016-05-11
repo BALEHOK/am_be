@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AppFramework.Entities;
 using Newtonsoft.Json;
+using Common.Logging;
 
 namespace AssetManager.Infrastructure.Models.Search
 {
@@ -21,7 +22,7 @@ namespace AssetManager.Infrastructure.Models.Search
 
         private static SearchResultItem GetIndexEntity(IIndexEntity indexEntity)
         {
-            return new SearchResultItem
+            var item = new SearchResultItem
             {
                 Name = indexEntity.Name,
                 Description = indexEntity.Description,
@@ -31,9 +32,23 @@ namespace AssetManager.Infrastructure.Models.Search
                 DynEntityConfigId = indexEntity.DynEntityConfigId,
                 DynEntityId = indexEntity.DynEntityId,
                 DynEntityUid = indexEntity.DynEntityUid,
-                DisplayValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(indexEntity.DisplayValues),
-                DisplayExtValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(indexEntity.DisplayExtValues)
             };
+
+            try
+            {
+                item.DisplayValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(
+                    indexEntity.DisplayValues);
+                item.DisplayExtValues = JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(
+                    indexEntity.DisplayExtValues);
+            }
+            catch(JsonReaderException ex)
+            {
+                item.DisplayValues = new KeyValuePair<string, string>[] { };
+                item.DisplayExtValues = new KeyValuePair<string, string>[] { };
+                LogManager.GetCurrentClassLogger().Error("Cannot deserialize JSON", ex);
+            }
+
+            return item;
         }
     }
 }

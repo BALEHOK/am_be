@@ -8,5 +8,6 @@ namespace AssetManagerAdmin
         void ShowError(string errorMessage, string title);
         void ShowError(Exception error, string title);
         void ShowMessage(string message, string title, StatusMessageType status);
+        void ShowMessage(StatusMessage message);
     }
 }

@@ -10,7 +10,7 @@ namespace AssetSite.Controls
     public partial class TaskCommonParams : System.Web.UI.UserControl
     {
         public bool OnlySSIS { get; set; }
-        public TaskExecutableType ExecutableType { get; set; }
+        public AppFramework.Tasks.Enumerations.TaskExecutableType ExecutableType { get; set; }
         public string ExecutablePath { get; set; }
         public List<KeyValuePair<string, string>> FunctionData { get; set; }
         public string HiddenFieldId
@@ -94,9 +94,9 @@ namespace AssetSite.Controls
             return result;
         }
 
-        public TaskExecutableType GetExecutableType()
+        public AppFramework.Tasks.Enumerations.TaskExecutableType GetExecutableType()
         {
-            return (TaskExecutableType)Convert.ToInt32(ddlExecType.SelectedValue);
+            return (AppFramework.Tasks.Enumerations.TaskExecutableType)Convert.ToInt32(ddlExecType.SelectedValue);
         }
 
         private void RestoreFunctionData(List<KeyValuePair<string, string>> taskParams)

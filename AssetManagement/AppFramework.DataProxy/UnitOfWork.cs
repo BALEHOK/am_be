@@ -116,9 +116,9 @@ namespace AppFramework.DataProxy
             return _noCacheContext.GetStocksByLocation(assetId, assetTypeId);
         }
 
-        public IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId)
+        public IEnumerable<f_cust_GetRelatedAssetTypes_Result> GetRelatedAssetTypes(long userId, long assetTypeId)
         {
-            return _noCacheContext.f_cust_GetChildAssets(assetTypeId);
+            return _noCacheContext.f_cust_GetRelatedAssetTypes(userId, assetTypeId);
         }
 
         public void ReIndexAsset(long assetUidNew, long assetId, long assetConfigUidNew, long assetConfigId)
@@ -161,34 +161,6 @@ namespace AppFramework.DataProxy
 
         #region IDataRepository: Repositories
 
-        public IDataRepository<DeletedEntity> DeletedEntitiesRepository
-        {
-            get
-            {
-                if (_repositoryDeletedEntities == null)
-                {
-                    _repositoryDeletedEntities = new DataRepository<DeletedEntity>(_context);
-                }
-                return _repositoryDeletedEntities;
-            }
-        }
-
-        private DataRepository<DeletedEntity> _repositoryDeletedEntities;
-
-        public IDataRepository<DynEntityAttribScreens> DynEntityAttribScreensRepository
-        {
-            get
-            {
-                if (_repositoryDynEntityAttribScreens == null)
-                {
-                    _repositoryDynEntityAttribScreens = new DataRepository<DynEntityAttribScreens>(_context);
-                }
-                return _repositoryDynEntityAttribScreens;
-            }
-        }
-
-        private IDataRepository<DynEntityAttribScreens> _repositoryDynEntityAttribScreens;
-
         public IDataRepository<Languages> LanguagesRepository
         {
             get
@@ -216,6 +188,20 @@ namespace AppFramework.DataProxy
         }
 
         private IDataRepository<StringResources> _repositoryStringResources;
+
+        public IDataRepository<BannerImage> BannerImageRepository
+        {
+            get
+            {
+                if (_repositoryBannerImage == null)
+                {
+                    _repositoryBannerImage = new DataRepository<BannerImage>(_context);
+                }
+                return _repositoryBannerImage;
+            }
+        }
+
+        private IDataRepository<BannerImage> _repositoryBannerImage;
 
         public IDataRepository<AssetsTaxonomies> AssetsTaxonomiesRepository
         {
@@ -328,6 +314,22 @@ namespace AppFramework.DataProxy
         }
 
         private IDataRepository<Reservation> _repositoryReservation;
+
+        public IDataRepository<ReservedAsset> ReservedAssetsRepository
+        {
+            get
+            {
+                if (_repositoryReservedAssets == null)
+                {
+                    _repositoryReservedAssets = new DataRepository<ReservedAsset>(_context);
+                }
+                return _repositoryReservedAssets;
+            }
+        }
+
+        private IDataRepository<ReservedAsset> _repositoryReservedAssets;
+
+
 
         public IDataRepository<PredefinedAttributes> PredefinedAttributesRepository
         {
@@ -1017,6 +1019,40 @@ namespace AppFramework.DataProxy
         public void Commit()
         {
             _context.SaveChanges();
+        }
+
+        public List<long> GetUsersTree(long userId)
+        {
+            var data = SqlProvider.ExecuteReader(
+                StoredProcedures.GetUsersTree,
+                new SqlParameter[] 
+                {
+                    new SqlParameter("@UserId", userId) { SqlDbType = SqlDbType.BigInt },
+                },
+                CommandType.StoredProcedure);
+
+            var returnList = new List<long>();
+
+            while (data.Read())
+            {
+                returnList.Add(data.GetInt64(0));
+            }
+
+            data.Close();
+
+            return returnList;
+        }
+
+        public bool DatabaseExists()
+        {
+            try
+            {
+                return _context.DatabaseExists();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

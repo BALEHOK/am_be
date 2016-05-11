@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Exceptions;
@@ -17,18 +18,24 @@ namespace AssetManager.WebApi.Controllers.Api
     public class SearchController : ApiController
     {
         private readonly ISearchService _searchService;
+        private readonly ISearchTracker _searchTracker;
         private readonly ISearchResultMapper _searchResultMapper;
         private readonly IAdvanceSearchModelMapper _advanceSearchModelMapper;
         private readonly IAdvanceSearchModelSearchQueryMapper _advanceSearchModelSearchQueryMapper;
 
         public SearchController(
             ISearchService searchService,
+            ISearchTracker searchTracker,
             IAdvanceSearchModelMapper advanceSearchModelMapper,
             IAdvanceSearchModelSearchQueryMapper advanceSearchModelSearchQueryMapper, ISearchResultMapper searchResultMapper)
         {
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
             _searchService = searchService;
+
+            if (searchTracker == null)
+                throw new ArgumentNullException("searchTracker");
+            _searchTracker = searchTracker;
 
             if (advanceSearchModelMapper == null)
                 throw new ArgumentNullException("advanceSearchModelMapper");
@@ -98,7 +105,6 @@ namespace AssetManager.WebApi.Controllers.Api
         public SearchResultModel ByType(AdvanceSearchModel model)
         {
             EnsureSearchId(model);
-            Debug.Assert(model.SearchId != null, "model.SearchId == null");
 
             var userId = User.GetId();
             var attributeElements = _advanceSearchModelMapper.GetAttributeElements(model);
@@ -135,7 +141,7 @@ namespace AssetManager.WebApi.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return _advanceSearchModelSearchQueryMapper.GetAdvanceSearchModel(searchQuery);
+            return _advanceSearchModelSearchQueryMapper.GetAdvanceSearchModel(User.GetId(), searchQuery);
         }
 
         /// <summary>
@@ -164,7 +170,7 @@ namespace AssetManager.WebApi.Controllers.Api
                         {
                             Id = e.id.Value,
                             Count = e.Count.Value,
-                            Name = e.Name
+                            Name = e.Name.Localized()
                         })
                         .ToList(),
                     Taxonomies = result.Where(e => e.Type == "Taxonomy")
@@ -172,7 +178,7 @@ namespace AssetManager.WebApi.Controllers.Api
                         {
                             Id = e.id.Value,
                             Count = e.Count.Value,
-                            Name = e.Name
+                            Name = e.Name.Localized()
                         })
                         .ToList()
                 };
@@ -189,7 +195,7 @@ namespace AssetManager.WebApi.Controllers.Api
         public SearchTrackingModel GetTrackingInfo(Guid searchId)
         {
             var userId = User.GetId();
-            var tracking = _searchService.GetTrackingBySearchId(searchId, userId);
+            var tracking = _searchTracker.GetTrackingBySearchIdUserId(searchId, userId);
             if (tracking == null)
                 throw new EntityNotFoundException(
                     "SearchTracking with given searchId doesn't exists or not accessible.");

@@ -1,6 +1,3 @@
-USE [facilitymanager_facilityflexware_com]
-GO
-
 ALTER TABLE [dbo].[AssetTypeScreen] DROP FK_AssetTypeScreen_ScreenLayout
 GO
 DROP TABLE [dbo].[ScreenLayout]

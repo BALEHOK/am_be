@@ -16,6 +16,7 @@ using AppFramework.Core.Interceptors;
 using AppFramework.Core.PL;
 using AppFramework.Core.Services;
 using AppFramework.Core.Validation;
+using AppFramework.Tasks;
 using Common.Logging;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.InterceptionExtension;
@@ -68,7 +69,9 @@ namespace AppFramework.Core
                 .RegisterType<IImportExportManager, ImportExportManager>()
                 .RegisterType<IRightsService, RightsService>()
                 .RegisterType<IExcelProvider, ExcelProvider>()
-                .RegisterType<IRoleService, RoleService>();
+                .RegisterType<IAssetsExporter, AssetsExporter>()
+                .RegisterType<IRoleService, RoleService>()
+                .RegisterType<IIndexationService, IndexationService>();
         }
     }
 }

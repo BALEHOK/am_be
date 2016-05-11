@@ -45,11 +45,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="tableName">table name</param>
         /// <param name="elements">search parameters</param>
         /// <returns></returns>
-        public DataTable FillAssetToDataTableByTypeContext(
-            long userId,
-            long assetTypeUid,
-            string tableName,
-            IEnumerable<AttributeElement> elements)
+        public DataTable FillAssetToDataTableByTypeContext(long userId, long assetTypeUid, string tableName, List<AttributeElement> elements)
         {
             var searchId = Guid.NewGuid();
             var dataTable = new DataTable();
@@ -57,12 +53,7 @@ namespace AppFramework.Core.Classes.SearchEngine
             List<SqlParameter> parameters;
 
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
-            var searchQuery = SearchQueryBuilder.GenerateTypeSearchQuery(
-                searchId,
-                type,
-                elements.ToSearchChains(type, _unitOfWork, _assetsService, _assetTypeRepository).ToList(),
-                TimePeriodForSearch.CurrentTime,
-                out parameters);
+            var searchQuery = SearchQueryBuilder.GenerateTypeSearchQuery(searchId, type, elements, TimePeriodForSearch.CurrentTime, out parameters);
 
             _prefillTemporaryTable(searchId, searchQuery, parameters, _unitOfWork);
             var reader = _unitOfWork.SqlProvider.ExecuteReader(

@@ -34,5 +34,9 @@
         public const string LastLoginDate = "LastLoginDate";
         public const string LastActivityDate = "LastActivityDate";
         public const string LastLockoutDate = "LastLockoutDate";
+        public const string IsDeleted = "IsDeleted";
+        public const string Assignee = "Assignee";
+        public const string Status = "Status";
+        public const string DueDate = "Due date";
     }
 }

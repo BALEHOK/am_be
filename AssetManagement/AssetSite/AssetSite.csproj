@@ -118,43 +118,43 @@
     <Reference Include="DayPilot">
       <HintPath>..\AppFramework.Core\ThirdParty\DayPilotProTrial-7.6.3006\Bin\DayPilot.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Charts.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Office.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.PivotGrid.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.PivotGrid.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.RichEdit.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Web.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Web.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpf.Printing.v15.1.Service, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Xpf.Printing.v15.2.Service, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraCharts.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraReports.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraReports.v15.1.Service, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraReports.v15.2.Service, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraReports.v15.1.Web, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraReports.v15.2.Web, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
     <Reference Include="EFCachingProvider">
@@ -222,8 +222,8 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SanitizerProviders">
@@ -314,7 +314,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="images\buttons\calculate.png" />
     <Content Include="images\headerban-flexmis.png" />
-    <Content Include="Reservations\Overview.aspx" />
     <Content Include="barcodeImage.aspx" />
     <Content Include="ClientBin\ReportDesigner.xap" />
     <Content Include="client\ckeditor\adapters\jquery.js" />
@@ -595,7 +594,6 @@
     <Content Include="Controls\AssetTemplates.ascx" />
     <Content Include="Controls\AssetTypeAttribList.ascx" />
     <Content Include="Controls\BatchScheduleDialog.ascx" />
-    <Content Include="Controls\ChildAssets.ascx" />
     <Content Include="Controls\Barcode.ascx" />
     <Content Include="Controls\Calendar.ascx" />
     <Content Include="Controls\ShowSharedResources.ascx" />
@@ -610,7 +608,6 @@
     <Content Include="Controls\NumericControl.ascx" />
     <Content Include="Controls\DynListDDHolder.ascx" />
     <Content Include="Controls\DynListItemEdit.ascx" />
-    <Content Include="Controls\ExportControl.ascx" />
     <Content Include="Controls\MultipleAssetsEditor.ascx" />
     <Content Include="Controls\MultipleAssetsList.ascx" />
     <Content Include="Controls\NewsAndLoginInfo.ascx" />
@@ -621,7 +618,6 @@
     <Content Include="Controls\ScreenDetails.ascx" />
     <Content Include="Controls\ScreensPanel.ascx" />
     <Content Include="Controls\SearchControls\CategoriesForSearch.ascx" />
-    <Content Include="Controls\SearchControls\RefinementsPanel.ascx" />
     <Content Include="Controls\SearchControls\SearchConditionsBar.ascx" />
     <Content Include="Controls\SearchControls\SearchTabs.ascx" />
     <Content Include="Controls\SearchControls\TypeSearchValueCell.ascx" />
@@ -790,7 +786,6 @@
     <Content Include="javascript\Tasks.js" />
     <Content Include="javascript\Tooltip.js" />
     <Content Include="mail\PasswordRecoveryTemplate.txt" />
-    <Content Include="MySettings.aspx" />
     <Content Include="RecoverCredentials.aspx" />
     <Content Include="Mobile\Default.aspx" />
     <Content Include="javascript\Silverlight.js" />
@@ -922,13 +917,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="admin\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="admin\Export\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin\Export\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="admin\FAQItems.aspx.cs">
@@ -1080,36 +1068,6 @@
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\EFCachingConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="Asset\AssetController.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\AttachDocument.aspx.cs">
-      <DependentUpon>AttachDocument.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\AttachDocument.aspx.designer.cs">
-      <DependentUpon>AttachDocument.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\New\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\New\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Reservations\ReservationController.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reservations\Overview.aspx.cs">
-      <DependentUpon>Overview.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reservations\Overview.aspx.designer.cs">
-      <DependentUpon>Overview.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\View.aspx.designer.cs">
-      <DependentUpon>View.aspx</DependentUpon>
-    </Compile>
     <Compile Include="barcodeImage.aspx.cs">
       <DependentUpon>barcodeImage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1119,13 +1077,6 @@
     </Compile>
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\AssetAttributePanels.ascx.cs">
-      <DependentUpon>AssetAttributePanels.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\AssetAttributePanels.ascx.designer.cs">
-      <DependentUpon>AssetAttributePanels.ascx</DependentUpon>
     </Compile>
     <Compile Include="Controls\AssetDropDownListEx.ascx.cs">
       <DependentUpon>AssetDropDownListEx.ascx</DependentUpon>
@@ -1161,13 +1112,6 @@
     </Compile>
     <Compile Include="Controls\BatchScheduleDialog.ascx.designer.cs">
       <DependentUpon>BatchScheduleDialog.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ChildAssets.ascx.cs">
-      <DependentUpon>ChildAssets.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ChildAssets.ascx.designer.cs">
-      <DependentUpon>ChildAssets.ascx</DependentUpon>
     </Compile>
     <Compile Include="Controls\Barcode.ascx.cs">
       <DependentUpon>Barcode.ascx</DependentUpon>
@@ -1256,13 +1200,6 @@
     <Compile Include="Controls\DynListItemEdit.ascx.designer.cs">
       <DependentUpon>DynListItemEdit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ExportControl.ascx.cs">
-      <DependentUpon>ExportControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ExportControl.ascx.designer.cs">
-      <DependentUpon>ExportControl.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MultipleAssetsEditor.ascx.cs">
       <DependentUpon>MultipleAssetsEditor.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1350,19 +1287,6 @@
     </Compile>
     <Compile Include="admin\Users\ViewRights.aspx.designer.cs">
       <DependentUpon>ViewRights.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\ViewTransactions.aspx.cs">
-      <DependentUpon>ViewTransactions.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\ViewTransactions.aspx.designer.cs">
-      <DependentUpon>ViewTransactions.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SearchControls\RefinementsPanel.ascx.cs">
-      <DependentUpon>RefinementsPanel.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\SearchControls\RefinementsPanel.ascx.designer.cs">
-      <DependentUpon>RefinementsPanel.ascx</DependentUpon>
     </Compile>
     <Compile Include="Controls\SearchControls\SearchConditionsBar.ascx.cs">
       <DependentUpon>SearchConditionsBar.ascx</DependentUpon>
@@ -1483,44 +1407,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Alert.cs" />
-    <Compile Include="AssetView.aspx.cs">
-      <DependentUpon>AssetView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AssetView.aspx.designer.cs">
-      <DependentUpon>AssetView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\History.aspx.cs">
-      <DependentUpon>History.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\History.aspx.designer.cs">
-      <DependentUpon>History.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\Edit.aspx.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\Edit.aspx.designer.cs">
-      <DependentUpon>Edit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\New\Step1.aspx.cs">
-      <DependentUpon>Step1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\New\Step1.aspx.designer.cs">
-      <DependentUpon>Step1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\New\Step2.aspx.cs">
-      <DependentUpon>Step2.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asset\New\Step2.aspx.designer.cs">
-      <DependentUpon>Step2.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Asset\View.aspx.cs">
-      <DependentUpon>View.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Controls\AssetToolbar.ascx.cs">
       <DependentUpon>AssetToolbar.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1569,13 +1455,6 @@
     <Compile Include="Controls\SearchControls\TypesForSearch.ascx.designer.cs">
       <DependentUpon>TypesForSearch.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NewAttributePanel.ascx.cs">
-      <DependentUpon>NewAttributePanel.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\NewAttributePanel.ascx.designer.cs">
-      <DependentUpon>NewAttributePanel.ascx</DependentUpon>
-    </Compile>
     <Compile Include="admin\DynList\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1616,26 +1495,12 @@
     <Compile Include="Install\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="MasterPages\MasterPageSearchResult.master.cs">
-      <DependentUpon>MasterPageSearchResult.master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MasterPages\MasterPageSearchResult.master.designer.cs">
-      <DependentUpon>MasterPageSearchResult.master</DependentUpon>
-    </Compile>
     <Compile Include="Mobile\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Mobile\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="MySettings.aspx.cs">
-      <DependentUpon>MySettings.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MySettings.aspx.designer.cs">
-      <DependentUpon>MySettings.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1648,19 +1513,6 @@
     </Compile>
     <Compile Include="RecoverCredentials.aspx.designer.cs">
       <DependentUpon>RecoverCredentials.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\ResultByCategory.aspx.cs">
-      <DependentUpon>ResultByCategory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\ResultByCategory.aspx.designer.cs">
-      <DependentUpon>ResultByCategory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\SearchPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\SearchResultPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="TaskView.aspx.cs">
       <DependentUpon>TaskView.aspx</DependentUpon>
@@ -1733,55 +1585,6 @@
     </Compile>
     <Compile Include="Controls\SortableListbox.ascx.designer.cs">
       <DependentUpon>SortableListbox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\SearchByContext.aspx.cs">
-      <DependentUpon>SearchByContext.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\SearchByContext.aspx.designer.cs">
-      <DependentUpon>SearchByContext.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\ResultByContext.aspx.cs">
-      <DependentUpon>ResultByContext.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\ResultByContext.aspx.designer.cs">
-      <DependentUpon>ResultByContext.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\ResultByType.aspx.cs">
-      <DependentUpon>ResultByType.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\ResultByType.aspx.designer.cs">
-      <DependentUpon>ResultByType.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\Search.aspx.cs">
-      <DependentUpon>Search.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\Search.aspx.designer.cs">
-      <DependentUpon>Search.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\SearchByCategory.aspx.cs">
-      <DependentUpon>SearchByCategory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\SearchByCategory.aspx.designer.cs">
-      <DependentUpon>SearchByCategory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\SearchByType.aspx.cs">
-      <DependentUpon>SearchByType.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\SearchByType.aspx.designer.cs">
-      <DependentUpon>SearchByType.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Search\SimpleSearchKeywords.aspx.cs">
-      <DependentUpon>SimpleSearchKeywords.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Search\SimpleSearchKeywords.aspx.designer.cs">
-      <DependentUpon>SimpleSearchKeywords.aspx</DependentUpon>
     </Compile>
     <Compile Include="Wizard\EditAttribute.aspx.cs">
       <DependentUpon>EditAttribute.aspx</DependentUpon>
@@ -1881,6 +1684,10 @@
       <Project>{41e0c02c-e115-4781-b686-b779a2b4eb6e}</Project>
       <Name>AppFramework.Reports</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Tasks\AppFramework.Tasks.csproj">
+      <Project>{4d38b9e7-6171-4858-bb02-1cef5137d451}</Project>
+      <Name>AppFramework.Tasks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AssetManager.Infrastructure\AssetManager.Infrastructure.csproj">
       <Project>{87d76790-81cc-45bb-9f7e-b3cdea2564c0}</Project>
       <Name>AssetManager.Infrastructure</Name>
@@ -1897,7 +1704,6 @@
     <Content Include="Controls\DynListDropDown.ascx" />
     <Content Include="Controls\SearchControls\TypesForSearch.ascx" />
     <Content Include="Controls\DynListListBox.ascx" />
-    <Content Include="Controls\NewAttributePanel.ascx" />
     <Content Include="css\controls\assettoolbar.css" />
     <Content Include="css\general.css" />
     <Content Include="css\layouts\layout1.css" />
@@ -1949,17 +1755,8 @@
     <Content Include="MasterPages\MasterPageDefault.Master" />
     <Content Include="Controls\ListboxForAttributeAdding.ascx" />
     <Content Include="Controls\SortableListbox.ascx" />
-    <Content Include="Search\SimpleSearchKeywords.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AssetView.aspx" />
-    <Content Include="Asset\History.aspx" />
-    <Content Include="Asset\Edit.aspx" />
-    <Content Include="Asset\New\Step1.aspx" />
-    <Content Include="Asset\New\Step2.aspx" />
-    <Content Include="Asset\View.aspx" />
-    <Content Include="Search\Search.aspx" />
-    <Content Include="Search\SearchByCategory.aspx" />
     <Content Include="Wizard\EditAttribute.aspx" />
     <Content Include="Wizard\EditValidationRule.aspx" />
     <Content Include="Wizard\Step1.aspx" />
@@ -1989,20 +1786,15 @@
     <Content Include="admin\Users\Default.aspx" />
     <Content Include="admin\Users\EditRights.aspx" />
     <Content Include="admin\Users\ViewRights.aspx" />
-    <Content Include="Asset\ViewTransactions.aspx" />
     <Content Include="Config.Files\cachingConfiguration.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="images\buttons\error.png" />
-    <Content Include="Search\SearchByContext.aspx" />
-    <Content Include="Search\ResultByContext.aspx" />
     <Content Include="images\buttons\attention.png" />
     <Content Include="images\buttons\close.png" />
     <Content Include="images\buttons\question.png" />
     <Content Include="images\buttons\question_hover.png" />
     <Content Include="javascript\jquery-delegate.js" />
-    <Content Include="Search\ResultByType.aspx" />
-    <Content Include="Search\SearchByType.aspx" />
     <Content Include="images\loaderA32.gif" />
     <Content Include="Wizard\Step4.aspx" />
   </ItemGroup>
@@ -2011,17 +1803,14 @@
     <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="admin\Export\Default.aspx" />
     <Content Include="admin\Import\Default.aspx" />
     <Content Include="Configuration\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Themes\Default\common.css" />
-    <Content Include="Asset\AttachDocument.aspx" />
     <Content Include="Config.Files\Predefined\Assets\Location.xml" />
     <Content Include="Config.Files\Predefined\Assets\User.xml" />
     <Content Include="Config.Files\WizardMenu.xml" />
-    <Content Include="Controls\AssetAttributePanels.ascx" />
     <Content Include="Controls\WizardMenu.ascx" />
     <Content Include="css\installer.css" />
     <Content Include="images\buttons\database--arrow.png" />
@@ -2039,7 +1828,6 @@
     <Content Include="javascript\Web.config" />
     <Content Include="Config.Files\Web.sitemap" />
     <Content Include="admin\Languages\Web.config" />
-    <Content Include="admin\Export\Web.config" />
     <Content Include="App_Themes\Default\Button.skin" />
     <Content Include="App_Themes\Default\Dropdown.skin" />
     <Content Include="App_Themes\Default\Grid.skin" />
@@ -2056,13 +1844,11 @@
     <Content Include="admin\Batch\Actions.aspx" />
     <Content Include="admin\Batch\Default.aspx" />
     <Content Include="images\buttons\zoom.png" />
-    <Content Include="Search\ResultByCategory.aspx" />
     <Content Include="Web.sitemap">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Wizard\Default.aspx" />
     <Content Include="Wizard\Step11.aspx" />
-    <Content Include="MasterPages\MasterPageSearchResult.master" />
     <Content Include="Install\Web.config" />
     <Content Include="Documents\Web.config" />
     <Content Include="Config.Files\Predefined\xlsxTemplate.xlsx" />
@@ -2114,7 +1900,6 @@
     <Content Include="App_LocalResources\ConfigOverview.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Asset\New\Default.aspx" />
     <Content Include="Config.Files\Predefined\ActiveDirectoryUserFields.xml" />
     <Content Include="Config.Files\Predefined\Assets\Department.xml" />
     <Content Include="Controls\Translations.ascx" />
@@ -2129,13 +1914,6 @@
     <Content Include="admin\Taxonomies\App_LocalResources\Default.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.resx" />
-    <Content Include="Asset\App_LocalResources\Edit.aspx.resx" />
-    <Content Include="Asset\App_LocalResources\History.aspx.resx" />
-    <Content Include="Asset\App_LocalResources\View.aspx.resx" />
-    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.resx" />
-    <Content Include="Asset\New\App_LocalResources\Step1.aspx.resx" />
-    <Content Include="Asset\New\App_LocalResources\Step2.aspx.resx" />
     <Content Include="admin\Batch\App_LocalResources\Actions.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2150,9 +1928,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="admin\DynList\App_LocalResources\ListItems.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="admin\Export\App_LocalResources\Default.aspx.resx">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="admin\Import\App_LocalResources\Default.aspx.resx">
@@ -2197,7 +1972,6 @@
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Global.nl.designer.cs</LastGenOutput>
     </Content>
-    <Content Include="Asset\New\App_LocalResources\Step1.aspx.nl.resx" />
     <Content Include="Controls\App_LocalResources\WizardMenu.ascx.nl.resx" />
     <Content Include="admin\Batch\App_LocalResources\Default.aspx.nl.resx">
       <SubType>Designer</SubType>
@@ -2212,7 +1986,6 @@
     <Content Include="admin\Users\App_LocalResources\Default.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Asset\New\App_LocalResources\Step2.aspx.nl.resx" />
     <Content Include="admin\Users\App_LocalResources\ViewRights.aspx.nl.resx" />
     <Content Include="admin\Users\App_LocalResources\EditRights.aspx.resx">
       <SubType>Designer</SubType>
@@ -2234,17 +2007,9 @@
     <Content Include="App_LocalResources\ConfigOverview.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="admin\Export\App_LocalResources\Default.aspx.nl.resx">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="admin\Import\App_LocalResources\Default.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.nl.resx" />
-    <Content Include="Asset\App_LocalResources\Edit.aspx.nl.resx" />
-    <Content Include="Asset\App_LocalResources\History.aspx.nl.resx" />
-    <Content Include="Asset\App_LocalResources\View.aspx.nl.resx" />
-    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.nl.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.nl.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\SortPanel.ascx.nl.resx" />
@@ -2295,7 +2060,6 @@
     <Content Include="admin\DynList\App_LocalResources\ListItems.aspx.fr.resx">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="admin\Export\App_LocalResources\Default.aspx.fr.resx" />
     <Content Include="admin\Import\App_LocalResources\Default.aspx.fr.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2371,15 +2135,6 @@
     <Content Include="admin\App_LocalResources\DataTypes.aspx.nl.resx" />
     <Content Include="admin\App_LocalResources\UsersMonitor.aspx.nl.resx" />
     <EmbeddedResource Include="admin\Users\App_LocalResources\ViewRights.aspx.fr.resx" />
-    <Content Include="Asset\App_LocalResources\AttachDocument.aspx.fr.resx" />
-    <Content Include="Asset\App_LocalResources\Edit.aspx.fr.resx" />
-    <Content Include="Asset\App_LocalResources\History.aspx.fr.resx" />
-    <Content Include="Asset\App_LocalResources\View.aspx.fr.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Asset\App_LocalResources\ViewTransactions.aspx.fr.resx" />
-    <Content Include="Asset\New\App_LocalResources\Step1.aspx.fr.resx" />
-    <Content Include="Asset\New\App_LocalResources\Step2.aspx.fr.resx" />
     <Content Include="Controls\App_LocalResources\WizardMenu.ascx.fr.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\SearchResult.ascx.fr.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\SortPanel.ascx.fr.resx" />
@@ -2390,15 +2145,6 @@
     <Content Include="Documents\App_LocalResources\Default.aspx.resx" />
     <Content Include="Financial\App_LocalResources\Default.aspx.resx" />
     <Content Include="App_LocalResources\RecoverCredentials.aspx.resx" />
-    <Content Include="Reservations\App_LocalResources\Add.aspx.resx" />
-    <Content Include="Reservations\App_LocalResources\History.aspx.resx" />
-    <Content Include="Reservations\App_LocalResources\Add.aspx.fr.resx" />
-    <Content Include="Reservations\App_LocalResources\Add.aspx.nl.resx" />
-    <Content Include="Reservations\App_LocalResources\History.aspx.fr.resx" />
-    <Content Include="Reservations\App_LocalResources\History.aspx.nl.resx" />
-    <Content Include="Reservations\App_LocalResources\Overview.aspx.resx" />
-    <Content Include="Reservations\App_LocalResources\Overview.aspx.fr.resx" />
-    <Content Include="Reservations\App_LocalResources\Overview.aspx.nl.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.fr.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.nl.resx" />
     <Content Include="Controls\SearchControls\App_LocalResources\CategoriesForSearch.ascx.resx" />
@@ -2459,11 +2205,6 @@
     <Content Include="Controls\App_LocalResources\AssetTemplates.ascx.resx" />
     <Content Include="Controls\App_LocalResources\AssetTemplates.ascx.nl.resx" />
     <Content Include="Controls\App_LocalResources\AssetTemplates.ascx .fr.resx" />
-    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.fr.resx" />
-    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.nl.resx" />
-    <Content Include="Asset\App_LocalResources\AssetToolbarButton.ascx.resx">
-      <SubType>Designer</SubType>
-    </Content>
     <EmbeddedResource Include="Controls\SearchControls\SearchConditionsBar.ascx.resx">
       <DependentUpon>SearchConditionsBar.ascx.cs</DependentUpon>
     </EmbeddedResource>
@@ -2492,20 +2233,6 @@
     <Content Include="Wizard\App_LocalResources\EditPanel.aspx.fr.resx" />
     <Content Include="Wizard\App_LocalResources\EditAttribute.aspx.fr.resx" />
     <Content Include="Wizard\App_LocalResources\EditAssetType.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\SearchByType.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\SearchByContext.aspx.fr.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\Search.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\ResultByType.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\ResultByContext.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.fr.resx" />
-    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.fr.resx" />
     <Content Include="Wizard\App_LocalResources\Step8.aspx.nl.resx">
       <SubType>Designer</SubType>
     </Content>
@@ -2520,34 +2247,6 @@
     <Content Include="Wizard\App_LocalResources\EditValidationRule.aspx.nl.resx" />
     <Content Include="Wizard\App_LocalResources\EditPanel.aspx.nl.resx" />
     <Content Include="Wizard\App_LocalResources\EditAssetType.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SearchByType.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SearchByContext.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\Search.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByType.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByContext.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.nl.resx" />
-    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.en.resx" />
-    <Content Include="Search\App_LocalResources\ResultByBarCode.aspx.resx" />
-    <Content Include="Search\App_LocalResources\ResultByCategory.aspx.resx" />
-    <Content Include="Search\App_LocalResources\ResultByContext.aspx.resx" />
-    <Content Include="Search\App_LocalResources\ResultByDocuments.aspx.resx" />
-    <Content Include="Search\App_LocalResources\ResultByType.aspx.resx" />
-    <Content Include="Search\App_LocalResources\Search.aspx.resx" />
-    <Content Include="Search\App_LocalResources\SearchByBarCode.aspx.resx" />
-    <Content Include="Search\App_LocalResources\SearchByCategory.aspx.resx" />
-    <Content Include="Search\App_LocalResources\SearchByContext.aspx.resx" />
-    <Content Include="Search\App_LocalResources\SearchByDocuments.aspx.resx" />
-    <Content Include="Search\App_LocalResources\SearchByType.aspx.resx">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Search\App_LocalResources\SimpleSearchKeywords.aspx.resx" />
-    <Content Include="Search\Default.aspx" />
     <Content Include="Wizard\App_LocalResources\Step9.aspx.nl.resx" />
     <Content Include="Wizard\App_LocalResources\Step6.aspx.nl.resx" />
     <Content Include="Wizard\App_LocalResources\Step4.aspx.nl.resx" />
@@ -2584,7 +2283,6 @@
     <Content Include="Wizard\App_LocalResources\Step1.aspx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="admin\Export\Exported\" />
     <Folder Include="admin\Import\Received\" />
     <Folder Include="App_Code\" />
     <Folder Include="App_Data\Download\" />

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Barcode;
 using AppFramework.Core.Classes.DynLists;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Core.ConstantsEnumerators;
 using AssetManager.Infrastructure.Helpers;
 using AssetManager.Infrastructure.Models;
-using AssetManager.Infrastructure.Services;
+using AssetManager.Infrastructure.Permissions;
 using Newtonsoft.Json.Linq;
 
 namespace AssetManager.Infrastructure
@@ -24,6 +26,7 @@ namespace AssetManager.Infrastructure
         private readonly IScreensService _screensService;
         private readonly IEnvironmentSettings _envSettings;
         private readonly IBarcodeProvider _barcodeProvider;
+        private readonly IAssetTypePermissionChecker _assetTypePermissionChecker;
 
         public ModelFactory(
             IAttributeValueFormatter attributeValueFormatter,
@@ -32,7 +35,8 @@ namespace AssetManager.Infrastructure
             IScreensService screensService,
             IAssetPanelsAdapter panelsAdapter,
             IEnvironmentSettings envSettings,
-            IBarcodeProvider barcodeProvider)
+            IBarcodeProvider barcodeProvider,
+            IAssetTypePermissionChecker assetTypePermissionChecker)
         {
             if (attributeValueFormatter == null)
                 throw new ArgumentNullException("attributeValueFormatter");
@@ -55,6 +59,9 @@ namespace AssetManager.Infrastructure
             if (barcodeProvider == null)
                 throw new ArgumentNullException("barcodeProvider");
             _barcodeProvider = barcodeProvider;
+            if (assetTypePermissionChecker == null)
+                throw new ArgumentNullException("assetTypePermissionChecker");
+            _assetTypePermissionChecker = assetTypePermissionChecker;
         }
 
         public AttributeModel GetAttributeModel(AssetAttribute attribute)
@@ -71,16 +78,27 @@ namespace AssetManager.Infrastructure
             {
                 Uid = attributeConfig.UID,
                 Id = attributeConfig.ID,
-                Name = attributeConfig.Name,
+                Name = attributeConfig.NameLocalized,
                 Datatype = attributeConfig.DataTypeEnum.ToString().ToLower(),
                 Editable = attributeConfig.Editable,
-                Required = attributeConfig.IsRequired
+                Required = attributeConfig.IsRequired,
+                AssetTypeId = attribute.ParentAsset.Configuration.ID
             };
 
             if (attributeConfig.DataTypeEnum == Enumerators.DataType.Asset ||
                 attributeConfig.DataTypeEnum == Enumerators.DataType.Assets ||
                 attributeConfig.DataTypeEnum == Enumerators.DataType.Document)
+            {
                 model.RelatedAssetTypeId = attributeConfig.RelatedAssetTypeID;
+
+                if (_assetTypePermissionChecker
+                        .GetPermission(attributeConfig.RelatedAssetTypeID.GetValueOrDefault(),
+                            attribute.ParentAsset[AttributeNames.UpdateUserId].ValueAsId.GetValueOrDefault())
+                        .CanWrite())
+                {
+                    model.CanCreateNew = true;
+                }
+            }
 
             var displayValue = _attributeValueFormatter.GetDisplayValue(
                 attributeConfig,
@@ -120,7 +138,10 @@ namespace AssetManager.Infrastructure
 
                 case Enumerators.DataType.DynList:
                 case Enumerators.DataType.DynLists:
-                    var listValues = _dynamicListsService.GetLegacyListValues(attributeConfig, assetUid).ToList();
+                    var listValues = _dynamicListsService.GetLegacyListValues(
+                        attribute.ParentAsset.DynEntityConfigUid,
+                        attributeConfig.UID, 
+                        assetUid).ToList();
                     model.Value = new JObject(
                         new JProperty("id", string.Join(",", listValues.Select(lv => lv.DynamicListItemId).Take(1))),
                         new JProperty("value", _attributeValueFormatter.GetDisplayValue(listValues)));
@@ -147,6 +168,18 @@ namespace AssetManager.Infrastructure
                 case Enumerators.DataType.DateTime:
                 case Enumerators.DataType.CurrentDate:
                     model.Value = new JValue(attributeData.Value);
+                    break;
+
+                case Enumerators.DataType.Bool:
+                    if (attributeData.Value == null ||
+                        string.IsNullOrEmpty(attributeData.Value.ToString()))
+                    {
+                        model.Value = new JValue(false);
+                    }
+                    else
+                    {
+                        model.Value = new JValue((bool)attributeData.Value);
+                    }
                     break;
 
                 default:
@@ -243,6 +276,10 @@ namespace AssetManager.Infrastructure
                             .Last();
                     break;
 
+                case Enumerators.DataType.Bool:
+                    attribute.Value = value.Value<bool>().ToString();
+                    break;
+
                 default:
                     attribute.Value = value.Value<string>();
                     break;
@@ -263,31 +300,35 @@ namespace AssetManager.Infrastructure
             attribute.Value = value;
         }
 
-        public AssetModel GetAssetModel(Asset asset, Permission? permission = null)
+        public AssetModel GetAssetModel(AssetWrapperForScreenView assetWrapper, Permission? permission = null)
         {
-            if (asset == null)
-                throw new ArgumentNullException("asset");
+            Debug.Assert(assetWrapper != null);
+
+            var asset = assetWrapper.Asset;
 
             var barcodeAttr = asset[AttributeNames.Barcode];
             if (barcodeAttr != null && asset.IsNew)
+            {
                 barcodeAttr.Value = _barcodeProvider.GenerateBarcode();
+            }
 
             var model = new AssetModel
             {
-                AssetTypeId = asset.GetConfiguration().ID,
+                AssetTypeId = asset.Configuration.ID,
                 Id = asset.ID,
                 Name = asset.Name,
                 IsHistory = asset.IsHistory,
                 IsDeleted = asset.IsDeleted,
                 Revision = asset.Revision,
                 UpdatedAt = asset.UpdatedAt,
-                Screens = _getAssetScreens(asset),
+                Screens = _getAssetScreens(assetWrapper),
                 Editable = permission.HasValue
                     ? permission.Value.CanWrite()
                     : true,
                 Deletable = permission.HasValue
                     ? permission.Value.CanDelete()
                     : true,
+                Reservable = asset.Configuration.AllowBorrow,
                 Barcode = asset.Barcode
             };
             return model;
@@ -301,18 +342,20 @@ namespace AssetManager.Infrastructure
                 ApplicationSettings.DisplayCultureInfo.DateTimeFormat);
         }
 
-        private IEnumerable<AssetScreenModel> _getAssetScreens(Asset asset)
+        private IEnumerable<AssetScreenModel> _getAssetScreens(AssetWrapperForScreenView assetWrapper)
         {
+            var asset = assetWrapper.Asset;
+
             var screens = _screensService.GetScreensByAssetTypeUid(asset.Configuration.UID);
             return from s in screens
                 select new AssetScreenModel
                 {
                     Id = s.ScreenId,
-                    Name = s.Name,
+                    Name = s.Name.Localized(),
                     IsDefault = s.IsDefault,
                     IsMobile = s.IsMobile,
                     LayoutType = s.ScreenLayout.Type,
-                    Panels = _panelsAdapter.GetPanelsByScreen(asset, s)
+                    Panels = _panelsAdapter.GetPanelsByScreen(assetWrapper, s)
                         .ToPanelModels(GetAttributeModel),
                     HasFormula = asset
                         .Configuration

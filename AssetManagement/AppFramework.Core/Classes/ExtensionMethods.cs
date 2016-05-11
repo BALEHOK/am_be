@@ -33,52 +33,6 @@ namespace AppFramework.Core.Classes
         }
 
         /// <summary>
-        /// Filters the assets list and shows only items 
-        /// with provided permission
-        /// </summary>
-        /// <param name="assets">List of assets to filter</param>
-        /// <param name="permissions">Permission value</param>
-        /// <param name="rights">Dataset of current user's rights</param>
-        /// <returns>Filtered list of assets</returns>
-        public static IEnumerable<Asset> WithPermission(this IEnumerable<Asset> assets, Permission permission,
-            IAuthenticationService authenticationService)
-        {
-            foreach (Asset asset in assets)
-            {
-                if (authenticationService.GetPermission(asset).CompareWithMask(permission.GetCode()))
-                {
-                    yield return asset;
-                }
-            }
-            yield break;
-        }
-
-        /// <summary>
-        /// Filters the assets list and shows only items 
-        /// with provided permission
-        /// </summary>
-        /// <param name="assets">List of assets to filter</param>
-        /// <param name="permissions">Permission value</param>
-        /// <param name="rights">Dataset of current user's rights</param>
-        /// <returns>Filtered list of assets</returns>
-        public static IEnumerable<Asset> WithReadPermission(
-            this IEnumerable<Asset> assets,
-            IAuthenticationService authenticationService)
-        {
-            if (authenticationService.CurrentUser == null)
-                throw new NullReferenceException("CurrentUser");
-
-            Permission permission = Permission.RDDD;
-            foreach (Asset asset in assets)
-            {
-                if (authenticationService.GetPermission(asset).CompareWithMask(permission.GetCode()))
-                {
-                    yield return asset;
-                }
-            }
-        }
-
-        /// <summary>
         /// Adds all rules together and returns the result permission
         /// </summary>
         /// <param name="rules"></param>

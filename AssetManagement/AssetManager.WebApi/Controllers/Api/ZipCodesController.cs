@@ -24,15 +24,15 @@ namespace AssetManager.WebApi.Controllers.Api
 
         [Route("")]
         [CacheOutput(ServerTimeSpan = 60 * 60, ClientTimeSpan = 60 * 60)]
-        public IEnumerable<ZipCodeModel> Get(string filter = null, int? rowStart = 1, int? rowsNumber = 20)
+        public IEnumerable<ZipCodeModel> Get(string query = null, int? rowStart = 1, int? rowsNumber = 20)
         {
             var querySet = _unitOfWork.ZipCodeRepository
                 .AsQueryable()
                 .OrderBy(c => c.Code)
                 .AsQueryable();
 
-            if (filter != null)
-                querySet = querySet.Where(p => p.Code.ToLower().StartsWith(filter.ToLower()));
+            if (query != null)
+                querySet = querySet.Where(p => p.Code.ToLower().StartsWith(query.ToLower()));
             if (rowStart.HasValue)
                 querySet = querySet.Skip(rowStart.Value);
             if (rowsNumber.HasValue)

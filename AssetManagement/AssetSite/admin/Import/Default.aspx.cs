@@ -216,11 +216,6 @@ namespace AssetSite.admin.Import
                 Response.Redirect("~/admin/Import");
             }
 
-            if (ScriptManager.GetCurrent(this).IsInAsyncPostBack && ImportingWizard.ActiveStep == WizardStep4)
-            {
-                ReadExcelFields();
-            }
-
             Page.DataBind();
         }
 
@@ -242,6 +237,14 @@ namespace AssetSite.admin.Import
             long id = 0;
             long.TryParse(atList.SelectedValue, out id);
             AssetTypeId = id;
+        }
+
+        protected void ImportingWizard_Previous(object sender, EventArgs e)
+        {
+            if (ImportingWizard.ActiveStep == WizardStep4)
+            {
+                AssetTypeAttributes = null;
+            }
         }
 
         protected void ImportingWizard_Next(object sender, EventArgs e)

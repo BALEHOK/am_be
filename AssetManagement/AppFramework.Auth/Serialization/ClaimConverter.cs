@@ -16,7 +16,7 @@
 
 using System;
 using System.Security.Claims;
-using Newtonsoft.Json;
+using NewtonsoftAM.Json;
 
 namespace AppFramework.Auth.Serialization
 {

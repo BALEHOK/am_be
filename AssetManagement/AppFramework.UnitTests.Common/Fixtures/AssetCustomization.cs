@@ -7,34 +7,20 @@ using AppFramework.Entities;
 using Ploeh.AutoFixture;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppFramework.UnitTests.Common.Fixtures
 {
     public class AssetCustomization : ICustomization
     {
+        protected Asset Asset { get; private set; }        
+
         private readonly IUnitOfWork _unitOfWork;
 
         public AssetCustomization(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-        }
-
-        public void Customize(IFixture fixture)
-        {
-            fixture.Customize<AppFramework.Core.Classes.Asset>(composer =>
-                   {
-                       return composer.FromFactory(CreateAsset);
-                   });
-        }
-
-        private AppFramework.Core.Classes.Asset CreateAsset()
-        {
-            return new AppFramework.Core.Classes.Asset
+            Asset = new Asset
             {
-                IsDeleted = false,
                 Configuration = new AssetType(new DynEntityConfig(), _unitOfWork)
                 {
                     ID = 1
@@ -195,6 +181,21 @@ namespace AppFramework.UnitTests.Common.Fixtures
                     new AssetAttribute
                     {
                         Configuration = new AssetTypeAttribute(
+                            new DynEntityAttribConfig()
+                            {
+                                DBTableFieldname  = AttributeNames.IsDeleted,
+                            }, _unitOfWork)
+                        {
+                            DataType = new CustomDataType
+                            {
+                                Code = Enumerators.DataType.Bool
+                            },
+                        },
+                        Value = "false",
+                    },
+                    new AssetAttribute
+                    {
+                        Configuration = new AssetTypeAttribute(
                             new DynEntityAttribConfig(), _unitOfWork)
                         {
                             DBTableFieldName = AttributeNames.Role,
@@ -206,6 +207,14 @@ namespace AppFramework.UnitTests.Common.Fixtures
                     },
                 }
             };
+        }
+
+        public void Customize(IFixture fixture)
+        {
+            fixture.Customize<Asset>(composer =>
+            {
+                return composer.FromFactory(() => { return Asset; });
+            });
         }
     }
 }

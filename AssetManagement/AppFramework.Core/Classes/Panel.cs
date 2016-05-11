@@ -12,6 +12,7 @@ namespace AppFramework.Core.Classes
     using System.Xml.Serialization;
 
     [Serializable()]
+    [Obsolete("use AttributePanel instead")]
     public class Panel
     {
         /// <summary>
@@ -57,6 +58,18 @@ namespace AppFramework.Core.Classes
         {
             get { return _base.DisplayOrder; }
             set { _base.DisplayOrder = value; }
+        }
+
+        public bool IsChildPanel
+        {
+            get { return _base.IsChildAssets; }
+            set { _base.IsChildAssets = value; }
+        }
+
+        public long ChildAssetAttrId
+        {
+            get { return _base.ChildAssetAttrId.GetValueOrDefault(); }
+            set { _base.ChildAssetAttrId = value; }
         }
 
         /// <summary>
@@ -150,12 +163,22 @@ namespace AppFramework.Core.Classes
 
         public int GetAttributeDisplayOrder(AssetTypeAttribute attribute)
         {
-            var apa =
-                _base.AttributePanelAttribute.SingleOrDefault(
+            var apa = GetAttributePanelAttribute(attribute);
+            return apa != null ? apa.DisplayOrder : default(int);
+        }
+
+        public string GetAttributeScreenFormula(AssetTypeAttribute attribute)
+        {
+            var apa = GetAttributePanelAttribute(attribute);
+            return apa != null ? apa.ScreenFormula : null;
+        }
+
+        private AttributePanelAttribute GetAttributePanelAttribute(AssetTypeAttribute attribute)
+        {
+            return _base.AttributePanelAttribute.SingleOrDefault(
                     item => item.DynEntityAttribConfig.DBTableFieldname 
                         == attribute.DBTableFieldName 
                         && item.DynEntityAttribConfigUId == attribute.UID);
-            return apa != null ? apa.DisplayOrder : default(int);
         }
 
         public void RemoveAssetTypeAttribute(AssetTypeAttribute attribute)

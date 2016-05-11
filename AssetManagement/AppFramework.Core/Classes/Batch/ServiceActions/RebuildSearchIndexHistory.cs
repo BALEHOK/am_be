@@ -1,6 +1,6 @@
 using System.Data;
 using System.Data.SqlClient;
-using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.DataProxy;
 
 namespace AppFramework.Core.Classes.Batch.ServiceActions
 {
@@ -11,10 +11,11 @@ namespace AppFramework.Core.Classes.Batch.ServiceActions
 
         public override void Run()
         {
-            var unitOfWork = new DataProxy.UnitOfWork();
-            unitOfWork.SqlProvider.ExecuteNonQuery(StoredProcedures.ReIndexAll,
-                                                   new IDataParameter[] { new SqlParameter("@active", false), },
-                                                   CommandType.StoredProcedure);
+            var unitOfWork = new UnitOfWork();
+            unitOfWork.SqlProvider.ExecuteNonQuery(
+                StoredProcedures.ReIndexAll,
+                new IDataParameter[] { new SqlParameter("@active", false), },
+                CommandType.StoredProcedure);
         }
     }
 }

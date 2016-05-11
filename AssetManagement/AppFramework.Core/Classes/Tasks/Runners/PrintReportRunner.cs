@@ -1,4 +1,5 @@
-﻿using AppFramework.ConstantsEnumerators;
+﻿using AppFramework.Tasks;
+using AppFramework.Tasks.Models;
 using System.Collections.Generic;
 
 namespace AppFramework.Core.Classes.Tasks.Runners
@@ -17,10 +18,10 @@ namespace AppFramework.Core.Classes.Tasks.Runners
 
         public TaskResult Run(Entities.Task task)
         {
-            var result = new TaskResult((TaskFunctionType)task.FunctionType);
+            var result = new TaskResult((Enumerations.TaskFunctionType)task.FunctionType);
             if (string.IsNullOrEmpty(reportId))
             {
-                result.Status = TaskStatus.Error;
+                result.Status = Enumerations.TaskStatus.Error;
                 result.NavigationResult = System.Web.VirtualPathUtility.ToAbsolute(
                     string.Format(RENDER_URL, reportId, assetUid));
                 result.NavigationResultArguments = new Dictionary<string, object>
@@ -31,7 +32,7 @@ namespace AppFramework.Core.Classes.Tasks.Runners
             }
             else
             {
-                result.Status = AppFramework.ConstantsEnumerators.TaskStatus.Sussess;
+                result.Status = Enumerations.TaskStatus.Sussess;
             }
             return result;
         }

@@ -7,7 +7,7 @@ namespace AppFramework.Core.DataTypes
 {
     public abstract class DataTypeBase
     {
-        protected Enumerators.DataType _datatype;
+        protected Enumerators.DataType _dataTypeCode;
 
         /// <summary>
         /// Datatype name

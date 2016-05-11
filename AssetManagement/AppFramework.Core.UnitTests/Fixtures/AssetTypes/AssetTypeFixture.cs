@@ -7,6 +7,7 @@ using AppFramework.DataProxy;
 using AppFramework.Entities;
 using Ploeh.AutoFixture;
 using System.Linq;
+using AppFramework.ConstantsEnumerators;
 
 namespace AppFramework.Core.UnitTests.Fixtures.AssetTypes
 {
@@ -26,6 +27,9 @@ namespace AppFramework.Core.UnitTests.Fixtures.AssetTypes
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.UpdateUserId, DataType = new AssetDataType(), ID = 6 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.UpdateDate, DataType = new DateTimeDataType(), ID = 7 });
             Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.Name, DataType = new StringDataType(), ID = 8 });
+
+            var dynListDataType = new CustomDataType {Code = Enumerators.DataType.DynList};
+            Attributes.Add(new AssetTypeAttribute(fixture.Create<DynEntityAttribConfig>(), unitOfWork) { Name = AttributeNames.Role, DataType = dynListDataType, ID = 9 });
             AllAttributes = Attributes.ToList();
             Panels.Add(new Panel());
             ID = UID = 1;

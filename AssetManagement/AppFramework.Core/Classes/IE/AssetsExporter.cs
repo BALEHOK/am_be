@@ -15,11 +15,13 @@ namespace AppFramework.Core.Classes.IE
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAssetsService _assetsService;
+        private readonly ITypeSearch _typeSearch;
 
         public AssetsExporter(
             IAssetTypeRepository assetTypeRepository, 
             IUnitOfWork unitOfWork,
-            IAssetsService assetsService)
+            IAssetsService assetsService,
+            ITypeSearch typeSearch)
         {
             if (assetTypeRepository == null)
                 throw new ArgumentNullException();
@@ -28,37 +30,32 @@ namespace AppFramework.Core.Classes.IE
             if (assetsService == null)
                 throw new ArgumentNullException("assetsService");
             _assetsService = assetsService;
+            _typeSearch = typeSearch;
             _assetTypeRepository = assetTypeRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public DataTable ExportToDataTable(long assetTypeUid, List<AttributeElement> filter)
+        public DataTable ExportToDataTable(long assetTypeUid, List<AttributeElement> filter, long userId)
         {
             var type = _assetTypeRepository.GetByUid(assetTypeUid);
-            var userService = new UserService(_unitOfWork, _assetTypeRepository, _assetsService);
-            var authenticationService = new AuthenticationService(_unitOfWork, userService);
-            var typeSearch = new TypeSearch(
-                _unitOfWork, 
-                _assetTypeRepository, 
-                _assetsService);
-            var dataTable = typeSearch.FillAssetToDataTableByTypeContext((long)authenticationService.CurrentUser.ProviderUserKey, assetTypeUid, type.DBTableName, filter);
+            var dataTable = _typeSearch.FillAssetToDataTableByTypeContext(userId, assetTypeUid, type.DBTableName, filter);
             var columnsDataTable = GetAssetColumnsByTypeContext(type.DBTableName);
 
             foreach (DataRow row in columnsDataTable.Rows)
             {
                 //retrieving related asset
-                int RelatedAssetTypeID = 0;
-                int.TryParse(row["RelatedAssetTypeID"].ToString(), out RelatedAssetTypeID);
-                if (RelatedAssetTypeID > 0)
+                int relatedAssetTypeId;
+                int.TryParse(row["RelatedAssetTypeID"].ToString(), out relatedAssetTypeId);
+                if (relatedAssetTypeId > 0)
                 {
-                    if (RelatedAssetTypeID == 0)
+                    AssetType assetType;
+                    if (!_assetTypeRepository.TryGetById(relatedAssetTypeId, out assetType)) // related asset type was deactivated
+                    {
                         continue;
+                    }
 
                     var newColumnName = row["dbtablefieldname"] + "temp";
-                    var newColumn = dataTable.Columns.Add(newColumnName, typeof(string));
-
-                    int relatedAssetTypeAttributeID = int.Parse(row["RelatedAssetTypeAttributeID"].ToString());
-                    var assetType = _assetTypeRepository.GetById(RelatedAssetTypeID);
+                    dataTable.Columns.Add(newColumnName, typeof(string));
 
                     foreach (DataRow dataRow in dataTable.Rows)
                     {
@@ -68,13 +65,12 @@ namespace AppFramework.Core.Classes.IE
                             continue;
 
                         int entityId;
-                        if (int.TryParse(cellValue, out entityId))
+                            Asset asset;
+                        if (int.TryParse(cellValue, out entityId)
+                            && entityId > 0
+                            && _assetsService.TryGetAssetById(entityId, assetType, out asset))
                         {
-                            var asset = _assetsService.GetAssetById(entityId, assetType);
-                            if (asset == null)
-                                continue;
-
-                            string attributeValue = asset["Name"].Value;
+                            var attributeValue = asset["Name"].Value;
                             dataRow[newColumnName] = attributeValue;
                         }
                     }
@@ -88,8 +84,8 @@ namespace AppFramework.Core.Classes.IE
                     //get dyn list uid
                     int dynListUid = int.Parse(row["DynListUid"].ToString());
 
-                    var newColumnName = row["dbtablefieldname"].ToString() + "temp";
-                    var newColumn = dataTable.Columns.Add(newColumnName, typeof(string));
+                    var newColumnName = row["dbtablefieldname"] + "temp";
+                    dataTable.Columns.Add(newColumnName, typeof(string));
 
                     foreach (DataRow dataRow in dataTable.Rows)
                     {
@@ -140,7 +136,7 @@ namespace AppFramework.Core.Classes.IE
         {
             var dataTable = new DataTable();
             using (var connection = new EntityConnection("name=DataEntities"))
-            using (var unitOfWork = new DataProxy.UnitOfWork(connection))
+            using (var unitOfWork = new UnitOfWork(connection))
             {
                 var reader = unitOfWork.SqlProvider.ExecuteReader(
                     "_cust_GetColumnNamesByTypeContext",

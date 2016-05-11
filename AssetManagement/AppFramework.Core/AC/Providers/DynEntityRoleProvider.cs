@@ -1,4 +1,5 @@
 ﻿using AppFramework.Core.AC.Authentication;
+using AppFramework.Core.Classes.SearchEngine;
 using Microsoft.Practices.Unity;
 
 namespace AppFramework.Core.AC.Providers
@@ -43,7 +44,8 @@ namespace AppFramework.Core.AC.Providers
                     var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
                     var rightsService = new RightsService(UnitOfWork);
                     var attributeRepository = new AttributeRepository(UnitOfWork);
-                    var assetsService = new AssetsService(UnitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+                    var indexationService = new IndexationService(UnitOfWork);
+                    var assetsService = new AssetsService(UnitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService, indexationService);
                     _userService = new UserService(UnitOfWork, atRepository, assetsService);
                 }
                 return _userService;

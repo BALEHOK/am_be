@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.DataProxy;
 
@@ -105,7 +106,7 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
                         _assetTypeRepository)
                 {
                     AttributeValue = attribute.UID,
-                    AttributeText = new TranslatableString(attribute.Name).GetTranslation()
+                    AttributeText = attribute.Name.Localized()
                 }));
             }
             else
@@ -116,7 +117,7 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
                     .Select(attribute => new Attribute(_unitOfWork, _assetTypeRepository)
                 {
                     AttributeValue = attribute.UID,
-                    AttributeText = new TranslatableString(attribute.Name).GetTranslation()
+                    AttributeText = attribute.Name.Localized()
                 }));
             }
         }

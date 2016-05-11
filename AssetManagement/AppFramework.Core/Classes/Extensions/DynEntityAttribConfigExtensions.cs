@@ -6,7 +6,7 @@ namespace AppFramework.Core.Classes.Extensions
     {
         public static string NameLocalized(this DynEntityAttribConfig attribConfig)
         {
-            return new TranslatableString(attribConfig.Name).GetTranslation();
+            return attribConfig.Name.Localized();
         }
     }
 }

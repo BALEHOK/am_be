@@ -16,7 +16,7 @@ namespace AppFramework.Reports.StandardReports.DataProviders
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly IAssetsService _assetsService;
 
-        public AssetWithChildsReportDataProvider(          
+        public AssetWithChildsReportDataProvider(
             IAssetTypeRepository assetTypeRepository,
             IAssetsService assetsService,
             IUnitOfWork unitOfWork)
@@ -47,22 +47,27 @@ namespace AppFramework.Reports.StandardReports.DataProviders
                 });
             }
 
-            var childAssetPointers = _unitOfWork.GetChildAssets(assetTypeId);
-            foreach (var assetsPointer in childAssetPointers)
+            var realtedAssetTypeDefinitions = _unitOfWork.GetRelatedAssetTypes(assetTypeId, currentUserId);
+            foreach (var typeDef in realtedAssetTypeDefinitions)
             {
-                var childAssetType = _assetTypeRepository.GetById(assetsPointer.DynEntityConfigId);
-                var childAssets = from ca in _assetsService.GetAssetsByAssetTypeAndUser(childAssetType, currentUserId)
-                                  let attribute = asset.Attributes
-                                     .SingleOrDefault(att => att.GetConfiguration().UID == assetsPointer.DynEntityAttribConfigUid)
-                                  where attribute != null && attribute.ValueAsId == asset.ID
-                                  select ca;
+                var relatedAssetType = _assetTypeRepository.GetById(
+                    typeDef.DynEntityConfigId);
 
-                foreach (var ca in childAssets)
+                var allAssetsOfRelatedAssetType = _assetsService.GetAssetsByAssetTypeAndUser(
+                    relatedAssetType, currentUserId);
+
+                var relatedAssets = allAssetsOfRelatedAssetType
+                    .Where(a => a.Attributes.Any(
+                        attr => attr.Configuration.ID == typeDef.DynEntityAttribConfigId
+                                && attr.ValueAsId == asset.ID))
+                    .ToList();
+
+                foreach (var relatedAsset in relatedAssets)
                 {
                     var childAssetModel = new AssetViewModel
                     {
                         Name = string.Format("{0} ({1})",
-                        ca.Name, ca.GetConfiguration().Name)
+                        relatedAsset.Name, relatedAsset.GetConfiguration().Name)
                     };
 
                     Func<AssetAttribute, bool> descriptionPredicate =
@@ -73,12 +78,12 @@ namespace AppFramework.Reports.StandardReports.DataProviders
                         a => a.GetConfiguration().IsShownOnPanel && !string.IsNullOrEmpty(a.Value);
 
                     var attributes = new List<AssetAttribute>();
-                    if (ca.Attributes.Any(descriptionPredicate))
-                        attributes = ca.Attributes.Where(descriptionPredicate).ToList();
-                    else if (ca.Attributes.Any(fallbackOnePredicate))
-                        attributes = ca.Attributes.Where(fallbackOnePredicate).ToList();
-                    else if (ca.Attributes.Any(fallbackTwoPredicate))
-                        attributes = ca.Attributes.Where(fallbackTwoPredicate).ToList();
+                    if (relatedAsset.Attributes.Any(descriptionPredicate))
+                        attributes = relatedAsset.Attributes.Where(descriptionPredicate).ToList();
+                    else if (relatedAsset.Attributes.Any(fallbackOnePredicate))
+                        attributes = relatedAsset.Attributes.Where(fallbackOnePredicate).ToList();
+                    else if (relatedAsset.Attributes.Any(fallbackTwoPredicate))
+                        attributes = relatedAsset.Attributes.Where(fallbackTwoPredicate).ToList();
 
                     foreach (var attr in attributes)
                     {

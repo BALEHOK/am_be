@@ -1,3 +1,4 @@
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.DAL.Adapters;
 using AppFramework.Core.Validation;
 using Microsoft.Practices.EnterpriseLibrary.Caching;
@@ -59,7 +60,7 @@ namespace AppFramework.Core.Classes
 		{
 			get
 			{
-				return new TranslatableString(_base.Name).GetTranslation();
+				return _base.Name.Localized();
 			}
 			set
 			{

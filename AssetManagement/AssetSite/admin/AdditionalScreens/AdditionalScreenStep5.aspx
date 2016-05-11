@@ -56,9 +56,26 @@
             this.RemoveItem = function () {
                 $('#' + this.ControlId + ' option:selected').each(function (i, elem) {
                     var tempElem = $(elem);
-                    var nOption = $("<option>" + tempElem.text() + "</option>").attr("value", tempElem.val());
-                    var num = tempElem.val().split(':')[1];
-                    $('#containerN' + num).find('select').append(nOption);
+                    var val = tempElem.val();
+                    var num = val.split(':')[1];
+
+                    var $select = $('#containerN' + num).find('select');
+                    var optionElems = $select.children();
+
+                    var duplicate = false;
+                    for (var i = 0; i < optionElems.length; i++) {
+                        var $op = $(optionElems[i]);
+                        if ($op.val() == val) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!duplicate) {
+                        var nOption = $("<option>" + tempElem.text() + "</option>").attr("value", val);
+                        $select.append(nOption);
+                    }
+
                     tempElem.remove();
                 });
             }
@@ -125,7 +142,8 @@
                                 <ItemTemplate>
                                     <uc1:AttribList runat="server" ReferencingDynEntityAttribConfigId='<%# Eval("ReferencingDynEntityAttribConfigId") %>'
                                         ReferencingDynEntityAttribConfigName='<%# Eval("ReferencingDynEntityAttribConfigName") %>'
-                                        Name='<%# Eval("Name") %>' DynEntityConfig='<%# Eval("Configuration") %>' LinkedAttributesUids='<%# AttributesToAttribute %>' />
+                                        Name='<%# Eval("Name") %>' DynEntityConfig='<%# Eval("Configuration") %>' LinkedAttributesUids='<%# AttributesToAttribute %>'
+                                        IgnoreValidation='<%# Eval("IgnoreValidation") %>' />
                                 </ItemTemplate>
                             </asp:Repeater>
                         </td>
@@ -133,21 +151,21 @@
                         <td style="width: 42%" id="panels">
                             <asp:Repeater ID="repPanels" runat="server" OnItemDataBound="OnPanelDataBound">
                                 <ItemTemplate>
-                                    <div id='<%# GetPanelDivId(Eval("Base.AttributePanelUid")) %>'>
+                                    <div id='<%# GetPanelDivId(Eval("AttributePanelUid")) %>'>
                                         <asp:Literal ID="litScript" runat="server"></asp:Literal>
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
                                                 <td colspan="3" style="text-align: center;">
-                                                    <asp:Label ID="Label1" runat="server" Text='<%#Eval("Name") %>'></asp:Label><br />
+                                                    <asp:Label ID="Label1" runat="server" Text='<%#Eval("Name")%>'></asp:Label><br />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="width: 15%; text-align: right;">
-                                                    <a style="cursor: pointer;" onclick='<%#GetAddScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetAddScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="add" src="../../images/buttons/addarrow.png" />
                                                     </a>
                                                     <br />
-                                                    <a style="cursor: pointer;" onclick='<%#GetRemoveScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetRemoveScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="remove" src="../../images/buttons/deletearrow.png" />
                                                     </a>
                                                 </td>
@@ -156,19 +174,19 @@
                                                         Height="200px"></asp:ListBox>
                                                 </td>
                                                 <td style="width: 15%;">
-                                                    <a style="cursor: pointer;" onclick='<%#GetTopScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetTopScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="top" src="../../images/buttons/sort_first.png" />
                                                     </a>
                                                     <br />
-                                                    <a style="cursor: pointer;" onclick='<%#GetUpScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetUpScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="up" src="../../images/buttons/sort_up.png" />
                                                     </a>
                                                     <br />
-                                                    <a style="cursor: pointer;" onclick='<%#GetDownScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetDownScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="down" src="../../images/buttons/sort_down.png" />
                                                     </a>
                                                     <br />
-                                                    <a style="cursor: pointer;" onclick='<%#GetBottomScript(Eval("Base.AttributePanelId")) %>'>
+                                                    <a style="cursor: pointer;" onclick='<%#GetBottomScript(Eval("AttributePanelId")) %>'>
                                                         <img alt="bottom" src="../../images/buttons/sort_last.png" />
                                                     </a>
                                                 </td>
@@ -209,11 +227,4 @@
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PlaceHolderLeftColumn" runat="server">
     <amc:SideMenu runat="server" id="SideMenu" />
-    <script type="text/javascript">        $(document).ready(function () {
-            $('.item').hover(
-    function () { $(this).css('background-color', '#84d859'); }, function () {
-        $(this).css('background-color',
-    '#999999');
-    });
-        }); </script>
 </asp:Content>

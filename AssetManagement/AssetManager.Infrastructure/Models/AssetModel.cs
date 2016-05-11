@@ -1,13 +1,8 @@
-﻿using AppFramework.Core.DTO;
-using AssetManager.Infrastructure.Validators;
-using FluentValidation.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace AssetManager.Infrastructure.Models
-{    
+{
     public class AssetModel
     {
         public string Name { get; set; }
@@ -27,6 +22,8 @@ namespace AssetManager.Infrastructure.Models
         public bool Editable { get; set; }
 
         public bool Deletable { get; set; }
+
+        public bool Reservable { get; set; }
 
         public bool IsDeleted { get; set; }
 

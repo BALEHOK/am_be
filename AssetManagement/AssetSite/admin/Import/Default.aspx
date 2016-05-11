@@ -23,6 +23,7 @@
                     StepNextButtonText="<% $Resources:Global, NextText %>" StartNextButtonText="<% $Resources:Global, NextText %>"
                     FinishCompleteButtonText="<% $Resources:Global, FinishText %>" DisplayCancelButton="True"
                     OnCancelButtonClick="ImportingWizard_Cancel" OnFinishButtonClick="ImportingWizard_Finish"
+                    OnPreviousButtonClick="ImportingWizard_Previous"
                     OnNextButtonClick="ImportingWizard_Next" DisplaySideBar="False" ActiveStepIndex="0">
                     <WizardSteps>
                         <asp:WizardStep ID="WizardStep1" runat="server" Title="Step 1 &mdash; Asset Type for data importing"

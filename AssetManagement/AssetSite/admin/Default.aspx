@@ -35,14 +35,6 @@
                 <asp:Label runat="server" ID="lblImportDesc" 
                     meta:resourcekey="lblImportDescResource1"></asp:Label>
             </p>   
-            <p>                
-                <asp:HyperLink ID="HyperLink11" runat="server" 
-                    NavigateUrl="~/admin/Export/Default.aspx" Text="Export" 
-                    meta:resourcekey="HyperLink11Resource1"></asp:HyperLink>                
-                <br />
-                <asp:Label runat="server" ID="lblExportDesc" 
-                    meta:resourcekey="lblExportDescResource1"></asp:Label>
-            </p>   
             <p runat="server" ID="linkSynchronization">                
                 <asp:HyperLink ID="HyperLink14" runat="server" 
                     NavigateUrl="~/admin/Synk/Default.aspx" Text="Synchronization" 

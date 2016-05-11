@@ -4,6 +4,7 @@ using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.DAL;
 using AppFramework.Core.Interfaces;
 using AppFramework.DataProxy;
+using Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,10 +132,8 @@ namespace AppFramework.Core.Classes
         {
             get
             {
-                return this
-                    .Attributes
-                    .SingleOrDefault(
-                        a => a.Configuration.DBTableFieldName.ToLower() == name.ToLower());
+                return Attributes.SingleOrDefault(
+                    a => a.Configuration.DBTableFieldName.ToLower() == name.ToLower());
             }
         }
 
@@ -165,22 +164,6 @@ namespace AppFramework.Core.Classes
                 long assetID = 0;
                 long.TryParse(this.Attributes.Single(g => g.GetConfiguration().Name == AttributeNames.DynEntityId).Value, out assetID);
                 return assetUID == 0 && assetID == 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets and sets if this asset is base of AssetUser internal type
-        /// </summary>
-        [XmlIgnore]
-        public bool IsUser
-        {
-            get
-            {
-                if (_userDynEntityConfigId == 0)
-                {
-                    _userDynEntityConfigId = _assetTypeRepository.GetPredefinedAssetType(PredefinedEntity.User).ID;
-                }
-                return _configuration.ID == _userDynEntityConfigId;
             }
         }
 
@@ -235,10 +218,15 @@ namespace AppFramework.Core.Classes
             set { this._configuration = value; }
         }
 
+        [XmlIgnore]
+        public DynRow DataRow
+        {
+            get { return _data; }
+        }
+
         private List<AssetAttribute> _attributes;
         private AssetType _configuration;
         private DynRow _data;
-        private long _userDynEntityConfigId;
 
         /// <summary>
         /// Constructor for deserialization support
@@ -413,20 +401,13 @@ namespace AppFramework.Core.Classes
         {
             get
             {
-                if (!_isDeleted.HasValue)
-                {
-                    var atId = GetConfiguration().ID;
-                    _isDeleted = _unitOfWork.DeletedEntitiesRepository
-                        .SingleOrDefault(e => e.DynEntityConfigId == atId && e.DynEntityId == ID) != null;
-                }
-                return _isDeleted.Value;
+                return bool.Parse(_data[AttributeNames.IsDeleted].Value.ToString());
             }
             set
             {
-                _isDeleted = value;
+                _data[AttributeNames.IsDeleted].Value = value.ToString();
             }
         }
-        private bool? _isDeleted;
 
         private readonly IAttributeValueFormatter _attributeValueFormatter;
         private readonly IAssetTypeRepository _assetTypeRepository;

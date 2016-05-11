@@ -6,6 +6,7 @@ using AppFramework.Core.AC.Providers;
 using AppFramework.Core.Classes;
 using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.DataProxy;
+using AppFramework.ConstantsEnumerators;
 
 namespace AppFramework.Core.AC.Authentication
 {
@@ -43,6 +44,7 @@ namespace AppFramework.Core.AC.Authentication
         private AssetUser _currentUser;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
+        private readonly IAssetTypeRepository _assetTypeRepository;
 
         /// <summary>
         /// Class constructor with initialization
@@ -50,17 +52,21 @@ namespace AppFramework.Core.AC.Authentication
         public AuthenticationService(
             IUnitOfWork unitOfWork, 
             IUserService userService,
+            IAssetTypeRepository assetTypeRepository,
             IAuthenticationStorageProvider storageProvider = null)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
+            _unitOfWork = unitOfWork;
             if (userService == null)
                 throw new ArgumentNullException("userService");
             _userService = userService;
+            if (assetTypeRepository == null)
+                throw new ArgumentNullException("assetTypeRepository");
+            _assetTypeRepository = assetTypeRepository;
             if (storageProvider == null)
                 storageProvider = new SessionAuthenticationStorageProvider();
             _provider = storageProvider;
-            _unitOfWork = unitOfWork;
         }
      
         /// <summary>
@@ -100,6 +106,7 @@ namespace AppFramework.Core.AC.Authentication
         /// </summary>
         /// <param name="asset">Asset to check the permissions</param>
         /// <returns>Permission code</returns>
+        [Obsolete("Use AssetPermissionChecker class")]
         public Permission GetPermission(Asset asset)
         {
             if (asset == null)
@@ -115,13 +122,14 @@ namespace AppFramework.Core.AC.Authentication
             if (asset[AttributeNames.DepartmentId] != null && asset[AttributeNames.DepartmentId].ValueAsId.HasValue)
                 deptId = asset[AttributeNames.DepartmentId].ValueAsId;
             var taxonomyItems = _unitOfWork.TaxonomyItemRepository.GetTaxonomyItemsByAssetTypeId(asset.GetConfiguration().ID);
+            bool isUser = _assetTypeRepository.IsPredefinedAssetType(asset.Configuration, PredefinedEntity.User);
             return GetPermission(asset.ID,                                 
                                  asset.GetConfiguration().ID,
                                  ownerId,
                                  deptId,
                                  (from t in taxonomyItems
                                   select t.TaxonomyItemId).ToList(),
-                                  asset.IsUser,
+                                  isUser,
                                   userId);
         }
 

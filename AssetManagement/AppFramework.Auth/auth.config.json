@@ -10,9 +10,13 @@
             "RedirectUris": [ "*" ],
             "PostLogoutRedirectUris": [ "*" ]
         },
-      "AMAT": {
-        "RedirectUris": [ "oob://localhost/AMATclient" ],
-        "PostLogoutRedirectUris": [ "oob://localhost/AMATclient" ]
-      }
+        "AMAT": {
+            "RedirectUris": [ "oob://localhost/AMATclient" ],
+            "PostLogoutRedirectUris": [ "oob://localhost/AMATclient" ]
+        },
+        "AMM": {
+            "RedirectUris": [ "flexmis://query" ],
+            "PostLogoutRedirectUris": [ "flexmis://query" ]
+        }
     }
 }

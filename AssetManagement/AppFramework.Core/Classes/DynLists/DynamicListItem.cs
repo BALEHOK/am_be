@@ -1,4 +1,6 @@
-﻿namespace AppFramework.Core.Classes.DynLists
+﻿using AppFramework.Core.Classes.Extensions;
+
+namespace AppFramework.Core.Classes.DynLists
 {
     using System.Xml.Serialization;
     using AppFramework.Entities;
@@ -44,7 +46,7 @@
 
         public string Value
         {
-            get { return new TranslatableString(_base.Value).GetTranslation(); }
+            get { return _base.Value.Localized(); }
             set { _base.Value = value; }
         }
 

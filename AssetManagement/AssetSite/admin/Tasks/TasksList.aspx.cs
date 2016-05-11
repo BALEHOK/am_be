@@ -5,6 +5,7 @@ using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.Classes;
 using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
+using AppFramework.Tasks;
 
 namespace AssetSite.admin.Tasks
 {
@@ -27,30 +28,27 @@ namespace AssetSite.admin.Tasks
 
         public string GetFunctionType(object input)
         {
-            TaskFunctionType fType = (TaskFunctionType)Convert.ToInt32(input);
+            Enumerations.TaskFunctionType fType = (Enumerations.TaskFunctionType)Convert.ToInt32(input);
             string result = string.Empty;
 
             switch (fType)
             {
-                case TaskFunctionType.CreateAsset:
+                case Enumerations.TaskFunctionType.CreateAsset:
                     result = "Create Asset";
                     break;
-                case TaskFunctionType.ExecuteSearch:
+                case Enumerations.TaskFunctionType.ExecuteSearch:
                     result = "Execute Search";
                     break;
-                case TaskFunctionType.ExportFileSearch:
-                    result = "File Export (via search)";
-                    break;
-                case TaskFunctionType.ExportFileSSIS:
+                case Enumerations.TaskFunctionType.ExportFileSSIS:
                     result = "File Export (SSIS)";
                     break;
-                case TaskFunctionType.ImportFile:
+                case Enumerations.TaskFunctionType.ImportFile:
                     result = "File Import";
                     break;
-                case TaskFunctionType.LaunchBatch:
+                case Enumerations.TaskFunctionType.LaunchBatch:
                     result = "Launch Batch Job";
                     break;
-                case TaskFunctionType.PrintReport:
+                case Enumerations.TaskFunctionType.PrintReport:
                     result = "Print Report";
                     break;
             }

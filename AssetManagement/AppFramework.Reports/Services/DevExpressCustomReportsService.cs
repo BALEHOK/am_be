@@ -27,7 +27,33 @@ namespace AppFramework.Reports.Services
 
         public List<Report> GetAllReports(long userId)
         {
-            return _reportPermissionChecker.FilterReadPermitted(_unitOfWork.ReportRepository.Get(), userId).ToList();
+            var leftOuterJoin = from r in _unitOfWork.ReportRepository.AsQueryable()
+                                join at in _unitOfWork.DynEntityConfigRepository
+                                                      .AsQueryable()
+                                                      .Where(at => at.ActiveVersion)
+                                on r.DynEntityConfigId equals at.DynEntityConfigId into atLeftJoin
+                                from at in atLeftJoin.DefaultIfEmpty()
+                                select new { r, at };
+
+            var reports = leftOuterJoin
+                .ToList()
+                .Select(x =>
+                    new Report
+                    {
+                        ReportUid = x.r.ReportUid,
+                        Name = x.r.Name,
+                        Type = x.r.Type,
+                        LayoutData = x.r.LayoutData,
+                        IsFinancial = x.r.IsFinancial,
+                        DynEntityConfigId = x.r.DynEntityConfigId,
+                        AssetTypeName = x.at == null
+                            ? string.Empty
+                            : x.at.Name
+                    });
+
+            return _reportPermissionChecker
+                .FilterReadPermitted(reports, userId)
+                .ToList();
         }
 
         public List<Report> GetReportsByAssetTypeId(long assetTypeId, long userId)

@@ -61,8 +61,8 @@ namespace AppFramework.Core.DataTypes
         /// </summary>
         public override Enumerators.DataType Code
         {
-            get { return this._datatype; }
-            set { this._datatype = value; }
+            get { return this._dataTypeCode; }
+            set { this._dataTypeCode = value; }
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace AppFramework.Core.DataTypes
                 throw new ArgumentNullException("DataType");
             _base = data;
             _base.StartTracking();
-            _datatype = (Enumerators.DataType)Enum.Parse(typeof(Enumerators.DataType), Name, true);
+            _dataTypeCode = (Enumerators.DataType)Enum.Parse(typeof(Enumerators.DataType), data.Name, true);
         }
     }
 }

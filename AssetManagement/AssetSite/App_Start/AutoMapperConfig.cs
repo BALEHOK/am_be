@@ -18,7 +18,6 @@ namespace AssetSite
             AutoMapper.Mapper.CreateMap<AppFramework.Entities.DynEntityAttribConfig, AppFramework.Entities.DynEntityAttribConfig>()
                 .ForMember(deac => deac.ChangeTracker, opt => opt.Ignore())
                 .ForMember(dec => dec.AttributePanelAttributes, opt => opt.Ignore())
-                .ForMember(deac => deac.DynEntityAttribScreens, opt => opt.Ignore())
                 .ForMember(deac => deac.DataType, opt => opt.Ignore());
             AutoMapper.Mapper.CreateMap<AppFramework.Entities.AttributePanel, AppFramework.Entities.AttributePanel>()
                 .ForMember(ap => ap.AttributePanelAttribute, opt => opt.Ignore())
@@ -26,7 +25,6 @@ namespace AssetSite
                 .ForMember(ap => ap.AssetTypeScreen, opt => opt.Ignore());
             AutoMapper.Mapper.CreateMap<AppFramework.Entities.AssetTypeScreen, AppFramework.Entities.AssetTypeScreen>()
                 .ForMember(s => s.ChangeTracker, opt => opt.Ignore())
-                .ForMember(s => s.DynEntityAttribScreens, opt => opt.Ignore())
                 .ForMember(s => s.DynEntityConfig, opt => opt.Ignore())
                 .ForMember(s => s.AttributePanel, opt => opt.Ignore());
             AutoMapper.Mapper.AssertConfigurationIsValid();

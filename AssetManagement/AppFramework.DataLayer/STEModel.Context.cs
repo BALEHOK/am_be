@@ -204,12 +204,6 @@ namespace AppFramework.DataLayer
         }
         private ObjectSet<PredefinedAttributes> _predefinedAttributes;
     
-        public ObjectSet<Reservation> Reservation
-        {
-            get { return _reservation  ?? (_reservation = CreateObjectSet<Reservation>("Reservation")); }
-        }
-        private ObjectSet<Reservation> _reservation;
-    
         public ObjectSet<Rights> Rights
         {
             get { return _rights  ?? (_rights = CreateObjectSet<Rights>("Rights")); }
@@ -312,12 +306,6 @@ namespace AppFramework.DataLayer
         }
         private ObjectSet<AssetTypeScreen> _assetTypeScreen;
     
-        public ObjectSet<DynEntityAttribScreens> DynEntityAttribScreens
-        {
-            get { return _dynEntityAttribScreens  ?? (_dynEntityAttribScreens = CreateObjectSet<DynEntityAttribScreens>("DynEntityAttribScreens")); }
-        }
-        private ObjectSet<DynEntityAttribScreens> _dynEntityAttribScreens;
-    
         public ObjectSet<ValidationOperand> ValidationOperand
         {
             get { return _validationOperand  ?? (_validationOperand = CreateObjectSet<ValidationOperand>("ValidationOperand")); }
@@ -329,12 +317,6 @@ namespace AppFramework.DataLayer
             get { return _attributePanelAttribute  ?? (_attributePanelAttribute = CreateObjectSet<AttributePanelAttribute>("AttributePanelAttribute")); }
         }
         private ObjectSet<AttributePanelAttribute> _attributePanelAttribute;
-    
-        public ObjectSet<DeletedEntity> DeletedEntities
-        {
-            get { return _deletedEntities  ?? (_deletedEntities = CreateObjectSet<DeletedEntity>("DeletedEntities")); }
-        }
-        private ObjectSet<DeletedEntity> _deletedEntities;
     
         public ObjectSet<DefaultValue> DefaultValue
         {
@@ -449,6 +431,24 @@ namespace AppFramework.DataLayer
             get { return _dynEntityTaxonomyItemHistories  ?? (_dynEntityTaxonomyItemHistories = CreateObjectSet<DynEntityTaxonomyItemHistory>("DynEntityTaxonomyItemHistories")); }
         }
         private ObjectSet<DynEntityTaxonomyItemHistory> _dynEntityTaxonomyItemHistories;
+    
+        public ObjectSet<Reservation> Reservations
+        {
+            get { return _reservations  ?? (_reservations = CreateObjectSet<Reservation>("Reservations")); }
+        }
+        private ObjectSet<Reservation> _reservations;
+    
+        public ObjectSet<ReservedAsset> ReservedAssets
+        {
+            get { return _reservedAssets  ?? (_reservedAssets = CreateObjectSet<ReservedAsset>("ReservedAssets")); }
+        }
+        private ObjectSet<ReservedAsset> _reservedAssets;
+    
+        public ObjectSet<BannerImage> BannerImages
+        {
+            get { return _bannerImages  ?? (_bannerImages = CreateObjectSet<BannerImage>("BannerImages")); }
+        }
+        private ObjectSet<BannerImage> _bannerImages;
 
         #endregion
 
@@ -1244,29 +1244,6 @@ namespace AppFramework.DataLayer
         } 
      
      
-        public ObjectResult<f_cust_GetChildAssets_Result> f_cust_GetChildAssets(Nullable<long> assetTypeId)     
-     
-        { 
-     
-     
-            ObjectParameter assetTypeIdParameter; 
-     
-            if (assetTypeId.HasValue) 
-            { 
-                assetTypeIdParameter = new ObjectParameter("assetTypeId", assetTypeId); 
-            } 
-            else 
-            { 
-                assetTypeIdParameter = new ObjectParameter("assetTypeId", typeof(long)); 
-            } 
-     
-     
-            return base.ExecuteFunction<f_cust_GetChildAssets_Result>("f_cust_GetChildAssets", assetTypeIdParameter); 
-     
-     
-        } 
-     
-     
         public ObjectResult<StockLocationInfo> f_cust_GetStocksByLocation(Nullable<long> assetid, Nullable<long> configid)     
      
         { 
@@ -1459,6 +1436,41 @@ namespace AppFramework.DataLayer
      
      
             base.ExecuteFunction("f_cust_ReIndex_Asset", dynEntityUidNewParameter, dynEntityIdParameter, dynEntityConfigUidNewParameter, dynEntityConfigIdParameter); 
+     
+     
+        } 
+     
+     
+        public ObjectResult<f_cust_GetRelatedAssetTypes_Result> f_cust_GetRelatedAssetTypes(Nullable<long> userId, Nullable<long> assetTypeId)     
+     
+        { 
+     
+     
+            ObjectParameter userIdParameter; 
+     
+            if (userId.HasValue) 
+            { 
+                userIdParameter = new ObjectParameter("userId", userId); 
+            } 
+            else 
+            { 
+                userIdParameter = new ObjectParameter("userId", typeof(long)); 
+            } 
+     
+     
+            ObjectParameter assetTypeIdParameter; 
+     
+            if (assetTypeId.HasValue) 
+            { 
+                assetTypeIdParameter = new ObjectParameter("assetTypeId", assetTypeId); 
+            } 
+            else 
+            { 
+                assetTypeIdParameter = new ObjectParameter("assetTypeId", typeof(long)); 
+            } 
+     
+     
+            return base.ExecuteFunction<f_cust_GetRelatedAssetTypes_Result>("f_cust_GetRelatedAssetTypes", userIdParameter, assetTypeIdParameter); 
      
      
         } 

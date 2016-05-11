@@ -4,6 +4,7 @@ using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Tasks.Runners;
 using AppFramework.Core.UnitTests.Fixtures;
 using AppFramework.DataProxy;
+using AppFramework.Tasks;
 using AppFramework.UnitTests.Common.Fixtures;
 using Xunit;
 using Xunit.Extensions;
@@ -20,7 +21,7 @@ namespace AppFramework.Core.UnitTests
             // Arrange
              var taskStub = new Entities.Task
              {
-                 FunctionType = (int)TaskFunctionType.ExecuteSqlServerAgentJob
+                 FunctionType = (int)Tasks.Enumerations.TaskFunctionType.ExecuteSqlServerAgentJob
              };
              // Act
              var result = sut.GetRunner(taskStub, userId, null);

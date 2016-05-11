@@ -1,11 +1,6 @@
 ﻿using AppFramework.Entities;
 using AssetManager.Infrastructure.Services;
 using AssetSite.UnitTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions;
 
@@ -15,36 +10,39 @@ namespace AssetSite.UnitTests.Services
     {
         [Theory, AutoDomainData]
         public void ExportService_ExportSearchResultToTxt_ReturnsString(
-            List<f_cust_SearchByKeywords_Result> searchResults,
-            ExportService sut)
+            SearchTracking searchTracking,
+            long userId,
+            ExportSearchResultService sut)
         {
             // Arrange
             // Act
-            var result = sut.ExportSearchResultToTxt(searchResults);
+            var result = sut.ExportToTxt(searchTracking, userId);
             // Assert
-            Assert.NotEqual(string.Empty, result);
+            Assert.NotEqual(0, result.Length);
         }
 
         [Theory, AutoDomainData]
         public void ExportService_ExportSearchResultToXml_ReturnsString(
-            List<f_cust_SearchByKeywords_Result> searchResults,
-            ExportService sut)
+            SearchTracking searchTracking,
+            long userId,
+            ExportSearchResultService sut)
         {
             // Arrange
             // Act
-            var result = sut.ExportSearchResultToXml(searchResults);
+            var result = sut.ExportToXml(searchTracking, userId);
             // Assert
-            Assert.NotEqual(string.Empty, result);
+            Assert.NotEqual(0, result.Length);
         }
 
         [Theory, AutoDomainData]
         public void ExportService_ExportSearchResultToExcel_ReturnsString(
-            List<f_cust_SearchByKeywords_Result> searchResults,
-            ExportService sut)
+            SearchTracking searchTracking,
+            long userId,
+            ExportSearchResultService sut)
         {
             // Arrange
             // Act
-            var result = sut.ExportSearchResultToExcel(searchResults);
+            var result = sut.ExportToExcel(searchTracking, userId);
             // Assert
             Assert.NotNull(result);
         }

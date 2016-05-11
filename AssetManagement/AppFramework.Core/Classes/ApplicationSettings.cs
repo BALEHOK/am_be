@@ -1,18 +1,21 @@
-﻿namespace AppFramework.Core.Classes
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Web;
-    using AppFramework.ConstantsEnumerators;
-    using AppFramework.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Web;
+using AppFramework.ConstantsEnumerators;
+using AppFramework.DataProxy;
+using AppFramework.Entities;
 
+namespace AppFramework.Core.Classes
+{
     public class ApplicationSettings
     {
+        private static string _activityCompletedStatus;
         public const int BulkInsertTheshold = 1000;
 
         public static CultureInfo DisplayCultureInfo
@@ -21,10 +24,9 @@
             {
                 //return new CultureInfo(CultureName, true);
                 //return System.Threading.Thread.CurrentThread.CurrentCulture;
-                var cultureInfo = new CultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true);
+                var cultureInfo = new CultureInfo(Thread.CurrentThread.CurrentCulture.Name, true);
                 cultureInfo.NumberFormat.CurrencyDecimalDigits = 2;
                 return cultureInfo;
-
             }
         }
 
@@ -32,7 +34,7 @@
         {
             get
             {
-                return System.Threading.Thread.CurrentThread.CurrentCulture;
+                return Thread.CurrentThread.CurrentCulture;
                 //return new CultureInfo("en-US", true);
             }
         }
@@ -46,11 +48,11 @@
                 {
                     if (ConfigurationManager.AppSettings["ApplicationType"] == "SOBnBUB")
                     {
-                        result = AppFramework.ConstantsEnumerators.ApplicationType.SOBenBUB;
+                        result = ApplicationType.SOBenBUB;
                     }
                     else if (ConfigurationManager.AppSettings["ApplicationType"] == "Combined")
                     {
-                        result = AppFramework.ConstantsEnumerators.ApplicationType.Combined;
+                        result = ApplicationType.Combined;
                     }
                 }
                 return result;
@@ -62,10 +64,10 @@
         /// </summary>
         public static List<string> SearchExcludeWords
         {
-            get { return GetStringPropertyByName("SearchExcludeWords").Split(new char[] {' ', ','}).ToList(); }
+            get { return GetStringPropertyByName("SearchExcludeWords").Split(' ', ',').ToList(); }
             set
             {
-                string[] words = value.ToArray();
+                var words = value.ToArray();
                 Array.Sort(words);
                 SetStringPropertyByName("SearchExcludeWords", string.Join(" ", words));
             }
@@ -81,14 +83,13 @@
         }
 
         public static void UpdateConnectionString(string host, string database, string user, string password,
-                                                  string isIntegrated)
+            string isIntegrated)
         {
             Routines.SetSectionValueToConnectionString(Enumerators.ConnectionString.User, user);
             Routines.SetSectionValueToConnectionString(Enumerators.ConnectionString.Password, password);
             Routines.SetSectionValueToConnectionString(Enumerators.ConnectionString.Host, host);
             Routines.SetSectionValueToConnectionString(Enumerators.ConnectionString.Database, database);
             Routines.SetSectionValueToConnectionString(Enumerators.ConnectionString.IsIntergatedSecurity, isIntegrated);
-
         }
 
         /// <summary>
@@ -109,9 +110,9 @@
 
         private static bool GetBoolPropertyByName(string propertyName)
         {
-            var unitOfWork = new DataProxy.UnitOfWork();
-            AppSettings entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
-            bool res = false;
+            var unitOfWork = new UnitOfWork();
+            var entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
+            var res = false;
             if (entity != null)
             {
                 res = entity.PropertyValue.ToLower() == true.ToString().ToLower();
@@ -126,14 +127,14 @@
 
         private static void SetStringPropertyByName(string propertyName, string value)
         {
-            var unitOfWork = new DataProxy.UnitOfWork();
-            AppSettings entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
+            var unitOfWork = new UnitOfWork();
+            var entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
             if (entity == null)
             {
-                entity = new AppSettings()
-                    {
-                        PropertyName = propertyName
-                    };
+                entity = new AppSettings
+                {
+                    PropertyName = propertyName
+                };
                 entity.PropertyValue = value;
                 unitOfWork.AppSettingsRepository.Insert(entity);
             }
@@ -147,9 +148,9 @@
 
         private static string GetStringPropertyByName(string propertyName)
         {
-            var unitOfWork = new DataProxy.UnitOfWork();
-            AppSettings entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
-            string res = string.Empty;
+            var unitOfWork = new UnitOfWork();
+            var entity = unitOfWork.AppSettingsRepository.SingleOrDefault(a => a.PropertyName == propertyName);
+            var res = string.Empty;
             if (entity != null)
             {
                 res = entity.PropertyValue;
@@ -165,10 +166,10 @@
         {
             get
             {
-                int recordsNum = 20;
+                var recordsNum = 20;
                 if (ConfigurationManager.AppSettings["RecordsPerPage"] != null)
                 {
-                    string tmp = ConfigurationManager.AppSettings["RecordsPerPage"];
+                    var tmp = ConfigurationManager.AppSettings["RecordsPerPage"];
                     int.TryParse(tmp, out recordsNum);
                 }
                 return recordsNum;
@@ -185,7 +186,7 @@
             {
                 DateTime? nw = null;
                 DateTime nowTime;
-                string tmp = ConfigurationManager.AppSettings["BatchDefaultScheduleTime"];
+                var tmp = ConfigurationManager.AppSettings["BatchDefaultScheduleTime"];
                 if (DateTime.TryParse(tmp, out nowTime))
                 {
                     // if selected time already passed - move schedule on next day                    
@@ -246,7 +247,7 @@
         {
             get
             {
-                string tmp = ConfigurationManager.AppSettings["TemplatesPath"];
+                var tmp = ConfigurationManager.AppSettings["TemplatesPath"];
                 if (string.IsNullOrEmpty(tmp))
                 {
                     tmp = "~/admin/Reports/Templates/";
@@ -259,7 +260,7 @@
         {
             get
             {
-                string tmp = ConfigurationManager.AppSettings["AssetTemplatePath"];
+                var tmp = ConfigurationManager.AppSettings["AssetTemplatePath"];
                 if (String.IsNullOrEmpty(tmp))
                     tmp = "~/App_Data/Asset_Templates/";
                 return MapPath(tmp);
@@ -290,7 +291,7 @@
         {
             get
             {
-                string tmp = ConfigurationManager.AppSettings["DocumentsPath"];
+                var tmp = ConfigurationManager.AppSettings["DocumentsPath"];
                 return string.IsNullOrEmpty(tmp) ? "~/Documents/" : tmp;
             }
         }
@@ -303,7 +304,7 @@
         {
             get
             {
-                string path = ConfigurationManager.AppSettings["TempPath"] ?? "~/App_Data/";
+                var path = ConfigurationManager.AppSettings["TempPath"] ?? "~/App_Data/";
                 return MapPath(path);
             }
         }
@@ -331,7 +332,8 @@
 
                 if (tmpRet < 7 || tmpRet > 48)
                 {
-                    throw new ConfigurationErrorsException("Barcode length must be within range 7 - 48 characters. See BarcodeLength parameter in AppSettings.");
+                    throw new ConfigurationErrorsException(
+                        "Barcode length must be within range 7 - 48 characters. See BarcodeLength parameter in AppSettings.");
                 }
 
                 return tmpRet;
@@ -367,7 +369,7 @@
             get
             {
                 return Path.Combine(MapPath(ConfigurationManager.AppSettings["ExtraAttributesPath"]),
-                                    "DocumentExtraAttributes.xml");
+                    "DocumentExtraAttributes.xml");
             }
         }
 
@@ -379,7 +381,7 @@
             get
             {
                 return Path.Combine(MapPath(ConfigurationManager.AppSettings["ExtraAttributesPath"]),
-                                    "FaqExtraAttributes.xml");
+                    "FaqExtraAttributes.xml");
             }
         }
 
@@ -391,7 +393,7 @@
             get
             {
                 return Path.Combine(MapPath(ConfigurationManager.AppSettings["ExtraAttributesPath"]),
-                                    "UserExtraAttributes.xml");
+                    "UserExtraAttributes.xml");
             }
         }
 
@@ -424,10 +426,27 @@
             get
             {
                 return new string[9]
-                    {
-                        "Name", "Password", "Email", "Users", "Permissions On Users", "Role", "Staff", "Unionist",
-                        "Contact"
-                    };
+                {
+                    "Name", "Password", "Email", "Users", "Permissions On Users", "Role", "Staff", "Unionist",
+                    "Contact"
+                };
+            }
+        }
+
+        public static TimeSpan CacheManagerTimeout
+        {
+            get { return TimeSpan.FromSeconds(15); }
+        }
+
+        public static string ActivityCompletedStatus
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_activityCompletedStatus))
+                {
+                    _activityCompletedStatus = ConfigurationManager.AppSettings["ActivityCompletedStatus"];
+                }
+                return _activityCompletedStatus;
             }
         }
     }

@@ -6,6 +6,7 @@ using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManagerAdmin.Model;
 using GalaSoft.MvvmLight.Command;
 using AssetManagerAdmin.Infrastructure;
+using System.Configuration;
 
 namespace AssetManagerAdmin.ViewModels
 {
@@ -212,20 +213,14 @@ namespace AssetManagerAdmin.ViewModels
                 MainMenuItems = menuItems;
                 SelectedMenuItem = MainMenuItems.First();
                 IsMenuVisible = true;
-                NavigationService.NavigateTo(ViewModelLocator.ReportBuilderKey);
+                NavigationService.NavigateTo(
+                    ConfigurationManager.AppSettings["DefaultWindow"] 
+                    ?? ViewModelLocator.FormulaBuilderKey);
             });
 
             MessengerInstance.Register<ServerConfig>(this, AppActions.LogoutDone, (server) =>
             {
                 IsMenuVisible = false;
-            });
-
-            MessengerInstance.Register<StatusMessage>(this, msg => 
-            {
-                dialogService.ShowMessage(
-                    msg.Message,
-                    msg.Title,
-                    msg.Status);
             });
 
             MessengerInstance.Register<string>(this, AppActions.LoadingStarted, message => 

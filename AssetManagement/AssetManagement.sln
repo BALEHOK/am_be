@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppFramework", "AppFramework", "{A2903D70-BDDA-4B32-9530-9FA3D2EF7153}"
 	ProjectSection(SolutionItems) = preProject
@@ -47,6 +47,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Auth", "AppFramework.Auth\AppFramework.Auth.csproj", "{0ACBD967-18BF-49F9-B342-FF5F69FB7F87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Email", "AppFramework.Email\AppFramework.Email.csproj", "{F37064E9-580C-48A0-835E-280F6B0CF87C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Reservations", "AppFramework.Reservations\AppFramework.Reservations.csproj", "{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppFramework.Tasks", "AppFramework.Tasks\AppFramework.Tasks.csproj", "{4D38B9E7-6171-4858-BB02-1CEF5137D451}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newtonsoft.Json", "Newtonsoft.Json\Newtonsoft.Json.csproj", "{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -378,6 +384,70 @@ Global
 		{F37064E9-580C-48A0-835E-280F6B0CF87C}.Staging-SOBBUB|x64.Build.0 = Release|Any CPU
 		{F37064E9-580C-48A0-835E-280F6B0CF87C}.Staging-SOBBUB|x86.ActiveCfg = Release|Any CPU
 		{F37064E9-580C-48A0-835E-280F6B0CF87C}.Staging-SOBBUB|x86.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|x64.Build.0 = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Debug|x86.Build.0 = Debug|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|x64.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Release|x86.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|Any CPU.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|Any CPU.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|x64.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|x64.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|x86.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-AssetManager|x86.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|Any CPU.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|Any CPU.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|x64.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|x64.Build.0 = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|x86.ActiveCfg = Release|Any CPU
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD}.Staging-SOBBUB|x86.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Debug|x86.Build.0 = Debug|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|x64.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|x86.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Release|x86.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|Any CPU.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|Any CPU.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|x64.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|x64.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|x86.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-AssetManager|x86.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|Any CPU.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|Any CPU.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|x64.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|x64.Build.0 = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|x86.ActiveCfg = Release|Any CPU
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451}.Staging-SOBBUB|x86.Build.0 = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Release|x64.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-AssetManager|Any CPU.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-AssetManager|Any CPU.Build.0 = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-AssetManager|x64.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-AssetManager|x86.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-SOBBUB|Any CPU.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-SOBBUB|Any CPU.Build.0 = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-SOBBUB|x64.ActiveCfg = Release|Any CPU
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D}.Staging-SOBBUB|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -400,6 +470,9 @@ Global
 		{CED40BF2-B88C-465F-AFA2-B5CC762F4C7D} = {5DEA754E-B57B-467D-B403-D63912FEFE28}
 		{0ACBD967-18BF-49F9-B342-FF5F69FB7F87} = {A2903D70-BDDA-4B32-9530-9FA3D2EF7153}
 		{F37064E9-580C-48A0-835E-280F6B0CF87C} = {A2903D70-BDDA-4B32-9530-9FA3D2EF7153}
+		{A2578B1C-3AB9-46F3-B63C-D5BF31BA8CDD} = {A2903D70-BDDA-4B32-9530-9FA3D2EF7153}
+		{4D38B9E7-6171-4858-BB02-1CEF5137D451} = {A2903D70-BDDA-4B32-9530-9FA3D2EF7153}
+		{EEEA67F9-9089-481D-A4DC-0966DEC9FD7D} = {A2903D70-BDDA-4B32-9530-9FA3D2EF7153}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35;packages\EnterpriseLibrary.Caching.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Caching.Database.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.Database.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.ExceptionHandling.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.ExceptionHandling.Logging.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Security.Cryptography.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Caching.Cryptography.5.0.505.0\lib\NET35

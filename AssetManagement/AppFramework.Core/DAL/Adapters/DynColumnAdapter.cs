@@ -57,8 +57,11 @@ namespace AppFramework.Core.DAL.Adapters
                     if (!string.IsNullOrEmpty(attribute.Value))
                     {
                         DateTime dt;
-                        if (DateTime.TryParse(attribute.Value, ApplicationSettings.DisplayCultureInfo.DateTimeFormat, DateTimeStyles.None, out dt))
+                        if (DateTime.TryParse(attribute.Value, ApplicationSettings.DisplayCultureInfo.DateTimeFormat, DateTimeStyles.None, out dt)
+                            || DateTime.TryParseExact(attribute.Value, "M/d/yyyy HH:mm:ss", null, DateTimeStyles.None, out dt)) // this format is used in datetime attribute editor in React app
+                        {
                             column.Value = dt.ToString(ApplicationSettings.PersistenceCultureInfo);
+                        }
                     }
                     break;
 

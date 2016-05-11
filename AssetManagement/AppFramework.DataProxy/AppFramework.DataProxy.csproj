@@ -117,6 +117,7 @@
     <Compile Include="Repositories\ITaxonomyItemRepository.cs" />
     <Compile Include="Repositories\TaxonomyItemRepository.cs" />
     <Compile Include="Repositories\TaxonomyRepository.cs" />
+    <Compile Include="StoredProcedures.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

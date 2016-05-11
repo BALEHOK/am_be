@@ -17,13 +17,19 @@ namespace AppFramework.Core.DataTypes
 
         public override int? StringSize
         {
-            get { throw new NotSupportedException(); }
+            get { return null; }
         }
 
         public override Enumerators.DataType Code
         {
             get { return Enumerators.DataType.Bool; }
             set { }
+        }
+
+        public BoolDataType()
+            : base()
+        {
+            Base.DBDataType = "Bit";
         }
     }
 }

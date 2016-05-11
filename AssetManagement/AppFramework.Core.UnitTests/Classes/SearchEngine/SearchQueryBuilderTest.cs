@@ -11,7 +11,6 @@ using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.UnitTests.Fixtures;
 using AppFramework.Core.UnitTests.Fixtures.AssetTypes;
 using AppFramework.DataProxy;
-using Moq;
 using Ploeh.AutoFixture.Xunit;
 using Xunit;
 using Xunit.Extensions;
@@ -23,11 +22,11 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [Theory]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime)]
         [InlineAutoDomainData(TimePeriodForSearch.History)]
-        public void GenerateTypeSearchQuery_ByType_OneSimpleCondition(TimePeriodForSearch period, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_OneSimpleCondition(TimePeriodForSearch period, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock);
+            var assetType = CreateTestAssetType(unitOfWork);
 
             var elements = new List<AttributeElement>
             {
@@ -53,11 +52,11 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [Theory]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime)]
         [InlineAutoDomainData(TimePeriodForSearch.History)]
-        public void GenerateTypeSearchQuery_ByType_InSimpleAssetCondition(TimePeriodForSearch period, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_InSimpleAssetCondition(TimePeriodForSearch period, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock);
+            var assetType = CreateTestAssetType(unitOfWork);
 
             var elements = new List<AttributeElement>
             {
@@ -82,11 +81,11 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [Theory]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime)]
         [InlineAutoDomainData(TimePeriodForSearch.History)]
-        public void GenerateTypeSearchQuery_ByType_AndOrConditionsWithParentheses(TimePeriodForSearch period, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_AndOrConditionsWithParentheses(TimePeriodForSearch period, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock);
+            var assetType = CreateTestAssetType(unitOfWork);
 
             var elements = new List<AttributeElement>
             {
@@ -121,15 +120,15 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime, typeof(AssetNotInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetNotInOperator))]
-        public void GenerateTypeSearchQuery_ByType_ComplexAssetCondition(TimePeriodForSearch period, Type operatorType, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_ComplexAssetCondition(TimePeriodForSearch period, Type operatorType, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock);
+            var assetType = CreateTestAssetType(unitOfWork);
 
             var elements = new List<AttributeElement>
             {
-                CreateUpdateUserComplexCondition(unitOfWorkMock, operatorType)
+                CreateUpdateUserComplexCondition(unitOfWork, operatorType)
             };
 
             List<SqlParameter> parameters;
@@ -157,16 +156,16 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime, typeof(AssetNotInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetNotInOperator))]
-        public void GenerateTypeSearchQuery_ByType_SimpleChildAssetsCondition(TimePeriodForSearch period, Type operatorType, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_SimpleChildAssetsCondition(TimePeriodForSearch period, Type operatorType, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock, "User", "_users_test_table");
+            var assetType = CreateTestAssetType(unitOfWork, "User", "_users_test_table");
 
             var elements = new List<AttributeElement>
             {
                 CreateNameCondition(),
-                CreateUserChildAssetsSimpleCondition(unitOfWorkMock, operatorType)
+                CreateUserChildAssetsSimpleCondition(unitOfWork, operatorType)
             };
 
             List<SqlParameter> parameters;
@@ -196,16 +195,16 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.CurrentTime, typeof(AssetNotInOperator))]
         [InlineAutoDomainData(TimePeriodForSearch.History, typeof(AssetNotInOperator))]
-        public void GenerateTypeSearchQuery_ByType_ComplexChildAssetsCondition(TimePeriodForSearch period, Type operatorType, [Frozen]Mock<IUnitOfWork> unitOfWorkMock)
+        public void GenerateTypeSearchQuery_ByType_ComplexChildAssetsCondition(TimePeriodForSearch period, Type operatorType, [Frozen]IUnitOfWork unitOfWork)
         {
             var searchId = Guid.NewGuid();
 
-            var assetType = CreateTestAssetType(unitOfWorkMock, "User", "_users_test_table");
+            var assetType = CreateTestAssetType(unitOfWork, "User", "_users_test_table");
 
             var elements = new List<AttributeElement>
             {
                 CreateNameCondition(),
-                CreateUserChildAssetsComplexCondition(unitOfWorkMock, operatorType)
+                CreateUserChildAssetsComplexCondition(unitOfWork, operatorType)
             };
 
             List<SqlParameter> parameters;
@@ -232,9 +231,40 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
             Assert.Equal(IgnoreWhitespace(expected), IgnoreWhitespace(actual));
         }
 
-        private static AssetTypeFixture CreateTestAssetType(Mock<IUnitOfWork> unitOfWorkMock, string name = "Test asset type", string tableName = "_test_table_name")
+        [Theory]
+        [InlineAutoDomainData(TimePeriodForSearch.CurrentTime)]
+        [InlineAutoDomainData(TimePeriodForSearch.History)]
+        public void GenerateTypeSearchQuery_ByType_DynListCondition(TimePeriodForSearch period, [Frozen]IUnitOfWork unitOfWork)
         {
-            return new AssetTypeFixture(unitOfWorkMock.Object)
+            var searchId = Guid.NewGuid();
+
+            var assetType = CreateTestAssetType(unitOfWork);
+
+            var elements = new List<AttributeElement>
+            {
+                CreateRoleCondition()
+            };
+
+            List<SqlParameter> parameters;
+            var actual = SearchQueryBuilder.GenerateTypeSearchQuery(searchId, assetType, elements, period,
+                out parameters);
+
+            var expected = string.Format(
+                "SELECT ''{0}'', [ADynEntity_test_table_name].DynEntityUid, [ADynEntity_test_table_name].DynEntityConfigUid " +
+                "FROM [ADynEntity_test_table_name] " +
+                "LEFT JOIN DynListValue ON DynListValue.DynEntityConfigUid = [ADynEntity_test_table_name].DynEntityConfigUid AND DynListValue.AssetUid = [ADynEntity_test_table_name].DynEntityUid" +
+                "WHERE ([DynListValue].[DynlistItemUid] = {1}) " +
+                "AND [ADynEntity_test_table_name].[ActiveVersion] = {2}",
+                searchId,
+                parameters[0].ParameterName,
+                (int)period);
+
+            Assert.Equal(IgnoreWhitespace(expected), IgnoreWhitespace(actual));
+        }
+
+        private static AssetTypeFixture CreateTestAssetType(IUnitOfWork unitOfWork, string name = "Test asset type", string tableName = "_test_table_name")
+        {
+            return new AssetTypeFixture(unitOfWork)
             {
                 Name = name,
                 DBTableName = tableName
@@ -292,7 +322,7 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
             };
         }
 
-        private static AttributeElement CreateUpdateUserComplexCondition(Mock<IUnitOfWork> unitOfWorkMock, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
+        private static AttributeElement CreateUpdateUserComplexCondition(IUnitOfWork unitOfWork, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
         {
             var complexValue = new List<AttributeElement>
             {
@@ -307,14 +337,14 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
                 ServiceMethod = operatorType.Name,
                 ElementType = Enumerators.DataType.Asset,
                 UseComplexValue = true,
-                ReferencedAssetType = CreateTestAssetType(unitOfWorkMock, "User", "_users_table_name"),
+                ReferencedAssetType = CreateTestAssetType(unitOfWork, "User", "_users_table_name"),
                 ComplexValue = complexValue,
                 StartBrackets = startBrackets,
                 EndBrackets = endBrackets
             };
         }
 
-        private AttributeElement CreateUserChildAssetsSimpleCondition(Mock<IUnitOfWork> unitOfWorkMock, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
+        private AttributeElement CreateUserChildAssetsSimpleCondition(IUnitOfWork unitOfWork, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
         {
             return new AttributeElement
             {
@@ -324,14 +354,14 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
                 ServiceMethod = operatorType.Name,
                 ElementType = Enumerators.DataType.ChildAssets,
                 UseComplexValue = false,
-                ReferencedAssetType = CreateTestAssetType(unitOfWorkMock),
+                ReferencedAssetType = CreateTestAssetType(unitOfWork),
                 Value = "1",
                 StartBrackets = startBrackets,
                 EndBrackets = endBrackets
             };
         }
 
-        private AttributeElement CreateUserChildAssetsComplexCondition(Mock<IUnitOfWork> unitOfWorkMock, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
+        private AttributeElement CreateUserChildAssetsComplexCondition(IUnitOfWork unitOfWork, Type operatorType, string startBrackets = "", string endBrackets = "", ConcatenationOperation operation = ConcatenationOperation.And)
         {
             var complexValue = new List<AttributeElement>
             {
@@ -347,8 +377,26 @@ namespace AppFramework.Core.UnitTests.Classes.SearchEngine
                 ServiceMethod = operatorType.Name,
                 ElementType = Enumerators.DataType.ChildAssets,
                 UseComplexValue = true,
-                ReferencedAssetType = CreateTestAssetType(unitOfWorkMock),
+                ReferencedAssetType = CreateTestAssetType(unitOfWork),
                 ComplexValue = complexValue,
+                StartBrackets = startBrackets,
+                EndBrackets = endBrackets
+            };
+        }
+
+        // DynList condition
+        private static AttributeElement CreateRoleCondition(string startBrackets = "", string endBrackets = "",
+            ConcatenationOperation operation = ConcatenationOperation.And)
+        {
+            return new AttributeElement
+            {
+                FieldName = AttributeNames.Role,
+                FieldSql = AttributeNames.Role,
+                ConcatenationOperation = operation,
+                ServiceMethod = "EqualOperator",
+                ElementType = Enumerators.DataType.DynList,
+                UseComplexValue = false,
+                Value = "864",
                 StartBrackets = startBrackets,
                 EndBrackets = endBrackets
             };

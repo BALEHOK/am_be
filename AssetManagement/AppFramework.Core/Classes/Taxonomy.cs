@@ -1,3 +1,4 @@
+using AppFramework.Core.Classes.Extensions;
 using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
 namespace AppFramework.Core.Classes
@@ -38,7 +39,7 @@ namespace AppFramework.Core.Classes
         /// </summary>
         public string Name
         {
-            get { return new TranslatableString(this.Base.Name).GetTranslation(); }
+            get { return this.Base.Name.Localized(); }
             set { this.Base.Name = value; }
         }
 

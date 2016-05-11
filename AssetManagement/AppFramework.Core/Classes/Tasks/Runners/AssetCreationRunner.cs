@@ -4,8 +4,9 @@
     using ConstantsEnumerators;
     using System;
     using System.Linq;
-    using AppFramework.ConstantsEnumerators;
     using System.Collections.Generic;
+    using AppFramework.Tasks;
+    using AppFramework.Tasks.Models;
 
     class AssetCreationRunner : ITaskRunner
     {
@@ -32,6 +33,11 @@
             if (DynEntityConfigId == 0)
                 throw new ArgumentException("DynEntityConfigId is not set");
 
+            var resultArguments = new Dictionary<string, object>(2)
+            {
+                { "DynEntityConfigId", DynEntityConfigId }
+            };
+
             if (ScreenId.HasValue)
             {
                 // ScreenId connected to the type via [DynEntityConfigUid], so it may refer to and old revision
@@ -43,20 +49,19 @@
                                     where screen.DynEntityConfigUid == assetType.UID &&
                                        screen.ScreenUid == referringScreen.ScreenUid &&
                                        referringScreen.ScreenId == ScreenId.Value
-                                    select screen).SingleOrDefault();
+                                    select screen).FirstOrDefault();
 
                 if (latestScreen != null)
                     ScreenId = latestScreen.ScreenId;
-            }
 
-            return new TaskResult((TaskFunctionType)task.FunctionType)
+                resultArguments.Add("ScreenId", ScreenId);
+            }
+            
+            return new TaskResult((Enumerations.TaskFunctionType)task.FunctionType)
             {
                 NavigationResult = string.Format(QueryStrings.CreateAssetUrlFormat, DynEntityConfigId) +
                     (ScreenId.HasValue ? "&ScreenId=" + ScreenId : string.Empty),
-                NavigationResultArguments = new Dictionary<string, object> {
-                    { "DynEntityConfigId", DynEntityConfigId },
-                    { "ScreenId", ScreenId }
-                },                    
+                NavigationResultArguments = resultArguments,                    
             };
         }
     }

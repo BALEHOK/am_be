@@ -22,7 +22,6 @@ namespace AppFramework.Entities
     [KnownType(typeof(Context))]
     [KnownType(typeof(DataType))]
     [KnownType(typeof(DynEntityConfig))]
-    [KnownType(typeof(DynEntityAttribScreens))]
     [KnownType(typeof(DynListValue))]
     [KnownType(typeof(DynList))]
     public partial class DynEntityAttribConfig: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
@@ -758,43 +757,6 @@ namespace AppFramework.Entities
         private DynEntityConfig _dynEntityConfig;
     
         [DataMember]
-        public TrackableCollection<DynEntityAttribScreens> DynEntityAttribScreens
-        {
-            get
-            {
-                if (_dynEntityAttribScreens == null)
-                {
-                    _dynEntityAttribScreens = new TrackableCollection<DynEntityAttribScreens>();
-                    _dynEntityAttribScreens.CollectionChanged += FixupDynEntityAttribScreens;
-    				_dynEntityAttribScreens.IsLoaded = false;
-                }
-                return _dynEntityAttribScreens;
-            }
-            set
-            {
-                if (!ReferenceEquals(_dynEntityAttribScreens, value))
-                {
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
-                    }
-                    if (_dynEntityAttribScreens != null)
-                    {
-                        _dynEntityAttribScreens.CollectionChanged -= FixupDynEntityAttribScreens;
-                    }
-                    _dynEntityAttribScreens = value;
-    				_dynEntityAttribScreens.IsLoaded = true;
-                    if (_dynEntityAttribScreens != null)
-                    {
-                        _dynEntityAttribScreens.CollectionChanged += FixupDynEntityAttribScreens;
-                    }
-                    OnNavigationPropertyChanged("DynEntityAttribScreens");
-                }
-            }
-        }
-        private TrackableCollection<DynEntityAttribScreens> _dynEntityAttribScreens;
-    
-        [DataMember]
         public TrackableCollection<DynListValue> DynListValues
         {
             get
@@ -931,7 +893,6 @@ namespace AppFramework.Entities
             Context = null;
             DataType = null;
             DynEntityConfig = null;
-            DynEntityAttribScreens.Clear();
             DynListValues.Clear();
             DynList = null;
         }
@@ -1140,45 +1101,6 @@ namespace AppFramework.Entities
                     if (ChangeTracker.ChangeTrackingEnabled)
                     {
                         ChangeTracker.RecordRemovalFromCollectionProperties("AttributePanelAttributes", item);
-                    }
-                }
-            }
-        }
-    
-        private void FixupDynEntityAttribScreens(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (IsDeserializing)
-            {
-                return;
-            }
-    
-            if (e.NewItems != null)
-            {
-                foreach (DynEntityAttribScreens item in e.NewItems)
-                {
-                    item.DynEntityAttribConfig = this;
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        if (!item.ChangeTracker.ChangeTrackingEnabled)
-                        {
-                            item.StartTracking();
-                        }
-                        ChangeTracker.RecordAdditionToCollectionProperties("DynEntityAttribScreens", item);
-                    }
-                }
-            }
-    
-            if (e.OldItems != null)
-            {
-                foreach (DynEntityAttribScreens item in e.OldItems)
-                {
-                    if (ReferenceEquals(item.DynEntityAttribConfig, this))
-                    {
-                        item.DynEntityAttribConfig = null;
-                    }
-                    if (ChangeTracker.ChangeTrackingEnabled)
-                    {
-                        ChangeTracker.RecordRemovalFromCollectionProperties("DynEntityAttribScreens", item);
                     }
                 }
             }

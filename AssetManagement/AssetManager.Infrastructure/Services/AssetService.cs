@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
@@ -16,15 +15,16 @@ using AssetManager.Infrastructure.Helpers;
 using AssetManager.Infrastructure.Models;
 using Common.Logging;
 using Newtonsoft.Json.Linq;
+using AssetManager.Infrastructure.Permissions;
 
 namespace AssetManager.Infrastructure.Services
 {
     public class AssetService : IAssetService
     {
-        private readonly IAssetsService _assetsService;
+        private readonly IAssetsService _coreAssetsService;
         private readonly IDynamicListsService _dynListService;
         private readonly IAssetTypeRepository _assetTypeRepository;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAssetTypePermissionChecker _assetTypePermissionChecker;
         private readonly IValidationServiceNew _validationService;
         private readonly IModelFactory _modelFactory;
         private readonly IFileService _fileService;
@@ -34,13 +34,15 @@ namespace AssetManager.Infrastructure.Services
         private readonly IAttributeCalculator _calculator;
         private readonly IUnitOfWork _unitOfWork;
         private long _userTypeId;
+        private readonly IAssetPermissionChecker _assetPermissionChecker;
 
         // TODO: more than 7 dependencies, needs to be decomposed
         public AssetService(
-            IAssetsService assetsService,
+            IAssetsService coreAssetsService,
             IDynamicListsService dynListService,
             IAssetTypeRepository assetTypeRepository,
-            IAuthenticationService authenticationService,
+            IAssetTypePermissionChecker assetTypePermissionChecker,
+            IAssetPermissionChecker assetPermissionChecker,
             IValidationServiceNew validationService,
             IModelFactory modelFactory,
             IFileService fileService,
@@ -50,18 +52,21 @@ namespace AssetManager.Infrastructure.Services
             ILog logger,
             IPasswordEncoder passwordEncoder)
         {
-            if (assetsService == null)
-                throw new ArgumentNullException("assetsService");
-            _assetsService = assetsService;
+            if (coreAssetsService == null)
+                throw new ArgumentNullException("coreAssetsService");
+            _coreAssetsService = coreAssetsService;
             if (dynListService == null)
                 throw new ArgumentNullException("dynListService");
             _dynListService = dynListService;
             if (assetTypeRepository == null)
                 throw new ArgumentNullException("assetTypeRepository");
             _assetTypeRepository = assetTypeRepository;
-            if (authenticationService == null)
-                throw new ArgumentNullException("authenticationService");
-            _authenticationService = authenticationService;
+            if (assetTypePermissionChecker == null)
+                throw new ArgumentNullException("assetTypePermissionChecker");
+            _assetTypePermissionChecker = assetTypePermissionChecker;
+            if (assetPermissionChecker == null)
+                throw new ArgumentNullException("assetPermissionChecker");
+            _assetPermissionChecker = assetPermissionChecker;
             if (validationService == null)
                 throw new ArgumentNullException("validationService");
             _validationService = validationService;
@@ -106,6 +111,7 @@ namespace AssetManager.Infrastructure.Services
         public AssetModel GetAsset(
             long assetTypeId,
             long assetId,
+            long userId,
             int? revision = null,
             long? uid = null,
             bool withChilds = false)
@@ -117,39 +123,42 @@ namespace AssetManager.Infrastructure.Services
             Asset asset;
 
             if (revision > 0)
-                asset = _assetsService.GetAssetByIdAndRevison(assetId, assetType, revision.Value);
+                asset = _coreAssetsService.GetAssetByIdAndRevison(assetId, assetType, revision.Value);
             else if (uid > 0)
-                asset = _assetsService.GetAssetByUid(uid.Value, assetType);
+                asset = _coreAssetsService.GetAssetByUid(uid.Value, assetType);
             else
-                asset = _assetsService.GetAssetById(assetId, assetType);
+                asset = _coreAssetsService.GetAssetById(assetId, assetType);
 
-            var permission = _authenticationService.GetPermission(asset);
+            var permission = _assetPermissionChecker.GetPermission(asset, userId);
             if (!permission.CanRead())
                 throw new InsufficientPermissionsException("No permissions to read asset's data");
 
-            var model = _modelFactory.GetAssetModel(asset, permission);
+            var assetWrapper = new AssetWrapperForScreenView(asset);
+            var model = _modelFactory.GetAssetModel(assetWrapper, permission);
 
             if (withChilds && assetType.ParentChildRelations)
-                model.ChildAssetTypes = GetChildAssetTypes(assetTypeId);
+                model.ChildAssetTypes = GetRelatedAssetTypes(userId, assetTypeId);
 
             return model;
         }
 
-        public AttributeModel GetAssetAttribute(long assetTypeId, long assetId, long attributeId)
+        public AttributeModel GetAssetAttribute(long assetTypeId, long assetId, long attributeId, long userId)
         {
-            var asset = GetAsset(assetTypeId, assetId);
+            var asset = GetAsset(assetTypeId, assetId, userId);
             return asset.Screens
                 .SelectMany(s => s.Panels)
                 .SelectMany(p => p.Attributes)
-                .SingleOrDefault(a => a.Id == attributeId);
+                .FirstOrDefault(a => a.Id == attributeId);
         }
 
-        public void DeleteAsset(long assetTypeId, long assetId)
+        public void DeleteAsset(long assetTypeId, long assetId, long userId)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            var asset = _assetsService.GetAssetById(assetId, assetType);
-            var permission = _authenticationService.GetPermission(asset);
-            _assetsService.DeleteAsset(asset, permission);
+            var asset = _coreAssetsService.GetAssetById(assetId, assetType);
+
+            _assetPermissionChecker.EnsureDeletePermission(asset, userId);
+
+            _coreAssetsService.DeleteAsset(asset);
         }
 
         public Tuple<long, string> SaveAsset(AssetModel model, long userId, long? screenId = null)
@@ -159,13 +168,17 @@ namespace AssetManager.Infrastructure.Services
 
             if (model.Id != 0)
             {
-                asset = _assetsService.GetAssetById(model.Id, assetType);
+                asset = _coreAssetsService.GetAssetById(model.Id, assetType);
                 if (!asset.GetConfiguration().IsActiveVersion)
                     throw new Exception("Given AssetType Id refers to inactive version.");
+
+                _assetPermissionChecker.EnsureWritePermission(asset, userId);
             }
             else
             {
-                asset = _assetsService.CreateAsset(assetType);
+                _assetTypePermissionChecker.EnsureWritePermission(assetType.Base, userId);
+
+                asset = _coreAssetsService.CreateAsset(assetType);
             }
 
             var dependencies = new Dictionary<AssetAttribute, Asset>();
@@ -218,8 +231,70 @@ namespace AssetManager.Infrastructure.Services
             if (!validationResult.IsValid)
                 throw new AssetValidationException(validationResult);
 
-            var assetId = _assetsService.InsertAsset(asset, dependencies).ID;
+            var assetId = _coreAssetsService.InsertAsset(asset, dependencies).ID;
             return new Tuple<long, string>(assetId, asset.Name);
+        }
+
+        /// <summary>
+        /// Use to update child asset only. not all the attributes are processed properly
+        /// </summary>
+        public Asset UpdateAsset(Dictionary<long, EntityAttribConfigModel> assetModel, long userId)
+        {
+            var entityConfigUid = 0L;
+            var entityId = 0L;
+            foreach (var attr in assetModel.Values)
+            {
+                if (attr.Name == AttributeNames.DynEntityConfigUid)
+                {
+                    entityConfigUid = attr.Value.Value<long>();
+                }
+                else if (attr.Name == AttributeNames.DynEntityId)
+                {
+                    entityId = attr.Value.Value<long>();
+                }
+
+                if (entityId > 0 && entityConfigUid > 0)
+                {
+                    break;
+                }
+            }
+
+            var assetType = _assetTypeRepository.GetByUid(entityConfigUid);
+            if (assetType == null)
+            {
+                throw new AssetTypeNotFoundException(null, entityConfigUid);
+            }
+
+            var asset = _coreAssetsService.GetAssetById(entityId, assetType);
+            if (!asset.GetConfiguration().IsActiveVersion)
+            {
+                throw new Exception("Given AssetType Id refers to inactive version.");
+            }
+
+            _assetPermissionChecker.EnsureWritePermission(asset, userId);
+
+            var dependencies = new Dictionary<AssetAttribute, Asset>();
+            foreach (var modelAttribute in assetModel)
+            {
+                var entityAttribute = asset.Attributes.SingleOrDefault(
+                    a => a.Configuration.ID == modelAttribute.Key);
+
+                if (entityAttribute == null)
+                    throw new Exception("Cannot bind model attribute to entity attribute");
+
+                var valueObject = modelAttribute.Value.Value;
+                _modelFactory.AssignValue(entityAttribute, valueObject);
+            }
+
+            _modelFactory.AssignInternalAttributes(asset, userId);
+
+            var validationResult = _validationService.ValidateAsset(asset);
+            if (!validationResult.IsValid)
+            {
+                throw new AssetValidationException(validationResult);
+            }
+
+            return _coreAssetsService.InsertAsset(asset, dependencies);
         }
 
         public IEnumerable<AssetAttributeRelatedEntitiesModel> GetAssetRelatedEntities(
@@ -232,13 +307,13 @@ namespace AssetManager.Infrastructure.Services
             Asset asset;
 
             if (assetId > 0 && revision > 0)
-                asset = _assetsService.GetAssetByIdAndRevison(assetId.Value, assetType, revision.Value);
+                asset = _coreAssetsService.GetAssetByIdAndRevison(assetId.Value, assetType, revision.Value);
             else if (uid > 0)
-                asset = _assetsService.GetAssetByUid(uid.Value, assetType);
+                asset = _coreAssetsService.GetAssetByUid(uid.Value, assetType);
             else if (assetId > 0)
-                asset = _assetsService.GetAssetById(assetId.Value, assetType);
+                asset = _coreAssetsService.GetAssetById(assetId.Value, assetType);
             else
-                asset = _assetsService.CreateAsset(assetType);
+                asset = _coreAssetsService.CreateAsset(assetType);
 
             var result = new List<AssetAttributeRelatedEntitiesModel>();
             foreach (var attribute in asset.Attributes)
@@ -247,7 +322,7 @@ namespace AssetManager.Infrastructure.Services
                 {
                     AttributeId = attribute.Configuration.ID,
                     AttributeUid = attribute.Configuration.UID,
-                    Name = attribute.Configuration.Name,
+                    Name = attribute.Configuration.NameLocalized,
                     Datatype = attribute.Configuration
                         .DataTypeEnum.ToString().ToLower()
                 };
@@ -256,7 +331,7 @@ namespace AssetManager.Infrastructure.Services
                 {
                     case Enumerators.DataType.Asset:
                         model.RelatedAssetTypeId = attribute.Configuration.RelatedAssetTypeID;
-                        var relatedAsset = _assetsService.GetRelatedAssetByAttribute(attribute);
+                        var relatedAsset = _coreAssetsService.GetRelatedAssetByAttribute(attribute);
                         if (relatedAsset != null)
                         {
                             model.Assets = new List<PlainAssetDTO>
@@ -276,7 +351,7 @@ namespace AssetManager.Infrastructure.Services
 
                     case Enumerators.DataType.Assets:
                         model.RelatedAssetTypeId = attribute.Configuration.RelatedAssetTypeID;
-                        var relatedAssets = _assetsService.GetRelatedAssetsByAttribute(attribute);
+                        var relatedAssets = _coreAssetsService.GetRelatedAssetsByAttribute(attribute);
                         model.Assets =
                             from a in relatedAssets
                             select a;
@@ -296,7 +371,7 @@ namespace AssetManager.Infrastructure.Services
 
         public AssetHistoryModel GetAssetHistory(long assetTypeId, long assetId)
         {
-            var revisions = _assetsService
+            var revisions = _coreAssetsService
                 .GetHistoryAssets(assetTypeId, assetId)
                 .ToList();
             var assetTypeUser = _assetTypeRepository.GetPredefinedAssetType(
@@ -329,25 +404,33 @@ namespace AssetManager.Infrastructure.Services
 
         public void RestoreAsset(long assetTypeId, long assetId)
         {
-            var asset = _assetsService
+            var asset = _coreAssetsService
                 .GetHistoryAssets(assetTypeId, assetId)
                 .First();
-            _assetsService.RestoreAsset(asset);
+            _coreAssetsService.RestoreAsset(asset);
         }
 
-        public IEnumerable<AssetModel> GetAssets(long assetTypeId, long userId, string query, int? rowStart,
+        public IEnumerable<AssetModel> GetAssetsByName(long assetTypeId, long userId, string query, int? rowStart,
             int? rowsNumber)
         {
-            var assets = _assetsService.GetAssetsByAssetTypeIdAndUser(assetTypeId, userId);
+            Func<Asset, bool> filterPredicate = (asset) =>
+            {
+                return query == null || asset.Name.ToLower().Contains(query.ToLower());
+            };
+            return GetAssets(assetTypeId, userId, filterPredicate, rowStart, rowsNumber);
+        }
 
-            var result = from asset in assets
-                where query == null || asset.Name.ToLower().Contains(query.ToLower())
-                select new AssetModel
-                {
-                    AssetTypeId = assetTypeId,
-                    Name = asset.Name,
-                    Id = asset.ID
-                };
+        public IEnumerable<AssetModel> GetAssets(long assetTypeId, long userId, Func<Asset, bool> filterPredicate = null,
+            int? rowStart = null, int? rowsNumber = null)
+        {
+            var assets = _coreAssetsService.GetAssetsByAssetTypeIdAndUser(assetTypeId, userId, filterPredicate);
+
+            var result = assets.Select(x => new AssetModel
+            {
+                AssetTypeId = assetTypeId,
+                Name = x.Name,
+                Id = x.ID
+            });
 
             if (rowStart.HasValue)
             {
@@ -360,16 +443,20 @@ namespace AssetManager.Infrastructure.Services
         public AssetModel CreateAsset(long assetTypeId, long userId)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            var asset = _assetsService.CreateAsset(assetType); // TODO: get rid of this invocation
+            _assetTypePermissionChecker.EnsureWritePermission(assetType.Base, userId);
+
+            var asset = _coreAssetsService.CreateAsset(assetType); // TODO: get rid of this invocation
             asset[AttributeNames.UpdateUserId].ValueAsId = userId;
             asset[AttributeNames.UpdateDate].Value = DateTime.Now.ToString();
-            asset = _calculator.PreCalculateAsset(asset);
-            return _modelFactory.GetAssetModel(asset);
+            var wrappedAsset = new AssetWrapperForScreenView(asset);
+            _calculator.CalculateAssetScreens(wrappedAsset);
+
+            return _modelFactory.GetAssetModel(wrappedAsset);
         }
 
         private Asset CreateRelatedEntity(long assetTypeId, AssetAttribute attribute, JToken value)
         {
-            var document = _assetsService.CreateAsset(PredefinedEntity.Document);
+            var document = _coreAssetsService.CreateAsset(PredefinedEntity.Document);
             document.Name = value["name"].Value<string>();
             var fileAttr = document.Attributes.FirstOrDefault(
                 a => a.Configuration.DataTypeEnum == Enumerators.DataType.File);
@@ -399,20 +486,20 @@ namespace AssetManager.Infrastructure.Services
                    !string.IsNullOrEmpty(modelAttribute.Value["name"].Value<string>());
         }
 
-        public AssetModel CalculateAsset(AssetModel model, long userId, long? screenId = null, bool overwrite = false)
+        public AssetModel CalculateAsset(AssetModel model, long userId, long? screenId = null)
         {
             var assetType = _assetTypeRepository.GetById(model.AssetTypeId);
             Asset asset;
 
             if (model.Id != 0)
             {
-                asset = _assetsService.GetAssetById(model.Id, assetType);
+                asset = _coreAssetsService.GetAssetById(model.Id, assetType);
                 if (!asset.GetConfiguration().IsActiveVersion)
                     throw new Exception("Given AssetType Id refers to inactive version.");
             }
             else
             {
-                asset = _assetsService.CreateAsset(assetType);
+                asset = _coreAssetsService.CreateAsset(assetType);
             }
 
             foreach (var modelAttribute in model.GetAttributes(screenId))
@@ -432,14 +519,14 @@ namespace AssetManager.Infrastructure.Services
             var validationResult = _validationService.ValidateAsset(asset);
             if (!validationResult.IsValid)
                 throw new AssetValidationException(validationResult);
-
-            asset = _calculator.PreCalculateAsset(asset, screenId, overwrite);
-            return _modelFactory.GetAssetModel(asset, Permission.RDRD);
+            var assetWrapper = new AssetWrapperForScreenView(asset);
+            _calculator.CalculateAssetScreens(assetWrapper, screenId);
+            return _modelFactory.GetAssetModel(assetWrapper, Permission.RDRD);
         }
 
-        public IEnumerable<ChildAssetType> GetChildAssetTypes(long assetTypeId)
+        public IEnumerable<ChildAssetType> GetRelatedAssetTypes(long userId, long assetTypeId)
         {
-            var result = _unitOfWork.GetChildAssets(assetTypeId);
+            var result = _unitOfWork.GetRelatedAssetTypes(userId, assetTypeId);
             return result.Select(i => new ChildAssetType
             {
                 DynEntityConfigId = i.DynEntityConfigId,

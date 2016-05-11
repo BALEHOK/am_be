@@ -1,4 +1,6 @@
-﻿namespace AppFramework.Core.Classes.SearchEngine
+﻿using AppFramework.Core.Exceptions;
+
+namespace AppFramework.Core.Classes.SearchEngine
 {
     using System;
     using AppFramework.Core.AC.Authentication;
@@ -63,6 +65,7 @@
         /// </summary>
         /// <param name="trackingId"></param>
         /// <returns></returns>
+        [Obsolete("Use GetTrackingBySearchIdUserId instead for more security")]
         public SearchTracking GetTrackingById(long trackingId)
         {
             return _unitOfWork.SearchTrackingRepository
@@ -70,10 +73,8 @@
         }
 
         /// <summary>
-        /// Returns tracked search action by its id
+        /// Returns tracked search action by its id and user id
         /// </summary>
-        /// <param name="trackingId"></param>
-        /// <returns></returns>
         public SearchTracking GetTrackingBySearchIdUserId(Guid searchId, long userId)
         {
             return _unitOfWork.SearchTrackingRepository

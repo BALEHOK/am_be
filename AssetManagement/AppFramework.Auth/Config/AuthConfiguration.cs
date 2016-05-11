@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
-using Newtonsoft.Json;
+using NewtonsoftAM.Json;
 
 namespace AppFramework.Auth.Config
 {

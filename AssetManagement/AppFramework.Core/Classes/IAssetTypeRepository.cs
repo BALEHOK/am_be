@@ -22,5 +22,7 @@ namespace AppFramework.Core.Classes
         AssetType GetDraftById(long assetTypeId, int currentRevision);
         void Delete(AssetType assetType);
         ValidationResult ValidateNameUniqueness(string assetTypeName, long assetTypeId);
+        bool TryGetById(long id, out AssetType assetType, bool activeOnly = true);
+        bool IsPredefinedAssetType(AssetType typeToCheck, PredefinedEntity entity);
     }
 }

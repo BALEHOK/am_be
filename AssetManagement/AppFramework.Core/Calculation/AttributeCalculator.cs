@@ -49,7 +49,7 @@ namespace AppFramework.Core.Calculation
 
             _assetsService = assetsService;
             _dependenciesFinder = new DependenciesFinder(assetsService, assetTypeRepository, attributeRepository);
-            _calculationFunctions = new CalculationFunctions(unitOfWork, assetTypeRepository, assetsService, this);
+            _calculationFunctions = new CalculationFunctions(unitOfWork, assetsService, this);
         }
 
         /// <summary>
@@ -57,10 +57,11 @@ namespace AppFramework.Core.Calculation
         /// Works only for attributes within same asset.
         /// </summary>
         /// <param name="asset">Asset instance</param>
+        /// <param name="attrs"></param>
         /// <param name="expressionString">Custom formula text</param>
         /// <param name="callingAsset"></param>
         /// <returns>Calculated value</returns>
-        public object GetValue(Asset asset, string expressionString, long callingAsset = -1)
+        public object GetValue(Asset asset, ScreenAttrs attrs, string expressionString, long callingAsset = -1)
         {
             if (asset == null)
                 throw new ArgumentNullException("asset");
@@ -81,7 +82,7 @@ namespace AppFramework.Core.Calculation
                 if (name.StartsWith(RelationOperator))
                 {
                     name = name.TrimStart(RelationOperator.ToCharArray());
-                    var paramValue = GetParameterValue(asset, name, callingAsset);
+                    var paramValue = GetParameterValue(asset, attrs, name, callingAsset);
                     args.Result = paramValue;
                 }
                 else if (name.StartsWith(ParameterPrefix))
@@ -94,7 +95,7 @@ namespace AppFramework.Core.Calculation
                 }
                 else
                 {
-                    var paramValue = GetParameterValue(asset, name);
+                    var paramValue = GetParameterValue(asset, attrs, name);
                     args.Result = paramValue;
                 }
             };
@@ -174,9 +175,9 @@ namespace AppFramework.Core.Calculation
             Error = e.Message;
         }
 
-        public object GetParameterValue(Asset asset, string parameterName, long callingAsset = -1)
+        private object GetParameterValue(Asset asset, ScreenAttrs attrs, string parameterName, long callingAsset = -1)
         {
-            if (asset == null)
+            if (asset == null || attrs == null || attrs.Count == 0)
                 return string.Empty;
 
             object result = string.Empty;
@@ -187,39 +188,68 @@ namespace AppFramework.Core.Calculation
                 var relatedAssetName = parameterName.Substring(0, dotIndex);
                 var valueFieldName = parameterName.Substring(dotIndex + 1, parameterName.Length - dotIndex - 1);
 
-                var related = asset[relatedAssetName].RelatedAsset;
+                var related = attrs[relatedAssetName].RelatedAsset;
 
                 if (related != null)
                 {
                     // handle self dependency to get edited result on the page
                     if (related.Configuration.ID == asset.Configuration.ID && related.ID == asset.ID)
-                        related = asset;
-
-                    result = GetParameterValue(related, valueFieldName, callingAsset);
+                    {
+                        result = GetParameterValue(asset, attrs, valueFieldName, callingAsset);
+                    }
+                    else
+                    {
+                        result = GetParameterValue(related, new ScreenAttrs(related.Attributes), valueFieldName, callingAsset);
+                    }
                 }
                 else
-                    result = TypesHelper.GetTypedValue(asset[relatedAssetName].Configuration.DataTypeEnum, result);
+                    result = TypesHelper.GetTypedValue(attrs[relatedAssetName].Configuration.DataTypeEnum, result);
 
                 return result;
             }
 
             result = callingAsset != -1
                 ? CallingAsset[parameterName].Value
-                : TypesHelper.GetTypedValue(asset, asset[parameterName].Configuration);
+                : TypesHelper.GetTypedValue(attrs, parameterName);
 
             return result;
         }
 
-        public Asset PreCalculateAsset(Asset asset, long? screenId = null, bool overwrite = true)
+        public void CalculateAssetScreens(AssetWrapperForScreenView assetWrapper, long? screenId = null)
         {
+            var asset = assetWrapper.Asset;
+
             _logger.DebugFormat("Calculating asset \"{0}\" (uid #{1}, DynEntityConfigUid #{2})",
                 asset.Name, asset.UID, asset.DynEntityConfigUid);
 
+            if (screenId.HasValue)
+            {
+                CalculateAssetScreens(assetWrapper, screenId.Value);
+            }
+            else
+            {
+                var screenIds = asset.Configuration.Panels
+                    .Where(p => p.ScreenId.HasValue) // no idea how it is possible, but there are panels with no screen
+                    .Select(p => p.ScreenId.GetValueOrDefault()).Distinct();
+                foreach (var s in screenIds)
+                {
+                    CalculateAssetScreens(assetWrapper, s);
+                }
+            }
+        }
+
+        private void CalculateAssetScreens(AssetWrapperForScreenView assetWrapper, long screenId)
+        {
+            var asset = assetWrapper.Asset;
+
+            _logger.DebugFormat("Calculating asset \"{0}\" (uid #{1}, DynEntityConfigUid #{2}, Screen Id {3})",
+                asset.Name, asset.UID, asset.DynEntityConfigUid, screenId);
+
             var attributesFormulas =
                 from panel in asset
-                    .GetConfiguration()
+                    .Configuration
                     .Panels
-                    .Where(p => screenId == null || p.ScreenId == screenId)
+                    .Where(p => p.ScreenId == screenId)
                 // for all screens or just for one particular
                 let tuples = panel.Base
                     .AttributePanelAttribute
@@ -230,9 +260,7 @@ namespace AppFramework.Core.Calculation
                 where attribute.UID == tuple.Item1
                 select Tuple.Create(attribute, tuple.Item2);
 
-            _calculateAttributes(asset, attributesFormulas.ToList());
-
-            return asset;
+            CalculateAttributes(assetWrapper.Asset, assetWrapper.ScreenAttributes(screenId), attributesFormulas.ToList());
         }
 
         public Asset PostCalculateAsset(Asset asset, bool calculateDependencies = true)
@@ -246,7 +274,7 @@ namespace AppFramework.Core.Calculation
                 // for all attributes with table formulas
                 .Select(a => Tuple.Create(a, a.FormulaText));
 
-            _calculateAttributes(asset, attributesFormulas.ToList());
+            CalculateAttributes(asset, new ScreenAttrs(asset.Attributes), attributesFormulas.ToList());
 
             if (calculateDependencies)
                 CalculateDependencies(asset);
@@ -254,14 +282,32 @@ namespace AppFramework.Core.Calculation
             return asset;
         }
 
-        private void _calculateAttributes(Asset asset, List<Tuple<AssetTypeAttribute, string>> attributesToCalc)
+        /// <summary>
+        /// Calculate attribute values by formulas
+        /// </summary>
+        /// <param name="asset">Source asset</param>
+        /// <param name="attributes">Calculated data holder</param>
+        /// <param name="attributesToCalc">turn on your imagination</param>
+        private void CalculateAttributes(Asset asset, ScreenAttrs attributes, List<Tuple<AssetTypeAttribute, string>> attributesToCalc)
         {
             var attributeReferences = attributesToCalc
                 .Select(a => a.Item1.DBTableFieldName)
                 .ToList();
 
+            /* cross reference check
+             * if we iterated over all attributes and didn't remove (calculated) at least one,
+             * then attributes have unresolvable set of formulas
+             */
+            var n = 0;
             while (attributesToCalc.Any())
             {
+                if (n >= attributesToCalc.Count)
+                {
+                    throw new Exception(string.Format(
+                        "Attributes of Asset (id {0}, type id {1}) have unresolvable cross references in formulas",
+                        asset.ID, asset.Configuration.ID));
+                }
+
                 var current = attributesToCalc.First();
                 var attrRef = attributeReferences
                     .Where(r => current.Item2.Contains(string.Format("[{0}]", r)) && r != current.Item1.DBTableFieldName)
@@ -275,27 +321,29 @@ namespace AppFramework.Core.Calculation
                     {
                         attributesToCalc.Remove(current);
                         attributesToCalc.Insert(attributesToCalc.Count, current);
+                        ++n;
                         continue;
                     }
                 }
 
-                var value = GetValue(asset, current.Item2);
+                var value = GetValue(asset, attributes, current.Item2);
 
                 if (Error == null)
                 {
                     if (current.Item1.DataTypeEnum == Enumerators.DataType.Asset)
                     {
-                        asset[current.Item1.DBTableFieldName].ValueAsId = TypesHelper.GetTypedValue<long>(value);
+                        attributes[current.Item1.DBTableFieldName].ValueAsId = TypesHelper.GetTypedValue<long>(value);
                     }
                     else
                     {
                         _logger.DebugFormat("Assigning calculated value \"{0}\"", value);
-                        asset[current.Item1.DBTableFieldName].Value = value == null
+                        attributes[current.Item1.DBTableFieldName].Value = value == null
                             ? string.Empty
                             : value.ToString();
                     }
                 }
                 attributesToCalc.Remove(current);
+                n = 0;
             }
         }
     }

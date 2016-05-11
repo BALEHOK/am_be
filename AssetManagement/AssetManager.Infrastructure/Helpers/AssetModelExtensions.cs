@@ -1,11 +1,11 @@
-﻿using AppFramework.Core.Classes;
-using AppFramework.Core.DTO;
-using AppFramework.Entities;
-using AssetManager.Infrastructure.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using AppFramework.Core.Classes;
+using AppFramework.Core.Classes.Extensions;
+using AppFramework.Entities;
+using AssetManager.Infrastructure.Models;
+using Common.Logging;
 
 namespace AssetManager.Infrastructure.Helpers
 {
@@ -16,26 +16,75 @@ namespace AssetManager.Infrastructure.Helpers
             Func<AssetAttribute, AttributeModel> attributeToModelConvertMethod)
         {
             return from p in panelsAttributes
-                   select new AssetPanelModel
-                   {
-                       Id = p.Key.AttributePanelId,
-                       Name = p.Key.Name,
-                       Attributes = from attribute in p.Value
-                                    select attributeToModelConvertMethod(attribute)
-                   };
+                select new AssetPanelModel
+                {
+                    Id = p.Key.AttributePanelId,
+                    Name = p.Key.Name.Localized(),
+                    IsChildAssets = p.Key.IsChildAssets,
+                    ChildAssetAttrId = p.Key.ChildAssetAttrId.GetValueOrDefault(),
+                    Attributes = from attribute in p.Value
+                        select attributeToModelConvertMethod(attribute)
+                };
         }
-
 
         public static IEnumerable<AttributeModel> GetAttributes(
             this AssetModel model, long? screenId = null)
         {
-            return model
-                .Screens
-                .Single(s => (screenId.HasValue && s.Id == screenId) || s.IsDefault)
+            var logger = LogManager.GetCurrentClassLogger();
+            AssetScreenModel screen = null;
+
+            if (screenId.HasValue)
+            {
+                screen = model.Screens.SingleOrDefault(s => s.Id == screenId.Value);
+
+                if (screen == null)
+                {
+                    logger.WarnFormat(
+                        @"Screen with id {0} not found in model (id: {1}, assetTypeId: {2}).
+                        Fallback to default screen.", 
+                        screenId, model.Id, model.AssetTypeId);
+
+                    screen = GetDefaultScreen(model, logger);
+                }
+            }
+            else
+            {
+                screen = GetDefaultScreen(model, logger);
+            }
+
+            return screen
                 .Panels
                 .SelectMany(p => p.Attributes)
                 .ToList();
         }
-       
+
+        private static AssetScreenModel GetDefaultScreen(AssetModel model, ILog logger)
+        {
+            AssetScreenModel screen;
+            var defaultScreensCount = model.Screens.Where(s => s.IsDefault).Count();
+
+            if (defaultScreensCount == 0)
+            {
+                throw new Exception(string.Format(
+                    @"Cannot get attributes from model (id: {0}, assetTypeId: {1}): 
+                        default screen not defined and no screenId provided.",
+                    model.Id, model.AssetTypeId));
+            }
+            else if (defaultScreensCount > 1)
+            {
+                logger.WarnFormat(
+                    @"More than one default screen found in model 
+                        (id: {0}, assetTypeId: {1}). Taking first one.",
+                    model.Id, model.AssetTypeId);
+
+                screen = model.Screens.First(s => s.IsDefault);
+            }
+            else
+            {
+                screen = model.Screens.Single(s => s.IsDefault);
+            }
+
+            return screen;
+        }
     }
 }

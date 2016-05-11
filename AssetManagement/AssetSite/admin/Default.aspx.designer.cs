@@ -94,24 +94,6 @@ namespace AssetSite.admin {
         protected global::System.Web.UI.WebControls.Label lblImportDesc;
         
         /// <summary>
-        /// HyperLink11 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink HyperLink11;
-        
-        /// <summary>
-        /// lblExportDesc control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblExportDesc;
-        
-        /// <summary>
         /// linkSynchronization control.
         /// </summary>
         /// <remarks>

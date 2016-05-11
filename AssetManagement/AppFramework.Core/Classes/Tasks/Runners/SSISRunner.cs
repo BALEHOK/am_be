@@ -1,6 +1,7 @@
 ﻿namespace AppFramework.Core.Classes.Tasks.Runners
 {
-    using AppFramework.ConstantsEnumerators;
+    using AppFramework.Tasks;
+    using AppFramework.Tasks.Models;
     using Common.Logging;
     using Microsoft.SqlServer.Dts.Runtime;
     using System;
@@ -25,7 +26,7 @@
             if (string.IsNullOrEmpty(packageLocation))
                 throw new ArgumentNullException();
             _packageLocation = packageLocation;
-            _result = new TaskResult(TaskFunctionType.LaunchBatch);
+            _result = new TaskResult(Enumerations.TaskFunctionType.LaunchBatch);
         }
 
         public TaskResult Run(Entities.Task task)
@@ -52,12 +53,14 @@
                         pkg.Variables.Add(param.Key, true, "User", param.Value);
                 }
                 DTSExecResult pkgResults = pkg.Execute(null, null, eventListener, null, null);
-                _result.Status = pkgResults == DTSExecResult.Success ? TaskStatus.Sussess : TaskStatus.Error;
+                _result.Status = pkgResults == DTSExecResult.Success 
+                    ? Enumerations.TaskStatus.Sussess 
+                    : Enumerations.TaskStatus.Error;
             }
             catch (Exception ex)
             {
                 _result.Errors.Add(ex.Message);
-                _result.Status = TaskStatus.Error;
+                _result.Status = Enumerations.TaskStatus.Error;
             }
             return _result;
         }

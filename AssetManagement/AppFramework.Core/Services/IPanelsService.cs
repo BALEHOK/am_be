@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using AppFramework.Entities;
 
-namespace AppFramework.Core.Classes.ScreensServices
+namespace AppFramework.Core.Services
 {
     public interface IPanelsService
     {
-        List<Panel> GetAllByScreenId(long screenId);
-        Panel GetByUid(long panelUid);
+        AttributePanel GetByUid(long panelUid);
+        AttributePanel GetById(long panelId);
         void Delete(long panelUid);
         void Save(AttributePanel panel);
+        List<AttributePanel> GetAllByScreenId(long screenId);
     }
 }

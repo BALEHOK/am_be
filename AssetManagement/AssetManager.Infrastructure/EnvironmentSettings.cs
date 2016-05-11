@@ -75,10 +75,20 @@ namespace AssetManager.Infrastructure
             return ConfigurationManager.AppSettings["ImagesUploadDir"] ?? "~/uploads";
         }
 
+        public string GetBannerUploadBaseDir()
+        {
+            return ConfigurationManager.AppSettings["BannerImagesUploadDir"] ?? GetImagesUploadBaseDir();
+        }
+
         public string GetAssetMediaRelativePath(long assetTypeId, long attributeId)
         {
-            return string.Format("/assets/{0}/{1}",
+            return string.Format("assets/{0}/{1}",
                 assetTypeId, attributeId);
+        }
+
+        public string GetBannerRelativePath()
+        {
+            return "__banner";
         }
 
         public string GetAssetMediaHttpRoot()

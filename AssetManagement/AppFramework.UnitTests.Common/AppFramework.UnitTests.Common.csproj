@@ -61,6 +61,7 @@
     <Compile Include="Fixtures\AssetCustomization.cs" />
     <Compile Include="Fixtures\AssetTypeCustomization.cs" />
     <Compile Include="Fixtures\EntitiesCustomization.cs" />
+    <Compile Include="Fixtures\UserAssetCustomization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

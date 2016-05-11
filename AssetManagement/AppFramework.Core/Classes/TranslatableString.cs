@@ -39,7 +39,7 @@ namespace AppFramework.Core.Classes
         /// <returns></returns>
         public string GetTranslation()
         {
-            return GetTranslation(CultureInfo.CurrentCulture);
+            return GetTranslation(CultureInfo.CurrentUICulture);
         }
 
         /// <summary>

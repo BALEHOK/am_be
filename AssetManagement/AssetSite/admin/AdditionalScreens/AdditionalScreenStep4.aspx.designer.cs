@@ -31,15 +31,6 @@ namespace AssetSite.admin.AdditionalScreens {
         protected global::System.Web.UI.WebControls.Label lblpanelHeader;
         
         /// <summary>
-        /// lbRebind control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lbRebind;
-        
-        /// <summary>
         /// gvPanels control.
         /// </summary>
         /// <remarks>
@@ -137,6 +128,24 @@ namespace AssetSite.admin.AdditionalScreens {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbPanelDesc;
+        
+        /// <summary>
+        /// tbPanelIsChild control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox tbPanelIsChild;
+        
+        /// <summary>
+        /// ddlChildAttrib control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlChildAttrib;
         
         /// <summary>
         /// Translations1 control.

@@ -42,11 +42,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Utils.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraPrinting.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPrinting.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Charts.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v15.2.Wizard, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v15.2.UI, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v15.2.Extensions, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v15.2, Version=15.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="EPPlus">
       <HintPath>..\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
     </Reference>
@@ -67,8 +74,8 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -152,6 +159,7 @@
     <Compile Include="Models\AssetRevisionModel.cs" />
     <Compile Include="Models\AssetScreenModel.cs" />
     <Compile Include="Models\AttributeValidationResultModel.cs" />
+    <Compile Include="Models\BannerImages.cs" />
     <Compile Include="Models\BarcodeModel.cs" />
     <Compile Include="Models\ChildAssetType.cs" />
     <Compile Include="Models\ContactFormMessage.cs" />
@@ -159,10 +167,10 @@
     <Compile Include="Models\CustomReportModel.cs" />
     <Compile Include="Models\DynListItemModel.cs" />
     <Compile Include="Models\DynListModel.cs" />
+    <Compile Include="Models\EntityAttribConfigModel.cs" />
     <Compile Include="Models\FaqContainer.cs" />
     <Compile Include="Models\FaqModel.cs" />
     <Compile Include="Models\PlaceModel.cs" />
-    <Compile Include="Models\ResultBase.cs" />
     <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\Search\AdvanceSearchModel.cs" />
     <Compile Include="Models\Search\AdvanceSearchModelMapper.cs" />
@@ -193,18 +201,28 @@
     <Compile Include="Models\UploadResultModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ZipCodeModel.cs" />
+    <Compile Include="Permissions\AssetPermissionChecker.cs" />
+    <Compile Include="Permissions\IAssetPermissionChecker.cs" />
+    <Compile Include="Permissions\AssetTypePermissionChecker.cs" />
+    <Compile Include="Permissions\IAssetTypePermissionChecker.cs" />
+    <Compile Include="Permissions\IPermissionsService.cs" />
+    <Compile Include="Permissions\PermissionsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AssetService.cs" />
     <Compile Include="Services\AssetTypeService.cs" />
+    <Compile Include="Services\BannerService.cs" />
     <Compile Include="Services\BarcodeService.cs" />
     <Compile Include="Services\DataTypeService.cs" />
     <Compile Include="Services\DocumentsService.cs" />
-    <Compile Include="Services\ExportService.cs" />
+    <Compile Include="Services\ExportByTypeService.cs" />
+    <Compile Include="Services\ExportProxy.cs" />
+    <Compile Include="Services\ExportSearchResultService.cs" />
     <Compile Include="Services\FaqService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\HistoryService.cs" />
     <Compile Include="Services\IAssetService.cs" />
     <Compile Include="Services\IAssetTypeService.cs" />
+    <Compile Include="Services\IBannerService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\IDataTypeService.cs" />
     <Compile Include="Services\IExportService.cs" />
@@ -243,7 +261,12 @@
       <Project>{41e0c02c-e115-4781-b686-b779a2b4eb6e}</Project>
       <Name>AppFramework.Reports</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Tasks\AppFramework.Tasks.csproj">
+      <Project>{4d38b9e7-6171-4858-bb02-1cef5137d451}</Project>
+      <Name>AppFramework.Tasks</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

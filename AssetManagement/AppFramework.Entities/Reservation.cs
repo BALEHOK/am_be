@@ -18,58 +18,29 @@ using System.Runtime.Serialization;
 namespace AppFramework.Entities
 {
     [DataContract(IsReference = true)]
+    [KnownType(typeof(ReservedAsset))]
     public partial class Reservation: IObjectWithChangeTracker, INotifyPropertyChanged, IDataEntity
     {
         #region Primitive Properties
     
         [DataMember]
-        public long ReservationUID
+        public long ReservationId
         {
-            get { return _reservationUID; }
+            get { return _reservationId; }
             set
             {
-                if (_reservationUID != value)
+                if (_reservationId != value)
                 {
                     if (ChangeTracker.ChangeTrackingEnabled && ChangeTracker.State != ObjectState.Added)
                     {
-                        throw new InvalidOperationException("The property 'ReservationUID' is part of the object's key and cannot be changed. Changes to key properties can only be made when the object is not being tracked or is in the Added state.");
+                        throw new InvalidOperationException("The property 'ReservationId' is part of the object's key and cannot be changed. Changes to key properties can only be made when the object is not being tracked or is in the Added state.");
                     }
-                    _reservationUID = value;
-                    OnPropertyChanged("ReservationUID");
+                    _reservationId = value;
+                    OnPropertyChanged("ReservationId");
                 }
             }
         }
-        private long _reservationUID;
-    
-        [DataMember]
-        public long DynEntityUID
-        {
-            get { return _dynEntityUID; }
-            set
-            {
-                if (_dynEntityUID != value)
-                {
-                    _dynEntityUID = value;
-                    OnPropertyChanged("DynEntityUID");
-                }
-            }
-        }
-        private long _dynEntityUID;
-    
-        [DataMember]
-        public long DynEntityConfigUID
-        {
-            get { return _dynEntityConfigUID; }
-            set
-            {
-                if (_dynEntityConfigUID != value)
-                {
-                    _dynEntityConfigUID = value;
-                    OnPropertyChanged("DynEntityConfigUID");
-                }
-            }
-        }
-        private long _dynEntityConfigUID;
+        private long _reservationId;
     
         [DataMember]
         public long UpdateUserId
@@ -87,19 +58,34 @@ namespace AppFramework.Entities
         private long _updateUserId;
     
         [DataMember]
-        public long Borrower
+        public System.DateTime UpdateDate
         {
-            get { return _borrower; }
+            get { return _updateDate; }
             set
             {
-                if (_borrower != value)
+                if (_updateDate != value)
                 {
-                    _borrower = value;
-                    OnPropertyChanged("Borrower");
+                    _updateDate = value;
+                    OnPropertyChanged("UpdateDate");
                 }
             }
         }
-        private long _borrower;
+        private System.DateTime _updateDate;
+    
+        [DataMember]
+        public long BorrowerId
+        {
+            get { return _borrowerId; }
+            set
+            {
+                if (_borrowerId != value)
+                {
+                    _borrowerId = value;
+                    OnPropertyChanged("BorrowerId");
+                }
+            }
+        }
+        private long _borrowerId;
     
         [DataMember]
         public System.DateTime StartDate
@@ -132,109 +118,87 @@ namespace AppFramework.Entities
         private System.DateTime _endDate;
     
         [DataMember]
-        public System.DateTime ReservationDate
+        public string Comment
         {
-            get { return _reservationDate; }
+            get { return _comment; }
             set
             {
-                if (_reservationDate != value)
+                if (_comment != value)
                 {
-                    _reservationDate = value;
-                    OnPropertyChanged("ReservationDate");
+                    _comment = value;
+                    OnPropertyChanged("Comment");
                 }
             }
         }
-        private System.DateTime _reservationDate;
+        private string _comment;
     
         [DataMember]
-        public System.DateTime UpdateDate
+        public short State
         {
-            get { return _updateDate; }
+            get { return _state; }
             set
             {
-                if (_updateDate != value)
+                if (_state != value)
                 {
-                    _updateDate = value;
-                    OnPropertyChanged("UpdateDate");
+                    _state = value;
+                    OnPropertyChanged("State");
                 }
             }
         }
-        private System.DateTime _updateDate;
+        private short _state;
+
+        #endregion
+
+        #region Navigation Properties
     
         [DataMember]
-        public string Reason
+        public TrackableCollection<ReservedAsset> ReservedAssets
         {
-            get { return _reason; }
+            get
+            {
+                if (_reservedAssets == null)
+                {
+                    _reservedAssets = new TrackableCollection<ReservedAsset>();
+                    _reservedAssets.CollectionChanged += FixupReservedAssets;
+    				_reservedAssets.IsLoaded = false;
+                }
+                return _reservedAssets;
+            }
             set
             {
-                if (_reason != value)
+                if (!ReferenceEquals(_reservedAssets, value))
                 {
-                    _reason = value;
-                    OnPropertyChanged("Reason");
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        throw new InvalidOperationException("Cannot set the FixupChangeTrackingCollection when ChangeTracking is enabled");
+                    }
+                    if (_reservedAssets != null)
+                    {
+                        _reservedAssets.CollectionChanged -= FixupReservedAssets;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Remove the cascade delete event handler for any entities in the current collection.
+                        foreach (ReservedAsset item in _reservedAssets)
+                        {
+                            ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                        }
+                    }
+                    _reservedAssets = value;
+    				_reservedAssets.IsLoaded = true;
+                    if (_reservedAssets != null)
+                    {
+                        _reservedAssets.CollectionChanged += FixupReservedAssets;
+                        // This is the principal end in an association that performs cascade deletes.
+                        // Add the cascade delete event handler for any entities that are already in the new collection.
+                        foreach (ReservedAsset item in _reservedAssets)
+                        {
+                            ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                        }
+                    }
+                    OnNavigationPropertyChanged("ReservedAssets");
                 }
             }
         }
-        private string _reason;
-    
-        [DataMember]
-        public string Remarks
-        {
-            get { return _remarks; }
-            set
-            {
-                if (_remarks != value)
-                {
-                    _remarks = value;
-                    OnPropertyChanged("Remarks");
-                }
-            }
-        }
-        private string _remarks;
-    
-        [DataMember]
-        public bool IsClosed
-        {
-            get { return _isClosed; }
-            set
-            {
-                if (_isClosed != value)
-                {
-                    _isClosed = value;
-                    OnPropertyChanged("IsClosed");
-                }
-            }
-        }
-        private bool _isClosed;
-    
-        [DataMember]
-        public bool IsDamaged
-        {
-            get { return _isDamaged; }
-            set
-            {
-                if (_isDamaged != value)
-                {
-                    _isDamaged = value;
-                    OnPropertyChanged("IsDamaged");
-                }
-            }
-        }
-        private bool _isDamaged;
-    
-        [DataMember]
-        public bool IsBorrowed
-        {
-            get { return _isBorrowed; }
-            set
-            {
-                if (_isBorrowed != value)
-                {
-                    _isBorrowed = value;
-                    OnPropertyChanged("IsBorrowed");
-                }
-            }
-        }
-        private bool _isBorrowed;
+        private TrackableCollection<ReservedAsset> _reservedAssets;
 
         #endregion
 
@@ -315,6 +279,56 @@ namespace AppFramework.Entities
     
         protected virtual void ClearNavigationProperties()
         {
+            ReservedAssets.Clear();
+        }
+
+        #endregion
+
+        #region Association Fixup
+    
+        private void FixupReservedAssets(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (IsDeserializing)
+            {
+                return;
+            }
+    
+            if (e.NewItems != null)
+            {
+                foreach (ReservedAsset item in e.NewItems)
+                {
+                    item.Reservation = this;
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        if (!item.ChangeTracker.ChangeTrackingEnabled)
+                        {
+                            item.StartTracking();
+                        }
+                        ChangeTracker.RecordAdditionToCollectionProperties("ReservedAssets", item);
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Update the event listener to refer to the new dependent.
+                    ChangeTracker.ObjectStateChanging += item.HandleCascadeDelete;
+                }
+            }
+    
+            if (e.OldItems != null)
+            {
+                foreach (ReservedAsset item in e.OldItems)
+                {
+                    if (ReferenceEquals(item.Reservation, this))
+                    {
+                        item.Reservation = null;
+                    }
+                    if (ChangeTracker.ChangeTrackingEnabled)
+                    {
+                        ChangeTracker.RecordRemovalFromCollectionProperties("ReservedAssets", item);
+                    }
+                    // This is the principal end in an association that performs cascade deletes.
+                    // Remove the previous dependent from the event listener.
+                    ChangeTracker.ObjectStateChanging -= item.HandleCascadeDelete;
+                }
+            }
         }
 
         #endregion

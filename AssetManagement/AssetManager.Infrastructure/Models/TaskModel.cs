@@ -2,7 +2,7 @@
 {
     public class TaskModel
     {
-        public long Id { get; set; }
+        public object Id { get; set; }
 
         public string Name { get; set; }
 
@@ -11,5 +11,7 @@
         public long DynEntityConfigId { get; set; }
 
         public string DynEntityConfigName { get; set; }
+
+        public bool IsPredefined { get; set; }
     }
 }

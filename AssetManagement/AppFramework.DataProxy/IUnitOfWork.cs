@@ -52,20 +52,20 @@ namespace AppFramework.DataProxy
         bool GetPermittedTask(long assetTypeId, long userId, long taxonomyItemId);
         ObjectResult<int?> GetPermittedAssetsCount(long assetTypeId, long userId);
         ObjectResult<StockLocationInfo> GetStocksByLocation(long assetId, long assetTypeId);
-        IEnumerable<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId);
+        IEnumerable<f_cust_GetRelatedAssetTypes_Result> GetRelatedAssetTypes(long userId, long assetTypeId);
+        List<long> GetUsersTree(long userId);
         bool IsValueUnique(string dynEntityTableName, string columnName, string value, Nullable<long> excludeDynEntityId);
         ITaxonomyItemRepository TaxonomyItemRepository { get; }
         TaxonomyRepository TaxonomyRepository { get; }
 
         IDataRepository<Context> ContextRepository { get; }
-        IDataRepository<DeletedEntity> DeletedEntitiesRepository { get; }
-        IDataRepository<DynEntityAttribScreens> DynEntityAttribScreensRepository { get; }
         IDataRepository<Languages> LanguagesRepository { get; }
         IDataRepository<StringResources> StringResourcesRepository { get; }
         IDataRepository<AssetsTaxonomies> AssetsTaxonomiesRepository { get; }
         IDataRepository<DynEntityConfigTaxonomy> DynEntityConfigTaxonomyRepository { get; }
         IDataRepository<Rights> RightsRepository { get; }
         IDataRepository<Reservation> ReservationRepository { get; }
+        IDataRepository<ReservedAsset> ReservedAssetsRepository { get; }
         IDataRepository<PredefinedAttributes> PredefinedAttributesRepository { get; }
         IDataRepository<PredefinedAsset> PredefinedAssetRepository { get; }
         IDataRepository<ZipCode> ZipCodeRepository { get; }
@@ -120,6 +120,7 @@ namespace AppFramework.DataProxy
         IDataRepository<SearchQuery> SearchQueryRepository { get; }
         IDataRepository<DynEntityTaxonomyItem> DynEntityTaxonomyItemRepository { get; }
         IDataRepository<DynEntityTaxonomyItemHistory> DynEntityTaxonomyItemHistoryRepository { get; }
+        IDataRepository<BannerImage> BannerImageRepository { get; }
 
         void Dispose();
         void Commit();
@@ -128,5 +129,6 @@ namespace AppFramework.DataProxy
         IEnumerable<long> GetPermittedTasks(long userId);
         void ReIndexAsset(long assetUidNew, long assetId, long assetConfigUidNew, long assetConfigId);
         IEnumerable<long> GetPermittedAssetTypes(long userId, byte requiredPermission);
+        bool DatabaseExists();
     }
 }

@@ -1,14 +1,15 @@
-﻿using AppFramework.Core.Classes.Tasks;
+﻿using AppFramework.Core.UnitTests.Fixtures;
 using AppFramework.DataProxy;
-using AppFramework.DataProxy.Providers;
+using AppFramework.Tasks;
 using Moq;
 using Xunit;
+using Xunit.Extensions;
 
 namespace AppFramework.Core.UnitTests
 {
     public class SobImportPaymentsTests
     {
-        [Fact(Skip="It's not a unit test. Everything must be mocked!")]
+        [Theory(Skip="TBD"), AutoDomainData]
         public void SobImportPayments_DoImport_NoExceptionOccures()
         {
             // Fixture setup

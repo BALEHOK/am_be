@@ -5,14 +5,16 @@ using System.Threading.Tasks;
 using AppFramework.Auth.Data;
 using AppFramework.Auth.Data.Models;
 using AppFramework.Auth.Serialization;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
-using Newtonsoft.Json;
+using NewtonsoftAM.Json;
 
 namespace AppFramework.Auth.Services
 {
     public class BaseTokenStore
     {
         private static JsonSerializerSettings _jsonSerializerSettings;
+
         protected static JsonSerializerSettings JsonSerializerSettings
         {
             get
@@ -28,6 +30,8 @@ namespace AppFramework.Auth.Services
                 return _jsonSerializerSettings;
             }
         }
+
+        protected static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
     }
 
     // ToDo use async context methods after updating to EF6
@@ -109,7 +113,7 @@ namespace AppFramework.Auth.Services
             {
                 Context.Tokens.Remove(token);
             }
-            
+
             var num = Context.SaveChanges();
             return Task.FromResult(num);
         }
@@ -121,7 +125,19 @@ namespace AppFramework.Auth.Services
 
         protected TToken ConvertFromJson(string json)
         {
-            return JsonConvert.DeserializeObject<TToken>(json, JsonSerializerSettings);
+            TToken token;
+            try
+            {
+                token = JsonConvert.DeserializeObject<TToken>(json, JsonSerializerSettings);
+            }
+            catch (Exception)
+            {
+                Logger.Error("Failed to deserialize token: " + json);
+
+                throw;
+            }
+
+            return token;
         }
 
         public abstract Task StoreAsync(string key, TToken value);

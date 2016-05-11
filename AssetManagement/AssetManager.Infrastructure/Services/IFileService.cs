@@ -1,4 +1,5 @@
 ﻿using AppFramework.ConstantsEnumerators;
+using AssetManager.Infrastructure.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -17,5 +18,7 @@ namespace AssetManager.Infrastructure.Services
             long relatedAssetTypeId,
             long relatedAttributeId,
             string filename);
+
+        string GetFilepath(AttributeModel attribute);
     }
 }

@@ -3,6 +3,7 @@ using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes.Barcode;
 using AppFramework.DataProxy;
 using System;
+using AppFramework.Core.Classes.SearchEngine;
 using Common.Logging;
 
 namespace AppFramework.Core.Classes.Batch
@@ -23,13 +24,15 @@ namespace AppFramework.Core.Classes.Batch
         private readonly ILog _logger;
         private readonly IBarcodeProvider _barcodeProvider;
         private readonly IAttributeCalculator _attributeCalculator;
+        private readonly IIndexationService _indexationService;
 
-	    public BatchActionFactory(
+        public BatchActionFactory(
             IAssetsService assetsService, 
             IUnitOfWork unitOfWork, 
             IAssetTypeRepository assetTypeRepository,
             IBarcodeProvider barcodeProvider,
             IAttributeCalculator attributeCalculator,
+            IIndexationService indexationService,
             ILog logger)
 	    {
 	        if (assetsService == null)
@@ -50,6 +53,9 @@ namespace AppFramework.Core.Classes.Batch
 	        if (attributeCalculator == null)
 	            throw new ArgumentNullException("attributeCalculator");
 	        _attributeCalculator = attributeCalculator;
+            if (indexationService == null)
+                throw new ArgumentNullException("indexationService");
+            _indexationService = indexationService;
 	    }
 
 		/// <summary>
@@ -103,7 +109,7 @@ namespace AppFramework.Core.Classes.Batch
 					break;
                 case BatchActionType.RecalculateAssets:
                     act = new AssetActions.RecalculateAssets(action, _unitOfWork, _assetsService,
-                        _assetTypeRepository, _attributeCalculator);
+                        _assetTypeRepository, _attributeCalculator, _indexationService);
                     break;
                 case BatchActionType.SynkAssets:
 					act = new AssetActions.SynkAssets(action, _unitOfWork, _assetsService, _assetTypeRepository, 

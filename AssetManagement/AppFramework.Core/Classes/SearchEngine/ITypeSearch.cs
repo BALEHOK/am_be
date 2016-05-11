@@ -17,11 +17,7 @@ namespace AppFramework.Core.Classes.SearchEngine
         /// <param name="tableName">table name</param>
         /// <param name="elements">search parameters</param>
         /// <returns></returns>
-        DataTable FillAssetToDataTableByTypeContext(
-            long userId,
-            long assetTypeUid,
-            string tableName,
-            IEnumerable<AttributeElement> elements);
+        DataTable FillAssetToDataTableByTypeContext(long userId, long assetTypeUid, string tableName, List<AttributeElement> elements);
 
         /// <summary>
         /// Advance search by type. Overload for v2

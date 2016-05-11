@@ -45,7 +45,7 @@ namespace AssetSite.admin.Users
             var at = AssetTypeRepository.GetById(AssetTypeId);
             var asset = AssetsService.GetAssetById(id, at);
             var permission = AuthenticationService.GetPermission(asset);
-            AssetsService.DeleteAsset(asset, permission);
+            AssetsService.DeleteAsset(asset);
             gvUsers.DataBind();
         }
     }

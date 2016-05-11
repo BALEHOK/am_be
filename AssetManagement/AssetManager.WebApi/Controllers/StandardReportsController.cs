@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using DevExpress.Web.Mvc;
-using AppFramework.Reports.Services;
-using AppFramework.Reports.CustomReports;
+using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Reports;
 using AppFramework.Reports.Models;
-using AppFramework.Core.Classes.SearchEngine;
+using AppFramework.Reports.Services;
 using AppFramework.Reports.StandardReports.DataProviders;
 
 namespace AssetManager.WebApi.Controllers
@@ -17,21 +12,29 @@ namespace AssetManager.WebApi.Controllers
     [AllowAnonymous]
     public class StandardReportsController : Controller
     {
+        private readonly ISearchTracker _searchTracker;
         private readonly ISearchService _searchService;
         private readonly IStandardReportService _reportService;
         private readonly IDataProviderFactory _reportDataProviderFactory;
 
         public StandardReportsController(
+            ISearchTracker searchTracker,
             ISearchService searchService,
             IStandardReportService reportService,
             IDataProviderFactory reportDataProviderFactory)
         {
+            if (searchTracker == null)
+                throw new ArgumentNullException("searchTracker");
+            _searchTracker = searchTracker;
+
             if (searchService == null)
                 throw new ArgumentNullException("searchService");
             _searchService = searchService;
+
             if (reportService == null)
                 throw new ArgumentNullException("reportService");
             _reportService = reportService;
+
             if (reportDataProviderFactory == null)
                 throw new ArgumentNullException("reportDataProviderFactory");
             _reportDataProviderFactory = reportDataProviderFactory;
@@ -42,12 +45,12 @@ namespace AssetManager.WebApi.Controllers
             //TODO: get actual current user
             long userId = 1;
 
-            var searchTracking = _searchService.GetTrackingBySearchId(searchId, userId);
-            var searchResults = _searchService.GetSearchResultsBySearchId(searchId, userId);
+            var searchTracking = _searchTracker.GetTrackingBySearchIdUserId(searchId, userId);
+            var searchResults = _searchService.GetSearchResultsByTracking(searchTracking, userId);
 
             var layout = LayoutType.Default;
             if (reportLayout.HasValue)
-                layout = (LayoutType)reportLayout;
+                layout = (LayoutType) reportLayout;
             var report = _reportService.GetStandardReport(ReportType.SearchResultReport, layout);
             report.DataSource = searchResults.ToModel(string.Format(
                 "Search conditions: {0}", searchTracking.VerboseString));

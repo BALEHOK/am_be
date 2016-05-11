@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using AssetManagerAdmin.ViewModels;
 using AssetManagerAdmin.Services;
 using AssetManagerAdmin.Infrastructure;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace AssetManagerAdmin.Model
 {
@@ -19,6 +20,7 @@ namespace AssetManagerAdmin.Model
         private readonly IAssetsApiManager _assetsApiManager;
         private readonly ILog _logger;
         private readonly IFrameNavigationService _navigationService;
+        private readonly IDialogService _dialogService;
 
         public AssetTypeModel CurrentAssetType { get; set; }
         public AttributeTypeModel CurrentAssetAttribute { get; set; }
@@ -26,10 +28,12 @@ namespace AssetManagerAdmin.Model
         public DataService(
             IAssetsApiManager assetsApiManager, 
             IFrameNavigationService navigationService,
+            IDialogService dialogService,
             ILog logger)
         {
             _navigationService = navigationService;
             _assetsApiManager = assetsApiManager;
+            _dialogService = dialogService;
             _logger = logger;
         }
                 
@@ -42,6 +46,7 @@ namespace AssetManagerAdmin.Model
                 if (task.Exception != null)
                 {
                     _logger.Error(task.Exception);
+                    _dialogService.ShowMessage(new StatusMessage(task.Exception));
                     throw task.Exception;
                 }
 
@@ -68,18 +73,26 @@ namespace AssetManagerAdmin.Model
                     panel.Attributes.ForEach(panelAttribute =>
                     {
                         // find attribute model by Id in panel attribute
-                        var attributeModel =
-                            allAttributes.Single(attribute => attribute.Id == panelAttribute.AttributeId);
-                        // connect screen formula to model
-                        attributeModel.ScreenFormula = panelAttribute.ScreenFormula;
+                        var attributeModelInAssettype = allAttributes
+                            .Single(attribute => attribute.Id == panelAttribute.AttributeId);
+
+                        var attributeModelInPanel = attributeModelInAssettype.ShallowCopy();
+                        if (!string.IsNullOrEmpty(panelAttribute.ScreenFormula))
+                        { 
+                            // connect screen formula to model
+                            attributeModelInAssettype.ScreenFormula = panelAttribute.ScreenFormula; // this is used to higlights type in dropdown
+                            attributeModelInPanel.ScreenFormula = panelAttribute.ScreenFormula; // this is used to highlight attribute in list
+                        }
+
                         // fill attribute model
-                        panelAttribute.AttributeModel = attributeModel;
+                        panelAttribute.AttributeModel = attributeModelInPanel;
                     });
                 });
                 return result;
             };
 
-            return api.GetTypesInfo().ContinueWith(result => transform(result));
+            return api.GetTypesInfo().ContinueWith(
+                result => transform(result));
         }
 
         public List<MenuItemViewModel> GetMainMenuItems(UserInfo user)

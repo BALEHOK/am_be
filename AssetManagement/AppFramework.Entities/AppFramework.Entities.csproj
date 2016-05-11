@@ -90,6 +90,9 @@
     <Compile Include="AttributePanelAttribute.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="BannerImage.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="BatchAction.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
@@ -111,13 +114,7 @@
     <Compile Include="DefaultValue.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DeletedEntity.cs">
-      <DependentUpon>STEModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="DynEntityAttribConfig.cs">
-      <DependentUpon>STEModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DynEntityAttribScreens.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DynEntityAttribValidation.cs">
@@ -158,7 +155,7 @@
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enumerations.cs" />
-    <Compile Include="f_cust_GetChildAssets_Result.cs">
+    <Compile Include="f_cust_GetRelatedAssetTypes_Result.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="f_cust_GetReports_Result.cs">
@@ -218,6 +215,7 @@
     <Compile Include="IIndexEntity.cs" />
     <Compile Include="Partials\IndexHistoryDynEntities.cs" />
     <Compile Include="Partials\IndexActiveDynEntities.cs" />
+    <Compile Include="Partials\Report.cs" />
     <Compile Include="Place.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
@@ -235,6 +233,9 @@
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Reservation.cs">
+      <DependentUpon>STEModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReservedAsset.cs">
       <DependentUpon>STEModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Rights.cs">

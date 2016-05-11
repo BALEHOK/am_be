@@ -1,6 +1,5 @@
 ﻿using System;
 using AppFramework.Core.Classes;
-using AssetSite.Asset;
 
 namespace AssetSite.Controls
 {

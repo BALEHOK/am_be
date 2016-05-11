@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AssetManager.Infrastructure
+﻿namespace AssetManager.Infrastructure
 {
     public interface IEnvironmentSettings
     {
@@ -23,5 +21,7 @@ namespace AssetManager.Infrastructure
         string GetAssetMediaHttpRoot();
 
         string GetAssetMediaRelativePath(long assetTypeId, long attributeId);
+        string GetBannerUploadBaseDir();
+        string GetBannerRelativePath();
     }
 }

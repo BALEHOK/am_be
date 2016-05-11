@@ -556,10 +556,10 @@ namespace AssetManagerAdmin.ViewModels
                         context == FormulaBuilderContextType.ScreenFormulas && t.HasScreenFormulas ||
                         context == FormulaBuilderContextType.Validation && t.HasValidationExpressions;
 
-                    t.Attributes.ForEach(a => a.IsHighlighted =
-                        context == FormulaBuilderContextType.DbFormulas && a.HasDatabaseFormula ||
-                        context == FormulaBuilderContextType.ScreenFormulas && a.HasScreenFormula ||
-                        context == FormulaBuilderContextType.Validation && a.HasValidationExpression);
+                    t.Screens.ForEach(s => s.Panels.ForEach(p => p.Attributes.ForEach(a => a.AttributeModel.IsHighlighted =
+                        context == FormulaBuilderContextType.DbFormulas && a.AttributeModel.HasDatabaseFormula ||
+                        context == FormulaBuilderContextType.ScreenFormulas && a.AttributeModel.HasScreenFormula ||
+                        context == FormulaBuilderContextType.Validation && a.AttributeModel.HasValidationExpression)));
                 });
 
                 IsAttributesSelectorVisible = context == FormulaBuilderContextType.DbFormulas ||

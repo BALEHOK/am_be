@@ -12,7 +12,7 @@ namespace AppFramework.Core.Classes.Tasks
     public class ImportTaskParametersDescriptor : ParametersDescriptor
     {
         [DataMember(Order = 2)]
-        public TaskImportFileType FileType { get; set; }
+        public AppFramework.Tasks.Enumerations.TaskImportFileType FileType { get; set; }
 
         public static ImportTaskParametersDescriptor Deserialize(string xml)
         {

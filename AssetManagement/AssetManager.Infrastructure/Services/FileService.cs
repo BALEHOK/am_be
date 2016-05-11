@@ -17,6 +17,7 @@ namespace AssetManager.Infrastructure.Services
     {
         private readonly IEnvironmentSettings _envSettings;
         private readonly IAttributeRepository _attributeRepository;
+        
         private readonly ILog _logger;
 
         public FileService(
@@ -106,6 +107,31 @@ namespace AssetManager.Infrastructure.Services
             Directory.CreateDirectory(destAbsolutePath);
             File.Move(sourceFilepath, destFilepath);
             return new FileInfo(destFilepath);
+        }
+
+        public string GetFilepath(AttributeModel attribute)
+        {
+            var filepathOrFilename = attribute.Value.ToString();
+
+            if (Path.GetFileName(filepathOrFilename) == filepathOrFilename)
+            {
+                var relPath = _envSettings.GetAssetMediaRelativePath(
+                    attribute.AssetTypeId, attribute.Id);
+
+                var baseDir = attribute.Datatype == "image"
+                    ? _envSettings.GetImagesUploadBaseDir()
+                    : _envSettings.GetDocsUploadBaseDir();
+
+                if (!Path.IsPathRooted(baseDir))
+                    baseDir = HostingEnvironment.MapPath(baseDir);
+
+                return Path.Combine(baseDir, relPath, filepathOrFilename);
+            }
+            else
+            {
+                // support legacy database values containing full path to a file
+                return HostingEnvironment.MapPath(filepathOrFilename);
+            }
         }
 
         private string _getDestinationFilename(

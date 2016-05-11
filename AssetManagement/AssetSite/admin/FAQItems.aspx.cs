@@ -74,7 +74,7 @@ namespace AssetSite.admin
             long aId = long.Parse(e.CommandArgument.ToString());
             var asset = AssetsService.GetAssetById(aId, currentAT);
             var permission = AuthenticationService.GetPermission(asset);
-            AssetsService.DeleteAsset(asset, permission);
+            AssetsService.DeleteAsset(asset);
             this.BindFaqItems();
         }
 

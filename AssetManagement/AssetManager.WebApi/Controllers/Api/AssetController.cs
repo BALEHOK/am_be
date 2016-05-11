@@ -12,7 +12,7 @@ using WebApi.OutputCache.V2;
 
 namespace AssetManager.WebApi.Controllers.Api
 {
-    [RoutePrefix("api/assettype/{assetTypeId}/asset/{assetId}")]
+    [RoutePrefix("api/assettype/{assetTypeId}/asset")]
     public class AssetController : ApiController
     {
         private readonly IAssetService _assetService;
@@ -30,22 +30,22 @@ namespace AssetManager.WebApi.Controllers.Api
             _logger = logger;
         }
 
-        [Route("")]
-        [Route("revisions/{revision}")]
-        public AssetModel Get(long assetTypeId, long assetId, int? revision = null, long? uid = null)
-        {
-            return _assetService.GetAsset(assetTypeId, assetId, revision, uid, true);
-        }
-
-        [Route("~/api/assettype/{assetTypeId}/asset"), HttpGet]
-        public AssetModel Create(long assetTypeId)
+        [Route(""), HttpGet]
+        public AssetModel GetEmptyModel(long assetTypeId)
         {
             var userId = User.GetId();
             return _assetService.CreateAsset(assetTypeId, userId);
         }
 
-        [Route(""), HttpPost]
-        [Route("~/api/assettype/{assetTypeId}/asset"), HttpPut]
+        [Route("{assetId}")]
+        [Route("{assetId}/revisions/{revision}")]
+        public AssetModel GetById(long assetTypeId, long assetId, int? revision = null, long? uid = null)
+        {
+            return _assetService.GetAsset(assetTypeId, assetId, User.GetId(), revision, uid, true);
+        }
+
+        [Route(""), HttpPut] // TODO : this should be POST
+        [Route("{assetId}"), HttpPost] // and this should be PUT
         [ValidateModelState, CheckModelForNull]
         public IHttpActionResult Save(AssetModel model, long screenId)
         {
@@ -66,6 +66,11 @@ namespace AssetManager.WebApi.Controllers.Api
                 {
                     ModelState.AddModelErrors(ex);
                 }
+                catch (InsufficientPermissionsException ex)
+                {
+                    _logger.Debug(ex);
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     _logger.Error(ex);
@@ -75,8 +80,8 @@ namespace AssetManager.WebApi.Controllers.Api
             return BadRequest(ModelState);
         }
 
+        [Route("{assetId}/related")]
         [Route("related")]
-        [Route("~/api/assettype/{assetTypeId}/asset/related")]
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
         public IEnumerable<AssetAttributeRelatedEntitiesModel> GetRelatedEntities(
             long assetTypeId, long? assetId = null, int? revision = null, long? uid = null)
@@ -84,30 +89,31 @@ namespace AssetManager.WebApi.Controllers.Api
             return _assetService.GetAssetRelatedEntities(assetTypeId, assetId, revision, uid);
         }
 
-        [Route("history"), Route("revisions")]
+        [Route("{assetId}/history")]
+        [Route("{assetId}/revisions")]
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
         public AssetHistoryModel GetHistory(long assetTypeId, long assetId)
         {
             return _assetService.GetAssetHistory(assetTypeId, assetId);
         }
 
-        [Route(""), HttpDelete]
+        [Route("{assetId}"), HttpDelete]
         public void Delete(long assetTypeId, long assetId)
         {
-            _assetService.DeleteAsset(assetTypeId, assetId);
+            _assetService.DeleteAsset(assetTypeId, assetId, User.GetId());
         }
 
-        [Route("restore"), HttpPost]
+        [Route("{assetId}/restore"), HttpPost]
         public void Restore(long assetTypeId, long assetId)
         {
             _assetService.RestoreAsset(assetTypeId, assetId);
         }
 
         [HttpPost]
+        [Route("{assetId}/calculate")]
         [Route("calculate")]
-        [Route("~/api/assettype/{assetTypeId}/asset/calculate")]
         [ValidateModelState, CheckModelForNull]
-        public IHttpActionResult Calculate(AssetModel model, long screenId, bool forceRecalc = false)
+        public IHttpActionResult Calculate(AssetModel model, long screenId)
         {
             var userId = User.GetId();
 
@@ -115,7 +121,7 @@ namespace AssetManager.WebApi.Controllers.Api
             {
                 try
                 {
-                    var result = _assetService.CalculateAsset(model, userId, screenId, forceRecalc);
+                    var result = _assetService.CalculateAsset(model, userId, screenId);
                     return Ok(result);
                 }
                 catch (AssetValidationException ex)
@@ -133,6 +139,24 @@ namespace AssetManager.WebApi.Controllers.Api
                 }
             }
             return BadRequest(ModelState);
+        }
+
+        /// <summary>
+        /// Returns list of assets for given type
+        /// </summary>
+        /// <param name="assetTypeId">AssetType Id</param>
+        /// <param name="query">Filter by asset name</param>
+        /// <param name="rowStart">Offset</param>
+        /// <param name="rowsNumber">Items to return</param>
+        /// <returns></returns>
+        [Route("~/api/assettype/{assetTypeId}/assets")]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public IEnumerable<AssetModel> GetAllAssets(
+            long assetTypeId, string query = null, int? rowStart = 0, int? rowsNumber = 20)
+        {
+            // TODO: impove this API by adding strong-typed property
+            var userId = User.GetId();
+            return _assetService.GetAssetsByName(assetTypeId, userId, query, rowStart, rowsNumber);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace AssetSite.Documents
                             var at = AssetTypeRepository.GetById(_assetTypeId);
                             var asset = AssetsService.GetAssetById(assetId, at);
                             var permission = AuthenticationService.GetPermission(asset);
-                            AssetsService.DeleteAsset(asset, permission);
+                            AssetsService.DeleteAsset(asset);
                         }
                         break;
 

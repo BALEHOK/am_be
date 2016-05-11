@@ -149,11 +149,11 @@ namespace AppFramework.Core.Classes
         {
             get
             {
-                return _multipleAssets 
-                    ?? (_multipleAssets = _assetsService
-                    .GetRelatedAssetsByAttribute(this)
-                    .Select(a => new KeyValuePair<long, string>(a.Id, a.Name))
-                    .ToList());                
+                return _multipleAssets
+                       ?? (_multipleAssets = _assetsService
+                           .GetRelatedAssetsByAttribute(this)
+                           .Select(a => new KeyValuePair<long, string>(a.Id, a.Name))
+                           .ToList());
             }
         }
 
@@ -174,7 +174,10 @@ namespace AppFramework.Core.Classes
                         if (ParentAsset != null && ParentAsset.UID > 0)
                         {
                             _dynamicListValues = _dynamicListsService
-                                .GetLegacyListValues(Configuration, ParentAsset.UID)
+                                .GetLegacyListValues(
+                                    ParentAsset.DynEntityConfigUid,
+                                    Configuration.UID,
+                                    ParentAsset.UID)
                                 .ToList();
                             _dynamicListValues.ForEach(lv => lv.AssetAttribute = this);
                         }
@@ -196,7 +199,11 @@ namespace AppFramework.Core.Classes
         public List<ValidationResult> ValidationResults { get; set; }
 
         [XmlIgnore]
-        public DynColumn Data { get { return _data; } }  
+        public DynColumn Data
+        {
+            get { return _data; }
+            protected set { _data = value; }
+        }
 
         private string _value = string.Empty;
         private List<KeyValuePair<long, string>> _multipleAssets;
@@ -226,10 +233,10 @@ namespace AppFramework.Core.Classes
         /// <param name="data">The data.</param>
         /// <param name="parent">Parent asset</param>
         public AssetAttribute(
-            AssetTypeAttribute attrConfig, 
-            DynColumn data, 
+            AssetTypeAttribute attrConfig,
+            DynColumn data,
             Asset parent,
-            IAttributeValueFormatter attributeValueFormatter, 
+            IAttributeValueFormatter attributeValueFormatter,
             IAssetTypeRepository assetTypeRepository,
             IAssetsService assetsService,
             IUnitOfWork unitOfWork,
@@ -246,7 +253,7 @@ namespace AppFramework.Core.Classes
         /// <param name="attrConfig">AssetTypeAttribute data</param>
         /// <param name="data">Asset data</param>
         private AssetAttribute(
-            AssetTypeAttribute attrConfig, 
+            AssetTypeAttribute attrConfig,
             DynColumn data,
             IAttributeValueFormatter attributeValueFormatter,
             IAssetTypeRepository assetTypeRepository,
@@ -294,7 +301,7 @@ namespace AppFramework.Core.Classes
 
                     case Enumerators.DataType.Assets:
                         _value = string.Join(", ", from pair in this.MultipleAssets
-                                                   select pair.Value.Trim());
+                            select pair.Value.Trim());
                         break;
 
                     case Enumerators.DataType.Bool:
@@ -303,25 +310,25 @@ namespace AppFramework.Core.Classes
 
                     case Enumerators.DataType.Float:
                         _value = string.Format(ApplicationSettings.DisplayCultureInfo, "{0}",
-                                               float.Parse(_data.Value.ToString(), NumberStyles.Float,
-                                                           ApplicationSettings.PersistenceCultureInfo));
+                            float.Parse(_data.Value.ToString(), NumberStyles.Float,
+                                ApplicationSettings.PersistenceCultureInfo));
                         break;
 
                     case Enumerators.DataType.Money:
                     case Enumerators.DataType.USD:
                     case Enumerators.DataType.Euro:
                         _value = string.Format(ApplicationSettings.DisplayCultureInfo, "{0}",
-                                               float.Parse(_data.Value.ToString(), NumberStyles.Currency,
-                                                           ApplicationSettings.PersistenceCultureInfo));
+                            float.Parse(_data.Value.ToString(), NumberStyles.Currency,
+                                ApplicationSettings.PersistenceCultureInfo));
                         break;
 
                     default:
                         if (_configuration.DataType.FrameworkDataType != null)
                         {
                             _value = string.Format(ApplicationSettings.DisplayCultureInfo, "{0}",
-                                                   Convert.ChangeType(_data.Value,
-                                                                      _configuration.DataType.FrameworkDataType,
-                                                                      ApplicationSettings.PersistenceCultureInfo));
+                                Convert.ChangeType(_data.Value,
+                                    _configuration.DataType.FrameworkDataType,
+                                    ApplicationSettings.PersistenceCultureInfo));
                         }
                         else
                         {
@@ -330,7 +337,7 @@ namespace AppFramework.Core.Classes
                         break;
                 }
             }
-        }               
+        }
 
         private bool IsActive()
         {
@@ -377,7 +384,7 @@ namespace AppFramework.Core.Classes
             dlv.AssetAttribute = this;
             _dynamicListValues.Add(dlv);
         }
-        
+
         /// <summary>
         /// Inits the internal data (associated datarow). This method can be used in case when attribute was created not from database data, but for XML import.
         /// To restore missed _data field after import, use InitData
@@ -400,8 +407,15 @@ namespace AppFramework.Core.Classes
                 throw new InvalidCastException();
             return
                 (DateTime)
-                Convert.ChangeType(_data.Value, _configuration.DataType.FrameworkDataType,
-                                   ApplicationSettings.PersistenceCultureInfo);
+                    Convert.ChangeType(_data.Value, _configuration.DataType.FrameworkDataType,
+                        ApplicationSettings.PersistenceCultureInfo);
+        }
+
+        internal AssetAttribute Copy()
+        {
+            var copy = (AssetAttribute)MemberwiseClone();
+            copy.Data = _data.ShadowCopy();
+            return copy;
         }
     }
 }

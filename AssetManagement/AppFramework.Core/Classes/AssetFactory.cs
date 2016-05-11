@@ -1,4 +1,5 @@
 ﻿using AppFramework.Core.AC.Providers;
+using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.DAL.Adapters;
 
 namespace AppFramework.Core.Classes
@@ -33,7 +34,8 @@ namespace AppFramework.Core.Classes
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
             var attributeRepository = new AttributeRepository(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+            var indexationService = new IndexationService(unitOfWork);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService, indexationService);
             var assetType = atRepository.GetById(assetTypeId);
             var userService = new UserService(unitOfWork, atRepository, assetsService);
 		    var currentUserId = userService.GetCurrentUser().Id;
@@ -57,7 +59,8 @@ namespace AppFramework.Core.Classes
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
             var attributeRepository = new AttributeRepository(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+            var indexationService = new IndexationService(unitOfWork);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService, indexationService);
             var assetType = atRepository.GetById(assetTypeId);
             var userService = new UserService(unitOfWork, atRepository, assetsService);
             var currentUser = userService.GetCurrentUser();
@@ -90,7 +93,8 @@ namespace AppFramework.Core.Classes
             var dynamicListsService = new DynamicListsService(unitOfWork, attributeRepository);
             var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
             var rightsService = new RightsService(unitOfWork);
-            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+            var indexationService = new IndexationService(unitOfWork);
+            var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService, indexationService);
             var dataTypeService = new DataTypeService(unitOfWork);
             var tableProvider = new DynTableProvider(unitOfWork, new DynColumnAdapter(dataTypeService));
             var assetType = atRepository.GetById(assetTypeId);
@@ -173,13 +177,6 @@ namespace AppFramework.Core.Classes
 			};
 		}
 
-		public static List<f_cust_GetChildAssets_Result> GetChildAssets(long assetTypeId)
-		{
-			var unitOfWork = new UnitOfWork();
-			var res = unitOfWork.GetChildAssets(assetTypeId).ToList();
-			return res;
-		}
-
 		public static IEnumerable<KeyValuePair<long, string>> GetAssetsByIds(AssetType assetType, IEnumerable<long> ids)
 		{
 			using (var unitOfWork = new DataProxy.UnitOfWork())
@@ -196,8 +193,9 @@ namespace AppFramework.Core.Classes
 
 				foreach (var row in rows)
 				{
-					yield return new KeyValuePair<long, string>(long.Parse(row.Fields.Find(r => r.Name == AttributeNames.DynEntityId).Value.ToString()),
-																   row.Fields.Find(r => r.Name == AttributeNames.Name).Value.ToString());
+					yield return new KeyValuePair<long, string>(
+                        long.Parse(row.Fields.Single(r => r.Name == AttributeNames.DynEntityId).Value.ToString()),
+						row.Fields.Single(r => r.Name == AttributeNames.Name).Value.ToString());
 				}
 			}
 		}

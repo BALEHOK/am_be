@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Http;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
+using AssetManager.Infrastructure.Extensions;
 using AssetManager.Infrastructure.Models.TypeModels;
 using AssetManager.Infrastructure.Services;
 
@@ -42,7 +43,8 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route(""), HttpGet]
         public TypesInfoModel GetTypesInfo()
         {
-            return _assetTypeService.GetAssetTypes(true, true);
+            var assetTypes = _assetTypeService.GetAssetTypes(User.GetId(), true, true).ToList();
+            return new TypesInfoModel { ActiveTypes = assetTypes };
         }
 
         private string UpdateAttributeParameter(string typeId, string attributeName, string parameterName, object value)

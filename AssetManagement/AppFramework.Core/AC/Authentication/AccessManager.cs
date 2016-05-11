@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using AppFramework.Core.Classes.SearchEngine;
 
 namespace AppFramework.Core.AC.Authentication
 {
@@ -67,9 +68,10 @@ namespace AppFramework.Core.AC.Authentication
                     var linkedEntityFinder = new LinkedEntityFinder(unitOfWork);
                     var attributeValueFormatter = new AttributeValueFormatter(linkedEntityFinder);
                     var attributeRepository = new AttributeRepository(unitOfWork);
-                    var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService);
+                    var indexationService = new IndexationService(unitOfWork);
+                    var assetsService = new AssetsService(unitOfWork, atRepository, attributeRepository, attributeValueFormatter, rightsService, indexationService);
                     var userService = new UserService(unitOfWork, atRepository, assetsService);
-                    _authService = new AuthenticationService(unitOfWork, userService);
+                    _authService = new AuthenticationService(unitOfWork, userService, atRepository);
                 }
                 return _authService;
             }

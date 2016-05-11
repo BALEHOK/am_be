@@ -2,7 +2,6 @@
 using AppFramework.Core.Classes;
 using AssetManager.Infrastructure.Models;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace AssetManager.Infrastructure
 {
@@ -14,7 +13,8 @@ namespace AssetManager.Infrastructure
 
         void AssignInternalAttributes(Asset asset, long userId);
 
-        AssetModel GetAssetModel(Asset asset, Permission? permission = null);
+        AssetModel GetAssetModel(AssetWrapperForScreenView assetWrapper, Permission? permission = null);
+
         void AssignValueUnconditional(AssetAttribute attribute, string value);
     }
 }

@@ -1,9 +1,7 @@
-﻿using AppFramework.Core.Classes.ScreensServices;
-using AppFramework.DataProxy;
+﻿using AppFramework.DataProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AppFramework.Core.Calculation;
 using AppFramework.Entities;
 
 namespace AppFramework.Core.Classes
@@ -12,37 +10,21 @@ namespace AppFramework.Core.Classes
     /// Provides interface between list of asset attibutes and their 
     /// presentation on panels, which described by asset's configuration.
     /// </summary>
-    public class AssetPanelsAdapter : AppFramework.Core.Classes.IAssetPanelsAdapter
+    public class AssetPanelsAdapter : IAssetPanelsAdapter
     {
         public IDictionary<AssetAttribute, Asset> DependencyDescriptor { get; private set; }
        
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAssetTypeRepository _assetTypeRepository;
-        private readonly IAssetsService _assetsService;
-        private readonly IScreensService _screensService;
 
         /// <summary>
         /// Provides interface between list of asset attibutes and their 
         /// presentation on panels
         /// </summary>
-        public AssetPanelsAdapter(
-            IUnitOfWork unitOfWork,
-            IAssetTypeRepository assetTypeRepository,
-            IAssetsService assetsService,
-            IScreensService screensService)
+        public AssetPanelsAdapter(IUnitOfWork unitOfWork)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
-            if (assetTypeRepository == null)
-                throw new ArgumentNullException("assetTypeRepository");
-            _assetTypeRepository = assetTypeRepository;
-            if (assetsService == null)
-                throw new ArgumentNullException("assetsService");
-            _assetsService = assetsService;
-            if (screensService == null)
-                throw new ArgumentNullException("screensService");
-            _screensService = screensService;
 
             DependencyDescriptor = new Dictionary<AssetAttribute, Asset>();
         }
@@ -51,21 +33,14 @@ namespace AppFramework.Core.Classes
         /// Returns list of panels with asset attributes based on asset's configuration.
         /// </summary>
         /// <returns></returns>
-        public Dictionary<AttributePanel, List<AssetAttribute>> GetPanelsByScreen(Asset asset, Entities.AssetTypeScreen screen)
+        public Dictionary<AttributePanel, List<AssetAttribute>> GetPanelsByScreen(
+            AssetWrapperForScreenView assetWrapper, AssetTypeScreen screen)
         {
-            if (asset == null)
-                throw new ArgumentNullException("asset");
+            if (assetWrapper == null)
+                throw new ArgumentNullException("assetWrapper");
             if (screen == null)
                 throw new ArgumentNullException("screen");
 
-            // collect all assets with current one
-            LoadRelatedAssets(asset, screen);
-            var panels = LoadScreenPanels(asset, screen);
-            return panels;
-        }
-
-        private Dictionary<AttributePanel, List<AssetAttribute>> LoadScreenPanels(Asset asset, Entities.AssetTypeScreen screen)
-        {
             var panels = new Dictionary<AttributePanel, List<AssetAttribute>>();
             foreach (var panel in screen.AttributePanel.OrderBy(p => p.DisplayOrder).ThenBy(p => p.AttributePanelId))
             {
@@ -76,12 +51,17 @@ namespace AppFramework.Core.Classes
                     if (apa.ReferencingDynEntityAttribConfigId == null || apa.ReferencingDynEntityAttribConfigId == 0)
                     {
                         // attribute relates to the main asset                             
-                        attribute = asset.Attributes.SingleOrDefault(a => a.Configuration.ID == apa.DynEntityAttribConfig.DynEntityAttribConfigId);
+                        attribute = assetWrapper
+                            .ScreenAttributes(panel.ScreenId.Value)
+                            .SingleOrDefault(a => a.Configuration.ID == apa.DynEntityAttribConfig.DynEntityAttribConfigId);
                     }
                     else
                     {
                         // attribute relates to one of linked assets, which itself linked to some particular attribute of main asset
-                        var parentAttribute = asset.Attributes.SingleOrDefault(a => a.GetConfiguration().ID == apa.ReferencingDynEntityAttribConfigId);
+                        var parentAttribute = assetWrapper
+                            .ScreenAttributes(panel.ScreenId.Value)
+                            .SingleOrDefault(a => a.GetConfiguration().ID == apa.ReferencingDynEntityAttribConfigId);
+                        
                         if (parentAttribute != null)
                         {
                             if (parentAttribute.GetConfiguration().IsAsset && DependencyDescriptor.ContainsKey(parentAttribute))
@@ -104,12 +84,9 @@ namespace AppFramework.Core.Classes
                                 }
                                 else
                                 {
-                                    var assetAttribute = assignedAttributes.Single(a => a == parentAttribute) as AssetAttribute;
-                                    if (assetAttribute != null)
-                                    {
-                                        assetAttribute.CustomMultipleAssetsFields
-                                                      .Add(apa.DynEntityAttribConfig.DBTableFieldname);
-                                    }
+                                    var assetAttribute = assignedAttributes.Single(a => a == parentAttribute);
+                                    assetAttribute.CustomMultipleAssetsFields
+                                        .Add(apa.DynEntityAttribConfig.DBTableFieldname);
                                 }
                             }
                         }
@@ -119,59 +96,13 @@ namespace AppFramework.Core.Classes
                         continue;
 
 //todo:                    attribute.ScreenFormula = apa.ScreenFormula;
+                    // no! never do like that ^ because attribute is a data model, it belongs to asset,
+                    // but apa is a part of... view model. multiple apas can reference the same attribute
                     assignedAttributes.Add(attribute);
                 }
                 panels[panel] = assignedAttributes;
             }
             return panels;
-        }
-
-        private void LoadRelatedAssets(Asset asset, Entities.AssetTypeScreen screen)
-        {
-            // load related assets screens
-            _unitOfWork.AssetTypeScreenRepository.LoadProperty(screen, e => e.DynEntityAttribScreens);
-
-            foreach (var attRel in screen.DynEntityAttribScreens)
-            {                
-                var attribute = asset.Attributes.SingleOrDefault(a => a.GetConfiguration().UID == attRel.DynEntityAttribUid);                
-
-                if (attribute == null)
-                    continue;
-                if (attribute.GetConfiguration().RelatedAssetTypeID == null)
-                    continue;
-                if (attribute.GetConfiguration().IsMultipleAssets)
-                    continue;
-                                                
-                var relatedAssetType =
-                    _assetTypeRepository.GetById(attribute.Configuration.RelatedAssetTypeID.Value);
-
-                if (relatedAssetType == null)
-                    throw new NullReferenceException("Cannot find related assettype");
-
-                Asset relAsset = null;
-
-                if (asset.IsNew)
-                {
-                    relAsset = _assetsService.CreateAsset(relatedAssetType);
-                }
-                else
-                {
-                    if (attribute.GetConfiguration().IsAsset && attribute.ValueAsId.HasValue && attribute.ValueAsId != 0)
-                    {
-                        if (!asset.IsHistory)
-                        {
-                            relAsset = _assetsService.GetAssetById(attribute.ValueAsId.Value, relatedAssetType);
-                        }
-                        else
-                        {
-                            relAsset = _assetsService.GetAssetByUid(attribute.ValueAsId.Value, relatedAssetType);
-                        }
-                    }
-                }
-
-                if (relAsset != null)
-                    DependencyDescriptor.Add(attribute, relAsset);
-            }
         }
 
         public Dictionary<AttributePanel, List<AssetAttribute>> GetDefaultPanels(Asset asset)

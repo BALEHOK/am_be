@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes.SearchEngine.SearchOperators;
+using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using Newtonsoft.Json;
 using Formatting = AppFramework.Core.Helpers.Formatting;
-using System.Collections.Generic;
 
 namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
 {
@@ -49,17 +49,11 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
         [JsonIgnore]
         public AssetAttribute AssetAttribute { get; set; }
 
-        public Enumerations.ConcatenationOperation ConcatenationOperation
+        public ConcatenationOperation ConcatenationOperation
         {
-            get
-            {
-                return AndOr == 0 ? Enumerations.ConcatenationOperation.And : Enumerations.ConcatenationOperation.Or;
-            }
+            get { return AndOr == 0 ? ConcatenationOperation.And : ConcatenationOperation.Or; }
 
-            set
-            {
-                AndOr = (int) value;
-            }
+            set { AndOr = (int) value; }
         }
 
         /// <summary>
@@ -70,9 +64,9 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
             get
             {
                 return (ElementType == Enumerators.DataType.Asset && UseComplexValue)
-                    || ElementType == Enumerators.DataType.Assets
-                    || ElementType == Enumerators.DataType.DynList
-                    || ElementType == Enumerators.DataType.DynLists;
+                       || ElementType == Enumerators.DataType.Assets
+                       || ElementType == Enumerators.DataType.DynList
+                       || ElementType == Enumerators.DataType.DynLists;
             }
         }
 
@@ -96,6 +90,7 @@ namespace AppFramework.Core.Classes.SearchEngine.TypeSearchElements
             get { return _value; }
             set { _value = Formatting.Escape(value); }
         }
+
         private string _value;
 
         public AssetType ReferencedAssetType { get; set; }

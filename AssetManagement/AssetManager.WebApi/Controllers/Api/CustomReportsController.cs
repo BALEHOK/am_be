@@ -42,14 +42,14 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("list"), Route(""), HttpGet]
         public List<CustomReportModel> ReportsList()
         {
+            var userId = User.GetId();
             var reports = _customReportService
-                .GetAllReports(User.GetId());
+                .GetAllReports(userId);
 
             var relatedAssetTypes =
-                _assetTypeService.GetAssetTypesByIds(
-                    reports
-                        .Select(r => r.DynEntityConfigId.GetValueOrDefault())
-                        .Distinct())
+                _assetTypeService.GetAssetTypesByIds(userId, reports
+                    .Select(r => r.DynEntityConfigId.GetValueOrDefault())
+                    .Distinct())
                     .ToDictionary(t => t.DynEntityConfigId, t => t.NameLocalized());
 
             return reports.Select(r => r.ToModel(relatedAssetTypes))
@@ -64,7 +64,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
         public List<CustomReportModel> GetReportsByAssetTypeId(long assetTypeId)
         {
-            var assetType = _assetTypeService.GetAssetType(assetTypeId);
+            var assetType = _assetTypeService.GetAssetType(User.GetId(), assetTypeId);
 
             return _customReportService
                 .GetReportsByAssetTypeId(assetTypeId, User.GetId())

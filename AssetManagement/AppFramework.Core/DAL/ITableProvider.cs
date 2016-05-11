@@ -12,6 +12,7 @@ namespace AppFramework.Core.DAL
         DynRow GetRowByIdAndRevision(Entities.DynEntityConfig assetConfig, long assetId, int revision);
 
         void InsertAsset(Asset asset);
+        void UpdateAsset(Asset asset);
 
         List<DynRow> GetRows(long typeId, Dictionary<string, string> options = null, string orderBy = null,
             bool desc = false, Dictionary<long, AssetType> typeRevisions = null);

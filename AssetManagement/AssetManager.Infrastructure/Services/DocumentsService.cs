@@ -30,7 +30,7 @@ namespace AssetManager.Infrastructure.Services
         public IEnumerable<AssetModel> GetDocuments(long userId, string query = null, int? rowStart = 1, int? rowsNumber = 20)
         {
             var docType = _assetTypeRepository.GetPredefinedAssetType(PredefinedEntity.Document);
-            return _assetService.GetAssets(docType.ID, userId, query, rowStart, rowsNumber);
+            return _assetService.GetAssetsByName(docType.ID, userId, query, rowStart, rowsNumber);
         }
     }
 }

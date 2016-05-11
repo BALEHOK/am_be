@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Web;
 using System.Web.Security;
@@ -43,29 +42,37 @@ namespace AppFramework.Core.Classes
             IAssetTypeRepository assetTypeRepository,
             IAttributeRepository attributeRepository,
             IAttributeValueFormatter attributeValueFormatter,
-            IRightsService rightsService)
+            IRightsService rightsService,
+            IIndexationService indexationService)
         {
             if (unitOfWork == null)
                 throw new ArgumentNullException("unitOfWork");
             _unitOfWork = unitOfWork;
+
             if (assetTypeRepository == null)
                 throw new ArgumentNullException("assetTypeRepository");
             _assetTypeRepository = assetTypeRepository;
+
             if (attributeRepository == null)
                 throw new ArgumentNullException("attributeRepository");
             _attributeRepository = attributeRepository;
+
             if (attributeValueFormatter == null)
                 throw new ArgumentNullException("attributeValueFormatter");
             _attributeValueFormatter = attributeValueFormatter;
+
             if (rightsService == null)
                 throw new ArgumentNullException("rightsService");
             _rightsService = rightsService;
+
+            if (indexationService == null)
+                throw new ArgumentNullException("indexationService");
+            _indexationService = indexationService;
 
             // TODO : must be passed via DI
             var dtService = new DataTypeService(_unitOfWork);
             _columnAdapter = new DynColumnAdapter(dtService);
             _tableProvider = new DynTableProvider(_unitOfWork, _columnAdapter);
-            _indexationService = new IndexationService(_unitOfWork);
             _attributeCalculator = new AttributeCalculator(_unitOfWork, this, _assetTypeRepository, attributeRepository);
             _dynamicListsService = new DynamicListsService(_unitOfWork, attributeRepository);
         }
@@ -224,13 +231,14 @@ namespace AppFramework.Core.Classes
             };
 
             var assetType = _assetTypeRepository.GetById(asset.GetConfiguration().ID);
+            bool isUser = _assetTypeRepository.IsPredefinedAssetType(assetType, PredefinedEntity.User);
             using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
                 long assetInitialUid = 0;
                 if (asset.ID == 0)
                 {
                     // asset is user
-                    if (asset.IsUser)
+                    if (isUser)
                     {
                         // user name
                         if (string.IsNullOrWhiteSpace(asset[AttributeNames.Name].Value))
@@ -326,16 +334,13 @@ namespace AppFramework.Core.Classes
                         });
                 }
 
-                // add to index
-                _indexationService.UpdateIndex(asset);
-
                 // get inserted asset from DB          
                 asset = GetAssetByUid(asset.UID, asset.GetConfiguration());
 
                 SaveDynamicLists(asset, _unitOfWork);
 
                 // asset is user
-                if (asset.IsUser)
+                if (isUser)
                 {
                     // Role assigning
                     int roleId = (int)asset[AttributeNames.Role].Data.Value;
@@ -386,7 +391,10 @@ namespace AppFramework.Core.Classes
                 // commit all
                 _unitOfWork.Commit();
                 scope.Complete();
-            }            
+            }
+
+            // add to index
+            _indexationService.UpdateIndex(asset);
 
             return asset;
         }
@@ -502,7 +510,14 @@ namespace AppFramework.Core.Classes
                     var entity = dynListValue.Base;
                     entity.ParentListId = parent;
                     entity.DynEntityAttribConfigUid = attribute.Configuration.UID;
-                    entity.DynEntityConfigUid = asset.Configuration.UID;
+
+                    /* screen for the updated asset is fetched for the original entity's config uid (most likelly, the old one)
+                     * asset.DynEntityConfigUid is the same (old)
+                     * asset.Cofiguration is the latest active Config (i.e. the new version of Asset Type)
+                     * the most logical decision for today (08/02/2016) is to set config uid the same as the asset.DynEntityConfigUid
+                     * happy refactoring!
+                     */
+                    entity.DynEntityConfigUid = asset.DynEntityConfigUid;
                     entity.AssetUid = asset.UID;
                     entity.DynListUid = attribute.Configuration.DynamicListUid.Value;
                
@@ -559,16 +574,29 @@ namespace AppFramework.Core.Classes
         /// <returns>Asset</returns>
         public Asset GetAssetById(long assetId, AssetType assetType)
         {
+            Asset asset;
+            if (!TryGetAssetById(assetId, assetType, out asset))
+            {
+                throw new AssetNotFoundException(
+                    string.Format("Cannot find asset by given id: {0} (asset type id: {1})",
+                        assetId, assetType.ID));
+            }
+            return asset;
+        }
+
+        public bool TryGetAssetById(long assetId, AssetType assetType, out Asset asset)
+        {
             if (assetType == null)
                 throw new ArgumentNullException("assetType");
 
             var dataRow = _tableProvider.GetRowById(assetType.Base, assetId);
             if (dataRow == null)
-                throw new AssetNotFoundException(
-                    string.Format("Cannot find asset by given id: {0} (asset type id: {1})",
-                        assetId, assetType.ID));
+            {
+                asset = null;
+                return false;
+            }
 
-            return new Asset(
+            asset = new Asset(
                 assetType,
                 dataRow,
                 _attributeValueFormatter,
@@ -576,6 +604,8 @@ namespace AppFramework.Core.Classes
                 this,
                 _unitOfWork,
                 _dynamicListsService);
+
+            return true;
         }
 
         /// <summary>
@@ -611,20 +641,6 @@ namespace AppFramework.Core.Classes
         /// Returns the asset by its Uid
         /// </summary>
         /// <param name="assetUid"></param>
-        /// <param name="assetTypeUid"></param>
-        /// <returns></returns>
-        public Asset GetAssetByUid(long assetUid, long assetTypeUid)
-        {
-            var assetType = _assetTypeRepository.GetByUid(assetTypeUid);
-            if (assetType == null)
-                throw new AssetTypeNotFoundException();
-            return GetAssetByUid(assetUid, assetType);
-        }
-
-        /// <summary>
-        /// Returns the asset by its Uid
-        /// </summary>
-        /// <param name="assetUid"></param>
         /// <param name="assetType">Instance of AssetType</param>
         /// <returns>Asset</returns>
         public Asset GetAssetByUid(long assetUid, AssetType assetType)
@@ -649,12 +665,15 @@ namespace AppFramework.Core.Classes
         /// <returns>New asset instance.</returns>
         public Asset CreateAsset(AssetType assetType)
         {
-            var dataRow = new DynRow { TableName = assetType.DBTableName };
-            dataRow.Fields.AddRange(from attr in assetType.Attributes
-                                    select _columnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr.Base));
+            var dataRow = new DynRow(
+                assetType.DBTableName, 
+                from attr in assetType.Attributes
+                select _columnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr.Base));
+
             dataRow.Fields.Single(f => f.Name == AttributeNames.DynEntityId).Value = 0;
             dataRow.Fields.Single(f => f.Name == AttributeNames.DynEntityUid).Value = 0;
             dataRow.Fields.Single(f => f.Name == AttributeNames.Revision).Value = 1;
+            dataRow.Fields.Single(f => f.Name == AttributeNames.IsDeleted).Value = false;
             dataRow.Fields.Single(f => f.Name == AttributeNames.DynEntityConfigUid).Value = assetType.UID;
             var newAsset = new Asset(
                 assetType,
@@ -670,13 +689,10 @@ namespace AppFramework.Core.Classes
         /// <summary>
         /// Deletes the asset
         /// </summary>
-        /// <param name="deletingAsset"></param>
+        /// <param name="asset"></param>
         /// <param name="permission"></param>
-        public void DeleteAsset(Asset deletingAsset, Permission permission)
+        public void DeleteAsset(Asset asset)
         {
-            if (!permission.CanDelete())
-                throw new InsufficientPermissionsException();
-
             var transactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -684,20 +700,12 @@ namespace AppFramework.Core.Classes
             };
 
             var dependenciesFinder = new DependenciesFinder(this, _assetTypeRepository, _attributeRepository);
-            var dependencies = dependenciesFinder.GetDependentAssets(deletingAsset);
+            var dependencies = dependenciesFinder.GetDependentAssets(asset);
 
             using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                deletingAsset[AttributeNames.ActiveVersion].Value = false.ToString();
-                InsertAsset(deletingAsset);
-                _unitOfWork.DeletedEntitiesRepository.Insert(new DeletedEntity()
-                {
-                    DynEntityId = deletingAsset.ID,
-                    DynEntityUid = deletingAsset.UID,
-                    DynEntityConfigId = deletingAsset.GetConfiguration().ID
-                });
-
-                _unitOfWork.Commit();
+                asset.IsDeleted = true;
+                _tableProvider.UpdateAsset(asset); // update (not insert) to bypass triggers
 
                 dependencies.ForEach(d =>
                 {
@@ -705,9 +713,10 @@ namespace AppFramework.Core.Classes
                     InsertAsset(calculated);
                 });
 
-                _unitOfWork.Commit();
                 scope.Complete();
             }
+
+            _indexationService.UpdateIndex(asset);
         }
 
         /// <summary>
@@ -716,10 +725,10 @@ namespace AppFramework.Core.Classes
         /// <param name="assetTypeId">Asset type identifier</param>
         /// <param name="currentUserId">Current User's Id</param>
         /// <returns>Assets collection</returns>  
-        public IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeId, long currentUserId)
+        public IEnumerable<Asset> GetAssetsByAssetTypeIdAndUser(long assetTypeId, long currentUserId, Func<Asset, bool> filterPredicate = null)
         {
             var assetType = _assetTypeRepository.GetById(assetTypeId);
-            return GetAssetsByAssetTypeAndUser(assetType, currentUserId);
+            return GetAssetsByAssetTypeAndUser(assetType, currentUserId, filterPredicate);
         }
 
         /// <summary>
@@ -728,22 +737,25 @@ namespace AppFramework.Core.Classes
         /// <param name="assetType">Asset type</param>
         /// <param name="currentUserId">Current User's Id</param>
         /// <returns>Assets collection</returns>        
-        public IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId)
+        public IEnumerable<Asset> GetAssetsByAssetTypeAndUser(AssetType assetType, long currentUserId, Func<Asset, bool> filterPredicate = null)
         {
-            var cacheKey = string.Format("_PermittedAssets_{0}_{1}", assetType.ID, currentUserId);
-
             var cacheManager = CacheFactory.GetCacheManager();
-            var data = cacheManager.GetData(cacheKey) as List<Asset>;
-            if (data != null)
+            var cacheKey = string.Format("_PermittedAssets_{0}_{1}", assetType.ID, currentUserId);
+            var result = cacheManager.GetData(cacheKey) as List<Asset>;
+
+            if (result == null)
             {
-                return data;
+                var assetIndexes = _unitOfWork.GetPermittedAssets(assetType.ID, currentUserId, null, null);
+                result = assetIndexes
+                    .Select(i => GetAssetById(i.DynEntityId, assetType))
+                    .ToList();
+                cacheManager.Add(cacheKey, result, CacheItemPriority.High, null,
+                    new AbsoluteTime(ApplicationSettings.CacheManagerTimeout));
             }
 
-            var assetIndexes = _unitOfWork.GetPermittedAssets(assetType.ID, currentUserId, null, null);
-            var assets = assetIndexes.Select(i => GetAssetById(i.DynEntityId, assetType)).ToList();
-            cacheManager.Add(cacheKey, assets, CacheItemPriority.High, null, new AbsoluteTime(TimeSpan.FromSeconds(30)));
-
-            return assets;
+            return filterPredicate != null
+                ? result.Where(filterPredicate)
+                : result;
         }
 
         /// <summary>
@@ -803,8 +815,8 @@ namespace AppFramework.Core.Classes
                 {
                     yield return
                         new KeyValuePair<long, string>(
-                            long.Parse(row.Fields.Find(r => r.Name == AttributeNames.DynEntityId).Value.ToString()),
-                            row.Fields.Find(r => r.Name == AttributeNames.Name).Value.ToString());
+                            long.Parse(row.Fields.Single(r => r.Name == AttributeNames.DynEntityId).Value.ToString()),
+                            row.Fields.Single(r => r.Name == AttributeNames.Name).Value.ToString());
                 }
             }
         }
@@ -936,41 +948,24 @@ namespace AppFramework.Core.Classes
                 Timeout = TransactionManager.MaximumTimeout
             };
 
-            //var dependenciesFinder = new DependenciesFinder(_unitOfWork, this, _assetTypeRepository);
-            //var dependencies = dependenciesFinder.GetDependentAssets(asset);
-
             using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                var assetTypeId = asset.GetConfiguration().ID;
-                var de = _unitOfWork.DeletedEntitiesRepository.Single(e =>
-                    e.DynEntityId == asset.ID &&
-                    e.DynEntityUid == asset.UID &&
-                    e.DynEntityConfigId == assetTypeId);
-                _unitOfWork.DeletedEntitiesRepository.Delete(de);
-                _unitOfWork.Commit();
-
-                asset[AttributeNames.ActiveVersion].Value = true.ToString();
+                asset.IsDeleted = false;
                 InsertAsset(asset);
-
-                //dependencies.ForEach(d =>
-                //{
-                //    var calculated = _attributeCalculator.GetCalculatedAsset(d);
-                //    InsertAsset(calculated);
-                //});
-                //_unitOfWork.Commit();
-
                 scope.Complete();
             }
         }
 
         public Asset CreateAsset(PredefinedEntity predefined)
         {
-            var docName = predefined.ToString();
-            var entity = _unitOfWork.PredefinedAttributesRepository
-                .Single(pa => pa.Name == docName);
-            var documentType = _assetTypeRepository
-                .GetById(entity.DynEntityConfigID);
-            return CreateAsset(documentType);
+            var config = _assetTypeRepository.GetPredefinedAssetType(predefined);
+            return CreateAsset(config);
         }
+
+        public Asset GetPredefinedAssetById(long assetId, PredefinedEntity predefined)
+        {
+            var config = _assetTypeRepository.GetPredefinedAssetType(predefined);
+            return GetAssetById(assetId, config);
+        } 
     }
 }

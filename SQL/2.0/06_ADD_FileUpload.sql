@@ -1,6 +1,3 @@
-USE [facilitymanager]
-GO
-
 /****** Object:  Table [dbo].[UploadedFile]    Script Date: 29.04.2015 17:39:04 ******/
 DROP TABLE [dbo].[UploadedFile]
 GO

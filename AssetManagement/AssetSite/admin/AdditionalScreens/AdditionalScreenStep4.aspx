@@ -12,28 +12,73 @@
         function ShowDialog(panelId, dialogId) {
             currentPanelId = panelId;
 
-            $("#" + dialogId).dialog("option", "width", 570);
-            if (panelId != 0) {
+            var $container = $("#" + dialogId);
+            $container.dialog("option", "width", 575);
+
+            var $isChildPanelCheckbox = $container.find('[type=checkbox]:eq(0)');
+            var $childSelect = $container.find('.childAttribute');
+
+            if ($childSelect.find('option').length === 0) {
+                <% foreach (var attr in ChildAttributes) {%>
+                <%= string.Format("$childSelect.append($('<option></option>').attr('value','{0}').text('{1} ({2})'));",
+                                            attr.DynEntityAttribConfigId, attr.DynEntityConfig.Name, attr.Name) %>
+                <% } %>
+
+                if ($childSelect.find('option').length === 0) {
+                    $isChildPanelCheckbox.attr('disabled', 'disabled');
+                    $childSelect.attr('disabled', 'disabled');
+                } else {
+                    $isChildPanelCheckbox.removeAttr('disabled');
+                    $isChildPanelCheckbox.change(setAttrSelectState);
+                    setAttrSelectState();
+                }
+            }
+
+            if (panelId !== 0) {
                 AssetSite.amDataService.GetPanel(panelId, dialogId, OnGotInfo);
             }
             else {
-                $("#" + dialogId).dialog('open');
+                $container.dialog('open');
+            }
+
+            function setAttrSelectState() {
+                console.log('checkbox changed');
+                if ($isChildPanelCheckbox.attr('checked')) {
+                    $childSelect.removeAttr('disabled');
+                } else {
+                    $childSelect.attr('disabled', 'disabled');
+                }
             }
         }
         function OnGotInfo(result) {
             if (result) {
-                $('#' + result.ContainerId).find('[type=text]:eq(0)').val(result.Name);
-                $('#' + result.ContainerId).find('[type=textarea]:eq(0)').val(result.Description);
-                $('#' + result.ContainerId).dialog('open');
+                var $container = $('#' + result.ContainerId);
+                $container.find('[type=text]:eq(0)').val(result.Name);
+                $container.find('[type=textarea]:eq(0)').val(result.Description);
+
+                var $childSelect = $container.find('.childAttribute');
+                if (result.IsChildAssets) {
+                    $container.find('[type=checkbox]:eq(0)').attr('checked', 'checked');
+                    $childSelect.removeAttr('disabled');
+                    $childSelect.val(result.ChildAssetAttrId);
+                } else {
+                    $container.find('[type=checkbox]:eq(0)').removeAttr('checked');
+                    $childSelect.attr('disabled', 'disabled');
+                    $childSelect.val(null);
+                }
+                $container.dialog('open');
             }
         }
         function SavePanel(atId, screen, dialogId) {
             if (!Page_ClientValidate())
                 return;
-            var name = $('#' + dialogId).find('[type=text]:eq(0)').val();
-            var desc = $('#' + dialogId).find('[type=textarea]:eq(0)').val();
+            var $dialog = $('#' + dialogId);
+            var name = $dialog.find('[type=text]:eq(0)').val();
+            var desc = $dialog.find('[type=textarea]:eq(0)').val();
+            var isChildAssets = $dialog.find('[type=checkbox]:eq(0)').attr('checked');
+            var childAttr = $dialog.find('.childAttribute').val();
             SetWaitImage(dialogId);
-            AssetSite.amDataService.SavePanel(currentPanelId, name, desc, atId, screen, dialogId, OnPanelSaved);
+            AssetSite.amDataService.SavePanel(currentPanelId, name, desc, isChildAssets, childAttr, atId, screen, dialogId, OnPanelSaved);
         }
         function OnPanelSaved(result) {
             if (result) {
@@ -55,11 +100,9 @@
                 <asp:Label runat="server" ID="lblpanelHeader"></asp:Label>
             </div>
             <div class="panelcontent">
-                <asp:LinkButton ID="lbRebind" runat="server" OnClick="lbRebind_Click" Visible="false">rebind</asp:LinkButton>
                 <asp:GridView ID="gvPanels" OnRowCommand="gvPanels_RowCommand" runat="server" AutoGenerateColumns="false"
                     OnRowDataBound="gvPanelsRowBound">
                     <Columns>
-                        <%--<asp:BoundField HeaderText="Name" DataField="Name" />--%>
                         <asp:TemplateField>
                             <HeaderTemplate>
                                 Name
@@ -71,9 +114,9 @@
                         <asp:BoundField HeaderText="Description" DataField="Description" />
                         <asp:TemplateField ItemStyle-HorizontalAlign="Right">
                             <ItemTemplate>
-                                <a style="cursor: pointer;" runat="server" id="lbtnEdit" onclick='<%#GetEditScript(Eval("UID")) %>'>
+                                <a style="cursor: pointer;" runat="server" id="lbtnEdit" onclick='<%#GetEditScript(Eval("AttributePanelUid")) %>'>
                                     <asp:Image ID="Image1" runat="server" ImageUrl="~/images/buttons/edit.png" /></a>&nbsp;
-                                <asp:LinkButton ID="lbtnDelete" runat="server" CommandArgument='<%#Eval("UID") %>'
+                                <asp:LinkButton ID="lbtnDelete" runat="server" CommandArgument='<%#Eval("AttributePanelUid") %>'
                                     CausesValidation="false" OnCommand="OnDeleteCommand">
                                     <asp:Image ID="Image2" runat="server" ImageUrl="~/images/buttons/delete.png" />
                                 </asp:LinkButton>
@@ -81,9 +124,9 @@
                         </asp:TemplateField>
                         <asp:TemplateField>
                             <ItemTemplate>
-                                <asp:ImageButton runat="server" CommandArgument='<%# Eval("UID") %>' ImageUrl="~/images/arrowdown.png"
+                                <asp:ImageButton runat="server" CommandArgument='<%# Eval("AttributePanelUid") %>' ImageUrl="~/images/arrowdown.png"
                                     CommandName="down" ID="imgbtnArrowDown" />
-                                <asp:ImageButton runat="server" CommandArgument='<%# Eval("UID") %>' ImageUrl="~/images/arrowup.png"
+                                <asp:ImageButton runat="server" CommandArgument='<%# Eval("AttributePanelUid") %>' ImageUrl="~/images/arrowup.png"
                                     CommandName="up" ID="imgbtnArrowUp" />
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -135,6 +178,17 @@
                     <td class="literal">
                         <a href="#" class="translation" onclick="showTranslationsFor('.SelectControl.desc')">
                             Translations</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <asp:Label runat="server">Is child items panel:</asp:Label>
+                        <asp:CheckBox ID="tbPanelIsChild" runat="server" CssClass="SelectControl ischild"></asp:CheckBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <asp:DropDownList ID="ddlChildAttrib" CssClass="childAttribute" runat="server"/>
                     </td>
                 </tr>
             </table>

@@ -39,8 +39,6 @@ namespace AssetManagerAdmin.ViewModels
 
         private void ExecuteViewReportCommand(Report reportModel)
         {
-            SelectedReport = reportModel;
-
             if (OnReportSelected != null)
                 OnReportSelected();
         }
@@ -73,7 +71,7 @@ namespace AssetManagerAdmin.ViewModels
             IAppContext context)
             : base(context)
         {
-            // ToDo get real user id
+            // TODO: get real user id
             ReportsList = reportsService.GetAllReports(1);
         }
     }

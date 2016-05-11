@@ -1,4 +1,6 @@
-﻿namespace AppFramework.Core.Classes.DynLists
+﻿using AppFramework.Core.Classes.Extensions;
+
+namespace AppFramework.Core.Classes.DynLists
 {
     using System;
     using System.Collections.ObjectModel;
@@ -33,7 +35,7 @@
 
         public string Name
         {
-            get { return new TranslatableString(_base.Name).GetTranslation(); }
+            get { return _base.Name.Localized(); }
             set { _base.Name = value; }
         }
         

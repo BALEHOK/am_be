@@ -5,6 +5,7 @@ using AssetManager.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AppFramework.Core.Classes.Extensions;
 using AssetManager.Infrastructure.Models.TypeModels;
 using TaxonomyItem = AppFramework.Entities.TaxonomyItem;
 
@@ -40,7 +41,7 @@ namespace AssetManager.Infrastructure.Services
             {
                 AssetType = new AssetTypeModel
                 {
-                    DisplayName = assetType.NameInvariant,
+                    DisplayName = assetType.NameInvariant.Localized(),
                     Id = assetType.ID
                 },
                 TaxonomyPath = items.Count > 0
@@ -58,7 +59,7 @@ namespace AssetManager.Infrastructure.Services
         {
             var model = new TaxonomyPathModel
             {
-                Name = item.Name,
+                Name = item.Name.Localized(),
                 Child = childModel
             };
 

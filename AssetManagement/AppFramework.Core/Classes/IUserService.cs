@@ -6,7 +6,6 @@ namespace AppFramework.Core.Classes
     {
         AssetUser GetUser(string username, bool userIsOnline);
         AssetUser GetCurrentUser();
-        IEnumerable<string> GetUserRoles(long userId);
         void UpdateUser(AssetUser user);
         TaskRightsList GetUserTaskRightsList(long userId);
         IEnumerable<AssetUser> GetAllUsers();
@@ -31,7 +30,5 @@ namespace AppFramework.Core.Classes
         /// <param name="providerUserKey">Asset ID</param>
         /// <returns>AssetUser</returns>
         AssetUser GetById(long userId);
-
-        AssetUser FromAsset(Asset asset);
     }
 }

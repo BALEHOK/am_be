@@ -1,15 +1,11 @@
-﻿using AppFramework.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http.Filters;
+using AppFramework.Core.Exceptions;
 
 namespace AssetSite.Filters
 {
-    public class NoPermissionsFilter : ExceptionFilterAttribute 
+    public class NoPermissionsFilter : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)
         {
@@ -18,7 +14,7 @@ namespace AssetSite.Filters
                 context.Response = new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.Forbidden,
-                    ReasonPhrase = "Not enough permissions for this action"
+                    ReasonPhrase = context.Exception.Message
                 };
             }
         }

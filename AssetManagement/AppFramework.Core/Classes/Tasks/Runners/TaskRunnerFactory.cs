@@ -2,8 +2,8 @@
 
 namespace AppFramework.Core.Classes.Tasks.Runners
 {
-    using AppFramework.ConstantsEnumerators;
     using AppFramework.Core.Classes.Tasks;
+    using AppFramework.Tasks;
     using System;
     using System.Collections.Generic;
 
@@ -30,48 +30,28 @@ namespace AppFramework.Core.Classes.Tasks.Runners
                 throw new ArgumentNullException("Task");
 
             ITaskRunner runner = null;
-            if (task.ExecutableType == (int)TaskExecutableType.SSIS)
+            if (task.ExecutableType == (int)Enumerations.TaskExecutableType.SSIS)
             {
                 runner = new SSISRunner(task.ExecutablePath);
                 SetParameters((runner as SSISRunner).Parameters, task);
                 SetContext((runner as SSISRunner).Parameters, task, currentUserId, dynEntityUid);
             }
-            else if (task.ExecutableType == (int)TaskExecutableType.Assembly)
+            else if (task.ExecutableType == (int)Enumerations.TaskExecutableType.Assembly)
             {
                 runner = new ProcessRunner();
                 (runner as ProcessRunner).ExecutablePath = task.ExecutablePath;
                 SetParameters((runner as ProcessRunner).Parameters, task);
 
             }
-            else if (task.ExecutableType == (int)TaskExecutableType.PredefinedTask)
+            else if (task.ExecutableType == (int)Enumerations.TaskExecutableType.Internal)
             {
-                runner = new PredefinedTaskRunner(task.ExecutablePath);
-                SetParameters((runner as PredefinedTaskRunner).Parameters, task);
-                SetContext((runner as PredefinedTaskRunner).Parameters, task, currentUserId, dynEntityUid);    
-            }
-            else if (task.ExecutableType == (int)TaskExecutableType.Internal)
-            {
-                switch ((TaskFunctionType)task.FunctionType)
+                switch ((Enumerations.TaskFunctionType)task.FunctionType)
                 {
-                    case TaskFunctionType.ExecuteSearch:
+                    case Enumerations.TaskFunctionType.ExecuteSearch:
                         runner = new SearchRunner();
-                        if (!string.IsNullOrEmpty(task.FunctionData))
-                        {
-                            var searchParams = SearchConfigurationDescriptor.Deserialize(task.FunctionData);
-                            (runner as SearchRunner).Params = searchParams;
-                        }
                         break;
-
-                    case TaskFunctionType.ExportFileSearch:
-                        runner = new ExportRunner();
-                        if (!string.IsNullOrEmpty(task.FunctionData))
-                        {
-                            var searchParams = SearchConfigurationDescriptor.Deserialize(task.FunctionData);
-                            (runner as ExportRunner).Params = searchParams;
-                        }
-                        break;
-
-                    case TaskFunctionType.CreateAsset:
+                                         
+                    case Enumerations.TaskFunctionType.CreateAsset:
                         runner = new AssetCreationRunner(_assetTypeRepository, _unitOfWork);
                         if (!string.IsNullOrEmpty(task.FunctionData))
                         {
@@ -81,16 +61,16 @@ namespace AppFramework.Core.Classes.Tasks.Runners
                         }
                         break;
 
-                    case TaskFunctionType.PrintReport:
+                    case Enumerations.TaskFunctionType.PrintReport:
                         runner = new PrintReportRunner(task.FunctionData, dynEntityUid ?? 0);
                         break;
 
-                    case TaskFunctionType.ExportFileSSIS:
-                    case TaskFunctionType.LaunchBatch:
-                    case TaskFunctionType.ImportFile:
+                    case Enumerations.TaskFunctionType.ExportFileSSIS:
+                    case Enumerations.TaskFunctionType.LaunchBatch:
+                    case Enumerations.TaskFunctionType.ImportFile:
                         throw new ArgumentException("Wrong FunctionType for task");
 
-                    case TaskFunctionType.ExecuteSqlServerAgentJob:
+                    case Enumerations.TaskFunctionType.ExecuteSqlServerAgentJob:
                         runner = new SqlServerAgentJobRunner(_unitOfWork);
                         break;
                 }
@@ -114,12 +94,12 @@ namespace AppFramework.Core.Classes.Tasks.Runners
         {
             if (string.IsNullOrEmpty(task.FunctionData)) return;
             ParametersDescriptor parameters;
-            switch ((TaskFunctionType)task.FunctionType)
+            switch ((Enumerations.TaskFunctionType)task.FunctionType)
             {
-                case TaskFunctionType.ImportFile:
+                case Enumerations.TaskFunctionType.ImportFile:
                     parameters = ImportTaskParametersDescriptor.Deserialize(task.FunctionData);
                     break;
-                case TaskFunctionType.ExportFileSSIS:
+                case Enumerations.TaskFunctionType.ExportFileSSIS:
                     parameters = ExportTaskParametersDescriptor.Deserialize(task.FunctionData);
                     break;
                 default:

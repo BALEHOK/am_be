@@ -272,7 +272,10 @@ namespace AppFramework.Core.Classes.SearchEngine
 
             string fieldName;
 
-            if (element.ElementType == Enumerators.DataType.ChildAssets && !element.UseComplexValue)
+            if (element.ElementType == Enumerators.DataType.DynList)
+            {
+                fieldName = "[DynListValue].[DynlistItemUid]";
+            } else if (element.ElementType == Enumerators.DataType.ChildAssets && !element.UseComplexValue)
             {
                 fieldName = "[DynEntityId]";
             }

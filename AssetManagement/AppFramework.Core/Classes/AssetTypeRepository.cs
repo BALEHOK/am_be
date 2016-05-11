@@ -106,6 +106,17 @@ namespace AppFramework.Core.Classes
         /// <returns></returns>
         public AssetType GetById(long id, bool activeOnly = true)
         {
+            AssetType assetType;
+            if (!TryGetById(id, out assetType, activeOnly))
+            {
+                throw new AssetTypeNotFoundException(id, null);
+            }
+
+            return assetType;
+        }
+
+        public bool TryGetById(long id, out AssetType assetType, bool activeOnly = true)
+        {
             var ibuilder = new IncludesBuilder<DynEntityConfig>();
             ibuilder.Add(e => e.DynEntityAttribConfigs
                 .Select(a => a.DataType.ValidationList
@@ -122,9 +133,13 @@ namespace AppFramework.Core.Classes
                     ibuilder.Get());
 
             if (data == null)
-                throw new AssetTypeNotFoundException();
+            {
+                assetType = null;
+                return false;
+            }
 
-            return new AssetType(data, _unitOfWork);
+            assetType = new AssetType(data, _unitOfWork);
+            return true;
         }
 
         /// <summary>
@@ -369,7 +384,7 @@ namespace AppFramework.Core.Classes
             }
         }
 
-        private DynEntityConfig CreateRevision(AssetType assetType, long currentUserId)
+        private static DynEntityConfig CreateRevision(AssetType assetType, long currentUserId)
         {
             var _base = assetType.Base;
             var revision = new DynEntityConfig();
@@ -398,21 +413,20 @@ namespace AppFramework.Core.Classes
                 // create attributes to panels revisions
                 for (var j = 0; j < _base.AttributePanel[i].AttributePanelAttribute.Count; j++)
                 {
-                    if (assetType.Panels[i].AssignedAttributes.ElementAtOrDefault(j) == null)
+                    var panel = assetType.Panels[i];
+                    var referentialAttribute = panel.AssignedAttributes.ElementAtOrDefault(j);
+                    if (referentialAttribute == null)
                         continue;
 
                     var apaRevision = new AttributePanelAttribute
                     {
                         UpdateUserId = currentUserId,
                         UpdateDate = DateTime.Now,
-                        DisplayOrder =
-                            assetType.Panels[i].GetAttributeDisplayOrder(assetType.Panels[i].AssignedAttributes[j])
+                        DisplayOrder = panel.GetAttributeDisplayOrder(referentialAttribute),
+                        ScreenFormula = panel.GetAttributeScreenFormula(referentialAttribute)
                     };
 
-                    // select matching attribute from current asset type
-                    var referentialAttribute = assetType.Panels[i].AssignedAttributes[j];
-
-                    var attr = (from attribute in revision.DynEntityAttribConfigs
+                    var attributeConfig = (from attribute in revision.DynEntityAttribConfigs
                         // zero for a new attribute or should be equals before revision commit
                         where attribute.DynEntityConfigUid == referentialAttribute.AssetTypeUID &&
                               ((attribute.DynEntityAttribConfigUid != 0 &&
@@ -421,10 +435,10 @@ namespace AppFramework.Core.Classes
                         select attribute)
                         .SingleOrDefault();
 
-                    if (attr != null)
+                    if (attributeConfig != null)
                     {
                         // revision of asset's attribute
-                        apaRevision.DynEntityAttribConfig = attr;
+                        apaRevision.DynEntityAttribConfig = attributeConfig;
                     }
                     else // it's related asset type attribute
                     {
@@ -455,22 +469,6 @@ namespace AppFramework.Core.Classes
                             revision.AttributePanel[j].AssetTypeScreen = screenRevision;
                     }
 
-                    // update connections between screen panels and attributes
-                    if (_base.AssetTypeScreen[i].DynEntityAttribScreens.Count == 0)
-                        _unitOfWork.AssetTypeScreenRepository.LoadProperty(_base.AssetTypeScreen[i],
-                            e => e.DynEntityAttribScreens);
-
-                    for (var j = 0; j < _base.AssetTypeScreen[i].DynEntityAttribScreens.Count; j++)
-                    {
-                        var arrtibuteRevision = revision.DynEntityAttribConfigs.Single(a =>
-                            a.DynEntityAttribConfigUid ==
-                            _base.AssetTypeScreen[i].DynEntityAttribScreens[j].DynEntityAttribUid);
-
-                        arrtibuteRevision.DynEntityAttribScreens.Add(new DynEntityAttribScreens
-                        {
-                            AssetTypeScreen = screenRevision
-                        });
-                    }
                     revision.AssetTypeScreen.Add(screenRevision);
                 }
             }
@@ -566,6 +564,12 @@ namespace AppFramework.Core.Classes
                 };
             }
             return ValidationResult.Success;
+        }
+
+        public bool IsPredefinedAssetType(AssetType typeToCheck, PredefinedEntity entity)
+        {
+            var expectedType = GetPredefinedAssetType(entity);
+            return expectedType.ID == typeToCheck.ID;
         }
     }
 }

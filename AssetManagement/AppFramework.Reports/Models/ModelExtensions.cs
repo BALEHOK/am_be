@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AppFramework.Entities;
+using Newtonsoft.Json;
 
 namespace AppFramework.Reports.Models
 {
     public static class ModelExtensions
     {
-        public static AssetsContainer ToModel(this IEnumerable<Entities.IIndexEntity> entities, string subtitle)
+        public static AssetsContainer ToModel(this IEnumerable<IIndexEntity> entities, string subtitle)
         {
             var dataSource = new List<AssetViewModel>();
             foreach (var entity in entities)
             {
-                var assetModel = new AssetViewModel 
-                { 
+                var assetModel = new AssetViewModel
+                {
                     Name = entity.Name,
-                    Attributes = new List<AssetAttributeViewModel>()
-                    {
-                        new AssetAttributeViewModel { Name = "Description", Value = entity.Description },
-                        new AssetAttributeViewModel { Name = "BarCode", Value = entity.BarCode },
-                        new AssetAttributeViewModel { Name = "Department", Value = entity.Department },
-                        new AssetAttributeViewModel { Name = "Location", Value = entity.Location },
-                    }
+                    Attributes = GetDisplayAttributes(entity.DisplayValues)
                 };
                 dataSource.Add(assetModel);
             }
-            return new AssetsContainer { Assets = dataSource, ReportSubtitle = subtitle };
+            return new AssetsContainer {Assets = dataSource, ReportSubtitle = subtitle};
+        }
+
+        private static List<AssetAttributeViewModel> GetDisplayAttributes(string displayValuesJson)
+        {
+            return JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(displayValuesJson)
+                .Select(v => new AssetAttributeViewModel {Name = v.Key, Value = v.Value})
+                .ToList();
         }
     }
 }

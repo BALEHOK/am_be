@@ -11,6 +11,8 @@ namespace AssetSite.Controls
 
         public string ReferencingDynEntityAttribConfigName { get; set; }
 
+        public bool IgnoreValidation { get; set; }
+
         public string Name { get; set; }
 
         public AppFramework.Entities.DynEntityConfig DynEntityConfig { get; set; }
@@ -36,7 +38,7 @@ namespace AssetSite.Controls
                     li.Value = string.Format("{0}:{1}:{2}",
                         attribute.DynEntityAttribConfigUid,
                         ReferencingDynEntityAttribConfigId,
-                        attribute.IsRequired ? "*" : string.Empty);
+                        attribute.IsRequired && !IgnoreValidation ? "*" : string.Empty);
                     lstAttributes.Items.Add(li);
                 }
             }

@@ -1,12 +1,6 @@
 ﻿using AssetManager.Infrastructure.Validators;
 using FluentValidation.Attributes;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web;
 
 namespace AssetManager.Infrastructure.Models
 {
@@ -25,8 +19,12 @@ namespace AssetManager.Infrastructure.Models
 
         public bool Editable { get; set; }
 
+        public bool CanCreateNew { get; set; }
+
         public JToken Value { get; set; }
 
         public bool Required { get; set; }
+
+        public long AssetTypeId { get; internal set; }
     }
 }

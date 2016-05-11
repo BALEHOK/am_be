@@ -1,5 +1,7 @@
-﻿using AssetManagerAdmin.Infrastructure;
+﻿using AppFramework.DataProxy;
+using AssetManagerAdmin.Infrastructure;
 using AssetManagerAdmin.Infrastructure.Messages;
+using AssetManagerAdmin.Model;
 using DevExpress.Xpf.Reports.UserDesigner;
 using GalaSoft.MvvmLight.Messaging;
 
@@ -11,9 +13,18 @@ namespace AssetManagerAdmin.ViewModels
 
         public ReportBuilderViewModel(
             IAppContext context,
-            IReportStorage reportStorage)
+            IReportStorage reportStorage,
+            IUnitOfWork unitOfWork,
+            IDialogService dialogService)
             : base(context)
         {
+            if (!unitOfWork.DatabaseExists())
+            {
+                dialogService.ShowError(
+                    "Unable to connect to database. Please check the connection string in the configuration file.", 
+                    "Error");
+            }
+
             ReportStorage = reportStorage;
 
             Messenger.Default.Register<OpenReportMessage>(this, (m) =>

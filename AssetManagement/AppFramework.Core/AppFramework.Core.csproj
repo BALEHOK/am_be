@@ -149,8 +149,8 @@
     <Reference Include="NCalc">
       <HintPath>..\packages\ncalc.1.3.8\lib\NCalc.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Opus6">
@@ -227,24 +227,26 @@
     <Compile Include="Calculation\FunctionsFactory.cs" />
     <Compile Include="Calculation\IAttributeCalculator.cs" />
     <Compile Include="Calculation\ParametersFinder.cs" />
+    <Compile Include="Classes\AssetWrapperForScreenView.cs" />
     <Compile Include="Classes\AttributeRepository.cs" />
     <Compile Include="Classes\AttributeValueFormatter.cs" />
     <Compile Include="Classes\DataFactory.cs" />
     <Compile Include="Classes\Extensions\DynEntityAttribConfigExtensions.cs" />
     <Compile Include="Classes\Extensions\DynEntityConfigExtensions.cs" />
+    <Compile Include="Classes\Extensions\StringExtensions.cs" />
     <Compile Include="Classes\IAttributeRepository.cs" />
     <Compile Include="Classes\IAttributeValueFormatter.cs" />
     <Compile Include="Classes\IE\IImportExportManager.cs" />
     <Compile Include="Classes\IE\Providers\IExcelProvider.cs" />
     <Compile Include="Classes\Layout.cs" />
     <Compile Include="Classes\LayoutType.cs" />
+    <Compile Include="Classes\ScreenAttrs.cs" />
     <Compile Include="Classes\SearchEngine\ISearchTracker.cs" />
     <Compile Include="Classes\SearchEngine\ITypeSearch.cs" />
     <Compile Include="Classes\SearchEngine\SearchOperators\AssetInOperator.cs" />
     <Compile Include="Classes\SearchEngine\SearchOperators\AssetNotInOperator.cs" />
+    <Compile Include="Classes\SearchEngine\SearchOperators\NotEqualOperator.cs" />
     <Compile Include="Classes\SearchEngine\SearchQueryBuilder.cs" />
-    <Compile Include="Classes\Tasks\Runners\ITaskRunnerFactory.cs" />
-    <Compile Include="Classes\Tasks\TaskResult.cs" />
     <Compile Include="ConstantsEnumerators\SecuredModules.cs" />
     <Compile Include="DTO\PlainAssetDTO.cs" />
     <Compile Include="Exceptions\AssetValidationException.cs" />
@@ -315,14 +317,11 @@
     <Compile Include="Classes\IE\AssetsExporter.cs" />
     <Compile Include="Classes\IE\AssetsImporter.cs" />
     <Compile Include="Classes\IE\IAssetsExporter.cs" />
-    <Compile Include="Classes\ReservationException.cs" />
-    <Compile Include="Classes\ReservationService.cs" />
     <Compile Include="Classes\SearchEngine\Presentation\Helper.cs" />
     <Compile Include="Classes\SearchEngine\RefactorCompatibility.cs" />
     <Compile Include="Classes\SearchEngine\SearchCounter.cs" />
     <Compile Include="Classes\SearchEngine\TypeSearchElements\SubsequentQuery.cs" />
     <Compile Include="Classes\Stock\StockTransactionValidateRest.cs" />
-    <Compile Include="Classes\Tasks\Descriptors\ReservationDescriptor.cs" />
     <Compile Include="Classes\Tasks\Runners\AssetCreationRunner.cs" />
     <Compile Include="Classes\AssetFactory.cs" />
     <Compile Include="Classes\AssetPanelsAdapter.cs" />
@@ -389,8 +388,6 @@
     <Compile Include="Classes\Place.cs" />
     <Compile Include="Classes\PredefinedAsset.cs" />
     <Compile Include="Classes\PredefinedAttribute.cs" />
-    <Compile Include="Classes\Tasks\Runners\PredefinedTaskRunner.cs" />
-    <Compile Include="Classes\Tasks\Runners\ExportRunner.cs" />
     <Compile Include="Classes\Tasks\Runners\PrintReportRunner.cs" />
     <Compile Include="Classes\Tasks\Runners\ProcessRunner.cs" />
     <Compile Include="Classes\RightsEntry.cs" />
@@ -429,7 +426,6 @@
     <Compile Include="Classes\SearchEngine\SearchParameters.cs" />
     <Compile Include="Classes\SearchEngine\SearchTracker.cs" />
     <Compile Include="Classes\SearchEngine\TypeSearch.cs" />
-    <Compile Include="Classes\Tasks\SobImportPayments.cs" />
     <Compile Include="Exceptions\InsufficientPermissionsException.cs" />
     <Compile Include="DAL\DynEntityIdsTableType.cs" />
     <Compile Include="DAL\ITableProvider.cs" />
@@ -503,7 +499,6 @@
     <Compile Include="ConstantsEnumerators\Enumerators.cs" />
     <Compile Include="ConstantsEnumerators\QueryStrings.cs" />
     <Compile Include="ConstantsEnumerators\SessionVariables.cs" />
-    <Compile Include="ConstantsEnumerators\StoredProcedures.cs" />
     <Compile Include="DAL\Adapters\DynColumnAdapter.cs" />
     <Compile Include="DAL\DynTableProvider.cs" />
     <Compile Include="DAL\DBHelper.cs" />
@@ -522,7 +517,6 @@
     <Compile Include="Interfaces\IModification.cs" />
     <Compile Include="Interfaces\IRevision.cs" />
     <Compile Include="Interfaces\ISerializable.cs" />
-    <Compile Include="Classes\Tasks\Runners\ITaskRunner.cs" />
     <Compile Include="ObservableSortedSet.cs" />
     <Compile Include="PL\AssetAttributeHyperlink.cs" />
     <Compile Include="PL\AssetAttributeLabel.cs" />
@@ -552,9 +546,7 @@
     <Compile Include="PL\HelpButton.cs" />
     <Compile Include="PL\AttributeFieldFactory.cs" />
     <Compile Include="PL\AttributeItemTemplate.cs" />
-    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="PL\Components\ComponentStyles\DynPanelStyle.cs" />
     <Compile Include="PL\Components\DynFormPanel.cs" />
     <Compile Include="PL\Components\DynPanel.cs" />
     <Compile Include="PL\Components\FormElementContainer.cs" />
@@ -609,6 +601,10 @@
     <ProjectReference Include="..\AppFramework.Entities\AppFramework.Entities.csproj">
       <Project>{658431C7-7442-46F1-81C8-7CC6744F7E46}</Project>
       <Name>AppFramework.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Tasks\AppFramework.Tasks.csproj">
+      <Project>{4d38b9e7-6171-4858-bb02-1cef5137d451}</Project>
+      <Name>AppFramework.Tasks</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

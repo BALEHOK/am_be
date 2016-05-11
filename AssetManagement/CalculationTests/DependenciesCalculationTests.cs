@@ -99,7 +99,7 @@ namespace CalculationTests
 
             detail = AssetsService.GetAssetById(detail.ID, Helper.GetTypeByName("ADynEntitytestorderdetails"));
             
-            AssetsService.DeleteAsset(detail, Permission.ReadWriteDelete);
+            AssetsService.DeleteAsset(detail);
 
             order = AssetsService.GetAssetById(order.ID, Helper.GetTypeByName("ADynEntitytestoder"));
             Assert.AreEqual("0", order["OrderAmount"].Value);

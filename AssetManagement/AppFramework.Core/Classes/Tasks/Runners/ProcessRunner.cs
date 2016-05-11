@@ -1,6 +1,7 @@
 ﻿namespace AppFramework.Core.Classes.Tasks.Runners
 {
-    using AppFramework.ConstantsEnumerators;
+    using AppFramework.Tasks;
+    using AppFramework.Tasks.Models;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -34,17 +35,17 @@
             }
 
             Process proc = null;
-            var result = new TaskResult((TaskFunctionType)task.FunctionType);
+            var result = new TaskResult((Enumerations.TaskFunctionType)task.FunctionType);
             try
             {
                 // Start the process
                 proc = Process.Start(psi);
-                result.Status = TaskStatus.Sussess;
+                result.Status = Enumerations.TaskStatus.Sussess;
             }
             catch (Exception ex)
             {
                 result.Errors.Add(ex.Message);
-                result.Status = TaskStatus.Error;
+                result.Status = Enumerations.TaskStatus.Error;
             }
             finally
             {

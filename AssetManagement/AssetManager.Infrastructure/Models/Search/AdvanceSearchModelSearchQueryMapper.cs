@@ -45,9 +45,9 @@ namespace AssetManager.Infrastructure.Models.Search
             return searchQuery;
         }
 
-        public AdvanceSearchModel GetAdvanceSearchModel(SearchQuery searchQuery)
+        public AdvanceSearchModel GetAdvanceSearchModel(long userId, SearchQuery searchQuery)
         {
-            var assetType = _assetTypeService.GetAssetType(searchQuery.AssetTypeId, true);
+            var assetType = _assetTypeService.GetAssetType(userId, searchQuery.AssetTypeId, true);
 
             return new AdvanceSearchModel
             {
@@ -55,7 +55,7 @@ namespace AssetManager.Infrastructure.Models.Search
                 AssetTypeContext = (TimePeriodForSearch) searchQuery.Context,
                 SearchId = searchQuery.SearchId,
                 Attributes =
-                    SearchQueryAttributesToAttributeFilters(searchQuery.SearchQueryAttributes, assetType.Attributes)
+                    SearchQueryAttributesToAttributeFilters(userId, searchQuery.SearchQueryAttributes, assetType.Attributes)
             };
         }
 
@@ -99,7 +99,7 @@ namespace AssetManager.Infrastructure.Models.Search
             return searchQueryAttributes;
         }
 
-        private AttributeFilter[] SearchQueryAttributesToAttributeFilters(ICollection<SearchQueryAttribute> searchQueryAttributes, List<AttributeTypeModel> assetTypeAtributes)
+        private AttributeFilter[] SearchQueryAttributesToAttributeFilters(long userId, ICollection<SearchQueryAttribute> searchQueryAttributes, List<AttributeTypeModel> assetTypeAtributes)
         {
             var attributeFilters = new AttributeFilter[searchQueryAttributes.Count];
             
@@ -144,9 +144,9 @@ namespace AssetManager.Infrastructure.Models.Search
                         filter.UseComplexValue = true;
 
                         var referenceAssetTypeAttributes =
-                            _assetTypeService.GetAssetType(filter.ReferenceAttrib.RelationId, true).Attributes;
+                            _assetTypeService.GetAssetType(userId, filter.ReferenceAttrib.RelationId, true).Attributes;
 
-                        filter.ComplexValue = SearchQueryAttributesToAttributeFilters(attribute.ComplexValue, referenceAssetTypeAttributes);
+                        filter.ComplexValue = SearchQueryAttributesToAttributeFilters(userId, attribute.ComplexValue, referenceAssetTypeAttributes);
                     }
                     else
                     {

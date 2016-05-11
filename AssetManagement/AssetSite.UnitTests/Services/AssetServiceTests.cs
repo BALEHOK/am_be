@@ -23,6 +23,7 @@ using Xunit;
 using Xunit.Extensions;
 using AppFramework.UnitTests.Common.Fixtures;
 using AssetManager.Infrastructure;
+using AssetManager.Infrastructure.Permissions;
 
 namespace AssetSite.UnitTests.Services
 {
@@ -37,7 +38,7 @@ namespace AssetSite.UnitTests.Services
             var fixture = new Fixture() { OmitAutoProperties = true }
                 .Customize(new AssetCustomization(unitOfWork))
                 .Customize(new AssetTypeCustomization(unitOfWork));
-            var asset = fixture.Create<Asset>();
+            var asset = fixture.Create<AssetWrapperForScreenView>();
             //Act
             var result = sut.GetAssetModel(asset, Permission.RWRW);
             //Assert
@@ -53,7 +54,7 @@ namespace AssetSite.UnitTests.Services
             int revision,
             [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
             [Frozen]Mock<IAssetsService> assetsCoreServiceMock,
-            [Frozen]Mock<IAuthenticationService> authServiceMock,
+            [Frozen]Mock<IAssetPermissionChecker> permissionCheckerMock,
             IUnitOfWork unitOfWork,
             AssetService sut)
         {
@@ -62,8 +63,8 @@ namespace AssetSite.UnitTests.Services
                 .Customize(new AssetCustomization(unitOfWork))
                 .Customize(new AssetTypeCustomization(unitOfWork));
 
-            var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
-            var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
+            var asset = fixture.Create<Asset>();
+            var assetType = fixture.Create<AssetType>();
 
             assetTypeRepositoryMock
                 .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
@@ -73,8 +74,8 @@ namespace AssetSite.UnitTests.Services
                 .Setup(s => s.GetAssetByIdAndRevison(assetId, assetType, revision))
                 .Returns(asset);
 
-            authServiceMock
-                .Setup(s => s.GetPermission(asset))
+            permissionCheckerMock
+                .Setup(s => s.GetPermission(It.IsAny<Asset>(), It.IsAny<long>()))
                 .Returns(Permission.RWRW);
 
             //Act
@@ -87,10 +88,11 @@ namespace AssetSite.UnitTests.Services
         public void AssetService_GetAssetByUid_ReturnsModel(
             long assetTypeId,
             long assetId,
+            long userId,
             long uid,
             [Frozen]Mock<IAssetTypeRepository> assetTypeRepositoryMock,
             [Frozen]Mock<IAssetsService> assetsCoreServiceMock,
-            [Frozen]Mock<IAuthenticationService> authServiceMock,
+            [Frozen]Mock<IAssetPermissionChecker> permissionCheckerMock,
             IUnitOfWork unitOfWork,
             AssetService sut)
         {
@@ -99,8 +101,8 @@ namespace AssetSite.UnitTests.Services
                 .Customize(new AssetCustomization(unitOfWork))
                 .Customize(new AssetTypeCustomization(unitOfWork));
 
-            var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
-            var assetType = fixture.Create<AppFramework.Core.Classes.AssetType>();
+            var asset = fixture.Create<Asset>();
+            var assetType = fixture.Create<AssetType>();
 
             assetTypeRepositoryMock
                 .Setup(r => r.GetById(assetTypeId, It.IsAny<bool>()))
@@ -110,12 +112,12 @@ namespace AssetSite.UnitTests.Services
                 .Setup(s => s.GetAssetByUid(uid, assetType))
                 .Returns(asset);
 
-            authServiceMock
-                .Setup(s => s.GetPermission(asset))
+            permissionCheckerMock
+                .Setup(s => s.GetPermission(It.IsAny<Asset>(), It.IsAny<long>()))
                 .Returns(Permission.RWRW);
 
             //Act
-            var result = sut.GetAsset(assetTypeId, assetId, null, uid);
+            var result = sut.GetAsset(assetTypeId, assetId, userId, null, uid);
             //Assert
             Assert.NotNull(result);
         }
@@ -124,6 +126,7 @@ namespace AssetSite.UnitTests.Services
         public void AssetService_GetAssetByUidAndRevision_Throws(
             long assetTypeId,
             long assetId,
+            long userId,
             int revision,
             long uid,
             AssetService sut)
@@ -132,7 +135,7 @@ namespace AssetSite.UnitTests.Services
             //Act
             //Assert
             Assert.Throws<ArgumentException>(() => 
-                sut.GetAsset(assetTypeId, assetId, revision, uid));
+                sut.GetAsset(assetTypeId, assetId, userId, revision, uid));
         }
 
         [Theory, AutoDomainData]
@@ -298,9 +301,10 @@ namespace AssetSite.UnitTests.Services
         public void AssetService_GetAssetWithRoleAttribute_ReturnsRoleId(
             long assetTypeId,
             long assetId,
+            long userId,
             [Frozen]Mock<IAssetsService> assetsCoreServiceMock,
             [Frozen]Mock<IAssetTypeRepository> assetTypeRepoMock,
-            [Frozen]Mock<IAuthenticationService> authServiceMock,
+            [Frozen]Mock<IAssetPermissionChecker> permissionCheckerMock,
             IUnitOfWork unitOfWork,
             AssetService sut)
         {
@@ -310,7 +314,7 @@ namespace AssetSite.UnitTests.Services
                 .Customize(new AssetTypeCustomization(unitOfWork));
 
             var assetType = fixture.Create<AssetType>();
-            var asset = fixture.Create<AppFramework.Core.Classes.Asset>();
+            var asset = fixture.Create<Asset>();
 
             assetTypeRepoMock
                 .Setup(x => x.GetById(assetTypeId, It.IsAny<bool>()))
@@ -320,12 +324,12 @@ namespace AssetSite.UnitTests.Services
                 .Setup(s => s.GetAssetById(assetId, assetType))
                 .Returns(asset);
 
-            authServiceMock
-                .Setup(x => x.GetPermission(asset))
+            permissionCheckerMock
+                .Setup(s => s.GetPermission(It.IsAny<Asset>(), It.IsAny<long>()))
                 .Returns(Permission.RDDD);
 
             // Act 
-            var result = sut.GetAsset(assetTypeId, assetId);
+            var result = sut.GetAsset(assetTypeId, assetId, userId);
             // Assert
 
         }

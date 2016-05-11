@@ -1,21 +1,33 @@
-﻿using AppFramework.Core.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
+using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Extensions;
-using AppFramework.Core.Classes.ScreensServices;
+using AppFramework.Core.Services;
 using AppFramework.Entities;
+using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
-using AppFramework.Core.ConstantsEnumerators;
 
 namespace AssetSite.admin.AdditionalScreens
 {
     public partial class AdditionalScreenStep5 : ScreensController
     {
+        protected class AssetTypeConfiguration
+        {
+            public DynEntityConfig Configuration { get; set; }
+            public string Name { get; set; }
+            public long ReferencingDynEntityAttribConfigId { get; set; }
+            public string ReferencingDynEntityAttribConfigName { get; set; }
+            public bool IgnoreValidation { get; set; }
+        }
+
         [Dependency]
         public IPanelsService PanelsService { get; set; }
+
+        [Dependency]
+        public IAssetTypeService AssetTypeService { get; set; }
 
         public Dictionary<long, List<long>> AttributesToAttribute = new Dictionary<long, List<long>>();
 
@@ -25,46 +37,61 @@ namespace AssetSite.admin.AdditionalScreens
 
             if (!IsPostBack)
             {
-                var linkedAssetTypeAttributesUids = _currentScreen
-                    .DynEntityAttribScreens
-                    .Select(a => a.DynEntityAttribUid)
+                // show configurations of related assets
+                var configurations = new List<AssetTypeConfiguration>();
+
+                // load all the panels of the screen
+                var panels = PanelsService.GetAllByScreenId(_currentScreen.ScreenId);
+
+                // show configurations of child assets
+                var panelChildAttribIds = new HashSet<long>();
+                var assetChildAttribs = AssetTypeService
+                    .GetChildAttribs(AuthenticationService.CurrentUserId, _currentType.ID)
                     .ToList();
 
-                // fixture to hide attributes which are formely linked assets
-                AttributesToAttribute.Add(0, linkedAssetTypeAttributesUids);
+                foreach (var childAssetPanel in panels.Where(p => p.IsChildAssets))
+                {
+                    panelChildAttribIds.Add(childAssetPanel.ChildAssetAttrId.Value);
+                    var panelAttrib =
+                        assetChildAttribs.Single(a => a.DynEntityAttribConfigId == childAssetPanel.ChildAssetAttrId);
 
-                // do not invoke UnitOfWork.DynEntityAttribConfigRepository, use AttributeRepository instead
-                var attributesSource = UnitOfWork.DynEntityAttribConfigRepository.AsQueryable();
-                var configsSource = UnitOfWork.DynEntityConfigRepository.AsQueryable();
-                var configurations = (from a in attributesSource
-                                      from d in configsSource
-                                      where linkedAssetTypeAttributesUids.Contains(a.DynEntityAttribConfigUid)
-                                        && a.RelatedAssetTypeID != null
-                                        && a.RelatedAssetTypeID == d.DynEntityConfigId
-                                        && d.ActiveVersion
-                                      select new { Configuration = d, Name = a.Name, ReferencingDynEntityAttribConfigId = a.DynEntityAttribConfigId, ReferencingDynEntityAttribConfigName = a.Name })
-                                          .ToList();
+                    // careful! updating a property of a trackable antity
+                    childAssetPanel.Name = string.Format("{0} [{1} - ({2})]", childAssetPanel.Name,
+                        panelAttrib.DynEntityConfig.Name, panelAttrib.Name);
+                }
+                if (panelChildAttribIds.Count > 0)
+                {
+
+                    configurations = configurations
+                        .Union(assetChildAttribs
+                                .Where(a => panelChildAttribIds.Contains(a.DynEntityAttribConfigId))
+                                .Select(a => new AssetTypeConfiguration
+                                {
+                                    Configuration = a.DynEntityConfig,
+                                    Name = string.Format("{0} ({1})", a.DynEntityConfig.Name, a.Name),
+                                    ReferencingDynEntityAttribConfigId = a.DynEntityAttribConfigId,
+                                    ReferencingDynEntityAttribConfigName = a.DynEntityConfig.Name, // this is added to the name of a list item: "attrib name (attrib config name)"
+                                    IgnoreValidation = true
+                                }))
+                        .ToList();
+                }
 
                 configurations.ForEach(c => UnitOfWork.DynEntityConfigRepository
                     .LoadProperty(c.Configuration, d => d.DynEntityAttribConfigs));
-                configurations.Insert(0, new
+                configurations.Insert(0, new AssetTypeConfiguration
                 {
                     Configuration = _currentType.Base,
                     Name = _currentType.Name,
-                    ReferencingDynEntityAttribConfigId = default(long),
+                    ReferencingDynEntityAttribConfigId = 0L,
                     ReferencingDynEntityAttribConfigName = _currentType.Name
                 });
 
-                var panels = PanelsService.GetAllByScreenId(_currentScreen.ScreenId)
-                    .OrderBy(p => p.DisplayOrder)
-                    .ThenBy(p => p.UID);
-
                 var attributes = panels
-                    .SelectMany(p => p.Base.AttributePanelAttribute)
+                    .SelectMany(p => p.AttributePanelAttribute)
                     .GroupBy(a => a.ReferencingDynEntityAttribConfigId)
                     .Select(g => new
                     {
-                        ReferencingDynEntityAttribConfigId = g.Key == null ? default(long) : (long)g.Key,
+                        ReferencingDynEntityAttribConfigId = g.Key == null ? 0L : (long) g.Key,
                         AttributesUids = g.Select(a => a.DynEntityAttribConfigUId).ToList()
                     });
 
@@ -90,35 +117,51 @@ namespace AssetSite.admin.AdditionalScreens
 
         protected void OnPanelDataBound(Object Sender, RepeaterItemEventArgs e)
         {
-            Literal lit = (Literal)e.Item.FindControl("litScript");
-            ListBox lst = (ListBox)e.Item.FindControl("lstPanelAttrib");
-            var currentPanel = ((AppFramework.Core.Classes.Panel)e.Item.DataItem).Base;
+            var lit = (Literal) e.Item.FindControl("litScript");
+            var lst = (ListBox) e.Item.FindControl("lstPanelAttrib");
+            var currentPanel = (AttributePanel) e.Item.DataItem;
 
-            string script = "<script type='text/javascript'>{0}</script>";
-            string innerScript = "var mvr" + currentPanel.AttributePanelId + "=new Mover('" + lst.ClientID + "');";
+            var script = "<script type='text/javascript'>{0}</script>";
+            var innerScript = "var mvr" + currentPanel.AttributePanelId + "=new Mover('" + lst.ClientID + "');";
 
-            lit.Text = String.Format(script, innerScript);
+            lit.Text = string.Format(script, innerScript);
 
             lst.Items.Clear();
+
+            var attributesSource = UnitOfWork.DynEntityAttribConfigRepository.AsQueryable();
+            var configsSource = UnitOfWork.DynEntityConfigRepository.AsQueryable();
 
             var parentNames = new Dictionary<long, string>();
 
             foreach (var attr in currentPanel.AttributePanelAttribute.OrderBy(a => a.DisplayOrder))
             {
-                string parentName = string.Empty;
-                if (attr.ReferencingDynEntityAttribConfigId.HasValue && attr.ReferencingDynEntityAttribConfigId > 0)
+                string parentName;
+                if (currentPanel.IsChildAssets)
+                {
+                    parentName = (
+                        from a in attributesSource
+                        from d in configsSource
+                        where a.DynEntityAttribConfigUid == attr.DynEntityAttribConfigUId
+                            && a.DynEntityConfigUid == d.DynEntityConfigUid
+                            && a.ActiveVersion && a.Active
+                            && d.ActiveVersion && d.Active
+                        select d.Name)
+                        .FirstOrDefault();
+                }
+                else if (attr.ReferencingDynEntityAttribConfigId.HasValue && attr.ReferencingDynEntityAttribConfigId > 0)
                 {
                     if (!parentNames.ContainsKey(attr.ReferencingDynEntityAttribConfigId.Value))
                         parentNames.Add(attr.ReferencingDynEntityAttribConfigId.Value,
-                            AttributeRepository.GetPublishedById(attr.ReferencingDynEntityAttribConfigId.Value).NameLocalized());
+                            AttributeRepository.GetPublishedById(attr.ReferencingDynEntityAttribConfigId.Value)
+                                .NameLocalized());
                     parentName = parentNames[attr.ReferencingDynEntityAttribConfigId.Value];
                 }
-                else
+                else 
                 {
                     parentName = _currentType.Name;
                 }
 
-                ListItem itm = new ListItem();
+                var itm = new ListItem();
                 itm.Text = string.Format("{0} ({1})",
                     new TranslatableString(attr.DynEntityAttribConfig.Name).GetTranslation(),
                     parentName);
@@ -126,25 +169,48 @@ namespace AssetSite.admin.AdditionalScreens
                 itm.Value = string.Format("{0}:{1}:{2}",
                     attr.DynEntityAttribConfigUId,
                     attr.ReferencingDynEntityAttribConfigId,
-                    attr.DynEntityAttribConfig.IsRequired ? "*" : string.Empty);
+                    attr.DynEntityAttribConfig.IsRequired && !currentPanel.IsChildAssets ? "*" : string.Empty);
                 lst.Items.Add(itm);
             }
         }
 
         #region Binding Helpers
-        public string GetAddScript(object id) { return "return mvr" + id + ".AddItem();"; }
-        public string GetRemoveScript(object id) { return "return mvr" + id + ".RemoveItem();"; }
 
-        public string GetTopScript(object id) { return "return mvr" + id + ".MoveTop();"; }
-        public string GetUpScript(object id) { return "return mvr" + id + ".Up();"; }
+        public string GetAddScript(object id)
+        {
+            return "return mvr" + id + ".AddItem();";
+        }
 
-        public string GetDownScript(object id) { return "return mvr" + id + ".Down();"; }
-        public string GetBottomScript(object id) { return "return mvr" + id + ".MoveBottom();"; }
+        public string GetRemoveScript(object id)
+        {
+            return "return mvr" + id + ".RemoveItem();";
+        }
+
+        public string GetTopScript(object id)
+        {
+            return "return mvr" + id + ".MoveTop();";
+        }
+
+        public string GetUpScript(object id)
+        {
+            return "return mvr" + id + ".Up();";
+        }
+
+        public string GetDownScript(object id)
+        {
+            return "return mvr" + id + ".Down();";
+        }
+
+        public string GetBottomScript(object id)
+        {
+            return "return mvr" + id + ".MoveBottom();";
+        }
 
         public string GetPanelDivId(object id)
         {
             return "panelDiv" + id;
         }
+
         #endregion
 
         protected void btnPrevious_Click(object sender, EventArgs e)
@@ -154,25 +220,28 @@ namespace AssetSite.admin.AdditionalScreens
         }
 
         protected void btnFinish_Click(object sender, EventArgs e)
-        {            
-            string[] sets = hfldCollectedData.Value
+        {
+            var sets = hfldCollectedData.Value
                 .Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string set in sets)
+            foreach (var set in sets)
             {
-                Regex pidRE = new Regex(@"\(\d+\)");
-                Match pidMatch = pidRE.Match(set);
+                var pidRE = new Regex(@"\(\d+\)");
+                var pidMatch = pidRE.Match(set);
                 if (pidMatch.Success)
                 {
-                    long panelUid = long.Parse(pidMatch.Value.Trim(new[] {'(', ')'}));
+                    var panelUid = long.Parse(pidMatch.Value.Trim('(', ')'));
+                    var apas = UnitOfWork
+                        .AttributePanelAttributeRepository
+                        .Where(apa => apa.AttributePanelUid == panelUid);
 
                     // DynEntityAttribConfigUid:ContainerId:isRequired;
-                    Regex pairRE = new Regex(@"\d+\:\d+:\*?;");
-                    Match pairMatch = pairRE.Match(set);
-                    int order = 0;
+                    var pairRE = new Regex(@"\d+\:\d+:\*?;");
+                    var pairMatch = pairRE.Match(set);
+                    var order = 0;
 
                     while (pairMatch.Success)
                     {
-                        string[] parts = pairMatch.Value.TrimEnd(new[] {';', '*'})
+                        var parts = pairMatch.Value.TrimEnd(';', '*')
                             .Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
 
                         var dynEntityAttribConfigUid = long.Parse(parts[0]);
@@ -180,17 +249,19 @@ namespace AssetSite.admin.AdditionalScreens
 
                         // get existing AttributePanelAttribute or create new if there is no existing
                         // it's important to have same Uids for AttributePanelAttributes because screen formulas have links for it
-                        var apaEntity = UnitOfWork
-                            .AttributePanelAttributeRepository
-                            .Get(apa => apa.AttributePanelUid == panelUid &&
+                        var apaEntity = apas
+                            .SingleOrDefault(apa => apa.AttributePanelUid == panelUid &&
                                         apa.DynEntityAttribConfigUId == dynEntityAttribConfigUid &&
-                                        apa.ReferencingDynEntityAttribConfigId == referencingDynEntityAttribConfigId)
-                            .SingleOrDefault();
+                                        apa.ReferencingDynEntityAttribConfigId == referencingDynEntityAttribConfigId);
 
                         var isNew = apaEntity == null;
                         if (isNew)
                         {
                             apaEntity = new AttributePanelAttribute();
+                        }
+                        else
+                        {
+                            apas.Remove(apaEntity);
                         }
 
                         apaEntity.DynEntityAttribConfigUId = dynEntityAttribConfigUid;
@@ -204,9 +275,11 @@ namespace AssetSite.admin.AdditionalScreens
                             UnitOfWork.AttributePanelAttributeRepository.Insert(apaEntity);
                         else
                             UnitOfWork.AttributePanelAttributeRepository.Update(apaEntity);
-                        
+
                         pairMatch = pairMatch.NextMatch();
                     }
+
+                    UnitOfWork.AttributePanelAttributeRepository.Delete(apas);
                 }
             }
 
@@ -218,13 +291,13 @@ namespace AssetSite.admin.AdditionalScreens
                     .ToList();
 
                 screens.ForEach(s =>
+                {
+                    if (s.ScreenId != _currentScreen.ScreenId)
                     {
-                        if (s.ScreenId != _currentScreen.ScreenId)
-                        {
-                            s.IsDefault = false;
-                            UnitOfWork.AssetTypeScreenRepository.Update(s);
-                        }
-                    });
+                        s.IsDefault = false;
+                        UnitOfWork.AssetTypeScreenRepository.Update(s);
+                    }
+                });
             }
             UnitOfWork.Commit();
             if (!TryRedirectToBatch())

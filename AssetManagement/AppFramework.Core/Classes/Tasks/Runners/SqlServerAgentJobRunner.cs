@@ -1,5 +1,6 @@
-﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.DataProxy;
+﻿using AppFramework.DataProxy;
+using AppFramework.Tasks;
+using AppFramework.Tasks.Models;
 using Common.Logging;
 using System;
 using System.Data;
@@ -27,7 +28,7 @@ namespace AppFramework.Core.Classes.Tasks.Runners
             if (string.IsNullOrEmpty(task.FunctionData))
                 throw new ArgumentException("Cannot retrieve job_id from task data");
 
-            var result = new TaskResult((TaskFunctionType)task.FunctionType);
+            var result = new TaskResult((Enumerations.TaskFunctionType)task.FunctionType);
             try
             {
                 var guid = Guid.Parse(task.FunctionData);
@@ -41,7 +42,7 @@ namespace AppFramework.Core.Classes.Tasks.Runners
             {
                 _logger.Error(ex);
                 result.Errors.Add(ex.Message);
-                result.Status = TaskStatus.Error;
+                result.Status = Enumerations.TaskStatus.Error;
             }
             return result;
         }

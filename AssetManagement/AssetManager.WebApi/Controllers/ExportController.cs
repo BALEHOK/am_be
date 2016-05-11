@@ -1,13 +1,14 @@
-﻿using AppFramework.Core.Classes;
-using AppFramework.Core.Classes.SearchEngine;
-using AssetManager.Infrastructure.Services;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
+using AppFramework.Core.Classes;
+using AppFramework.Core.Classes.SearchEngine;
+using AppFramework.Core.Classes.SearchEngine.Enumerations;
+using AppFramework.Core.Exceptions;
+using AssetManager.Infrastructure.Services;
 
 namespace AssetManager.WebApi.Controllers
 {
@@ -15,18 +16,15 @@ namespace AssetManager.WebApi.Controllers
     [AllowAnonymous]
     public class ExportController : Controller
     {
-        private readonly ISearchService _searchService;
+        private readonly ISearchTracker _searchTracker;
         private readonly IExportService _exportService;
 
-        private static string[] AllowedFormats = new string[] { "xml", "txt", "xlsx" };
-
-        public ExportController(
-            ISearchService searchService,
-            IExportService exportService)
+        public ExportController(ISearchTracker searchTracker, IExportService exportService)
         {
-            if (searchService == null)
-                throw new ArgumentNullException("searchService");
-            _searchService = searchService;
+            if (searchTracker == null)
+                throw new ArgumentNullException("searchTracker");
+            _searchTracker = searchTracker;
+
             if (exportService == null)
                 throw new ArgumentNullException("exportService");
             _exportService = exportService;
@@ -40,41 +38,42 @@ namespace AssetManager.WebApi.Controllers
         public ActionResult Index(Guid searchId, string format)
         {
             var formatLower = format.ToLower();
-            if (!AllowedFormats.Any(f => f == formatLower))
-                return new HttpStatusCodeResult(
-                    HttpStatusCode.BadRequest,
-                    "Unsupported format to export");
 
             //TODO: get actual current user
-            long userId = 1;
-            var searchResults = _searchService.GetSearchResultsBySearchId(searchId, userId);
+            var userId = 1L;
+            var searchTracking = _searchTracker.GetTrackingBySearchIdUserId(searchId, userId);
+            if (searchTracking == null)
+                throw new EntityNotFoundException("Cannot find search request parameters by given SearchId");
+
             byte[] exportContent;
             string contentType;
-
-            if (formatLower == "xml")
+            switch (formatLower)
             {
-                exportContent = Encoding.UTF8.GetBytes(
-                    _exportService.ExportSearchResultToXml(searchResults));
-                contentType = "text/xml";
-            }
-            else if (formatLower == "xlsx")
-            {
-                exportContent = _exportService.ExportSearchResultToExcel(searchResults);
-                contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            }
-            else
-            {
-                exportContent = Encoding.UTF8.GetBytes(
-                    _exportService.ExportSearchResultToTxt(searchResults));
-                contentType = "text/plain";
+                case "xml":
+                    exportContent = _exportService.ExportToXml(searchTracking, userId);
+                    contentType = "text/xml";
+                    break;
+
+                case "xlsx":
+                    exportContent = _exportService.ExportToExcel(searchTracking, userId);
+                    contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    break;
+
+                case "txt":
+                    exportContent = _exportService.ExportToTxt(searchTracking, userId);
+                    contentType = "text/plain";
+                    break;
+
+                default:
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Unsupported format to export");
             }
 
-            Response.AddHeader("content-disposition", "attachment; filename=" +
-                string.Format("search-export-{0}.{1}",
-                    Routines.SanitizeFileName(DateTime.Now.ToShortDateString()),
-                    format));
-
-            return new FileContentResult(exportContent, contentType);
+            return new FileContentResult(exportContent, contentType)
+                {
+                    FileDownloadName = string.Format("search-export-{0}.{1}",
+                        Routines.SanitizeFileName(DateTime.Now.ToShortDateString()),
+                        format)
+                };
         }
     }
 }

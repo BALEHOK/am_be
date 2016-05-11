@@ -142,7 +142,7 @@ namespace AppFramework.Core.Classes
                 : null;
         }
 
-        public AssetUser FromAsset(Asset asset)
+        private AssetUser FromAsset(Asset asset)
         {
             if (asset == null)
                 throw new ArgumentNullException("Asset");
@@ -182,22 +182,18 @@ namespace AppFramework.Core.Classes
             var permissions = (from entry in _unitOfWork.RightsRepository.Get(r => r.UserId == currentUserId)
                 select new RightsEntry(entry)).ToList();
 
+            var userInRoles = _unitOfWork.UserInRoleRepository
+                    .Where(u => u.UserId == currentUserId)
+                    .ToList();
+
+            var roles = _roleService.GetAllRoles()
+                .Where(r => userInRoles.Any(ur => ur.RoleId == (int)r))
+                .Select(r => r.ToString());
+
             return new AssetUser("DynEntityMembershipProvider", asset[AttributeNames.Name].Value, currentUserId,
                 asset[AttributeNames.Email].Value, "", "", true, false,
                 UpdateDate, LastLoginDate, LastActivityDate, LastPasswordChangeDate, LastLockoutdate, asset,
-                GetUserRoles(currentUserId),
-                permissions);
-        }
-
-        public IEnumerable<string> GetUserRoles(long userId)
-        {
-            var userInRoles = _unitOfWork.UserInRoleRepository
-                    .Where(u => u.UserId == userId)
-                    .ToList();
-
-            return _roleService.GetAllRoles()
-                .Where(r => userInRoles.Any(ur => ur.RoleId == (int)r))
-                .Select(r => r.ToString());
+                roles, permissions);
         }
 
         /// <summary>

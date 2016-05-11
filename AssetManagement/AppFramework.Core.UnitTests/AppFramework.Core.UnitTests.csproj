@@ -122,6 +122,10 @@
       <Project>{658431c7-7442-46f1-81c8-7cc6744f7e46}</Project>
       <Name>AppFramework.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AppFramework.Tasks\AppFramework.Tasks.csproj">
+      <Project>{4d38b9e7-6171-4858-bb02-1cef5137d451}</Project>
+      <Name>AppFramework.Tasks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AppFramework.UnitTests.Common\AppFramework.UnitTests.Common.csproj">
       <Project>{f9a326ed-d245-44e4-aaed-0629c0616bf9}</Project>
       <Name>AppFramework.UnitTests.Common</Name>

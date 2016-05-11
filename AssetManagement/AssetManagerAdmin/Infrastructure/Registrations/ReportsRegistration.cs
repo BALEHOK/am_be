@@ -2,6 +2,7 @@
 using AppFramework.DataProxy;
 using AppFramework.Reports.Permissions;
 using AppFramework.Reports.Services;
+using AssetManager.Infrastructure.Permissions;
 using AssetManager.Infrastructure.Services;
 using AssetManagerAdmin.Services;
 using DevExpress.Xpf.Reports.UserDesigner;
@@ -21,6 +22,7 @@ namespace AssetManagerAdmin.Infrastructure.Registrations
                     new TransientLifetimeManager(),
                     new InjectionFactory(c => new UnitOfWork()))
                 .RegisterType<IAssetTypeService, AssetTypeService>()
+                .RegisterType<IAssetTypePermissionChecker, AssetTypePermissionChecker>()
                 .RegisterType<IScreensService, ScreensService>() // required for AssetTypeService
 
                 .RegisterType<IStandardReportService, DevExpressStandardReportService>()

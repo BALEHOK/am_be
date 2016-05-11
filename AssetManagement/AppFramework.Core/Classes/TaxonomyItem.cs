@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Interfaces;
 using AppFramework.Entities;
 
@@ -41,7 +42,7 @@ namespace AppFramework.Core.Classes
         /// </summary>
         public string Name
         {
-            get { return new TranslatableString(_base.Name).GetTranslation(); }
+            get { return _base.Name.Localized(); }
             set { _base.Name = value; }
         }
 

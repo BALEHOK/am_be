@@ -4,7 +4,7 @@ using System.Linq;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 
-namespace AppFramework.Core.Classes.ScreensServices
+namespace AppFramework.Core.Services
 {
     public class PanelsService : IPanelsService
     {
@@ -17,37 +17,34 @@ namespace AppFramework.Core.Classes.ScreensServices
             _unitOfWork = unitOfWork;
         }
 
-        public List<Panel> GetAllByScreenId(long screenId)
+        public List<AttributePanel> GetAllByScreenId(long screenId)
         {
-            var screen = _unitOfWork.AssetTypeScreenRepository.Single(s => s.ScreenId == screenId);
-            var panels = _unitOfWork.AttributePanelRepository
+            // order in the app
+            return _unitOfWork.AttributePanelRepository
                 .Where(
-                    a => a.DynEntityConfigUId == screen.DynEntityConfigUid && a.ScreenId == screenId,                    
-                    a => a.AttributePanelAttribute
-                        .Select(ap => ap.DynEntityAttribConfig))
-                .Select(panel => new Panel(panel, panel.AttributePanelAttribute
-                    .OrderBy(apa => apa.DisplayOrder)
-                    .Select(apa => new AssetTypeAttribute(apa.DynEntityAttribConfig, _unitOfWork))
-                    .Where(a => a.IsActive)
-                    .ToList()))
+                    a => a.DynEntityConfigUId == a.AssetTypeScreen.DynEntityConfigUid && a.ScreenId == screenId,
+                    a => a.AttributePanelAttribute.Select(ap => ap.DynEntityAttribConfig))
+                .OrderBy(p => p.DisplayOrder)
+                .ThenBy(p => p.AttributePanelUid)
                 .ToList();
-            return panels;
         }
 
-        public Panel GetByUid(long panelUid)
+        public AttributePanel GetByUid(long panelUid)
         {
-            Panel result = null;
-            var panel = _unitOfWork.AttributePanelRepository
+            return _unitOfWork.AttributePanelRepository
                 .SingleOrDefault(
                     p => p.AttributePanelUid == panelUid,
                     p => p.AttributePanelAttribute.Select(a => a.DynEntityAttribConfig));
-            if (panel != null)
-                result = new Panel(panel, panel.AttributePanelAttribute
-                    .OrderBy(apa => apa.DisplayOrder)
-                    .Select(apa => new AssetTypeAttribute(apa.DynEntityAttribConfig, _unitOfWork))
-                    .Where(a => a.IsActive)
-                    .ToList());
-            return result;
+        }
+
+        public AttributePanel GetById(long panelId)
+        {
+            return _unitOfWork.AttributePanelRepository
+                .SingleOrDefault(
+                    p => p.AttributePanelId == panelId
+                        && p.DynEntityConfig.Active
+                        && p.DynEntityConfig.ActiveVersion,
+                    p => p.AttributePanelAttribute.Select(apa => apa.DynEntityAttribConfig));
         }
 
         public void Delete(long panelUid)

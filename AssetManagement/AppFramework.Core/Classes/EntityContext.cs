@@ -1,3 +1,4 @@
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.DataProxy;
 
 namespace AppFramework.Core.Classes
@@ -49,7 +50,7 @@ namespace AppFramework.Core.Classes
         /// </summary>
         public string Name
         {
-            get { return new TranslatableString(_base.Name).GetTranslation(); }
+            get { return _base.Name.Localized(); }
             set
             {
                 string name = value;

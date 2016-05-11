@@ -95,10 +95,12 @@ namespace AssetManagerAdmin.ViewModels
             IAppContext context)
             : base(context)
         {
-            var assetTypes = assetTypeService.GetAssetTypes();
+            //TODO: get actual current user
+            var userId = 1L;
+            var assetTypes = assetTypeService.GetAssetTypes(userId);
 
             // do not modify original collection
-            AssetTypesList = new List<AssetTypeModel>(assetTypes.ActiveTypes);
+            AssetTypesList = new List<AssetTypeModel>(assetTypes);
             AssetTypesList.Insert(0, new AssetTypeModel
             {
                 Id = null,

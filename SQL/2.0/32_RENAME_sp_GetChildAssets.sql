@@ -1,0 +1,1 @@
+sp_rename '_cust_GetChildAssets', '_cust_GetRelatedAssetTypes'

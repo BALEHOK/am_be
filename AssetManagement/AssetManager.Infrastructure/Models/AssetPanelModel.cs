@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace AssetManager.Infrastructure.Models
 {
@@ -12,5 +9,7 @@ namespace AssetManager.Infrastructure.Models
         public string Name { get; set; }
 
         public IEnumerable<AttributeModel> Attributes { get; set; }
+        public bool IsChildAssets { get; set; }
+        public long ChildAssetAttrId { get; set; }
     }
 }

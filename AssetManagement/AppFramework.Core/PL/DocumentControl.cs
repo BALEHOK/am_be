@@ -86,7 +86,9 @@ namespace AppFramework.Core.PL
                 {
                     var asset = AssetsService.GetAssetById(attachedDocumentId, documentAssetType);
                     var permission = AuthenticationService.GetPermission(asset);
-                    AssetsService.DeleteAsset(asset, permission);
+                    if (!permission.CanDelete())
+                        throw new Exception("User has no permission to delete asset");
+                    AssetsService.DeleteAsset(asset);
                 }
             }
 

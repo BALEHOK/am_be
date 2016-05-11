@@ -36,16 +36,16 @@ namespace AppFramework.Core.Classes
 
         public bool IsAdministrator
         {
-            get { return _roles.Contains(PredefinedRoles.Administrators.ToString()); }
+            get { return Roles.Contains(PredefinedRoles.Administrators.ToString()); }
         }
 
-        public IEnumerable<string> Roles
-        {
-            get { return _roles; }
-        }
+        public IEnumerable<string> Roles { get; private set; }
 
-        private readonly List<RightsEntry> _permissions;
-        private readonly string[] _roles;
+        /// <summary>
+        /// Returns the permissions
+        /// </summary>
+        /// <value></value>
+        public List<RightsEntry> Permissions { get; private set; }
 
         public AssetUser(string providername,
             string username,
@@ -78,8 +78,8 @@ namespace AppFramework.Core.Classes
                     lastLockedOutDate)
         {
             Asset = asset;
-            _roles = roles.ToArray();
-            _permissions = permissions.ToList();
+            Roles = roles.ToArray();
+            Permissions = permissions.ToList();
         }
 
         /// <summary>
@@ -162,15 +162,6 @@ namespace AppFramework.Core.Classes
                 }
             });
             return string.Join(",", result);
-        }
-
-        /// <summary>
-        /// Returns the permissions
-        /// </summary>
-        /// <value></value>
-        public List<RightsEntry> Permissions
-        {
-            get { return _permissions; }
         }
         
         /// <summary>

@@ -34,6 +34,7 @@ body {
     top: -100px;
     margin: 0 0 0 -107px;
     background: url('../images/app-logo_transparent.png') 0 0 no-repeat;
+    background-size: cover;
 }
 
 .external-providers {
@@ -93,7 +94,6 @@ input[type="text"],
 input[type="password"] {
     display: inline-block;
     position: relative;
-    /*width: 100%;*/
     height: 42px;
     padding: 11px 18px;
     font-size: 13px;

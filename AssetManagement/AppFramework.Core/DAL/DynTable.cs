@@ -2,8 +2,6 @@
 using AppFramework.Core.DAL.Adapters;
 using AppFramework.DataProxy;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -44,20 +42,16 @@ namespace AppFramework.Core.DAL
                     string.Format("Table {0} already exists. Cannot create table for asset type {1}.",
                     tableName, at.Name));
 
-            var row = new DynRow();
-            var columns = row.Fields;
-            foreach (var attr in at.Attributes)
-            {
-                var column = _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr.Base);
-                columns.Add(column);
-            }
-
+            var row = new DynRow(
+                at.DBTableName,
+                at.Attributes.Select(attr => _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr.Base)));
+        
             var sb = new StringBuilder();
             sb.Append("IF NOT EXISTS ");
             sb.Append(" ( SELECT * FROM INFORMATION_SCHEMA.TABLES ");
             sb.AppendFormat(" WHERE TABLE_NAME = '{0}' )", tableName);
             sb.AppendFormat(" CREATE TABLE {0} ( ", tableName);
-            sb.Append(string.Join(", ", from column in columns
+            sb.Append(string.Join(", ", from column in row.Fields
                                         select GetSql(column)));
             sb.Append(" ); ");
 

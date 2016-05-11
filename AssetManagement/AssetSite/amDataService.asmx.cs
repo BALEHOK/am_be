@@ -1,5 +1,4 @@
-﻿using System.Web.Script.Serialization;
-using AppFramework.ConstantsEnumerators;
+﻿using AppFramework.ConstantsEnumerators;
 using AppFramework.Core.AC.Authentication;
 using AppFramework.Core.Calculation;
 using AppFramework.Core.Classes;
@@ -10,7 +9,6 @@ using AppFramework.Core.Classes.ScreensServices;
 using AppFramework.Core.Classes.SearchEngine;
 using AppFramework.Core.Classes.SearchEngine.Enumerations;
 using AppFramework.Core.Classes.SearchEngine.Interface;
-using AppFramework.Core.ConstantsEnumerators;
 using AppFramework.Core.Interfaces;
 using AppFramework.DataProxy;
 using System;
@@ -25,8 +23,8 @@ using Microsoft.Practices.Unity;
 using Place = AppFramework.Core.Classes.Place;
 using ZipCode = AppFramework.Core.Classes.ZipCode;
 using AssetManager.Infrastructure.Services;
-using AppFramework.Core.Classes.Tasks.Runners;
-using AssetManager.Infrastructure.Extensions;
+using AppFramework.Core.Services;
+using AppFramework.Tasks;
 
 namespace AssetSite
 {
@@ -231,7 +229,7 @@ namespace AssetSite
                 var at = AssetTypeRepository.GetByUid(atUID);
                 var asset = AssetsService.GetAssetById(aId, at);
                 var permission = AuthenticationService.GetPermission(asset);
-                AssetsService.DeleteAsset(asset, permission);
+                AssetsService.DeleteAsset(asset);
                 result.IsSuccess = true;
             }
             catch (Exception ex)
@@ -246,60 +244,6 @@ namespace AssetSite
         public long DeleteTemplate(long atUID, long tID)
         {
             return AssetTemplateService.DeleteById(atUID, tID) ? tID : 0;
-        }
-
-        [WebMethod(true)]
-        public ReservationResponse ReserveAssetWithTimeRange(
-            long reservationUid,
-            long assetTypeUid,
-            long assetUid,
-            string startDate,
-            string returnDate,
-            string reason,
-            string containerId,
-            long? borrowerId)
-        {
-            var service = new ReservationService(UnitOfWork, AuthenticationService);
-            var result = new ReservationResponse() { ContainerId = containerId };
-
-            try
-            {
-                service.Reserve(
-                    reservationUid,
-                    DateTime.Parse(startDate, ApplicationSettings.PersistenceCultureInfo),
-                    DateTime.Parse(returnDate, ApplicationSettings.PersistenceCultureInfo),
-                    assetTypeUid,
-                    assetUid,
-                    borrowerId,
-                    reason);
-            }
-            catch (ReservationException ex)
-            {
-                result.ErrorMessage = ex.Message;
-            }
-            return result;
-        }
-
-        [WebMethod(true)]
-        public ReservationResponse BorrowReservationByUid(long reservationUid)
-        {
-            var service = new ReservationService(UnitOfWork, AuthenticationService);
-            var reservation = service.Borrow(reservationUid);
-
-            var result = new ReservationResponse
-            {
-            };
-            return result;
-        }
-
-        [WebMethod(true)]
-        public ReservationResponse ReleaseBorrowedReservationByUid(long reservationUid, bool isDamaged, string remarks,
-            string containerId)
-        {
-            var service = new ReservationService(UnitOfWork, AuthenticationService);
-            var reservation = service.ReleaseBorrowed(reservationUid, isDamaged, remarks);
-            var result = new ReservationResponse {ContainerId = containerId};
-            return result;
         }
 
         [WebMethod(true)]
@@ -545,16 +489,19 @@ namespace AssetSite
         }
 
         [WebMethod]
-        public string SavePanel(long panelUid, string name, string desc, long atId, long screenId, string dialogId)
+        public string SavePanel(long panelUid, string name, string desc, bool isChildAssets, long? childAttr, long atId, long screenId, string dialogId)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("Panel name cannot be empty");
 
             var pnl = panelUid != 0
-                ? PanelsService.GetByUid(panelUid).Base
+                ? PanelsService.GetByUid(panelUid)
                 : new AttributePanel();
+
             pnl.Name = name;
             pnl.Description = desc;
+            pnl.IsChildAssets = isChildAssets;
+            pnl.ChildAssetAttrId = childAttr;
             pnl.ScreenId = screenId;
             pnl.DynEntityConfigUId = atId;
             pnl.DisplayOrder = (byte)PanelsService.GetAllByScreenId(screenId).Count;
@@ -565,12 +512,14 @@ namespace AssetSite
         [WebMethod]
         public PanelInfo GetPanel(long panelUid, string dialogId)
         {
-            Panel pnl = PanelsService.GetByUid(panelUid);
+            var pnl = PanelsService.GetByUid(panelUid);
 
-            PanelInfo info = new PanelInfo();
+            var info = new PanelInfo();
             if (pnl != null)
             {
                 info.ContainerId = dialogId;
+                info.IsChildAssets = pnl.IsChildAssets;
+                info.ChildAssetAttrId = pnl.ChildAssetAttrId.GetValueOrDefault();
                 info.Description = pnl.Description;
                 info.Name = pnl.Name;
             }
@@ -599,8 +548,8 @@ namespace AssetSite
             return new TaskExecutionDataHolder()
             {
                 NavigationResult = 
-                    result.Status == TaskStatus.Sussess 
-                    && result.ActionOnComplete == TaskActionOnComplete.Navigate
+                    result.Status == AppFramework.Tasks.Enumerations.TaskStatus.Sussess 
+                    && result.ActionOnComplete == AppFramework.Tasks.Enumerations.TaskActionOnComplete.Navigate
                         ? result.NavigationResult 
                         : string.Empty,
                 Messages = result.Errors.ToArray()
@@ -745,7 +694,9 @@ namespace AssetSite
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool IsChildAssets { get; set; }
         public string ContainerId { get; set; }
+        public long ChildAssetAttrId { get; set; }
     }
 
     public class ResultDto

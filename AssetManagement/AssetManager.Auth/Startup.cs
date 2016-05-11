@@ -5,10 +5,11 @@ using AppFramework.Auth.Security;
 using AssetManager.Auth;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services.Default;
+using log4net.Config;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof (Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
 namespace AssetManager.Auth
 {
@@ -18,12 +19,12 @@ namespace AssetManager.Auth
 
         public void Configuration(IAppBuilder app)
         {
-            log4net.Config.XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
 
             app.Map(AuthRoot, authApp =>
             {
                 var factory = Factory.Configure("AuthEntities");
-                
+
                 // add custom CSS
                 var viewOptions = new DefaultViewServiceOptions();
                 viewOptions.Stylesheets.Add("/content/css/am-custom.css");
@@ -37,10 +38,9 @@ namespace AssetManager.Auth
 
                     // ToDo [Alexandr Shukletsov] set SSL required
                     RequireSsl = false,
-
                     AuthenticationOptions = new AuthenticationOptions
                     {
-                        LoginPageLinks = new LoginPageLink[]
+                        LoginPageLinks = new[]
                         {
                             new LoginPageLink
                             {
@@ -48,7 +48,8 @@ namespace AssetManager.Auth
                                 Href = "/recoverpassword"
                             }
                         }
-                    }
+                    },
+                    CspOptions = new CspOptions {FontSrc = "'self' data:"}
                 };
 
                 authApp.UseIdentityServer(options);
@@ -57,8 +58,8 @@ namespace AssetManager.Auth
             RouteTable.Routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
+                defaults: new {controller = "Home", action = "Index", id = UrlParameter.Optional}
+                );
         }
     }
 }

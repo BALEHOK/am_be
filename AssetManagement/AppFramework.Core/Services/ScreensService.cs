@@ -3,7 +3,6 @@ using System.Linq;
 using AppFramework.Core.Calculation;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
-using System.Data.SqlClient;
 
 namespace AppFramework.Core.Classes.ScreensServices
 {
@@ -28,7 +27,7 @@ namespace AppFramework.Core.Classes.ScreensServices
             _unitOfWork = unitOfWork;
         }
 
-        public List<Entities.AssetTypeScreen> GetScreensByAssetTypeUid(long assetTypeUid)
+        public List<AssetTypeScreen> GetScreensByAssetTypeUid(long assetTypeUid)
         {
             var includes = new IncludesBuilder<AssetTypeScreen>(
                 s => s.AttributePanel
@@ -46,7 +45,6 @@ namespace AppFramework.Core.Classes.ScreensServices
         public AssetTypeScreen GetScreenById(long screenId)
         {
             var ib = new IncludesBuilder<AssetTypeScreen>(
-                s => s.DynEntityAttribScreens,
                 s => s.AttributePanel.
                     Select(a => a.AttributePanelAttribute
                         .Select(apa => apa.DynEntityAttribConfig)));
@@ -114,7 +112,6 @@ namespace AppFramework.Core.Classes.ScreensServices
                 }
             }
 
-            screen.DynEntityAttribScreens.Clear();
 
             if (screen.ScreenId == 0)
             {
@@ -125,21 +122,6 @@ namespace AppFramework.Core.Classes.ScreensServices
                 _unitOfWork.AssetTypeScreenRepository.Update(screen);
             }
             _unitOfWork.Commit();
-
-            _unitOfWork.SqlProvider.ExecuteNonQuery(
-                "DELETE FROM DynEntityAttribScreens WHERE ScreenId=" + screen.ScreenId);
-
-            var linkedAssetTypeAttributesUids = screen
-                   .DynEntityAttribScreens
-                   .Select(a => a.DynEntityAttribUid)
-                   .ToList();
-
-            foreach (var attribUid in linkedAssetTypeAttributesUids)
-            {
-                _unitOfWork.SqlProvider.ExecuteNonQuery(
-                    "INSERT INTO DynEntityAttribScreens(DynEntityAttribUid, ScreenId) VALUES(@0, @1);",
-                    new [] { new SqlParameter("@0", attribUid), new SqlParameter("@1", screen.ScreenId) });
-            }
         }
     }
 }

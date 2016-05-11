@@ -14,6 +14,7 @@ namespace AppFramework.Auth
         {
             var AMSPAconfig = AuthConfiguration.Instance.Clients["AMSPA"];
             var AMATconfig = AuthConfiguration.Instance.Clients["AMAT"];
+            var AMMconfig = AuthConfiguration.Instance.Clients["AMM"];
 
             clients = new List<Client>
             {
@@ -60,6 +61,27 @@ namespace AppFramework.Auth
                     AccessTokenLifetime = 86400,
 
                     ClientSecrets = new List<Secret>(1){ new Secret(ConfigurationManager.AppSettings["AMAT_Secret"])}
+                },
+
+                // Asset manager mobile app
+                new Client
+                {
+                    ClientName = "Asset management mobile app",
+                    ClientId = "AMM",
+                    Enabled = true,
+                    AccessTokenType = AccessTokenType.Reference,
+                    Flow = Flows.Implicit,
+                    AllowedScopes = new List<string>
+                    {
+                        Constants.StandardScopes.OpenId,
+                        Constants.StandardScopes.Profile,
+                        AuthConstants.Scopes.WebApi
+                    },
+
+                    RedirectUris = AMMconfig.RedirectUris,
+                    PostLogoutRedirectUris = AMMconfig.PostLogoutRedirectUris,
+
+                    ClientSecrets = new List<Secret>(1){ new Secret(ConfigurationManager.AppSettings["AMM_Secret"])}
                 }
             };
         }

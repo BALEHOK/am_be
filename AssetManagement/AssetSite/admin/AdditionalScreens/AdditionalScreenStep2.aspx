@@ -131,28 +131,6 @@
                 </table>
             </div>
         </div>
-        <div class="panel" id="linkedItemsPanel" runat="server">
-            <div class="panelheader">
-                <asp:Label ID="Label1" runat="server" Text="Linked Item(types)"></asp:Label>
-            </div>
-            <div class="panelcontent">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <asp:Repeater ID="repLinkedAssets" runat="server">
-                        <ItemTemplate>
-                            <tr>
-                                <td class="controls" style="width: auto">
-                                    <asp:CheckBox ID="cbLinkedAsset" runat="server" Checked='<%#Eval("IsChecked") %>' />
-                                    <asp:HiddenField ID="hdfAssetId" runat="server" Value='<%#Eval("Attribute.UID") %>' />
-                                </td>
-                                <td class="labels" style="width: auto">
-                                    <asp:Label ID="Label2" runat="server" Text='<%#Eval("Attribute.Name") %>'></asp:Label>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </table>
-            </div>
-        </div>
         <div class="wizard-footer-buttons">
             <asp:Button CssClass="btnPrev" Text="<%$ Resources:Global, PreviousText %>" ID="btnPrevious"
                 runat="server" OnClick="btnPrevious_Click" CausesValidation="False" meta:resourcekey="btnPreviousResource1" />

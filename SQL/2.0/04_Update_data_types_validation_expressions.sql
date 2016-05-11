@@ -1,5 +1,3 @@
-  USE [facilitymanager_facilityflexware_com]
-
   UPDATE [dbo].[DataType]
   SET ValidationExpr = 'IsUrl([@value])'
   WHERE ValidationExpr = '@IsUrl'

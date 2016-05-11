@@ -16,19 +16,13 @@ namespace AssetManagerAdmin.WebApi
     public class AssetsApi : IAssetsApi
     {
         private readonly UserInfo _user;
-        private readonly string _baseAddress;
+        private readonly Uri _baseAddress;
         private readonly JavaScriptSerializer _js = new JavaScriptSerializer();
 
         public AssetsApi(string baseAddress, UserInfo user)
         {
             _user = user;
-            _baseAddress = baseAddress;
-        }
-
-        private string GetApiUrl(string api)
-        {
-            var url = string.Format("{0}{1}", _baseAddress, api);
-            return url;
+            _baseAddress = new Uri(baseAddress);
         }
 
         private void Authorize(HttpClient client)
@@ -56,18 +50,23 @@ namespace AssetManagerAdmin.WebApi
                     string json;
                     using (var client = new HttpClient())
                     {
+                        client.BaseAddress = _baseAddress;
                         Authorize(client);
-                        json = await client.GetStringAsync(GetApiUrl("/api/typesinfo"));
+                        var response = await client.GetAsync(ApiUrls.TypesInfo);
+                        response.EnsureSuccessStatusCode();
+                        json = await response.Content.ReadAsStringAsync();
                     }
 
                     _typesInfoModelResponse = _js.Deserialize<TypesInfoModel>(json);
-
-                    _typesInfoModelRequestInProgress = false;
-
                     return _typesInfoModelResponse;
+                }
+                catch
+                {
+                    throw;
                 }
                 finally
                 {
+                    _typesInfoModelRequestInProgress = false;
                     _typesInfoModelSemaphore.Release();
                 }
             }
@@ -82,24 +81,23 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
-
-                var apiRequest = GetApiUrl("/api/reports/custom/list");
-
-                var response = await client.GetStringAsync(apiRequest);
-                
-                return _js.Deserialize<List<CustomReportModel>>(response);
+                var response = await client.GetAsync(ApiUrls.CustomReportsList);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                return _js.Deserialize<List<CustomReportModel>>(result);
             }
         }
 
         public async Task<long> CreateReport(string reportName, long assetTypeId)
         {
             var client = new RestClient();
-            client.BaseUrl = new Uri(_baseAddress);
+            client.BaseUrl = _baseAddress;
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", _user.AccessToken));
 
             var request = new RestRequest();
-            request.Resource = "api/reports/custom/create";
+            request.Resource = ApiUrls.CustomReportsCreate;
             request.Method = Method.PUT;
             request.AddParameter("reportName", reportName, ParameterType.QueryString);
             request.AddParameter("assetTypeId", assetTypeId, ParameterType.QueryString);
@@ -111,11 +109,11 @@ namespace AssetManagerAdmin.WebApi
         public async Task DeleteReport(long reportId)
         {
             var client = new RestClient();
-            client.BaseUrl = new Uri(_baseAddress);
+            client.BaseUrl = _baseAddress;
             client.AddDefaultHeader("Authorization", string.Format("Bearer {0}", _user.AccessToken));
 
             var request = new RestRequest();
-            request.Resource = "api/reports/custom/delete";
+            request.Resource = ApiUrls.CustomReportsDelete;
             request.Method = Method.DELETE;
             request.AddParameter("reportId", reportId, ParameterType.QueryString);
 
@@ -126,16 +124,19 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
 
                 var apiRequest = !string.IsNullOrWhiteSpace(formula)
-                    ? string.Format("/api/typesinfo/formula?typeId={0}&attributeName={1}&formula={2}",
+                    ? ApiUrls.TypesInfoFormula + string.Format("?typeId={0}&attributeName={1}&formula={2}",
                         assetType.Id, HttpUtility.UrlEncode(attributeName), HttpUtility.UrlEncode(formula))
-                    : string.Format("/api/typesinfo/formula/clear?typeId={0}&attributeName={1}",
+                    : ApiUrls.TypesInfoFormulaClear + string.Format("?typeId={0}&attributeName={1}",
                         assetType.Id, HttpUtility.UrlEncode(attributeName));
 
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                return response;
+                var response = await client.GetAsync(apiRequest);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                return result;
             }
         }
 
@@ -143,16 +144,19 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
 
                 var apiRequest = !string.IsNullOrWhiteSpace(panelAttribute.ScreenFormula)
-                    ? string.Format("/api/typesinfo/screens/formula?panelAttributeId={0}&formula={1}",
+                    ? ApiUrls.TypesInfoScreensFormula + string.Format("?panelAttributeId={0}&formula={1}",
                         panelAttribute.Id, HttpUtility.UrlEncode(panelAttribute.ScreenFormula))
-                    : string.Format("/api/typesinfo/screens/formula/clear?panelAttributeId={0}",
+                    : ApiUrls.TypesInfoScreensFormulaClear + string.Format("?panelAttributeId={0}",
                         panelAttribute.Id);
 
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                return response;
+                var response = await client.GetAsync(apiRequest);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                return result;
             }
         }
 
@@ -160,16 +164,19 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
 
                 var apiRequest = !string.IsNullOrWhiteSpace(expression)
-                    ? string.Format("/api/typesinfo/validation?typeId={0}&attributeName={1}&expression={2}",
+                    ? ApiUrls.TypesInfoValidation + string.Format("?typeId={0}&attributeName={1}&expression={2}",
                         assetType.Id, HttpUtility.UrlEncode(attributeName), HttpUtility.UrlEncode(expression))
-                    : string.Format("/api/typesinfo/validation/clear?typeId={0}&attributeName={1}",
+                    : ApiUrls.TypesInfoValidationClear + string.Format("?typeId={0}&attributeName={1}",
                         assetType.Id, HttpUtility.UrlEncode(attributeName));
 
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                return response;
+                var response = await client.GetAsync(apiRequest);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                return result;
             }
         }
 
@@ -178,14 +185,18 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
 
-                var apiRequest = string.Format("/api/validation/attribute/{0}?value={1}&expression={2}",
-                    id, HttpUtility.UrlEncode(value), HttpUtility.UrlEncode(expression));
+                var apiRequest = string.Format("{0}?value={1}&expression={2}",
+                    string.Format(ApiUrls.ValidationAttributeFormat, id), 
+                    HttpUtility.UrlEncode(value), 
+                    HttpUtility.UrlEncode(expression));
 
-                var response = await client.GetStringAsync(GetApiUrl(apiRequest));
-                var result = _js.Deserialize<AttributeValidationResultModel>(response);
-                return result;
+                var response = await client.GetAsync(apiRequest);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                return _js.Deserialize<AttributeValidationResultModel>(result);
             }
         }
 
@@ -193,18 +204,18 @@ namespace AssetManagerAdmin.WebApi
         {
             using (var client = new HttpClient())
             {
+                client.BaseAddress = _baseAddress;
                 Authorize(client);
 
-                var apiRequest = string.Format("/api/uploads?assetTypeId={0}&attributeId={1}", 0, 0);
-                var url = GetApiUrl(apiRequest);
+                var apiRequest = ApiUrls.Uploads + string.Format("?assetTypeId={0}&attributeId={1}", 0, 0);
 
                 using (var content = new MultipartFormDataContent())
                 {
                     content.Add(new StreamContent(new MemoryStream(file)), "report_template", fileName);
 
-                    using (var response = await client.PostAsync(url, content))
+                    using (var response = await client.PostAsync(apiRequest, content))
                     {
-                        await response.Content.ReadAsStringAsync();
+                        response.EnsureSuccessStatusCode();
                     }
                 }
             }

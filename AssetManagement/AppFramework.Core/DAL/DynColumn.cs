@@ -1,5 +1,4 @@
 ﻿using AppFramework.ConstantsEnumerators;
-using AppFramework.Core.Classes;
 using System;
 using AppFramework.Core.DataTypes;
 
@@ -57,7 +56,6 @@ namespace AppFramework.Core.DAL
         /// </summary>
         public bool IsUnique { get; set; }
 
-
         private string _name = string.Empty;
         private object _value = string.Empty;
         private DataTypeBase _dataType;
@@ -111,6 +109,11 @@ namespace AppFramework.Core.DAL
         public override string ToString()
         {
             return Name;
+        }
+
+        internal DynColumn ShadowCopy()
+        {
+            return (DynColumn) MemberwiseClone();
         }
     }    
 }

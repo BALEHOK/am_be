@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using AppFramework.Core.Classes.Extensions;
 using AppFramework.Core.Classes.SearchEngine.ContextSearchElements;
 using AppFramework.Core.Classes.SearchEngine.TypeSearchElements;
 using AppFramework.DataProxy;
@@ -225,8 +226,8 @@ namespace AppFramework.Core.Classes.SearchEngine
             {
 
                 queryString += string.Format("{0}{1} {2} ",
-                        new TranslatableString(CurrentType.Attributes[item.AttributeId].AttributeText).GetTranslation(),
-                        "==", new TranslatableString(item.AssetAttribute.Value).GetTranslation());
+                        CurrentType.Attributes[item.AttributeId].AttributeText.Localized(),
+                        "==", item.AssetAttribute.Value.Localized());
             }
             else
             {

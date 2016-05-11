@@ -287,13 +287,8 @@ namespace AppFramework.Core.Classes.Batch.AssetActions
                 }
 
                 asset[AttributeNames.ActiveVersion].Value = false.ToString();
+                asset.IsDeleted = true;
                 _assetsService.InsertAsset(asset);
-                _unitOfWork.DeletedEntitiesRepository.Insert(new DeletedEntity()
-                {
-                    DynEntityId = asset.ID,
-                    DynEntityUid = asset.UID,
-                    DynEntityConfigId = assetType.ID
-                });
             }
 
             dbEntity.Status = status.IsSuccess ? (int)ImportExportStatus.Completed : (int)ImportExportStatus.Error;

@@ -18,7 +18,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using IdentityServer3.Core;
-using Newtonsoft.Json;
+using NewtonsoftAM.Json;
 
 namespace AppFramework.Auth.Serialization
 {

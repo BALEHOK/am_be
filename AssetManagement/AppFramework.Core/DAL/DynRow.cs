@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using AppFramework.ConstantsEnumerators;
+using AppFramework.Core.ConstantsEnumerators;
+using AppFramework.Core.DataTypes;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AppFramework.Core.DAL
@@ -17,7 +20,7 @@ namespace AppFramework.Core.DAL
         /// <summary>
         /// Gets list of table columns
         /// </summary>
-        public List<DynColumn> Fields
+        public IReadOnlyCollection<DynColumn> Fields
         {
             get { return this._fields; }
         }
@@ -26,20 +29,24 @@ namespace AppFramework.Core.DAL
         private List<DynColumn> _fields = new List<DynColumn>();
 
         /// <summary>
-        /// Default constructor is providing default columns
-        /// </summary>
-        public DynRow() { }
-
-        /// <summary>
         /// Class constructor
         /// </summary>
         /// <param name="tableName">Name of table from which to retrieve the row</param>
         /// <param name="fields">List of fields to retrieve</param>
-        public DynRow(string tableName, List<DynColumn> fields)
-            : this()
+        public DynRow(string tableName, IEnumerable<DynColumn> fields)
         {
-            this._tableName = tableName;
-            this._fields.AddRange(fields);
+            _tableName = tableName;
+            _fields.AddRange(fields);
+
+            // hack to add fields which are not in the DynEntityAttribConfig table
+            if (!_fields.Any(f => f.Name == AttributeNames.IsDeleted))
+            {
+                _fields.Add(new DynColumn(
+                    AttributeNames.IsDeleted,
+                    new BoolDataType(),
+                    false,
+                    false));
+            }
         }
 
         /// <summary>

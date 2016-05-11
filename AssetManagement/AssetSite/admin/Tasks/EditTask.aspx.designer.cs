@@ -148,13 +148,22 @@ namespace AssetSite.admin.Tasks {
         protected global::System.Web.UI.WebControls.View viewSearch;
         
         /// <summary>
-        /// ifSearch control.
+        /// txtSearchUrl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlIframe ifSearch;
+        protected global::System.Web.UI.WebControls.TextBox txtSearchUrl;
+        
+        /// <summary>
+        /// vldSearchUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator vldSearchUrl;
         
         /// <summary>
         /// viewBatch control.
@@ -254,24 +263,6 @@ namespace AssetSite.admin.Tasks {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.EntityDataSource edsScreens;
-        
-        /// <summary>
-        /// viewPrintReport control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.View viewPrintReport;
-        
-        /// <summary>
-        /// ReportsList control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ReportsList;
         
         /// <summary>
         /// viewExportSSIS control.

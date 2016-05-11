@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Web;
 
 namespace AppFramework.Core.Exceptions
 {
-    public class InsufficientPermissionsException : Exception
+    public class InsufficientPermissionsException : HttpException
     {
         public InsufficientPermissionsException()
-            : base("Insufficient permissions for this action")
+            : base(403, "Insufficient permissions for this action")
         {
-
         }
 
         public InsufficientPermissionsException(string message)
-            : base(message)
+            : base(403, message)
         {
-
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using AppFramework.Core.DataTypes;
 using AppFramework.DataProxy;
 using AppFramework.Entities;
 using Common.Logging;
 using Dapper;
 using LinqKit;
-using Opus6;
 
 namespace AppFramework.Core.DAL
 {
@@ -18,7 +16,6 @@ namespace AppFramework.Core.DAL
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Diagnostics;
     using System.Linq;
     using System.Text;
 
@@ -160,10 +157,10 @@ namespace AppFramework.Core.DAL
             if (assetConfig == null)
                 throw new NullReferenceException("AssetType was not provided");
 
-            var tableRow = new DynRow { TableName = assetConfig.DBTableName };
-
-            tableRow.Fields.AddRange(from attr in assetConfig.DynEntityAttribConfigs
-                                     select _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr));
+            var tableRow = new DynRow(
+                assetConfig.DBTableName, 
+                from attr in assetConfig.DynEntityAttribConfigs
+                select _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr));
 
             var query = new StringBuilder();
             query.AppendFormat("SELECT * FROM [{0}] ", tableRow.TableName);
@@ -205,31 +202,30 @@ namespace AppFramework.Core.DAL
             if (assetConfig == null)
                 throw new NullReferenceException("AssetType was not provided");
 
-            DynRow tableRow = new DynRow();
-            tableRow.TableName = assetConfig.DBTableName;
-
-            tableRow.Fields.AddRange(from attr in assetConfig.DynEntityAttribConfigs
-                                     where attr.Active
-                                     select _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr));
+            var tableRow = new DynRow(
+                assetConfig.DBTableName,
+                from attr in assetConfig.DynEntityAttribConfigs
+                where attr.Active
+                select _dynColumnAdapter.ConvertDynEntityAttribConfigToDynColumn(attr));
 
             var query = new StringBuilder();
             query.AppendFormat("SELECT Top(1) * FROM [{0}] where ActiveVersion=1", tableRow.TableName);
 
-
-
-            var reader = _unitOfWork.SqlProvider.ExecuteReader(query.ToString());
-            if (reader.Read())
+            using (var reader = _unitOfWork.SqlProvider.ExecuteReader(query.ToString()))
             {
-                foreach (DynColumn field in tableRow.Fields)
+                if (reader.Read())
                 {
-                    _assignValue(reader, field);
+                    foreach (DynColumn field in tableRow.Fields)
+                    {
+                        _assignValue(reader, field);
+                    }
                 }
+                else
+                {
+                    tableRow = null;
+                }
+                reader.Close();
             }
-            else
-            {
-                tableRow = null;
-            }
-            reader.Close();
             return tableRow;
         }
 
@@ -441,12 +437,14 @@ namespace AppFramework.Core.DAL
             sb.AppendFormat(" ORDER BY [{0}];", orderBy);
 
             var rows = new List<DynRow>(10);
-            using (var reader = _unitOfWork.SqlProvider.ExecuteReader(sb.ToString(), (from item in options
-                                                                                      select new SqlParameter()
-                                                                                          {
-                                                                                              ParameterName = item.Key,
-                                                                                              Value = item.Value,
-                                                                                          }).ToArray()))
+            var parameters = (from item in options
+                              select new SqlParameter()
+                              {
+                                  ParameterName = item.Key,
+                                  Value = item.Value,
+                              }).ToArray();
+
+            using (var reader = _unitOfWork.SqlProvider.ExecuteReader(sb.ToString(), parameters))
             {
                 while (reader.Read())
                 {
@@ -464,26 +462,30 @@ namespace AppFramework.Core.DAL
             return rows;
         }
 
-        private static void _assignValue(IDataReader reader, DynColumn field)
+        private void _assignValue(IDataReader reader, DynColumn field)
         {
             try
             {
-                if (reader[field.Name].GetType() != typeof(System.DBNull))
-                    field.Value = Convert.ChangeType(reader[field.Name], field.DataType.FrameworkDataType, ApplicationSettings.PersistenceCultureInfo);
+                if (reader[field.Name].GetType() != typeof(DBNull))
+                {
+                    field.Value = Convert.ChangeType(
+                        reader[field.Name],
+                        field.DataType.FrameworkDataType,
+                        ApplicationSettings.PersistenceCultureInfo);
+                }
             }
-            catch (FormatException)
+            catch (FormatException fe)
             {
+                _logger.Warn(fe);
                 field.Value = Convert.ToString(reader[field.Name], ApplicationSettings.PersistenceCultureInfo);
-                //Debugger.Break();
             }
-            catch (System.ArgumentOutOfRangeException noColumnException)
+            catch (ArgumentOutOfRangeException ae)
             {
-                //Logger.Write(string.Format("Column {0} not found. Exception:\n{1}", field.Name, noColumnException.Message));
-                Debugger.Break();
+                _logger.Error(ae);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //Logger.Write(ex);
+                _logger.Error(e);
             }
         }
 
@@ -498,9 +500,19 @@ namespace AppFramework.Core.DAL
                 throw new ArgumentNullException();
 
             var columns = (from attr in asset.Attributes
-                           where attr.IsIdentity == false &&
-                           !(string.IsNullOrEmpty(attr.Value) && attr.GetConfiguration().IsRequired == false && attr.GetConfiguration().IsAsset == false)
+                           where !attr.IsIdentity
+                            && !(string.IsNullOrEmpty(attr.Value)
+                            && attr.GetConfiguration().IsRequired == false
+                            && attr.GetConfiguration().IsAsset == false)
                            select _dynColumnAdapter.ConvertAttributeToDynColumn(attr)).ToList();
+
+            // type created before IsDeleted refactoring doesn't have that column
+            // therefore we need this hack to add IsDeleted in update query
+            if (columns.All(x => x.Name != AttributeNames.IsDeleted))
+            {
+                columns.Add(
+                    asset.DataRow.Fields.Single(x => x.Name == AttributeNames.IsDeleted));
+            }
 
             var sb = new StringBuilder();
             sb.Append("INSERT INTO ");
@@ -512,9 +524,6 @@ namespace AppFramework.Core.DAL
                 columns.Select(c => _getVariableName(c))));
             sb.Append(" ) ");
             sb.Append("SELECT @@IDENTITY;");
-
-            // inserting asset and
-            // assigning new DynEntityUid to it
 
             var parameters = GetSqlParameters(columns);
             var result = _unitOfWork.SqlProvider.ExecuteScalar(sb.ToString(), parameters.ToArray());
@@ -543,12 +552,20 @@ namespace AppFramework.Core.DAL
             var columns = (from attr in asset.Attributes
                            where !attr.IsIdentity && !string.IsNullOrEmpty(attr.Value)
                            select _dynColumnAdapter.ConvertAttributeToDynColumn(attr)).ToList();
-            // only on some locales
+
+            // type created before IsDeleted refactoring doesn't have that column
+            // therefore we need this hack to add IsDeleted in update query
+            if (columns.All(x => x.Name != AttributeNames.IsDeleted))
+            {
+                columns.Add(
+                    asset.DataRow.Fields.Single(x => x.Name == AttributeNames.IsDeleted));
+            }
+            
             sb.Append(@"UPDATE ");
             sb.Append(asset.GetConfiguration().DBTableName);
             sb.Append(" SET ");
-            string valuesString = string.Join(", ", from column in columns
-                                                    select string.Format("[{0}]={1}", column.Name, _getVariableName(column)));
+            var valuesString = string.Join(", ", from column in columns
+                                                 select string.Format("[{0}]={1}", column.Name, _getVariableName(column)));
             sb.Append(valuesString);
             sb.AppendFormat(" WHERE [{0}] = @{0};", AttributeNames.DynEntityUid);
 

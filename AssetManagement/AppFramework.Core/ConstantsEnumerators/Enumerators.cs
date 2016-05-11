@@ -2,12 +2,6 @@ namespace AppFramework.ConstantsEnumerators
 {
     using System.ComponentModel;
 
-    public enum TaskStatus
-    {
-        Sussess = 0,
-        Error = 1
-    }
-
     public enum BatchExecute
     {
         WebSite,
@@ -86,7 +80,8 @@ namespace AppFramework.ConstantsEnumerators
         Location,
         Department,
         Document,
-        Faq
+        Faq,
+        Activity
     }
 
     public enum BatchActionType
@@ -122,38 +117,6 @@ namespace AppFramework.ConstantsEnumerators
         XLS,
         XLSX,
         XML,
-    }
-
-    public enum TaskExecutableType
-    {
-        Internal = 0,
-        Assembly = 1,
-        SSIS = 2,
-        PredefinedTask = 3,
-    }
-
-    public enum TaskFunctionType
-    {
-        ExecuteSearch = 0,
-        LaunchBatch = 1,
-        ImportFile = 2,
-        ExportFileSearch = 3,
-        CreateAsset = 4,
-        PrintReport = 5,
-        ExportFileSSIS = 6,
-        ExecuteSqlServerAgentJob = 7
-    }
-
-    public enum TaskImportFileType
-    {
-        Excel,
-        XML
-    }
-
-    public enum TaskActionOnComplete
-    {
-        Navigate = 0,
-        Nothing = 1
     }
 
     public class Enumerators

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using AppFramework.Core.AC.Providers;
 using AppFramework.Core.Classes;
+using System;
 
 namespace AppFramework.Core.AC.Authentication
 {
@@ -48,6 +48,7 @@ namespace AppFramework.Core.AC.Authentication
         /// </summary>
         /// <param name="asset">Asset to check the permissions</param>
         /// <returns>Permission code</returns>
+        [Obsolete("Use AssetPermissionChecker class")]
         Permission GetPermission(Asset asset);
     }
 }

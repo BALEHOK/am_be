@@ -40,6 +40,7 @@ namespace AssetManager.WebApi
             config.Filters.Add(new NoPermissionsFilter());
             config.Filters.Add(new ArgumentExceptionFilter());
             config.Filters.Add(new LogExceptionFilter());
+            config.Filters.Add(new UiCultureFilter());
         }
     }
 }

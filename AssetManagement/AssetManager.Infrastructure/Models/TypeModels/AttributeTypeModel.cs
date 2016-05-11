@@ -56,5 +56,10 @@ namespace AssetManager.Infrastructure.Models.TypeModels
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public AttributeTypeModel ShallowCopy()
+        {
+            return (AttributeTypeModel)MemberwiseClone();
+        }
     }
 }

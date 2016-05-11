@@ -224,6 +224,36 @@ namespace AppFramework.Entities
             }
         }
         private Nullable<long> _screenId;
+    
+        [DataMember]
+        public bool IsChildAssets
+        {
+            get { return _isChildAssets; }
+            set
+            {
+                if (_isChildAssets != value)
+                {
+                    _isChildAssets = value;
+                    OnPropertyChanged("IsChildAssets");
+                }
+            }
+        }
+        private bool _isChildAssets;
+    
+        [DataMember]
+        public Nullable<long> ChildAssetAttrId
+        {
+            get { return _childAssetAttrId; }
+            set
+            {
+                if (_childAssetAttrId != value)
+                {
+                    _childAssetAttrId = value;
+                    OnPropertyChanged("ChildAssetAttrId");
+                }
+            }
+        }
+        private Nullable<long> _childAssetAttrId;
 
         #endregion
 

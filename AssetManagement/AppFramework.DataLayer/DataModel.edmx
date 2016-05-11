@@ -47,6 +47,8 @@
           <Property Name="UpdateUserId" Type="bigint" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
           <Property Name="ScreenId" Type="bigint" />
+          <Property Name="IsChildAssets" Type="bit" Nullable="false" />
+          <Property Name="ChildAssetAttrId" Type="bigint" />
         </EntityType>
         <EntityType Name="AttributePanelAttribute">
           <Key>
@@ -60,6 +62,13 @@
           <Property Name="AttributePanelAttributeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ReferencingDynEntityAttribConfigId" Type="bigint" />
           <Property Name="ScreenFormula" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="BannerImages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="BatchAction">
           <Key>
@@ -170,15 +179,6 @@
           <Property Name="ValueType" Type="int" Nullable="false" />
           <Property Name="Value" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="DeletedEntities">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DynEntityConfigId" Type="bigint" Nullable="false" />
-          <Property Name="DynEntityId" Type="bigint" Nullable="false" />
-          <Property Name="DynEntityUid" Type="bigint" Nullable="false" />
-        </EntityType>
         <EntityType Name="DynEntityAttribConfig">
           <Key>
             <PropertyRef Name="DynEntityAttribConfigUid" />
@@ -223,14 +223,6 @@
           <Property Name="NameGenOrder" Type="int" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="CalculationFormula" Type="nchar" MaxLength="1000" />
-        </EntityType>
-        <EntityType Name="DynEntityAttribScreens">
-          <Key>
-            <PropertyRef Name="DynEntityAttribScreensId" />
-          </Key>
-          <Property Name="DynEntityAttribScreensId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DynEntityAttribUid" Type="bigint" Nullable="false" />
-          <Property Name="ScreenId" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="DynEntityAttribValidation">
           <Key>
@@ -614,24 +606,29 @@
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="LayoutData" Type="varbinary(max)" />
         </EntityType>
-        <EntityType Name="Reservation">
+        <EntityType Name="Reservations">
           <Key>
-            <PropertyRef Name="ReservationUID" />
+            <PropertyRef Name="ReservationId" />
           </Key>
-          <Property Name="ReservationUID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="DynEntityUID" Type="bigint" Nullable="false" />
-          <Property Name="DynEntityConfigUID" Type="bigint" Nullable="false" />
+          <Property Name="ReservationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UpdateUserId" Type="bigint" Nullable="false" />
-          <Property Name="Borrower" Type="bigint" Nullable="false" />
-          <Property Name="StartDate" Type="datetime" Nullable="false" />
-          <Property Name="EndDate" Type="datetime" Nullable="false" />
-          <Property Name="ReservationDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
-          <Property Name="Reason" Type="nvarchar" MaxLength="1000" />
-          <Property Name="Remarks" Type="nvarchar" MaxLength="1000" />
-          <Property Name="IsClosed" Type="bit" Nullable="false" />
-          <Property Name="IsDamaged" Type="bit" Nullable="false" />
-          <Property Name="IsBorrowed" Type="bit" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="BorrowerId" Type="bigint" Nullable="false" />
+          <Property Name="StartDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="EndDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="State" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReservedAssets">
+          <Key>
+            <PropertyRef Name="ReservedAssetId" />
+          </Key>
+          <Property Name="ReservedAssetId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReservationId" Type="bigint" Nullable="false" />
+          <Property Name="DynEntityConfigId" Type="bigint" Nullable="false" />
+          <Property Name="DynEntityId" Type="bigint" Nullable="false" />
+          <Property Name="UpdateUserId" Type="bigint" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Rights">
           <Key>
@@ -1122,32 +1119,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DynEntityAttribScreens_DynEntityAttribUid">
-          <End Role="DynEntityAttribConfig" Type="Self.DynEntityAttribConfig" Multiplicity="1" />
-          <End Role="DynEntityAttribScreens" Type="Self.DynEntityAttribScreens" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityAttribConfig">
-              <PropertyRef Name="DynEntityAttribConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityAttribScreens">
-              <PropertyRef Name="DynEntityAttribUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DynEntityAttribScreens_ScreenId">
-          <End Role="AssetTypeScreen" Type="Self.AssetTypeScreen" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="DynEntityAttribScreens" Type="Self.DynEntityAttribScreens" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AssetTypeScreen">
-              <PropertyRef Name="ScreenId" />
-            </Principal>
-            <Dependent Role="DynEntityAttribScreens">
-              <PropertyRef Name="ScreenId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DynEntityContextAttributesValues_Context">
           <End Role="Context" Type="Self.Context" Multiplicity="1" />
           <End Role="DynEntityContextAttributesValues" Type="Self.DynEntityContextAttributesValues" Multiplicity="*" />
@@ -1243,6 +1214,20 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
             </Principal>
             <Dependent Role="Place2Zip">
               <PropertyRef Name="ZipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReservedAsset_Reservation">
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ReservedAssets" Type="Self.ReservedAssets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservations">
+              <PropertyRef Name="ReservationId" />
+            </Principal>
+            <Dependent Role="ReservedAssets">
+              <PropertyRef Name="ReservationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1469,9 +1454,6 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="column_isnull" Type="bit" Mode="In" />
           <Parameter Name="column_default" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="f_cust_GetChildAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetChildAssets">
-          <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
-        </Function>
         <Function Name="f_cust_GetPermittedAssets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetPermittedAssets">
           <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
           <Parameter Name="userId" Type="bigint" Mode="In" />
@@ -1486,6 +1468,10 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <Parameter Name="DynEntityConfigId" Type="bigint" Mode="In" />
           <Parameter Name="userId" Type="bigint" Mode="In" />
           <Parameter Name="TaxonomyItemId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="f_cust_GetRelatedAssetTypes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetRelatedAssetTypes">
+          <Parameter Name="userId" Type="bigint" Mode="In" />
+          <Parameter Name="assetTypeId" Type="bigint" Mode="In" />
         </Function>
         <Function Name="f_cust_GetSqlServerAgentJobs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSqlServerAgentJobs" />
         <Function Name="f_cust_GetSrchCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="_cust_GetSrchCount">
@@ -1562,6 +1548,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="AssetTypeScreen" EntityType="Self.AssetTypeScreen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AttributePanel" EntityType="Self.AttributePanel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AttributePanelAttribute" EntityType="Self.AttributePanelAttribute" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BannerImages" EntityType="Self.BannerImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchAction" EntityType="Self.BatchAction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchJob" EntityType="Self.BatchJob" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchSchedule" EntityType="Self.BatchSchedule" Schema="dbo" store:Type="Tables" />
@@ -1571,9 +1558,7 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="DataTypeSearchOperators" EntityType="Self.DataTypeSearchOperators" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataTypeValidation" EntityType="Self.DataTypeValidation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DefaultValue" EntityType="Self.DefaultValue" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DeletedEntities" EntityType="Self.DeletedEntities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityAttribConfig" EntityType="Self.DynEntityAttribConfig" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DynEntityAttribScreens" EntityType="Self.DynEntityAttribScreens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityAttribValidation" EntityType="Self.DynEntityAttribValidation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityConfig" EntityType="Self.DynEntityConfig" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DynEntityConfigTaxonomy" EntityType="Self.DynEntityConfigTaxonomy" Schema="dbo" store:Type="Tables" />
@@ -1602,7 +1587,8 @@ warning 6002: The table/view 'facilitymanager.dbo.AssetsTaxonomies' does not hav
           <EntitySet Name="PredefinedAsset" EntityType="Self.PredefinedAsset" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PredefinedAttributes" EntityType="Self.PredefinedAttributes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Reservation" EntityType="Self.Reservation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReservedAssets" EntityType="Self.ReservedAssets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rights" EntityType="Self.Rights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScreenLayout" EntityType="Self.ScreenLayout" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchOperators" EntityType="Self.SearchOperators" Schema="dbo" store:Type="Tables" />
@@ -1716,14 +1702,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="TaxonomyItem" EntitySet="TaxonomyItem" />
             <End Role="DynEntityTaxonomyItem" EntitySet="DynEntityTaxonomyItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_DynEntityAttribScreens_DynEntityAttribUid" Association="Self.FK_DynEntityAttribScreens_DynEntityAttribUid">
-            <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfig" />
-            <End Role="DynEntityAttribScreens" EntitySet="DynEntityAttribScreens" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DynEntityAttribScreens_ScreenId" Association="Self.FK_DynEntityAttribScreens_ScreenId">
-            <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
-            <End Role="DynEntityAttribScreens" EntitySet="DynEntityAttribScreens" />
-          </AssociationSet>
           <AssociationSet Name="FK_DynEntityContextAttributesValues_Context" Association="Self.FK_DynEntityContextAttributesValues_Context">
             <End Role="Context" EntitySet="Context" />
             <End Role="DynEntityContextAttributesValues" EntitySet="DynEntityContextAttributesValues" />
@@ -1755,6 +1733,10 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="FK_Place2Zip_ZipCode" Association="Self.FK_Place2Zip_ZipCode">
             <End Role="ZipCode" EntitySet="ZipCode" />
             <End Role="Place2Zip" EntitySet="Place2Zip" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReservedAsset_Reservation" Association="Self.FK_ReservedAsset_Reservation">
+            <End Role="Reservations" EntitySet="Reservations" />
+            <End Role="ReservedAssets" EntitySet="ReservedAssets" />
           </AssociationSet>
           <AssociationSet Name="FK_SearchQueryAttributes_SearchQueries" Association="Self.FK_SearchQueryAttributes_SearchQueries">
             <End Role="SearchQueries" EntitySet="SearchQueries" />
@@ -1874,7 +1856,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <EntitySet Name="Place2Zip" EntityType="DataModel.Place2Zip" />
           <EntitySet Name="PredefinedAsset" EntityType="DataModel.PredefinedAsset" />
           <EntitySet Name="PredefinedAttributes" EntityType="DataModel.PredefinedAttributes" />
-          <EntitySet Name="Reservation" EntityType="DataModel.Reservation" />
           <EntitySet Name="Rights" EntityType="DataModel.Rights" />
           <EntitySet Name="SearchOperators" EntityType="DataModel.SearchOperators" />
           <EntitySet Name="StringResources" EntityType="DataModel.StringResources" />
@@ -1960,7 +1941,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="AttributePanel" EntitySet="AttributePanel" />
           </AssociationSet>
           <EntitySet Name="AssetTypeScreen" EntityType="DataModel.AssetTypeScreen" />
-          <EntitySet Name="DynEntityAttribScreens" EntityType="DataModel.DynEntityAttribScreens" />
           <AssociationSet Name="FK_AssetTypeScreen_DynEntityConfigUid" Association="DataModel.FK_AssetTypeScreen_DynEntityConfigUid">
             <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
             <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
@@ -1968,10 +1948,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="FK_AttributePanel_ScreenId" Association="DataModel.FK_AttributePanel_ScreenId">
             <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
             <End Role="AttributePanel" EntitySet="AttributePanel" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DynEntityAttribScreens_ScreenId" Association="DataModel.FK_DynEntityAttribScreens_ScreenId">
-            <End Role="AssetTypeScreen" EntitySet="AssetTypeScreen" />
-            <End Role="DynEntityAttribScreens" EntitySet="DynEntityAttribScreens" />
           </AssociationSet>
           <EntitySet Name="ValidationOperand" EntityType="DataModel.ValidationOperand" />
           <AssociationSet Name="FK_ValidationOperand_DataType" Association="DataModel.FK_ValidationOperand_DataType">
@@ -1991,7 +1967,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="AttributePanel" EntitySet="AttributePanel" />
             <End Role="AttributePanelAttribute" EntitySet="AttributePanelAttribute" />
           </AssociationSet>
-          <EntitySet Name="DeletedEntities" EntityType="DataModel.DeletedEntity" />
           <EntitySet Name="DefaultValue" EntityType="DataModel.DefaultValue" />
           <EntitySet Name="AssetsTaxonomies" EntityType="DataModel.AssetsTaxonomies" />
           <FunctionImport Name="IsValueUnique">
@@ -2074,9 +2049,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <End Role="DynListItem" EntitySet="DynListItem" />
             <End Role="DynEntityContextAttributesValues" EntitySet="DynEntityContextAttributesValues" />
           </AssociationSet>
-          <FunctionImport Name="f_cust_GetChildAssets" ReturnType="Collection(DataModel.f_cust_GetChildAssets_Result)">
-          <Parameter Name="assetTypeId" Mode="In" Type="Int64" />
-          </FunctionImport>
           <FunctionImport Name="f_cust_GetStocksByLocation" ReturnType="Collection(DataModel.StockLocationInfo)">
             <Parameter Name="assetid" Mode="In" Type="Int64" />
             <Parameter Name="configid" Mode="In" Type="Int64" />
@@ -2097,10 +2069,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <AssociationSet Name="DynEntityConfig_DynEntityAttribConfig_FK1" Association="DataModel.DynEntityConfig_DynEntityAttribConfig_FK1">
             <End Role="DynEntityConfig" EntitySet="DynEntityConfig" />
             <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfigs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DynEntityAttribScreens_DynEntityAttribUid" Association="DataModel.FK_DynEntityAttribScreens_DynEntityAttribUid">
-            <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfigs" />
-            <End Role="DynEntityAttribScreens" EntitySet="DynEntityAttribScreens" />
           </AssociationSet>
           <AssociationSet Name="FK_DynListValue_DynEntityAttribConfig" Association="DataModel.FK_DynListValue_DynEntityAttribConfig">
             <End Role="DynEntityAttribConfig" EntitySet="DynEntityAttribConfigs" />
@@ -2186,6 +2154,17 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             <Parameter Name="DynEntityConfigUidNew" Mode="In" Type="Int64" />
             <Parameter Name="DynEntityConfigId" Mode="In" Type="Int64" />
           </FunctionImport>
+          <FunctionImport Name="f_cust_GetRelatedAssetTypes" ReturnType="Collection(DataModel.f_cust_GetRelatedAssetTypes_Result)">
+            <Parameter Name="userId" Mode="In" Type="Int64" />
+            <Parameter Name="assetTypeId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="Reservations" EntityType="DataModel.Reservation" />
+          <EntitySet Name="ReservedAssets" EntityType="DataModel.ReservedAsset" />
+          <AssociationSet Name="FK_ReservedAsset_Reservation" Association="DataModel.FK_ReservedAsset_Reservation">
+            <End Role="Reservation" EntitySet="Reservations" />
+            <End Role="ReservedAsset" EntitySet="ReservedAssets" />
+          </AssociationSet>
+          <EntitySet Name="BannerImages" EntityType="DataModel.BannerImage" />
           </EntityContainer>
         <EntityType Name="AppSettings">
           <Key>
@@ -2440,25 +2419,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="String" Name="Name" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="Int64" Name="DynEntityConfigID" Nullable="false" />
           <Property Type="Int64" Name="DynEntityAttribConfigID" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Reservation">
-          <Key>
-            <PropertyRef Name="ReservationUID" />
-          </Key>
-          <Property Type="Int64" Name="ReservationUID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int64" Name="DynEntityUID" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityConfigUID" Nullable="false" />
-          <Property Type="Int64" Name="UpdateUserId" Nullable="false" />
-          <Property Type="Int64" Name="Borrower" Nullable="false" />
-          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="EndDate" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="ReservationDate" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="3" />
-          <Property Type="String" Name="Reason" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Remarks" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="IsClosed" Nullable="false" />
-          <Property Type="Boolean" Name="IsDamaged" Nullable="false" />
-          <Property Type="Boolean" Name="IsBorrowed" Nullable="false" />
         </EntityType>
         <EntityType Name="Rights">
           <Key>
@@ -2888,6 +2848,8 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="DynEntityConfig" Relationship="DataModel.DynEntityConfig_AttributePanel_FK1" FromRole="AttributePanel" ToRole="DynEntityConfig" />
           <NavigationProperty Name="AssetTypeScreen" Relationship="DataModel.FK_AttributePanel_ScreenId" FromRole="AttributePanel" ToRole="AssetTypeScreen" />
           <NavigationProperty Name="AttributePanelAttribute" Relationship="DataModel.AttributePanel_AttributePanelAttribute_FK1" FromRole="AttributePanel" ToRole="AttributePanelAttribute" />
+          <Property Name="IsChildAssets" Type="Boolean" Nullable="false" />
+          <Property Name="ChildAssetAttrId" Type="Int64" />
         </EntityType>
         <Association Name="DynEntityConfig_AttributePanel_FK1">
           <End Type="DataModel.DynEntityConfig" Role="DynEntityConfig" Multiplicity="1" />
@@ -2919,20 +2881,9 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <Property Type="Boolean" Name="IsDefault" Nullable="false" />
           <NavigationProperty Name="DynEntityConfig" Relationship="DataModel.FK_AssetTypeScreen_DynEntityConfigUid" FromRole="AssetTypeScreen" ToRole="DynEntityConfig" />
           <NavigationProperty Name="AttributePanel" Relationship="DataModel.FK_AttributePanel_ScreenId" FromRole="AssetTypeScreen" ToRole="AttributePanel" />
-          <NavigationProperty Name="DynEntityAttribScreens" Relationship="DataModel.FK_DynEntityAttribScreens_ScreenId" FromRole="AssetTypeScreen" ToRole="DynEntityAttribScreens" />
           <Property Type="Guid" Name="ScreenUid" Nullable="false" />
           <NavigationProperty Name="ScreenLayout" Relationship="DataModel.FK_AssetTypeScreen_ScreenLayout" FromRole="AssetTypeScreen" ToRole="ScreenLayout" />
           <Property Name="IsMobile" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="DynEntityAttribScreens">
-          <Key>
-            <PropertyRef Name="DynEntityAttribScreensId" />
-          </Key>
-          <Property Type="Int64" Name="DynEntityAttribUid" Nullable="false" />
-          <Property Type="Int64" Name="ScreenId" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityAttribScreensId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="AssetTypeScreen" Relationship="DataModel.FK_DynEntityAttribScreens_ScreenId" FromRole="DynEntityAttribScreens" ToRole="AssetTypeScreen" />
-          <NavigationProperty Name="DynEntityAttribConfig" Relationship="DataModel.FK_DynEntityAttribScreens_DynEntityAttribUid" FromRole="DynEntityAttribScreens" ToRole="DynEntityAttribConfig" />
         </EntityType>
         <Association Name="FK_AssetTypeScreen_DynEntityConfigUid">
           <End Type="DataModel.DynEntityConfig" Role="DynEntityConfig" Multiplicity="1" />
@@ -2954,18 +2905,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               <PropertyRef Name="ScreenId" />
             </Principal>
             <Dependent Role="AttributePanel">
-              <PropertyRef Name="ScreenId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DynEntityAttribScreens_ScreenId">
-          <End Type="DataModel.AssetTypeScreen" Role="AssetTypeScreen" Multiplicity="1" />
-          <End Type="DataModel.DynEntityAttribScreens" Role="DynEntityAttribScreens" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AssetTypeScreen">
-              <PropertyRef Name="ScreenId" />
-            </Principal>
-            <Dependent Role="DynEntityAttribScreens">
               <PropertyRef Name="ScreenId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3043,15 +2982,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DeletedEntity">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityId" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityUid" Nullable="false" />
-        </EntityType>
         <EntityType Name="DefaultValue">
           <Key>
             <PropertyRef Name="DefaultValueID" />
@@ -3337,14 +3267,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="f_cust_GetChildAssets_Result">
-          <Property Type="String" Name="AssetTypeName" Nullable="false" MaxLength="60" />
-          <Property Type="String" Name="AttributeName" Nullable="false" MaxLength="60" />
-          <Property Type="Int64" Name="DynEntityConfigUid" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityAttribConfigUid" Nullable="false" />
-          <Property Type="Int64" Name="DynEntityAttribConfigId" Nullable="false" />
-        </ComplexType>
         <EntityType Name="DynEntityAttribConfig">
           <Key>
             <PropertyRef Name="DynEntityAttribConfigUid" />
@@ -3392,7 +3314,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <NavigationProperty Name="Context" Relationship="DataModel.Context_DynEntityAttribConfig_FK1" FromRole="DynEntityAttribConfig" ToRole="Context" />
           <NavigationProperty Name="DataType" Relationship="DataModel.DataType_DynEntityAttribConfig_FK1" FromRole="DynEntityAttribConfig" ToRole="DataType" />
           <NavigationProperty Name="DynEntityConfig" Relationship="DataModel.DynEntityConfig_DynEntityAttribConfig_FK1" FromRole="DynEntityAttribConfig" ToRole="DynEntityConfig" />
-          <NavigationProperty Name="DynEntityAttribScreens" Relationship="DataModel.FK_DynEntityAttribScreens_DynEntityAttribUid" FromRole="DynEntityAttribConfig" ToRole="DynEntityAttribScreens" />
           <NavigationProperty Name="DynListValues" Relationship="DataModel.FK_DynListValue_DynEntityAttribConfig" FromRole="DynEntityAttribConfig" ToRole="DynListValue" />
           <NavigationProperty Name="DynList" Relationship="DataModel.DynList_DynEntityAttribConfig_FK1" FromRole="DynEntityAttribConfig" ToRole="DynList" />
           <Property Type="String" Name="CalculationFormula" MaxLength="1000" FixedLength="true" Unicode="true" />
@@ -3442,18 +3363,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Principal>
             <Dependent Role="DynEntityAttribConfig">
               <PropertyRef Name="DynEntityConfigUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DynEntityAttribScreens_DynEntityAttribUid">
-          <End Type="DataModel.DynEntityAttribConfig" Role="DynEntityAttribConfig" Multiplicity="1" />
-          <End Type="DataModel.DynEntityAttribScreens" Role="DynEntityAttribScreens" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DynEntityAttribConfig">
-              <PropertyRef Name="DynEntityAttribConfigUid" />
-            </Principal>
-            <Dependent Role="DynEntityAttribScreens">
-              <PropertyRef Name="DynEntityAttribUid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3781,6 +3690,61 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="f_cust_GetRelatedAssetTypes_Result">
+          <Property Type="Int64" Name="DynEntityConfigUid" Nullable="false" />
+          <Property Type="Int64" Name="DynEntityConfigId" Nullable="false" />
+          <Property Type="String" Name="AssetTypeName" Nullable="false" MaxLength="60" />
+          <Property Type="Int64" Name="DynEntityAttribConfigUid" Nullable="false" />
+          <Property Type="Int64" Name="DynEntityAttribConfigId" Nullable="false" />
+          <Property Type="String" Name="AttributeName" Nullable="false" MaxLength="60" />
+        </ComplexType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="ReservationId" />
+          </Key>
+          <Property Name="ReservationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UpdateUserId" Type="Int64" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="BorrowerId" Type="Int64" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="ReservedAssets" Relationship="DataModel.FK_ReservedAsset_Reservation" FromRole="Reservation" ToRole="ReservedAsset" />
+        </EntityType>
+        <EntityType Name="ReservedAsset">
+          <Key>
+            <PropertyRef Name="ReservedAssetId" />
+          </Key>
+          <Property Name="ReservedAssetId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReservationId" Type="Int64" Nullable="false" />
+          <Property Name="DynEntityConfigId" Type="Int64" Nullable="false" />
+          <Property Name="DynEntityId" Type="Int64" Nullable="false" />
+          <Property Name="UpdateUserId" Type="Int64" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Reservation" Relationship="DataModel.FK_ReservedAsset_Reservation" FromRole="ReservedAsset" ToRole="Reservation" />
+        </EntityType>
+        <Association Name="FK_ReservedAsset_Reservation">
+          <End Type="DataModel.Reservation" Role="Reservation" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataModel.ReservedAsset" Role="ReservedAsset" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Reservation">
+              <PropertyRef Name="ReservationId" />
+            </Principal>
+            <Dependent Role="ReservedAsset">
+              <PropertyRef Name="ReservationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BannerImage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4035,26 +3999,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Reservation">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.Reservation)">
-        <MappingFragment StoreEntitySet="Reservation">
-                <ScalarProperty Name="IsBorrowed" ColumnName="IsBorrowed" />
-                <ScalarProperty Name="ReservationUID" ColumnName="ReservationUID" />
-          <ScalarProperty Name="DynEntityUID" ColumnName="DynEntityUID" />
-          <ScalarProperty Name="DynEntityConfigUID" ColumnName="DynEntityConfigUID" />
-          <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
-          <ScalarProperty Name="Borrower" ColumnName="Borrower" />
-          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-          <ScalarProperty Name="ReservationDate" ColumnName="ReservationDate" />
-          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-          <ScalarProperty Name="Reason" ColumnName="Reason" />
-          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-          <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
-          <ScalarProperty Name="IsDamaged" ColumnName="IsDamaged" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Rights">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.Rights)">
         <MappingFragment StoreEntitySet="Rights">
@@ -4267,7 +4211,9 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
     <EntitySetMapping Name="AttributePanel">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.AttributePanel)">
         <MappingFragment StoreEntitySet="AttributePanel">
-          <ScalarProperty Name="AttributePanelUid" ColumnName="AttributePanelUid" />
+          <ScalarProperty Name="ChildAssetAttrId" ColumnName="ChildAssetAttrId" />
+                <ScalarProperty Name="IsChildAssets" ColumnName="IsChildAssets" />
+                <ScalarProperty Name="AttributePanelUid" ColumnName="AttributePanelUid" />
           <ScalarProperty Name="AttributePanelId" ColumnName="AttributePanelId" />
           <ScalarProperty Name="DynEntityConfigUId" ColumnName="DynEntityConfigUId" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -4302,15 +4248,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DynEntityAttribScreens">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.DynEntityAttribScreens)">
-        <MappingFragment StoreEntitySet="DynEntityAttribScreens">
-          <ScalarProperty Name="DynEntityAttribScreensId" ColumnName="DynEntityAttribScreensId" />
-          <ScalarProperty Name="DynEntityAttribUid" ColumnName="DynEntityAttribUid" />
-          <ScalarProperty Name="ScreenId" ColumnName="ScreenId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="ValidationOperand">
       <EntityTypeMapping TypeName="IsTypeOf(DataModel.ValidationOperand)">
         <MappingFragment StoreEntitySet="ValidationOperand">
@@ -4332,16 +4269,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
           <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
           <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DeletedEntities">
-      <EntityTypeMapping TypeName="IsTypeOf(DataModel.DeletedEntity)">
-        <MappingFragment StoreEntitySet="DeletedEntities">
-                <ScalarProperty Name="DynEntityUid" ColumnName="DynEntityUid" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
-          <ScalarProperty Name="DynEntityId" ColumnName="DynEntityId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -4604,18 +4531,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="f_cust_GetChildAssets" FunctionName="DataModel.Store.f_cust_GetChildAssets">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DataModel.f_cust_GetChildAssets_Result">
-                <ScalarProperty Name="AssetTypeName" ColumnName="AssetTypeName" />
-                <ScalarProperty Name="AttributeName" ColumnName="AttributeName" />
-                <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
-                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
-                <ScalarProperty Name="DynEntityAttribConfigUid" ColumnName="DynEntityAttribConfigUid" />
-                <ScalarProperty Name="DynEntityAttribConfigId" ColumnName="DynEntityAttribConfigId" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetStocksByLocation" FunctionName="DataModel.Store.f_cust_GetStocksByLocation">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DataModel.StockLocationInfo">
@@ -4816,6 +4731,52 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="f_cust_GetRelatedAssetTypes" FunctionName="DataModel.Store.f_cust_GetRelatedAssetTypes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.f_cust_GetRelatedAssetTypes_Result">
+                <ScalarProperty Name="DynEntityConfigUid" ColumnName="DynEntityConfigUid" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="AssetTypeName" ColumnName="AssetTypeName" />
+                <ScalarProperty Name="DynEntityAttribConfigUid" ColumnName="DynEntityAttribConfigUid" />
+                <ScalarProperty Name="DynEntityAttribConfigId" ColumnName="DynEntityAttribConfigId" />
+                <ScalarProperty Name="AttributeName" ColumnName="AttributeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Reservations">
+            <EntityTypeMapping TypeName="DataModel.Reservation">
+              <MappingFragment StoreEntitySet="Reservations">
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="BorrowerId" ColumnName="BorrowerId" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="ReservationId" ColumnName="ReservationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReservedAssets">
+            <EntityTypeMapping TypeName="DataModel.ReservedAsset">
+              <MappingFragment StoreEntitySet="ReservedAssets">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="UpdateUserId" ColumnName="UpdateUserId" />
+                <ScalarProperty Name="DynEntityId" ColumnName="DynEntityId" />
+                <ScalarProperty Name="DynEntityConfigId" ColumnName="DynEntityConfigId" />
+                <ScalarProperty Name="ReservationId" ColumnName="ReservationId" />
+                <ScalarProperty Name="ReservedAssetId" ColumnName="ReservedAssetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BannerImages">
+            <EntityTypeMapping TypeName="DataModel.BannerImage">
+              <MappingFragment StoreEntitySet="BannerImages">
+                <ScalarProperty Name="Name" ColumnName="name" />
+                <ScalarProperty Name="Id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -4859,7 +4820,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         <EntityTypeShape EntityType="DataModel.Place2Zip" Width="1.5" PointX="13" PointY="5.875" Height="1.980286458333353" />
         <EntityTypeShape EntityType="DataModel.PredefinedAsset" Width="1.5" PointX="16.75" PointY="18.75" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="DataModel.PredefinedAttributes" Width="1.5" PointX="19.75" PointY="0.75" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="DataModel.Reservation" Width="1.5" PointX="19.75" PointY="3.75" Height="3.7109993489583335" />
         <EntityTypeShape EntityType="DataModel.Rights" Width="1.5" PointX="19.75" PointY="8.75" Height="2.9417936197916674" />
         <EntityTypeShape EntityType="DataModel.SearchOperators" Width="1.5" PointX="3.625" PointY="22.875" Height="2.3648893229166674" />
         <EntityTypeShape EntityType="DataModel.StringResources" Width="1.5" PointX="20.75" PointY="12.75" Height="1.5956835937499818" />
@@ -4992,7 +4952,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="13.375" PointY="21.34375" />
         </AssociationConnector>
         <EntityTypeShape EntityType="DataModel.AssetTypeScreen" Width="1.5" PointX="10.5" PointY="13.375" Height="4.0956022135416674" />
-        <EntityTypeShape EntityType="DataModel.DynEntityAttribScreens" Width="1.875" PointX="17.5" PointY="21.5" Height="1.9802864583333246" />
         <AssociationConnector Association="DataModel.FK_AssetTypeScreen_DynEntityConfigUid" >
           <ConnectorPoint PointX="9.75" PointY="23.328250225360577" />
           <ConnectorPoint PointX="10" PointY="23.328250225360577" />
@@ -5013,21 +4972,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="12.552083333333334" PointY="25.403300781249982" />
           <ConnectorPoint PointX="13" PointY="25.403300781249982" />
           <ConnectorPoint PointX="13.375" PointY="25.028300781249982" />
-        </AssociationConnector>
-        <AssociationConnector Association="DataModel.FK_DynEntityAttribScreens_ScreenId" >
-          <ConnectorPoint PointX="9.625" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.041666666666666" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.208333333333334" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.416666666666666" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.583333333333334" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.875" PointY="24.162512720352566" />
-          <ConnectorPoint PointX="10.875" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="12.385416666666666" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="12.552083333333334" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="15.322916666666666" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="15.489583333333334" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="16.4062505" PointY="25.662985026041667" />
-          <ConnectorPoint PointX="16.4062505" PointY="27.375" />
         </AssociationConnector>
         <EntityTypeShape EntityType="DataModel.ValidationOperand" Width="1.5" PointX="3.625" PointY="26.125" Height="1.9802864583333353" />
         <AssociationConnector Association="DataModel.FK_ValidationOperand_DataType" >
@@ -5073,7 +5017,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="15.40625" PointY="31.792631499511721" />
           <ConnectorPoint PointX="15.875" PointY="31.792631499511721" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="DataModel.DeletedEntity" Width="1.5" PointX="21.75" PointY="5.75" Height="1.7879850260416665" />
         <EntityTypeShape EntityType="DataModel.DefaultValue" Width="1.5" PointX="21.75" PointY="8.75" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="DataModel.AssetsTaxonomies" Width="1.5" PointX="22.75" PointY="11.75" Height="3.1340950520833246" />
         <EntityTypeShape EntityType="DataModel.TaskRights" Width="1.5" PointX="22.75" PointY="15.75" Height="2.1725878906249818" />
@@ -5152,12 +5095,6 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
           <ConnectorPoint PointX="13.058925565098878" PointY="26.058925565098878" />
           <ConnectorPoint PointX="13.125" PointY="26.125" />
         </AssociationConnector>
-        <AssociationConnector Association="DataModel.FK_DynEntityAttribScreens_DynEntityAttribUid" >
-          <ConnectorPoint PointX="14.625" PointY="27.931340518229163" />
-          <ConnectorPoint PointX="15.322916666666666" PointY="27.931340518229163" />
-          <ConnectorPoint PointX="15.489583333333334" PointY="27.931340518229163" />
-          <ConnectorPoint PointX="15.875" PointY="27.931340518229163" />
-        </AssociationConnector>
         <AssociationConnector Association="DataModel.FK_DynListValue_DynEntityAttribConfig" >
           <ConnectorPoint PointX="13.125" PointY="30.115247337239648" />
           <ConnectorPoint PointX="12.46875" PointY="30.115247337239648" />
@@ -5221,6 +5158,10 @@ FROM [dbo].[AssetsTaxonomies] AS [AssetsTaxonomies]</DefiningQuery>
         <AssociationConnector Association="DataModel.FK_DynEntityTaxonomyItemHistory_DynEntityConfig" />
         <AssociationConnector Association="DataModel.FK_DDynEntityTaxonomyItem_TaxonomyItem" />
         <AssociationConnector Association="DataModel.TaxonomyItem_DynEntityTaxonomyItemHistory_FK1" />
+        <EntityTypeShape EntityType="DataModel.Reservation" Width="1.5" PointX="24.375" PointY="25" />
+        <EntityTypeShape EntityType="DataModel.ReservedAsset" Width="1.5" PointX="26.625" PointY="25.125" />
+        <AssociationConnector Association="DataModel.FK_ReservedAsset_Reservation" />
+        <EntityTypeShape EntityType="DataModel.BannerImage" Width="1.5" PointX="5.375" PointY="9.75" />
         </Diagram>
     </Diagrams>
   </Designer>

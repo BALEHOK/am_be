@@ -2,15 +2,13 @@
 using AppFramework.Core.Classes;
 using AppFramework.Core.Classes.Tasks;
 using AppFramework.Core.Classes.Tasks.Runners;
+using AppFramework.Tasks;
 using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
 using System;
-using System.Linq;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI.WebControls;
-using AppFramework.Core.AC.Authentication;
-using AssetManager.Infrastructure.Extensions;
 
 namespace AssetSite.admin.Tasks
 {
@@ -24,16 +22,9 @@ namespace AssetSite.admin.Tasks
         const string SessionFlagKey = "TaskConfig";
         const string SessionFunctionData = "TaskData";
 
-        public string ExecutableType
-        {
-            get;
-            set;
-        }
-        public string ExecutablePath
-        {
-            get;
-            set;
-        }
+        public string ExecutableType { get; set; }
+
+        public string ExecutablePath { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -52,37 +43,37 @@ namespace AssetSite.admin.Tasks
                 txtDescription.Text = task.Description;
                 chkShowAtSidebar.Checked = task.DisplayInSidebar;
 
-                int fType = (int)task.FunctionType;
-
+                int fType = task.FunctionType;
                 ddlFunctionType.SelectedValue = fType.ToString();
-                mvFunctions.ActiveViewIndex = fType;
-
-                InitTask(assetTypeId, task);
                 ddlFunctionType_SelectedIndexChanged(ddlFunctionType, null);
 
                 switch (task.FunctionType)
                 {
-                    case (int)TaskFunctionType.LaunchBatch:
+                    case (int)Enumerations.TaskFunctionType.LaunchBatch:
+                        mvFunctions.SetActiveView(viewBatch);
                         var batchData = BatchTaskParametersDescriptor.Deserialize(task.FunctionData);
                         BatchCommonParams.ExecutablePath = task.ExecutablePath;
-                        BatchCommonParams.ExecutableType = (TaskExecutableType)task.ExecutableType;
+                        BatchCommonParams.ExecutableType = (Enumerations.TaskExecutableType)task.ExecutableType;
                         BatchCommonParams.FunctionData = batchData.Data;
                         btnSave.OnClientClick = "return CollectParams('" + BatchCommonParams.HiddenFieldId + "');";
                         break;
-                    case (int)TaskFunctionType.ImportFile:
+                    case (int)Enumerations.TaskFunctionType.ImportFile:
+                        mvFunctions.SetActiveView(viewImport);
                         ImportTaskParametersDescriptor importData = ImportTaskParametersDescriptor.Deserialize(task.FunctionData);
                         importParams.ExecutablePath = task.ExecutablePath;
-                        importParams.ExecutableType = (TaskExecutableType)task.ExecutableType;
+                        importParams.ExecutableType = (Enumerations.TaskExecutableType)task.ExecutableType;
                         importParams.FunctionData = importData.Data;
                         btnSave.OnClientClick = "return CollectParams('" + importParams.HiddenFieldId + "');";
                         ddlOutputFileType.SelectedValue = ((int)importData.FileType).ToString();
                         break;
-                    case (int)TaskFunctionType.ExportFileSSIS:
+                    case (int)Enumerations.TaskFunctionType.ExportFileSSIS:
+                        mvFunctions.SetActiveView(viewExportSSIS);
                         var exportData = ExportTaskParametersDescriptor.Deserialize(task.FunctionData);
                         exportParams.ExecutablePath = task.ExecutablePath;
                         exportParams.FunctionData = exportData.Data;
                         break;
-                    case (int)TaskFunctionType.CreateAsset:
+                    case (int)Enumerations.TaskFunctionType.CreateAsset:
+                        mvFunctions.SetActiveView(viewNewAsset);
                         SetScreensDataSource();
                         ddlView.DataBound += (s, args) =>
                         {
@@ -91,29 +82,9 @@ namespace AssetSite.admin.Tasks
                                 ddlView.SelectedValue = newAssetData.ScreenId.ToString();
                         };
                         break;
-                    case (int)TaskFunctionType.PrintReport:
-                        SetCurrentReport(assetTypeId, task.FunctionData);
-                        break;
-                    case (int)TaskFunctionType.ExecuteSearch:
-                    case (int)TaskFunctionType.ExportFileSearch:
-                        var runner = TaskRunnerFactory.GetRunner(task, AuthenticationService.CurrentUserId, null);
-                        var result = runner.Run(task);
-                        if (result.Status == TaskStatus.Sussess && result.ActionOnComplete == TaskActionOnComplete.Navigate)
-                        {
-                            ifSearch.Attributes.Add("src", result.NavigationResult);
-                        }
-                        break;
-                }
-            }
-        }
-
-        private void InitTask(long assetTypeId, AppFramework.Entities.Task task)
-        {
-            if (!string.IsNullOrEmpty(ddlFunctionType.SelectedValue))
-            {
-                switch (int.Parse(ddlFunctionType.SelectedValue))
-                {
-                    default:
+                    case (int)Enumerations.TaskFunctionType.ExecuteSearch:
+                        mvFunctions.SetActiveView(viewSearch);
+                        txtSearchUrl.Text = task.FunctionData;
                         break;
                 }
             }
@@ -123,35 +94,39 @@ namespace AssetSite.admin.Tasks
         {
             edsScreens.WhereParameters.Clear();
             long assetTypeId = Convert.ToInt64(Request.QueryString["AssetTypeId"]);
-            AssetType current = AssetType.GetByID(assetTypeId);
+            var current = AssetTypeRepository.GetById(assetTypeId);
             edsScreens.WhereParameters.Add(new Parameter() { Name = "dynEntityConfigUid", DefaultValue = current.UID.ToString(), Type = TypeCode.Int64 });
         }
 
         protected void ddlFunctionType_SelectedIndexChanged(object sender, EventArgs e)
         {
             int selectedType = Convert.ToInt32((sender as DropDownList).SelectedValue);
-            mvFunctions.ActiveViewIndex = selectedType;
+            vldSearchUrl.Enabled = false;
 
-            switch ((TaskFunctionType) selectedType)
+            switch ((Enumerations.TaskFunctionType) selectedType)
             {
-                case TaskFunctionType.ExecuteSearch:
-                case TaskFunctionType.ExportFileSearch:
-                    Session[SessionFlagKey] = "1";
-                    btnSave.OnClientClick = "return SearchDataCheck();";
+                case Enumerations.TaskFunctionType.ExecuteSearch:
+                    mvFunctions.SetActiveView(viewSearch);
+                    vldSearchUrl.Enabled = true;
                     break;
-                case TaskFunctionType.LaunchBatch:
+                case Enumerations.TaskFunctionType.LaunchBatch:
+                    mvFunctions.SetActiveView(viewBatch);
                     btnSave.OnClientClick = "return CollectParams('" + BatchCommonParams.HiddenFieldId + "');";
                     break;
-                case TaskFunctionType.ImportFile:
+                case Enumerations.TaskFunctionType.ImportFile:
+                    mvFunctions.SetActiveView(viewImport);
                     btnSave.OnClientClick = "return CollectParams('" + importParams.HiddenFieldId + "');";
                     break;
-                case TaskFunctionType.ExportFileSSIS:
+                case Enumerations.TaskFunctionType.ExportFileSSIS:
+                    mvFunctions.SetActiveView(viewExportSSIS);
                     btnSave.OnClientClick = "return CollectParams('" + exportParams.HiddenFieldId + "');";
                     break;
-                case TaskFunctionType.CreateAsset:
+                case Enumerations.TaskFunctionType.CreateAsset:
+                    mvFunctions.SetActiveView(viewNewAsset);
                     SetScreensDataSource();
                     break;
-                case TaskFunctionType.ExecuteSqlServerAgentJob:
+                case Enumerations.TaskFunctionType.ExecuteSqlServerAgentJob:
+                    mvFunctions.SetActiveView(viewExecuteSqlServerAgentJob);
                     BindAgentJobsList();
                     break;
             }
@@ -166,18 +141,6 @@ namespace AssetSite.admin.Tasks
             dlAgentJobs.DataBind();
         }
 
-        private void SetCurrentReport(long assetTypeId, string reportId = null)
-        {
-            if (!string.IsNullOrEmpty(reportId))
-            {
-                var item = ReportsList.Items.FindByValue(reportId);
-                if (item != null)
-                {
-                    item.Selected = true;
-                }
-            }
-        }
-
         [WebMethod]
         public static bool CheckForFunctionData()
         {
@@ -190,7 +153,7 @@ namespace AssetSite.admin.Tasks
                 return;
 
             long assetTypeId = Convert.ToInt64(Request.QueryString["AssetTypeId"]);
-            TaskFunctionType selectedType = (TaskFunctionType)Convert.ToInt32(ddlFunctionType.SelectedValue);
+            Enumerations.TaskFunctionType selectedType = (Enumerations.TaskFunctionType)Convert.ToInt32(ddlFunctionType.SelectedValue);
 
             var currentTask = !string.IsNullOrEmpty(Request.QueryString["TaskId"])
                 ? TasksService.GetTaskById(Convert.ToInt64(Request.QueryString["TaskId"]), AuthenticationService.CurrentUserId) 
@@ -205,24 +168,13 @@ namespace AssetSite.admin.Tasks
 
             switch (selectedType)
             {
-                case TaskFunctionType.ExecuteSearch:
-                case TaskFunctionType.ExportFileSearch:
-                    (viewSearch.FindControl("searchSessionEmpty") as Label).Visible = Session[SessionFunctionData] ==
-                                                                                      null;
-                    if (Session[SessionFunctionData] == null)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        currentTask.FunctionData = Session[SessionFunctionData].ToString();
-                        currentTask.ExecutableType = (int)TaskExecutableType.Internal;
-                        currentTask.ExecutablePath = null;
-                        Session[SessionFunctionData] = null;
-                    }
+                case Enumerations.TaskFunctionType.ExecuteSearch:
+                    currentTask.ExecutableType = (int)Enumerations.TaskExecutableType.Internal;
+                    currentTask.ExecutablePath = null;
+                    currentTask.FunctionData = txtSearchUrl.Text;
                     break;
 
-                case TaskFunctionType.LaunchBatch:
+                case Enumerations.TaskFunctionType.LaunchBatch:
                     currentTask.ExecutableType = (int)BatchCommonParams.GetExecutableType();
                     currentTask.ExecutablePath = BatchCommonParams.GetExecutablePath();
                     BatchTaskParametersDescriptor batchData = new BatchTaskParametersDescriptor();
@@ -230,16 +182,16 @@ namespace AssetSite.admin.Tasks
                     currentTask.FunctionData = batchData.Serialize();
                     break;
 
-                case TaskFunctionType.ImportFile:
+                case Enumerations.TaskFunctionType.ImportFile:
                     currentTask.ExecutableType = (int)importParams.GetExecutableType();
                     currentTask.ExecutablePath = importParams.GetExecutablePath();
                     ImportTaskParametersDescriptor importData = new ImportTaskParametersDescriptor();
                     importData.Data = importParams.GetFunctionData();
-                    importData.FileType = (TaskImportFileType) Convert.ToInt32(ddlOutputFileType.SelectedValue);
+                    importData.FileType = (Enumerations.TaskImportFileType) Convert.ToInt32(ddlOutputFileType.SelectedValue);
                     currentTask.FunctionData = importData.Serialize();
                     break;
 
-                case TaskFunctionType.ExportFileSSIS:
+                case Enumerations.TaskFunctionType.ExportFileSSIS:
                     currentTask.ExecutableType = (int)exportParams.GetExecutableType();
                     currentTask.ExecutablePath = exportParams.GetExecutablePath();
                     var exportData = new ExportTaskParametersDescriptor();
@@ -247,8 +199,8 @@ namespace AssetSite.admin.Tasks
                     currentTask.FunctionData = exportData.Serialize();
                     break;
 
-                case TaskFunctionType.CreateAsset:
-                    currentTask.ExecutableType = (int)TaskExecutableType.Internal;
+                case Enumerations.TaskFunctionType.CreateAsset:
+                    currentTask.ExecutableType = (int)Enumerations.TaskExecutableType.Internal;
                     currentTask.ExecutablePath = null;
                     NewAssetTaskParametrsDescriptor newAssetData = new NewAssetTaskParametrsDescriptor();
                     if (!string.IsNullOrEmpty(ddlView.SelectedValue) && long.Parse(ddlView.SelectedValue) > 0)
@@ -256,14 +208,8 @@ namespace AssetSite.admin.Tasks
                     currentTask.FunctionData = newAssetData.Serialize();
                     break;
 
-                case TaskFunctionType.PrintReport:
-                    currentTask.ExecutableType = (int)TaskExecutableType.Internal;
-                    currentTask.ExecutablePath = null;
-                    currentTask.FunctionData = ReportsList.SelectedValue;
-                    break;
-
-                case TaskFunctionType.ExecuteSqlServerAgentJob:
-                    currentTask.ExecutableType = (int)TaskExecutableType.Internal;
+                case Enumerations.TaskFunctionType.ExecuteSqlServerAgentJob:
+                    currentTask.ExecutableType = (int)Enumerations.TaskExecutableType.Internal;
                     currentTask.ExecutablePath = null;
                     currentTask.FunctionData = dlAgentJobs.SelectedValue;
                     break;
@@ -271,11 +217,6 @@ namespace AssetSite.admin.Tasks
 
             TasksService.SaveTask(currentTask, AuthenticationService.CurrentUserId);
             Response.Redirect("TasksList.aspx?AssetTypeId=" + Request.QueryString["AssetTypeId"]);
-        }
-
-        protected void ReportsList_DataBound(object sender, EventArgs e)
-        {
-            (sender as DropDownList).Items.Insert(0, new ListItem() { Value = string.Empty, Text = "Select..." });
         }
     }
 }

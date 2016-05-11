@@ -20,15 +20,13 @@ namespace AppFramework.Core.Calculation
 
     public class CalculationFunctions : FunctionsFactory<object, Asset>
     {
-        private readonly IAssetTypeRepository _typeRepository;
         private readonly IAssetsService _assetsService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAttributeCalculator _calculator;
 
-        public CalculationFunctions(IUnitOfWork unitOfWork, IAssetTypeRepository typeRepository,
+        public CalculationFunctions(IUnitOfWork unitOfWork,
             IAssetsService assetsService, IAttributeCalculator calculator)
         {
-            _typeRepository = typeRepository;
             _assetsService = assetsService;
             _unitOfWork = unitOfWork;
             _calculator = calculator;
@@ -131,7 +129,7 @@ namespace AppFramework.Core.Calculation
             if (!string.IsNullOrWhiteSpace(expression))
             {
                 ((AttributeCalculator) _calculator).CallingAsset = asset;
-                result = assets.Select(a => _calculator.GetValue(a, expression, asset.ID)).ToList();
+                result = assets.Select(a => _calculator.GetValue(a, new ScreenAttrs(a.Attributes), expression, asset.ID)).ToList();
                 ((AttributeCalculator) _calculator).CallingAsset = null;
             }
             else

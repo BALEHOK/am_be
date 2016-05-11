@@ -1,5 +1,6 @@
 ﻿using System.Web.Security;
 using AppFramework.Core.AC.Providers;
+using AssetManager.Infrastructure.Permissions;
 using AssetManager.Infrastructure.Services;
 using Microsoft.Practices.Unity;
 
@@ -17,8 +18,10 @@ namespace AssetManager.Infrastructure
                     new InjectionFactory(c => (IPasswordEncoder)Membership.Provider)
                 )
                 .RegisterType<IAssetTypeService, AssetTypeService>()
+                .RegisterType<IAssetPermissionChecker, AssetPermissionChecker>()
+                .RegisterType<IAssetTypePermissionChecker, AssetTypePermissionChecker>()
                 .RegisterType<IDataTypeService, DataTypeService>()
-                .RegisterType<IExportService, ExportService>()
+                .RegisterType<IExportService, ExportProxy>()
                 .RegisterType<IFileService, FileService>()
                 .RegisterType<IEnvironmentSettings, EnvironmentSettings>()
                 .RegisterType<ITaxonomyService, TaxonomyService>()
@@ -26,7 +29,9 @@ namespace AssetManager.Infrastructure
                 .RegisterType<IModelFactory, ModelFactory>()
                 .RegisterType<IHistoryService, HistoryService>()
                 .RegisterType<ITasksService, TasksService>()
-                .RegisterType<IFaqService, FaqService>();
+                .RegisterType<IFaqService, FaqService>()
+                .RegisterType<IPermissionsService, PermissionsService>()
+                .RegisterType<IBannerService, BannerService>();
         }
     }
 }

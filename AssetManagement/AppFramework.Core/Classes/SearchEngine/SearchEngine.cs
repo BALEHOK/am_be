@@ -318,14 +318,8 @@ namespace AppFramework.Core.Classes.SearchEngine
             return counters;
         }
 
-        public SearchTracking GetTrackingBySearchId(Guid searchId, long userId)
+        public IEnumerable<IIndexEntity> GetSearchResultsByTracking(SearchTracking searchTracking, long userId)
         {
-            return _searchTracker.GetTrackingBySearchIdUserId(searchId, userId);
-        }
-
-        public IEnumerable<IIndexEntity> GetSearchResultsBySearchId(Guid searchId, long userId)
-        {
-            var searchTracking = GetTrackingBySearchId(searchId, userId);
             if (searchTracking == null)
                 throw new EntityNotFoundException("Cannot find search request parameters by given SearchId");
 
@@ -337,7 +331,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 case SearchType.SearchByType:
                 {
                     return FindByType(
-                        searchId,
+                        searchTracking.SearchId,
                         userId,
                         long.Parse(parameters.ConfigsIds),
                         parameters.Elements,
@@ -349,7 +343,7 @@ namespace AppFramework.Core.Classes.SearchEngine
                 {
                     return FindByKeywords(
                         parameters.QueryString,
-                        searchId,
+                        searchTracking.SearchId,
                         userId,
                         parameters.ConfigsIds,
                         parameters.TaxonomyItemsIds,

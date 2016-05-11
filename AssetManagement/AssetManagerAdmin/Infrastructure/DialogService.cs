@@ -16,6 +16,11 @@ namespace AssetManagerAdmin
             ShowMessage(errorMessage, title, StatusMessageType.Error);
         }
 
+        public void ShowMessage(StatusMessage message)
+        {
+            ShowMessage(message.Message, message.Title, message.Status);
+        }
+
         public void ShowMessage(string message, string title, StatusMessageType status)
         {
             MessageBoxImage icon = MessageBoxImage.None;

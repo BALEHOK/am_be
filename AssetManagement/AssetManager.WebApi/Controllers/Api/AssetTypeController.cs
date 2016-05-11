@@ -38,34 +38,33 @@ namespace AssetManager.WebApi.Controllers.Api
 
         [Route(""), HttpGet]
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
-        public TypesInfoModel GetAssetTypes()
+        public IEnumerable<AssetTypeModel> GetAssetTypes()
         {
-            return _assetTypeService.GetAssetTypes();
+            return _assetTypeService.GetAssetTypes(User.GetId());
+        }
+
+        [HttpGet]
+        [Route("writable")]
+        [Route("~/api/writableAssettype")]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public IEnumerable<AssetTypeModel> GetWritableAssetTypes()
+        {
+            return _assetTypeService.GetWritableAssetTypes(User.GetId());
+        }
+
+        [HttpGet]
+        [Route("reservable")]
+        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
+        public IEnumerable<AssetTypeModel> GetReservableAssetTypes()
+        {
+            return _assetTypeService.GetReservableAssetTypes(User.GetId());
         }
 
         [Route("{assetTypeId}"), HttpGet]
         [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
         public AssetTypeModel GetAssetType(long assetTypeId)
         {
-            return _assetTypeService.GetAssetType(assetTypeId, true);
-        }
-
-        /// <summary>
-        /// Returns list of assets for given type
-        /// </summary>
-        /// <param name="assetTypeId">AssetType Id</param>
-        /// <param name="query">Filter by asset name</param>
-        /// <param name="rowStart">Offset</param>
-        /// <param name="rowsNumber">Items to return</param>
-        /// <returns></returns>
-        [Route("{assetTypeId}/assets")]
-        [CacheOutput(ServerTimeSpan = 100, ClientTimeSpan = 100)]
-        public IEnumerable<AssetModel> GetAllAssets(
-            long assetTypeId, string query = null, int? rowStart = 1, int? rowsNumber = 20)
-        {
-            // TODO: impove this API by adding strong-typed property
-            var userId = User.GetId();
-            return _assetService.GetAssets(assetTypeId, userId, query, rowStart, rowsNumber);
+            return _assetTypeService.GetAssetType(User.GetId(), assetTypeId, true);
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace AssetManager.WebApi.Controllers.Api
         [Route("{assetTypeId}/child")]
         public IEnumerable<ChildAssetType> GetChildAssetTypes(long assetTypeId)
         {
-            return _assetService.GetChildAssetTypes(assetTypeId);
+            return _assetService.GetRelatedAssetTypes(User.GetId(), assetTypeId);
         }
     }
 }

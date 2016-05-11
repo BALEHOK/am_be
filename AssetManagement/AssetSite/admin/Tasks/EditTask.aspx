@@ -64,10 +64,8 @@
                                 <asp:ListItem Text="Save Search" Value="0"></asp:ListItem>
                                 <asp:ListItem Text="Launch Batch Task" Value="1"></asp:ListItem>
                                 <asp:ListItem Text="Import File" Value="2"></asp:ListItem>
-                                <asp:ListItem Text="Export File (via search)" Value="3"></asp:ListItem>
                                 <asp:ListItem Text="Export File (SSIS)" Value="6"></asp:ListItem>
                                 <asp:ListItem meta:resourcekey="metaCreateAssetListItem" Value="4"></asp:ListItem>
-                                <asp:ListItem Text="Print Report" Value="5"></asp:ListItem>
                                 <asp:ListItem Text="Run SQL Server Agent Job" Value="7"></asp:ListItem>
                             </asp:DropDownList>
                             <asp:RangeValidator runat="server" ControlToValidate="ddlFunctionType" MinimumValue="0" MaximumValue="7" ErrorMessage="Please select a function type" />
@@ -91,8 +89,17 @@
             <div class="panelcontent">
                 <asp:MultiView ID="mvFunctions" runat="server" ActiveViewIndex="-1">
                     <asp:View ID="viewSearch" runat="server">
-                        <iframe runat="server" id="ifSearch" enableviewstate="false" src="../../Search/Search.aspx"
-                            width="100%" height="550px" style="border: 0;"></iframe>
+                        <p>
+                            <asp:Label runat="server" CssClass="labels">Search url</asp:Label>
+                            <asp:TextBox runat="server" ID="txtSearchUrl" CssClass="controls" />
+                            <asp:RequiredFieldValidator 
+                                runat="server" 
+                                ID="vldSearchUrl"
+                                ControlToValidate="txtSearchUrl" 
+                                Enabled="false"
+                                ForeColor="Red"
+                                Text="*" />
+                        </p>
                     </asp:View>
                     <asp:View ID="viewBatch" runat="server">
                         <uc1:CommonParams runat="server" ID="BatchCommonParams"></uc1:CommonParams>
@@ -135,22 +142,6 @@
                                         Select="it.[ScreenId], it.[DynEntityConfigUid], it.[Name]" EntityTypeFilter=""
                                         Where="it.[DynEntityConfigUid]==@dynEntityConfigUid">
                                     </asp:EntityDataSource>
-                                </td>
-                            </tr>
-                        </table>
-                    </asp:View>
-                    <asp:View ID="viewPrintReport" runat="server">
-                        <table border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td class="labels">
-                                    Report template
-                                </td>
-                                <td>
-                                    <asp:DropDownList runat="server" OnDataBound="ReportsList_DataBound" ID="ReportsList"
-                                        DataValueField="UID" DataTextField="Name">
-                                    </asp:DropDownList>
-                                    <asp:RequiredFieldValidator ErrorMessage="Report template is requried" ControlToValidate="ReportsList"
-                                        EnableClientScript="true" runat="server" />
                                 </td>
                             </tr>
                         </table>
